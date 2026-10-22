@@ -17,3 +17,12 @@
 - [SC-13: Провести воспроизводимые benchmark и совместимость](https://github.com/AdilSatuv/spaceclient/issues/13) — P1, M6 — Производительность и качество
 - [SC-14: Собрать alpha установщик и проверяемые артефакты](https://github.com/AdilSatuv/spaceclient/issues/14) — P0, M7 — Alpha и размещение
 - [SC-15: Разместить Next.js и NestJS и проверить пользовательский путь](https://github.com/AdilSatuv/spaceclient/issues/15) — P1, M7 — Alpha и размещение
+- [SC-16: Зафиксировать подробное ТЗ сайта перед дизайном](https://github.com/AdilSatuv/spaceclient/issues/16) — P0, W — Сайт: ТЗ, интерфейс и публикация
+- [SC-17: Спроектировать wireframes и визуальную систему сайта](https://github.com/AdilSatuv/spaceclient/issues/17) — P0, W — Сайт: ТЗ, интерфейс и публикация
+- [SC-18: Реализовать общий Next.js интерфейс и главную](https://github.com/AdilSatuv/spaceclient/issues/18) — P0, W — Сайт: ТЗ, интерфейс и публикация
+- [SC-19: Сделать каталог возможностей с фильтрами и честными статусами](https://github.com/AdilSatuv/spaceclient/issues/19) — P1, W — Сайт: ТЗ, интерфейс и публикация
+- [SC-20: Реализовать контракты контента и релизов NestJS](https://github.com/AdilSatuv/spaceclient/issues/20) — P0, W — Сайт: ТЗ, интерфейс и публикация
+- [SC-21: Добавить обновления, статьи и раздел помощи](https://github.com/AdilSatuv/spaceclient/issues/21) — P1, W — Сайт: ТЗ, интерфейс и публикация
+- [SC-22: Сделать страницу загрузок и обработку отказов API](https://github.com/AdilSatuv/spaceclient/issues/22) — P0, W — Сайт: ТЗ, интерфейс и публикация
+- [SC-23: Пройти матрицу приёмки вебсайта](https://github.com/AdilSatuv/spaceclient/issues/23) — P0, W — Сайт: ТЗ, интерфейс и публикация
+- [SC-24: Подготовить и разместить сайт до игрового релиза](https://github.com/AdilSatuv/spaceclient/issues/24) — P1, W — Сайт: ТЗ, интерфейс и публикация

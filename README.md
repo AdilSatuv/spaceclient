@@ -16,6 +16,7 @@
 - [Подробный план из 45 шагов](docs/IMPLEMENTATION-PLAN.md).
 - [Трекер задач](docs/TRACKING.md) — GitHub Issues, milestones и CLI.
 - [Список задач](docs/TASKS.md) и [проверки игры](docs/SMOKE-TEST.md).
+- [Подробное ТЗ сайта](docs/WEBSITE-SPEC.md) — текущий приоритет; сначала спецификация, затем интерфейс.
 
 ## Порядок работы
 
