@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "spaceclient",
+  "version": "${version}",
+  "name": "Space Client",
+  "description": "Space Client HUD for Minecraft 1.8.9. Development build.",
+  "authors": ["AdilSatuv"],
+  "contact": { "sources": "https://github.com/AdilSatuv/spaceclient" },
+  "environment": "client",
+  "entrypoints": { "client": ["dev.spaceclient.SpaceClient"] },
+  "mixins": ["spaceclient.mixins.json"],
+  "depends": { "fabricloader": ">=0.18.3", "minecraft": "1.8.9", "java": ">=8" }
+}
