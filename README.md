@@ -13,6 +13,9 @@
 - [Установка инструментов](docs/TOOLCHAIN.md) — локальный JDK и команды Gradle.
 - [Игровой загрузчик](docs/ADR-001-game-loader.md) — решение и ограничения прототипа.
 - [Next.js и NestJS](docs/WEB.md) — запуск сайта, API и проверки.
+- [Подробный план из 45 шагов](docs/IMPLEMENTATION-PLAN.md).
+- [Трекер задач](docs/TRACKING.md) — GitHub Issues, milestones и CLI.
+- [Список задач](docs/TASKS.md) и [проверки игры](docs/SMOKE-TEST.md).
 
 ## Порядок работы
 

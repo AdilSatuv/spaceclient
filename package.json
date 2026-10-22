@@ -8,7 +8,7 @@
     "site": "npm run dev --workspace @space/website",
     "api": "npm run dev --workspace @space/api",
     "build": "npm run build --workspace @space/api && npm run build --workspace @space/website",
-    "test": "npm run test --workspace @space/api",
+    "test": "node --test tests/*.test.cjs && npm run test --workspace @space/api",
     "check": "npm run check --workspaces"
   }
 }
