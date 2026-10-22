@@ -1,7 +1,7 @@
 export type FeatureStatus = 'planned' | 'prototype' | 'verified' | 'released';
 export type Feature = { id: string; slug: string; name: string; summary: string; category: 'hud' | 'comfort' | 'launcher' | 'performance'; status: FeatureStatus; details: string; releaseId?: string };
 export type Artifact = { platform: 'windows'; architecture: 'x64'; fileName: string; sizeBytes: number; sha256: string; downloadUrl: string; signatureStatus: 'signed' | 'unsigned' | 'unknown' };
-export type Release = { id: string; version: string; channel: 'alpha' | 'beta' | 'stable'; publishedAt: string; minecraftVersions: string[]; changelogSlug: string; artifacts: Artifact[] };
+export type Release = { id: string; version: string; channel: 'alpha' | 'beta' | 'stable'; publishedAt: string; minecraftVersions: string[]; changelogSlug: string; artifacts: Artifact[]; withdrawn?: boolean };
 export type Update = { id: string; slug: string; type: 'development' | 'release'; title: string; summary: string; publishedAt: string; blocks: { heading: string; text: string }[]; releaseId?: string };
 
 export const features: Feature[] = [
@@ -48,6 +48,7 @@ export function validateContent(content: { features: Feature[]; releases: Releas
     requireValue(!update.releaseId || releaseIds.has(update.releaseId), 'Unknown update release');
   }
   for (const release of content.releases) {
+    requireValue(release.withdrawn === undefined || typeof release.withdrawn === 'boolean', 'Invalid withdrawn state');
     requireValue(validSlug(release.id) && /^\d+\.\d+\.\d+(?:-[a-z0-9.-]+)?$/.test(release.version), 'Invalid release identity');
     requireValue(['alpha', 'beta', 'stable'].includes(release.channel) && timestamp(release.publishedAt), 'Invalid release channel/date');
     requireValue(release.minecraftVersions.length > 0 && release.minecraftVersions.every(x => /^\d+\.\d+(?:\.\d+)?$/.test(x)), 'Invalid Minecraft versions');

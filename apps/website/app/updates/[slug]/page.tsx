@@ -1,6 +1,64 @@
-import {notFound} from 'next/navigation';
+import { notFound } from 'next/navigation';
 import Link from 'next/link';
-export const dynamicParams=false;
-export function generateStaticParams(){return [{slug:'first-contact'}];}
-export async function generateMetadata({params}:{params:Promise<{slug:string}>}){return {title:(await params).slug==='first-contact'?'Начинаем с фундамента — Space Client':'Запись не найдена — Space Client'};}
-export default async function Update({params}:{params:Promise<{slug:string}>}){if((await params).slug!=='first-contact')notFound();return <article className="container page-content article-body"><div className="page-intro"><Link className="back-link" href="/updates">Обновления /</Link><p className="eyebrow">РАЗРАБОТКА · <time dateTime="2026-10-23">23 октября 2026</time></p><h1>Начинаем с фундамента.</h1><p className="lead">Space Client делает первые шаги. Вот что уже есть и что ещё предстоит.</p></div><h2>Первый игровой прототип</h2><p>Подготовлена сборка Minecraft 1.8.9 на Legacy Fabric. В dev-моде есть FPS, XYZ, состояния клавиш и переключение HUD через F8. Проверка поведения внутри мира ещё не завершена.</p><h2>Понятные журналы</h2><p>Исправлена конфигурация Log4j dev-запуска, восстановлен журнал и исключены строки с session ID. Известная ошибка старой Twitch-интеграции остаётся.</p><h2>Сначала план, затем интерфейс</h2><p>Сайт использует Next.js и NestJS. Подробное ТЗ описывает страницы, API, адаптивность и критерии приёмки. Сейчас идёт реализация общего интерфейса.</p><h2>Что дальше</h2><p>Пользовательского лаунчера и установщика пока нет. Продолжаем работу над сайтом и проверяем игровой фундамент. Дату alpha пока не объявляем.</p><Link className="text-link" href="/features">Возможности и их статус →</Link></article>;}
+import { getUpdate } from '../../../lib/api';
+import { validSlug } from '../../../lib/contracts';
+import ContentError from '../../../components/content-error';
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  if (!validSlug(slug))
+    return { title: 'Запись не найдена — Space Client', robots: { index: false, follow: false } };
+  const result = await getUpdate(slug);
+  return result.ok
+    ? { title: `${result.data.title} — Space Client`, description: result.data.summary }
+    : { title: 'Журнал — Space Client', robots: { index: false, follow: false } };
+}
+export default async function UpdatePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  if (!validSlug(slug)) notFound();
+  const result = await getUpdate(slug);
+  if (!result.ok && result.reason === 'missing') notFound();
+  if (!result.ok)
+    return (
+      <div className="container page-content">
+        <div className="page-intro">
+          <Link className="back-link" href="/updates">
+            Обновления /
+          </Link>
+          <h1>Журнал временно недоступен.</h1>
+        </div>
+        <ContentError title="Не удалось открыть запись." />
+      </div>
+    );
+  const item = result.data;
+  return (
+    <article className="container page-content article-body">
+      <div className="page-intro">
+        <Link className="back-link" href="/updates">
+          Обновления /
+        </Link>
+        <p className="eyebrow">
+          {item.type === 'release' ? 'РЕЛИЗ' : 'РАЗРАБОТКА'} ·{' '}
+          <time dateTime={item.publishedAt}>
+            {new Date(item.publishedAt).toLocaleDateString('ru-RU', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+              timeZone: 'UTC',
+            })}
+          </time>
+        </p>
+        <h1>{item.title}</h1>
+        <p className="lead">{item.summary}</p>
+      </div>
+      {item.blocks.map((block, i) => (
+        <section key={i}>
+          <h2>{block.heading}</h2>
+          <p>{block.text}</p>
+        </section>
+      ))}
+      <Link className="text-link" href={item.type === 'release' ? '/download' : '/features'}>
+        {item.type === 'release' ? 'Сборки и совместимость' : 'Возможности и их статус'} →
+      </Link>
+    </article>
+  );
+}

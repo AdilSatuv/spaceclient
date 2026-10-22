@@ -42,3 +42,5 @@ git push origin main
 - Релиз: сборка в CI с чистого checkout, smoke-test артефакта, changelog и tag.
 
 Не коммитить node_modules, Java runtime, access/refresh tokens, .env, личные настройки, игровые assets и скачанные бинарные файлы Minecraft. Перед каждым пушем просмотреть staged diff.
+
+Для Next.js-кода установлен локальный Prettier 3.9.10 (точная версия в package-lock). Использовать `npm.cmd run format` перед проверкой; CI выполняет `format:check`. Не форматировать auto-generated next-env.d.ts и AGENTS.md от Next dev. Встроенные руководства установленной Next.js доступны в node_modules/next/dist/docs и учитываются при смене API/конвенций.
