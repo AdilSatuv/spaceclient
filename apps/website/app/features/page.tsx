@@ -3,10 +3,16 @@ import { PageIntro } from '../../components/shell';
 import ContentError from '../../components/content-error';
 import { getFeatures } from '../../lib/api';
 import { statusLabels } from '../../lib/content';
-export const metadata = {
-  title: 'Возможности — Space Client',
-  description: 'HUD-модули Space Client: возможности, прототипы и планы разработки.',
-};
+import { pageMetadata } from '../../lib/metadata';
+export async function generateMetadata() {
+  const result = await getFeatures();
+  return pageMetadata(
+    '/features',
+    'Возможности — Space Client',
+    'HUD-модули Space Client: возможности, прототипы и планы разработки.',
+    !result.ok,
+  );
+}
 const categories = ['hud', 'comfort', 'launcher', 'performance'];
 const statuses = ['prototype', 'planned', 'verified', 'released'];
 export default async function Features({
@@ -38,7 +44,7 @@ export default async function Features({
       <PageIntro label="ТВОЙ ИНСТРУМЕНТАРИЙ" title="Твой интерфейс. Твои правила.">
         От базового HUD до будущих профилей. Каждая возможность — со своим реальным статусом.
       </PageIntro>
-      <form className="filter-form" action="/features">
+      <form key={`${q}|${category}|${status}`} className="filter-form" action="/features">
         <label>
           Поиск
           <input name="q" defaultValue={q} placeholder="Например, координаты" maxLength={120} />

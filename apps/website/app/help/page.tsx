@@ -1,7 +1,12 @@
 import Link from 'next/link';
 import { PageIntro } from '../../components/shell';
 import { helpArticles } from '../../lib/content';
-export const metadata = { title: 'Помощь — Space Client' };
+import { pageMetadata } from '../../lib/metadata';
+export const metadata = pageMetadata(
+  '/help',
+  'Помощь — Space Client',
+  'Начало работы, совместимость и ответы на вопросы о Space Client.',
+);
 export default async function Help({
   searchParams,
 }: {
@@ -17,7 +22,7 @@ export default async function Help({
       <PageIntro label="ЦЕНТР ПОМОЩИ" title="Найдём ответ.">
         Начало работы, совместимость и полезные инструкции. Без лишних сложностей.
       </PageIntro>
-      <form className="filter-form" action="/help">
+      <form key={q} className="filter-form" action="/help">
         <label>
           Поиск по инструкциям
           <input name="q" defaultValue={q} maxLength={120} placeholder="Что хотите узнать?" />

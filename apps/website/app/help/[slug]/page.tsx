@@ -1,15 +1,20 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { helpArticles } from '../../../lib/content';
+import { pageMetadata } from '../../../lib/metadata';
 export const dynamicParams = false;
 export function generateStaticParams() {
   return helpArticles.map((article) => ({ slug: article.slug }));
 }
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const slug = (await params).slug;
-  return {
-    title: `${helpArticles.find((article) => article.slug === slug)?.title || 'Инструкция не найдена'} — Space Client`,
-  };
+  const article = helpArticles.find((item) => item.slug === slug);
+  return pageMetadata(
+    `/help/${slug}`,
+    `${article?.title || 'Инструкция не найдена'} — Space Client`,
+    article?.summary || 'Инструкция не найдена.',
+    !article,
+  );
 }
 export default async function Article({ params }: { params: Promise<{ slug: string }> }) {
   const slug = (await params).slug;

@@ -5,10 +5,16 @@ import CopyHash from '../../components/copy-hash';
 import { Arrow } from '../../components/icons';
 import { getReleases } from '../../lib/api';
 import { recommendedRelease } from '../../lib/contracts';
-export const metadata = {
-  title: 'Загрузки — Space Client',
-  description: 'Проверенные сборки Space Client, совместимость, версии и контрольные суммы.',
-};
+import { pageMetadata } from '../../lib/metadata';
+export async function generateMetadata() {
+  const result = await getReleases();
+  return pageMetadata(
+    '/download',
+    'Загрузки — Space Client',
+    'Проверенные сборки Space Client, совместимость, версии и контрольные суммы.',
+    !result.ok,
+  );
+}
 export default async function Download({
   searchParams,
 }: {
@@ -33,9 +39,11 @@ export default async function Download({
     : [];
   return (
     <div className="container page-content">
-      <PageIntro label="ГОТОВНОСТЬ К СТАРТУ" title="Готовим новую орбиту.">
-        Проверенные сборки Space Client и всё необходимое для установки. Никаких автоматических
-        загрузок.
+      <PageIntro
+        label="ГОТОВНОСТЬ К СТАРТУ"
+        title={recommended ? 'Твоя следующая орбита.' : 'Готовим новую орбиту.'}
+      >
+        Проверенные сборки Space Client и всё необходимое для установки.
       </PageIntro>
       <div className="two-columns">
         <section>
@@ -59,7 +67,7 @@ export default async function Download({
             </div>
           ) : (
             <>
-              <form className="filter-form" action="/download">
+              <form key={channel} className="filter-form" action="/download">
                 <label>
                   Канал
                   <select name="channel" defaultValue={channel}>

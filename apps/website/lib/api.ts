@@ -1,4 +1,5 @@
 import { isFeatureList, isReleaseList, isUpdate, isUpdateList } from './contracts';
+import { cache } from 'react';
 
 type Result<T> =
   { ok: true; data: T } | { ok: false; reason: 'unavailable' | 'invalid' | 'missing' };
@@ -21,8 +22,11 @@ async function request<T>(
     return { ok: false, reason: 'unavailable' };
   }
 }
-export const getFeatures = () => request('features', isFeatureList);
-export const getReleases = () => request('releases', isReleaseList);
-export const getUpdates = (type: string, page: number) =>
-  request(`updates?type=${encodeURIComponent(type)}&page=${page}`, isUpdateList);
-export const getUpdate = (slug: string) => request(`updates/${encodeURIComponent(slug)}`, isUpdate);
+export const getFeatures = cache(() => request('features', isFeatureList));
+export const getReleases = cache(() => request('releases', isReleaseList));
+export const getUpdates = cache((type: string, page: number) =>
+  request(`updates?type=${encodeURIComponent(type)}&page=${page}`, isUpdateList),
+);
+export const getUpdate = cache((slug: string) =>
+  request(`updates/${encodeURIComponent(slug)}`, isUpdate),
+);

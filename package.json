@@ -7,7 +7,7 @@
     "apps/api"
   ],
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   },
   "scripts": {
     "site": "npm run dev --workspace @space/website",
@@ -15,8 +15,8 @@
     "build": "npm run build --workspace @space/api && npm run build --workspace @space/website",
     "test": "node --test tests/*.test.cjs && npm run test --workspace @space/api",
     "check": "npm run check --workspaces",
-    "format": "prettier --write apps/website/app apps/website/components apps/website/lib apps/website/next.config.ts scripts/check-website*.cjs tests/website-contracts.test.cjs",
-    "format:check": "prettier --check apps/website/app apps/website/components apps/website/lib apps/website/next.config.ts scripts/check-website*.cjs tests/website-contracts.test.cjs",
+    "format": "prettier --write apps/website/app apps/website/components apps/website/lib apps/website/next.config.ts scripts/check-website*.cjs tests/website-*.test.cjs",
+    "format:check": "prettier --check apps/website/app apps/website/components apps/website/lib apps/website/next.config.ts scripts/check-website*.cjs tests/website-*.test.cjs",
     "check:web:states": "node scripts/check-website-states.cjs"
   },
   "devDependencies": {

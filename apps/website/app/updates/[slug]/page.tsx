@@ -3,13 +3,14 @@ import Link from 'next/link';
 import { getUpdate } from '../../../lib/api';
 import { validSlug } from '../../../lib/contracts';
 import ContentError from '../../../components/content-error';
+import { pageMetadata } from '../../../lib/metadata';
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   if (!validSlug(slug))
     return { title: 'Запись не найдена — Space Client', robots: { index: false, follow: false } };
   const result = await getUpdate(slug);
   return result.ok
-    ? { title: `${result.data.title} — Space Client`, description: result.data.summary }
+    ? pageMetadata(`/updates/${slug}`, `${result.data.title} — Space Client`, result.data.summary)
     : { title: 'Журнал — Space Client', robots: { index: false, follow: false } };
 }
 export default async function UpdatePage({ params }: { params: Promise<{ slug: string }> }) {

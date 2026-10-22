@@ -35,7 +35,8 @@ export default function Home() {
           alt=""
           fill
           sizes="100vw"
-          preload
+          loading="eager"
+          fetchPriority="high"
           quality={85}
         />
         <div className="hero-shade" />
@@ -167,8 +168,7 @@ export default function Home() {
         <div>
           <p className="eyebrow">04 / ЧАСТЫЕ ВОПРОСЫ</p>
           <h2>
-            На одной
-            <br />
+            На одной <br />
             орбите.
           </h2>
           <p className="muted">Всё, что стоит знать перед стартом.</p>

@@ -2,10 +2,27 @@ import Link from 'next/link';
 import { PageIntro } from '../../../components/shell';
 import ContentError from '../../../components/content-error';
 import { getUpdates } from '../../../lib/api';
-export const metadata = {
-  title: 'Обновления — Space Client',
-  description: 'Бортовой журнал Space Client: реальные изменения разработки и заметки о релизах.',
-};
+import { pageMetadata } from '../../../lib/metadata';
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const params = await searchParams;
+  const type =
+    typeof params.type === 'string' && ['development', 'release'].includes(params.type)
+      ? params.type
+      : 'all';
+  const page =
+    typeof params.page === 'string' && /^[1-9]\d{0,5}$/.test(params.page) ? Number(params.page) : 1;
+  const result = await getUpdates(type, page);
+  return pageMetadata(
+    '/updates',
+    'Обновления — Space Client',
+    'Бортовой журнал Space Client: реальные изменения разработки и заметки о релизах.',
+    !result.ok,
+  );
+}
 export default async function Updates({
   searchParams,
 }: {
@@ -24,7 +41,7 @@ export default async function Updates({
       <PageIntro label="БОРТОВОЙ ЖУРНАЛ" title="Не релизы. Путь к ним.">
         Реальные изменения проекта. Заметки разработки ещё не означают выпуск клиента.
       </PageIntro>
-      <form className="filter-form" action="/updates">
+      <form key={type} className="filter-form" action="/updates">
         <label>
           Тип записи
           <select name="type" defaultValue={type}>

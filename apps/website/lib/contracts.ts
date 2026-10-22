@@ -155,7 +155,8 @@ export function isUpdateList(x: unknown): x is UpdateList {
     x.items.every(isUpdate) &&
     unique(x.items) &&
     positive(x.page) &&
-    positive(x.pageSize) &&
+    x.pageSize === 12 &&
+    x.items.length <= 12 &&
     Number.isSafeInteger(x.total) &&
     Number(x.total) >= x.items.length
   );

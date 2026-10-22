@@ -52,3 +52,11 @@ API v1:
 State-проверки покрывают empty/error, unsafe URL, stable preference, prerelease, withdrawn, hash controls, пагинацию и настоящий HTTP 404 неизвестной записи. Проверка clipboard требует браузера отдельно: наличие кнопки в HTML не доказывает успешную запись в буфер.
 
 Loading boundaries находятся в конкретных разделах; список обновлений вынесен в route group `(index)`. У detail обновления нет предшествующего streaming loading: неизвестная запись возвращает HTTP 404, а не уже отправленный 200 с not-found интерфейсом.
+
+## Metadata и индексация
+
+`apps/website/.env.example` содержит серверные переменные. Без реального `SPACE_SITE_URL` canonical и Open Graph URL не выдумываются. Индексация включается только при одновременных production-сборке, HTTPS-origin без path/query/credentials и `SPACE_SITE_INDEXABLE=true`. По умолчанию robots запрещает обход, meta robots — noindex, sitemap пуст. Перед публичной публикацией rebuild выполняется с окончательными переменными: статические страницы получают metadata во время build.
+
+У разделов и инструкций уникальные title/description; canonical у фильтров ведёт на основную страницу раздела. Ошибки получения данных получают noindex. `robots.txt`, `sitemap.xml` и исходный SVG favicon генерируются Next.js. Sitemap включает существующие help-статьи и до 1008 свежих заметок API; при росте журнала за этот предел потребуется разбиение sitemap. Если API недоступен, sitemap содержит только известные статические страницы.
+
+React cache используется только для согласованного чтения одного endpoint между metadata и страницей в рамках серверного запроса. Долгосрочного кэша каталога и автоматических сетевых повторов нет.

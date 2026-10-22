@@ -1439,3 +1439,11 @@ dialog nav a[aria-current] {
 .faq-layout h2 br:after {
   content: ' ';
 }
+.loading-content {
+  padding-top: 40px;
+}
+@media (max-width: 760px) {
+  .footer a {
+    min-height: 44px;
+  }
+}
