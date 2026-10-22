@@ -13,6 +13,13 @@ dependencies {
     mappings(legacy.yarn(project.minecraft_version, project.yarn_build))
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     testImplementation 'junit:junit:4.13.2'
+    // Align the legacy Minecraft logger with the current dev launcher.
+    runtimeOnly 'org.apache.logging.log4j:log4j-api:2.26.1'
+    runtimeOnly 'org.apache.logging.log4j:log4j-core:2.26.1'
+}
+loom {
+    // The default config references Minecraft's server GUI appender, absent on clients.
+    log4jConfigs.setFrom(file('config/log4j2.xml'))
 }
 processResources {
     inputs.property 'version', project.version
