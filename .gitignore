@@ -1,0 +1,10 @@
+.tools/
+.gradle/
+**/build/
+**/run/
+node_modules/
+*.log
+.env*
+!.env.example
+.idea/
+*.iml
