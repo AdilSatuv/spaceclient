@@ -88,11 +88,24 @@ Next/Nest используют общий @space/content-contracts. API разд
 - [Отчёт](qa/website-fsd-2026-10-24.json). Личный браузер не использовался. Clipboard, настоящие загрузки, Lighthouse и публичный HTTPS-origin в этом прогоне не проверялись.
 - Первый общий test run завершился ошибкой worker файла launcher/auth-callback; отдельный прогон всех девяти тестов файла и повторный общий прогон прошли. Причина разового сбоя не установлена; исправление callback в этом срезе не заявляется, код лаунчера не изменён.
 
-## Ещё проверить
+## Локальный MVP — 24 октября 2026
+
+По уточнению пользователя публичное размещение пока не требуется. Добавлена команда `npm.cmd run preview:web`: сборка контракта/API/Next, два управляемых процесса на свободных loopback-портах, URL в терминале, остановка через Ctrl+C. Production-каталог релизов остаётся пустым. Домен, хостинг и HTTPS-публикация отложены.
+
+Обновлены статус профилей (`verified` для проверенного прототипа), заметка о лаунчере и сайте, главная, FAQ и инструкции с индивидуальными датами. Вход по нику обозначен как выбранный, но ещё не реализованный сценарий; готовый установщик и запуск не обещаются.
+
+- **Chrome:** семь маршрутов на 320/375/390/768/1024/1440 px; настоящий browser zoom 200% через tabs.setZoom — CSS viewport 1424 → 712, DPR 1 → 2. Проверены отсутствие горизонтального scroll и обрезанных строк. Снимок осмотрен. [Отчёт](qa/website-mvp-browser-2026-10-24.json).
+- **Clipboard:** настоящий write/read с fake SHA-256; прежнее содержимое не сохраняется в отчёте и восстанавливается, если его не изменил пользователь. Permissions-Policy запрет проверен в отдельном proxy-origin; сообщение об ошибке и выделение полного хеша с клавиатуры работают. Fixture-ссылки не открывались, browser downloads запрещены.
+- **Reduced-motion:** live emulation браузерного media feature без reload останавливает декорацию и блокирует переключатель; возврат no-preference восстанавливает нормальный режим. Настройки ОС не менялись. Escape закрывает mobile menu и возвращает focus.
+- **Edge:** девять маршрутов на 390/1440 px, сохранение паузы после reload, mobile menu/scroll cleanup и 404. [Отчёт](qa/website-mvp-edge-2026-10-24.json). Это второй Chromium-браузер; Firefox/Safari не проверялись.
+- Базовые headers: nosniff, запрет embedding, Referrer-Policy и Permissions-Policy. CSP ограничивает object/base/frame/form; script-src nonce-политика не добавлена. Hydration, изображения и API/error states проверены с этими headers. Browser QA включена в CI.
+- Три последовательных mobile Lighthouse-прогона каждой из пяти страниц: Performance **98/99/99/100/99**, Accessibility **100** везде, median LCP **2484/1958/1957/1658/1957 мс**, CLS **0**. Серверный Image cache прогрет, Chrome-профили отдельные, обычный mobile throttling Lighthouse 13.5.0. Preview SEO 63–66 из-за намеренного noindex. [Условия, прогоны и source hashes](qa/website-mvp-lighthouse-2026-10-24.json). Эти числа не являются измерением публичного HTTPS-origin.
+- Все 120 unit/HTTP tests, TypeScript, Next/API build, route/head metadata и production state checks прошли. Поведение preview проверено с настоящим API, browser fixtures остаются отдельным тестовым процессом.
+
+## Ещё проверить для публичного релиза
 
 - Дополнительные размеры и браузеры для keyboard/focus trap; полный проход пяти страниц на 390 и 1440 px записан выше.
-- Сверить фактическое содержимое системного clipboard в обычном пользовательском браузере; уже проверены UI feedback и ручное выделение.
-- 200% zoom/reflow и динамическое переключение системного reduced-motion. Начальный reduced-motion в отдельном Chrome проверен для нового среза выше.
+- Дополнительные движки Firefox/Safari и ручная проверка assistive technology. Chrome/Edge, настоящий 200% zoom, clipboard и live browser reduced-motion проверены выше.
 - Повторить SEO/performance на production HTTPS-origin; локальные три измерения выполнены и записаны выше.
 - Финальная библиотека tokens/components/control states в Figma; подтвердить облачную синхронизацию мобильного фона. Созданные шесть макетов не означают завершение SC-17.
 - Публичный hosting/origin/HTTPS, rebuild с production env, sitemap и rollback после размещения. Домен и хостинг ещё не выбраны.

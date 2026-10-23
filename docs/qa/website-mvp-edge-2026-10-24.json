@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-23T19:33:06.615Z",
+  "browser": "Edg/155.0.4283.62",
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+  "realAccountUsed": false,
+  "downloadsStarted": false,
+  "views": [
+    {
+      "route": "/",
+      "width": 390,
+      "status": 200
+    },
+    {
+      "route": "/features",
+      "width": 390,
+      "status": 200
+    },
+    {
+      "route": "/download",
+      "width": 390,
+      "status": 200
+    },
+    {
+      "route": "/updates",
+      "width": 390,
+      "status": 200
+    },
+    {
+      "route": "/help",
+      "width": 390,
+      "status": 200
+    },
+    {
+      "route": "/help/getting-started",
+      "width": 390,
+      "status": 200
+    },
+    {
+      "route": "/updates/first-contact",
+      "width": 390,
+      "status": 200
+    },
+    {
+      "route": "/help/launcher-status",
+      "width": 390,
+      "status": 200
+    },
+    {
+      "route": "/updates/launcher-and-website",
+      "width": 390,
+      "status": 200
+    },
+    {
+      "route": "/",
+      "width": 1440,
+      "status": 200
+    },
+    {
+      "route": "/features",
+      "width": 1440,
+      "status": 200
+    },
+    {
+      "route": "/download",
+      "width": 1440,
+      "status": 200
+    },
+    {
+      "route": "/updates",
+      "width": 1440,
+      "status": 200
+    },
+    {
+      "route": "/help",
+      "width": 1440,
+      "status": 200
+    },
+    {
+      "route": "/help/getting-started",
+      "width": 1440,
+      "status": 200
+    },
+    {
+      "route": "/updates/first-contact",
+      "width": 1440,
+      "status": 200
+    },
+    {
+      "route": "/help/launcher-status",
+      "width": 1440,
+      "status": 200
+    },
+    {
+      "route": "/updates/launcher-and-website",
+      "width": 1440,
+      "status": 200
+    }
+  ],
+  "checks": [
+    "Motion pause persists after reload and resume restores animation.",
+    "Mobile menu opens, locks body, navigates and releases scroll lock.",
+    "Nine routes at 390 and 1440 pixels: HTTP 200, one h1, no horizontal overflow.",
+    "Unknown update returns HTTP 404 and the global not-found view.",
+    "No captured page or hydration errors."
+  ],
+  "errors": [],
+  "scope": "Own headless Chrome profile, isolated Next and Nest on temporary loopback ports; no personal browser session, clipboard test, real download or Lighthouse."
+}

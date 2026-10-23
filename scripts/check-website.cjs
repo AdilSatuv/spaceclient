@@ -7,10 +7,12 @@ const base = process.env.SPACE_SITE_URL || 'http://127.0.0.1:3000';
     '/download',
     '/updates',
     '/updates/first-contact',
+    '/updates/launcher-and-website',
     '/help',
     '/help/getting-started',
     '/help/compatibility',
     '/help/report-a-bug',
+    '/help/launcher-status',
   ]) {
     const response = await fetch(base + route);
     const html = await response.text();

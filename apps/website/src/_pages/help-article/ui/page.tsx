@@ -25,7 +25,15 @@ export default async function Article({ params }: { params: Promise<{ slug: stri
         <Link className="back-link" href="/help">
           Помощь /
         </Link>
-        <p className="eyebrow">ОБНОВЛЕНО 23.10.2026 · СТАДИЯ РАЗРАБОТКИ</p>
+        <p className="eyebrow">
+          ОБНОВЛЕНО{' '}
+          <time dateTime={item.updatedAt}>
+            {new Date(`${item.updatedAt}T00:00:00Z`).toLocaleDateString('ru-RU', {
+              timeZone: 'UTC',
+            })}
+          </time>{' '}
+          · СТАДИЯ РАЗРАБОТКИ
+        </p>
         <h1>{item.title}</h1>
         <p className="lead">{item.summary}</p>
       </div>

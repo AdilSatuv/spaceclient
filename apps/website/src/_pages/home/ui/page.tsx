@@ -151,21 +151,21 @@ export default function Home() {
         </div>
       </section>
       <section className="container section" data-reveal>
-        <Link className="update-banner" href="/updates/first-contact">
+        <Link className="update-banner" href="/updates/launcher-and-website">
           <div>
             <p className="eyebrow">БОРТОВОЙ ЖУРНАЛ</p>
-            <time dateTime="2026-10-23">23.10.2026</time>
+            <time dateTime="2026-10-24">24.10.2026</time>
             <span className="status">Разработка</span>
           </div>
           <div>
             <h2>
-              Сейчас — фундамент.
+              Лаунчер обретает форму.
               <br />
-              Дальше — новая орбита.
+              Дальше — первый запуск.
             </h2>
             <p>
-              Первый игровой прототип, HUD-модули и новый сайт. Рассказываем, что уже сделано и что
-              ещё впереди.
+              Профили, Java и подготовка файлов уже проверены. Рассказываем о прогрессе и о том, что
+              нужно до первой пользовательской сборки.
             </p>
             <span className="text-link">
               Читать заметку <Arrow />
@@ -210,8 +210,9 @@ export default function Home() {
           <details>
             <summary>Что уже есть в клиенте?</summary>
             <p>
-              В dev-моде есть FPS, координаты и состояния клавиш. Проверка внутри игрового мира ещё
-              предстоит. Лаунчер и редактор HUD находятся в планах.
+              В dev-моде есть FPS, CPS, координаты и состояния клавиш; часть игровых проверок ещё
+              впереди. В прототипе лаунчера проверены профили, Java и подготовка файлов. Вход,
+              запуск игры и редактор HUD ещё разрабатываются.
             </p>
           </details>
         </div>

@@ -47,10 +47,10 @@ export default async function Help({
         </div>
       )}
       <details>
-        <summary>Нужна лицензия Minecraft?</summary>
+        <summary>Как будет работать вход?</summary>
         <p>
-          Пользовательский лаунчер планируется с Microsoft-входом и проверкой владения игрой. Space
-          Client не заменяет покупку Minecraft.
+          Для следующего этапа выбраны регистрация Space и вход по нику. Они пока не реализованы.
+          Аккаунт Space и профиль Minecraft — разные вещи; Space Client не заменяет покупку игры.
         </p>
       </details>
       <details>

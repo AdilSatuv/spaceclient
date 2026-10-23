@@ -16,6 +16,7 @@ jobs:
       - run: npm run format:check
       - run: npm run build
       - run: npm run check:web:states
+      - run: npm run check:web:browser
       - run: npm run check
   game:
     runs-on: ubuntu-latest

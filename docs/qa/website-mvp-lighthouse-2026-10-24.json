@@ -1,0 +1,308 @@
+{
+  "schemaVersion": 1,
+  "scope": "Local production preview on loopback; default Lighthouse mobile throttling, three sequential runs per route, fresh browser profiles and warm Next image cache. No public HTTPS/indexability audit.",
+  "conditions": {
+    "output": [
+      "json"
+    ],
+    "maxWaitForFcp": 30000,
+    "maxWaitForLoad": 45000,
+    "pauseAfterFcpMs": 1000,
+    "pauseAfterLoadMs": 1000,
+    "networkQuietThresholdMs": 1000,
+    "cpuQuietThresholdMs": 1000,
+    "formFactor": "mobile",
+    "throttling": {
+      "rttMs": 150,
+      "throughputKbps": 1638.4,
+      "requestLatencyMs": 562.5,
+      "downloadThroughputKbps": 1474.5600000000002,
+      "uploadThroughputKbps": 675,
+      "cpuSlowdownMultiplier": 4
+    },
+    "throttlingMethod": "simulate",
+    "screenEmulation": {
+      "mobile": true,
+      "width": 412,
+      "height": 823,
+      "deviceScaleFactor": 1.75,
+      "disabled": false
+    },
+    "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+    "auditMode": false,
+    "gatherMode": false,
+    "clearStorageTypes": [
+      "file_systems",
+      "shader_cache",
+      "service_workers",
+      "cache_storage"
+    ],
+    "disableStorageReset": false,
+    "debugNavigation": false,
+    "channel": "cli",
+    "usePassiveGathering": false,
+    "disableFullPageScreenshot": false,
+    "skipAboutBlank": false,
+    "blankPage": "about:blank",
+    "ignoreStatusCode": false,
+    "locale": "en-US",
+    "blockedUrlPatterns": null,
+    "additionalTraceCategories": null,
+    "extraHeaders": null,
+    "precomputedLanternData": null,
+    "onlyAudits": null,
+    "onlyCategories": [
+      "performance",
+      "accessibility",
+      "seo"
+    ],
+    "skipAudits": null
+  },
+  "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+  "lighthouse": "13.5.0",
+  "runs": [
+    {
+      "route": "/",
+      "run": 1,
+      "fetchedAt": "2026-10-23T19:34:13.405Z",
+      "scores": {
+        "performance": 98,
+        "accessibility": 100,
+        "seo": 66
+      },
+      "lcpMs": 2485.0986000000003,
+      "cls": 0,
+      "failedAuditIds": [
+        "is-crawlable"
+      ]
+    },
+    {
+      "route": "/",
+      "run": 2,
+      "fetchedAt": "2026-10-23T19:34:24.867Z",
+      "scores": {
+        "performance": 98,
+        "accessibility": 100,
+        "seo": 66
+      },
+      "lcpMs": 2484.3755,
+      "cls": 0,
+      "failedAuditIds": [
+        "is-crawlable"
+      ]
+    },
+    {
+      "route": "/",
+      "run": 3,
+      "fetchedAt": "2026-10-23T19:34:36.216Z",
+      "scores": {
+        "performance": 98,
+        "accessibility": 100,
+        "seo": 66
+      },
+      "lcpMs": 2483.3767,
+      "cls": 0,
+      "failedAuditIds": [
+        "is-crawlable"
+      ]
+    },
+    {
+      "route": "/features",
+      "run": 1,
+      "fetchedAt": "2026-10-23T19:34:47.577Z",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "seo": 63
+      },
+      "lcpMs": 1657.5176,
+      "cls": 0,
+      "failedAuditIds": [
+        "is-crawlable",
+        "bf-cache"
+      ]
+    },
+    {
+      "route": "/features",
+      "run": 2,
+      "fetchedAt": "2026-10-23T19:34:58.720Z",
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "seo": 63
+      },
+      "lcpMs": 1957.5939,
+      "cls": 0,
+      "failedAuditIds": [
+        "is-crawlable",
+        "bf-cache"
+      ]
+    },
+    {
+      "route": "/features",
+      "run": 3,
+      "fetchedAt": "2026-10-23T19:35:10.085Z",
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "seo": 63
+      },
+      "lcpMs": 1958.2804,
+      "cls": 0,
+      "failedAuditIds": [
+        "is-crawlable",
+        "bf-cache"
+      ]
+    },
+    {
+      "route": "/download",
+      "run": 1,
+      "fetchedAt": "2026-10-23T19:35:21.316Z",
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "seo": 63
+      },
+      "lcpMs": 1957.6331999999998,
+      "cls": 0,
+      "failedAuditIds": [
+        "is-crawlable",
+        "bf-cache"
+      ]
+    },
+    {
+      "route": "/download",
+      "run": 2,
+      "fetchedAt": "2026-10-23T19:35:32.477Z",
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "seo": 63
+      },
+      "lcpMs": 1957.2853,
+      "cls": 0,
+      "failedAuditIds": [
+        "is-crawlable",
+        "bf-cache"
+      ]
+    },
+    {
+      "route": "/download",
+      "run": 3,
+      "fetchedAt": "2026-10-23T19:35:43.677Z",
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "seo": 63
+      },
+      "lcpMs": 1956.7833,
+      "cls": 0,
+      "failedAuditIds": [
+        "is-crawlable",
+        "bf-cache"
+      ]
+    },
+    {
+      "route": "/updates",
+      "run": 1,
+      "fetchedAt": "2026-10-23T19:35:54.813Z",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "seo": 63
+      },
+      "lcpMs": 1657.0564,
+      "cls": 0,
+      "failedAuditIds": [
+        "is-crawlable",
+        "bf-cache"
+      ]
+    },
+    {
+      "route": "/updates",
+      "run": 2,
+      "fetchedAt": "2026-10-23T19:36:05.929Z",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "seo": 63
+      },
+      "lcpMs": 1657.8264,
+      "cls": 0,
+      "failedAuditIds": [
+        "is-crawlable",
+        "bf-cache"
+      ]
+    },
+    {
+      "route": "/updates",
+      "run": 3,
+      "fetchedAt": "2026-10-23T19:36:17.058Z",
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "seo": 63
+      },
+      "lcpMs": 1956.986,
+      "cls": 0,
+      "failedAuditIds": [
+        "is-crawlable",
+        "bf-cache"
+      ]
+    },
+    {
+      "route": "/help",
+      "run": 1,
+      "fetchedAt": "2026-10-23T19:36:28.304Z",
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "seo": 63
+      },
+      "lcpMs": 1957.024,
+      "cls": 0,
+      "failedAuditIds": [
+        "is-crawlable",
+        "bf-cache"
+      ]
+    },
+    {
+      "route": "/help",
+      "run": 2,
+      "fetchedAt": "2026-10-23T19:36:39.519Z",
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "seo": 63
+      },
+      "lcpMs": 2046.9336,
+      "cls": 0,
+      "failedAuditIds": [
+        "is-crawlable",
+        "bf-cache"
+      ]
+    },
+    {
+      "route": "/help",
+      "run": 3,
+      "fetchedAt": "2026-10-23T19:36:50.725Z",
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "seo": 63
+      },
+      "lcpMs": 1957.3245,
+      "cls": 0,
+      "failedAuditIds": [
+        "is-crawlable",
+        "bf-cache"
+      ]
+    }
+  ],
+  "sourceHashes": {
+    "apps/website/src/_app/styles/globals.css": "c1080bd2471649d0875a2993e953d8865c7376eea6864c7e7ee69caeb4e11b06",
+    "apps/website/src/_pages/home/ui/page.tsx": "5356437ae20fc89d25813c26a3c69ff2b876a66238837edc2f8444be7586d126",
+    "apps/website/next.config.ts": "96546bb6c1ea2f227f28888c8acb7ebd9bb2fa2c4df809551fda10e2a7aa5a02",
+    "apps/api/src/content/infrastructure/curated-catalog.ts": "44b35938b3dbfc6a821dda8b5378e0e54076c4e6460e9d42f9300f1540408efd"
+  }
+}

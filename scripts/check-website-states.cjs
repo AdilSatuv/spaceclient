@@ -174,6 +174,9 @@ async function freePort() {
     }
     const page = async (route = '/download') => {
       const r = await fetch(base + route);
+      assert.equal(r.headers.get('x-content-type-options'), 'nosniff');
+      assert.equal(r.headers.get('x-frame-options'), 'DENY');
+      assert.match(r.headers.get('content-security-policy') || '', /frame-ancestors 'none'/);
       return { status: r.status, html: await r.text() };
     };
     let result = await page();
@@ -228,7 +231,9 @@ async function freePort() {
       '/features',
       '/help',
       '/help/getting-started',
+      '/help/launcher-status',
       '/updates/first-contact',
+      '/updates/launcher-and-website',
     ])
       assert.equal((await page(route)).status, 200, route);
     console.log('Website production state checks passed; fixtures stayed in the test server.');

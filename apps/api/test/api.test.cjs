@@ -22,7 +22,7 @@ test('HTTP API exposes health, project and an honest empty release list', async 
     );
     const updates = await (await fetch(base + '/v1/updates')).json();
     assert.equal(updates.pageSize, 12);
-    assert.equal(updates.total, 1);
+    assert.equal(updates.total, 2);
     assert.equal((await (await fetch(base + '/v1/updates?type=release')).json()).total, 0);
     assert.equal((await (await fetch(base + '/v1/updates?page=2')).json()).items.length, 0);
     assert.equal(
@@ -67,7 +67,11 @@ test('HTTP API exposes health, project and an honest empty release list', async 
 
 test('pagination uses twelve entries and deterministic ordering for equal dates', async () => {
   const content = require('../dist/content/infrastructure/curated-catalog.js');
-  const catalog = structuredClone(content);
+  const catalog = {
+    features: structuredClone(content.features),
+    releases: [],
+    updates: [structuredClone(content.updates[0])],
+  };
   for (let i = 0; i < 13; i++)
     catalog.updates.push({
       ...catalog.updates[0],
@@ -87,7 +91,7 @@ test('pagination uses twelve entries and deterministic ordering for equal dates'
       [...first.items, ...second.items].map((x) => x.id),
       catalog.updates.map((x) => x.id).sort(),
     );
-    assert.equal(content.updates.length, 1);
+    assert.equal(content.updates.length, 2);
   } finally {
     await app.close();
   }

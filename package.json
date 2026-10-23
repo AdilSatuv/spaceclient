@@ -17,8 +17,8 @@
     "build": "npm run build --workspace @space/api && npm run build --workspace @space/website && npm run build --workspace @space/launcher",
     "test": "node --test tests/*.test.cjs && npm run test --workspace @space/api && npm run test --workspace @space/launcher",
     "check": "npm run check --workspaces",
-    "format": "prettier --write apps/website/app apps/website/src apps/website/next.config.ts scripts/check-website*.cjs scripts/audit-website.cjs tests/website-*.test.cjs apps/launcher/src apps/launcher/scripts apps/launcher/test apps/api/src apps/api/test packages/content-contracts/src",
-    "format:check": "prettier --check apps/website/app apps/website/src apps/website/next.config.ts scripts/check-website*.cjs scripts/audit-website.cjs tests/website-*.test.cjs apps/launcher/src apps/launcher/scripts apps/launcher/test apps/api/src apps/api/test packages/content-contracts/src",
+    "format": "prettier --write apps/website/app apps/website/src apps/website/next.config.ts scripts/check-website*.cjs scripts/audit-website.cjs scripts/preview-web.cjs tests/website-*.test.cjs apps/launcher/src apps/launcher/scripts apps/launcher/test apps/api/src apps/api/test packages/content-contracts/src",
+    "format:check": "prettier --check apps/website/app apps/website/src apps/website/next.config.ts scripts/check-website*.cjs scripts/audit-website.cjs scripts/preview-web.cjs tests/website-*.test.cjs apps/launcher/src apps/launcher/scripts apps/launcher/test apps/api/src apps/api/test packages/content-contracts/src",
     "check:web:states": "node scripts/check-website-states.cjs",
     "audit:web": "node scripts/audit-website.cjs",
     "launcher": "npm run dev --workspace @space/launcher",
@@ -26,7 +26,9 @@
     "test:launcher": "npm run test --workspace @space/launcher",
     "build:contracts": "npm run build --workspace @space/content-contracts",
     "pretest": "npm run build:contracts",
-    "precheck": "npm run build:contracts"
+    "precheck": "npm run build:contracts",
+    "preview:web": "node scripts/preview-web.cjs --build",
+    "check:web:browser": "node scripts/check-website-browser.cjs"
   },
   "devDependencies": {
     "lighthouse": "13.5.0",

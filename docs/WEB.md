@@ -15,6 +15,14 @@ npm.cmd run site
 
 Next.js: http://127.0.0.1:3000, NestJS: http://127.0.0.1:3001/v1/health.
 
+Для локального production-preview одной командой:
+
+```powershell
+npm.cmd run preview:web
+```
+
+Команда собирает общий контракт, API и сайт, затем запускает оба процесса только на loopback со свободными портами. URL выводится в терминал и сохраняется в игнорируемом `.reports/local-preview.json`. Ctrl+C останавливает только процессы этого preview. Каталог релизов настоящий и пустой, сайт не публикуется; preview собирается с выключенной индексацией. Docker, домен и аккаунт хостинга не требуются. Повторный запуск уже готовой сборки: `node scripts/preview-web.cjs`.
+
 ```powershell
 npm.cmd test
 npm.cmd run build
@@ -48,6 +56,7 @@ API v1:
 - `npm.cmd run format` — форматировать веб-код закреплённым Prettier 3.9.10.
 - `npm.cmd run format:check` — проверить формат без записи.
 - `npm.cmd test` — проверки API, контентных контрактов и выбора рекомендуемой сборки.
+- `npm.cmd run check:web:browser` — отдельный Chrome с временным профилем и fixture API: responsive, настоящий 200% browser zoom, dynamic reduced-motion, меню, clipboard success/denial. Нужны build API/Next и установленный Chrome; путь можно задать через SPACE_CHROME_PATH. Fixtures не публикуются, download запрещён. Предыдущее содержимое clipboard не записывается в отчёт и восстанавливается, если за время проверки его не изменил пользователь.
 - `npm.cmd run build` → `npm.cmd run check:web:states` — HTTP-проверки production Next.js с изолированным fixture API на временных loopback-портах. Fixture-релизы не записываются в каталог и не скачиваются.
 - `node scripts/check-website.cjs` — маршруты/фильтры/404 работающего сайта; origin можно изменить через `SPACE_SITE_URL`.
 
