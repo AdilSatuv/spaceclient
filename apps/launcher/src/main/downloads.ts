@@ -132,6 +132,20 @@ async function targetPath(root: string, relativePath: string): Promise<string> {
   return join(current, parts.at(-1)!);
 }
 
+/** Verify a local artifact without network requests. Never returns an unverified path. */
+export async function verifiedCachedArtifact(
+  root: string,
+  input: DownloadArtifact,
+  signal?: AbortSignal,
+): Promise<string> {
+  const artifact = validateArtifact(input);
+  signal?.throwIfAborted();
+  const path = await targetPath(root, artifact.relativePath);
+  if (!(await matches(path, artifact, signal)))
+    throw new Error('Архив отсутствует или не прошёл проверку целостности.');
+  return path;
+}
+
 /** Download one declared artifact. This does not install or launch Minecraft. */
 export async function downloadArtifact(
   root: string,

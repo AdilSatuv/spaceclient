@@ -15,7 +15,7 @@ SC-09 в работе. Реализованы downloader, очередь и reso
 
 ## Проверки
 
-Восемь offline-тестов downloader: целый файл/cache, cancel/resume, неверный Range и fallback 200, ошибочный hash, размер/обрыв/HTTP failure, недопустимые пути/URL, junction и конкурентная запись. Шесть тестов очереди проверяют её ограничения, прогресс, повторы, отмену и отключение progress observer; ещё шесть — resolver и целостность metadata. Вместе с профилями/IPC/Java — **30 тестов launcher**.
+Восемь offline-тестов downloader: целый файл/cache, cancel/resume, неверный Range и fallback 200, ошибочный hash, размер/обрыв/HTTP failure, недопустимые пути/URL, junction и конкурентная запись. По шесть тестов очереди, resolver и распаковки проверяют ограничения, прогресс, повторы, отмену, целостность metadata и ошибочные архивы. Вместе с профилями/IPC/Java — **36 тестов launcher**.
 
 Реальная сеть: скачан только JSON-metadata 1.8.9 размером 18 244 байта, SHA-1 `d546f1707a3f2b7d034eece5ea2e311eda875787`; повторный вызов использовал проверенный кеш. Затем создана часть в 128 байт: настоящий CDN ответил HTTP 206 на Range `bytes=128-`, итоговый размер и хеш проверены. [Результат и точный URL](qa/launcher-downloads-2026-10-23.json). Bulk assets, client.jar и чужие игровые файлы не скачивались этим smoke-test.
 
@@ -53,11 +53,28 @@ node apps/launcher/scripts/preview-plan.mjs
 
 Проверено 23.10.2026: 758 уникальных файлов, 734 логические записи assets (часть hashes повторяется), 30 classpath entries без legacy Log4j, четыре Windows native-архива, 145 084 967 байт запланированных файлов. Полный plan.json хранится в игнорируемой `.reports/launcher-plan-smoke`; [краткий результат](qa/launcher-plan-2026-10-23.json) сохранён в репозитории. Архивы и игра этим preview не загружаются.
 
+## Распаковка natives
+
+`extractNatives` повторно проверяет SHA-1/размер локальных архивов без сети, затем распаковывает их в новую уникальную генерацию `natives/run-*`. Старые генерации не заменяются. При ошибке/отмене удаляется только созданная этим вызовом staging-папка, после проверки абсолютного пути очистки. Готовый путь возвращается только после успешной обработки всех записей; DLL не загружаются.
+
+- Зафиксированы `yauzl 3.4.0` и `@types/yauzl 3.4.0`; последовательное чтение lazy entries, strictFileNames, проверка размеров. Дополнительно проверяется CRC32 каждой распакованной записи и вычисляется SHA-256 результата. CRC не является доказательством источника; источник архива связан с metadata SHA-1 и HTTPS.
+- Максимум восемь архивов по 32 МиБ, 2048 записей суммарно, 32 МиБ на запись и 128 МиБ объявленного распакованного содержимого, включая исключённые записи. Фактический поток не может превысить размер записи.
+- Запрещены traversal/absolute/Windows device paths, backslash, symlink/специальный Unix type, reparse attributes, encrypted entries, неподдерживаемое сжатие, case collisions и file/directory collisions. META-INF/ исключается после проверки имени и свойств.
+- Отмена проверяется перед операциями и при чтении, активный поток уничтожается. Offline-проверены предварительная отмена, rollback повреждённого архива и сохранение старой генерации; UI-отмена распаковки ещё не проверена.
+
+Реальная проверка только официальных native-архивов:
+
+```powershell
+node apps/launcher/scripts/smoke-natives.mjs
+```
+
+23.10.2026 скачаны четыре архива (8 806 644 байта), проверены hashes и распакованы 14 DLL (25 323 600 байт) с CRC/size checks. Windows x64 классификаторы Twitch выбраны корректно; общие LWJGL/JInput архивы содержат обе архитектуры. [Список файлов и SHA-256](qa/launcher-natives-2026-10-23.json). Данные находятся в игнорируемой `.reports/launcher-native-smoke`; бинарники не коммитятся. Успешная распаковка не подтверждает загрузку DLL или запуск игры.
+
 ## Дальнейшая очередь
 
 1. Закрепить совместимую замену Log4j и Legacy Fabric/Space manifest; перед запуском проверить весь classpath в реальном runtime.
 2. Подключить resolver к готовой очереди и UI; ограничения, дедупликация, concurrency и повторы модели уже реализованы.
-3. Распаковка natives с ограничением суммарного размера/entry count и защитой ZIP Slip; не доверять путям архива.
+3. Связать готовый extractor с install lifecycle: состояние установки, отмена, восстановление и использование только полностью проверенной генерации.
 4. Legacy Fabric loader и собственный remapped Space jar связать с контролируемым манифестом и проверенными хешами. Mojang-файлы не переупаковывать в репозиторий.
 5. Перед запуском — проверка готовности всех файлов, Java, лицензии/профиля и актуальной авторизации; один процесс на профиль.
 
@@ -66,3 +83,4 @@ node apps/launcher/scripts/preview-plan.mjs
 - [Официальный version manifest Mojang](https://piston-meta.mojang.com/mc/game/version_manifest_v2.json): запись 1.8.9 проверена 23.10.2026.
 - [Закреплённые metadata 1.8.9](https://piston-meta.mojang.com/v1/packages/d546f1707a3f2b7d034eece5ea2e311eda875787/1.8.9.json): client URL/size/hash, asset index и 37 library entries. Старые launcher.mojang.com/launchermeta.mojang.com остаются в этих metadata; нельзя предполагать только новые piston-hosts.
 - [Документация installer проекта XMCL](https://xmcl.app/en/core/installer): независимый первичный источник о его собственных CDN defaults, включая resources.download.minecraft.net. Код XMCL не копировался.
+- [yauzl API](https://github.com/thejoshwolfe/yauzl): lazy entries, validateEntrySizes, strictFileNames и потоковое чтение. Используется как библиотека ZIP parsing; политика каталогов и лимиты задаются нашим кодом.

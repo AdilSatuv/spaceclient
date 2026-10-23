@@ -1,0 +1,81 @@
+{
+  "checkedAt": "2026-10-23T03:01:41.031Z",
+  "version": "1.8.9",
+  "platform": "windows-x64",
+  "archiveCount": 4,
+  "archiveBytes": 8806644,
+  "extractedBytes": 25323600,
+  "files": [
+    {
+      "relativePath": "OpenAL32.dll",
+      "size": 390144,
+      "sha256": "baf27fc91dc852d78889e052cfc9ed2b6fc0927258bb507a895c6fcd50f10fef"
+    },
+    {
+      "relativePath": "OpenAL64.dll",
+      "size": 382464,
+      "sha256": "9261b66010a845ddef9f61d5e4266fe2f08a53f3605da002e9e8f8d202bdbc5e"
+    },
+    {
+      "relativePath": "lwjgl.dll",
+      "size": 306176,
+      "sha256": "fff711369747e9bb3656d4c5bdee7051bbc13f30abd634418bf40706a25f365c"
+    },
+    {
+      "relativePath": "lwjgl64.dll",
+      "size": 317440,
+      "sha256": "ebdcedbc3e24b911aacd7bb666ab426397ca7d7883a8d4e3cf28946041c95425"
+    },
+    {
+      "relativePath": "jinput-dx8.dll",
+      "size": 61952,
+      "sha256": "89779abf806a93dd809bc7a4914967d0e6924dedf293afd48dd205dbce87d8b8"
+    },
+    {
+      "relativePath": "jinput-dx8_64.dll",
+      "size": 65024,
+      "sha256": "a38cb458b9e5a246d7418f38ac04430c2e5a3f46b082955d6dfd5d2bd74f4222"
+    },
+    {
+      "relativePath": "jinput-raw.dll",
+      "size": 59392,
+      "sha256": "0a8c0b47e173453bd92da224f73a6aff35b07c2db315abaf33e68edbdb147971"
+    },
+    {
+      "relativePath": "jinput-raw_64.dll",
+      "size": 62464,
+      "sha256": "832308f96b1760f2ebc183d1a1771278bb3236e4567dd7a23e1eaecf95f9c03c"
+    },
+    {
+      "relativePath": "jinput-wintab.dll",
+      "size": 56832,
+      "sha256": "59201c94eb563025e47fe6b6f5c4dc326f0059d49285e2d3a44482cb60ffc9e2"
+    },
+    {
+      "relativePath": "twitchsdk.dll",
+      "size": 1384960,
+      "sha256": "d0e66caf685c48b3839b6e883a7365cb225830ef5ec6eb6eddae0d38569fe1f7"
+    },
+    {
+      "relativePath": "avutil-ttv-51.dll",
+      "size": 653832,
+      "sha256": "d16151cf613bd26f9138188efab2e55df37b0c21956ea70adc252d0fa35ae3cc"
+    },
+    {
+      "relativePath": "libmfxsw64.dll",
+      "size": 20533656,
+      "sha256": "b5eaa1918ffbdcdfaf91a4895dac20b6325a9f53d20f343b7e7f05ff95c9aabd"
+    },
+    {
+      "relativePath": "libmp3lame-ttv.dll",
+      "size": 688161,
+      "sha256": "d2941e4392fe2c55f7858b0e5d76567b6dea00c99ebbbf9e6049cefc5241c0e0"
+    },
+    {
+      "relativePath": "swresample-ttv-0.dll",
+      "size": 361103,
+      "sha256": "d2e299de60803d5c4f869b45a3c9f9eff3876dd466bfc5b8071bf34ef592afea"
+    }
+  ],
+  "note": "Official Windows native archives downloaded, SHA-1 verified and extracted with size/CRC checks. DLLs were not loaded; game was not launched. Failure and cancellation cases use offline fixtures."
+}
