@@ -8,5 +8,8 @@ const api: LauncherApi = {
   chooseJava: (id) => ipcRenderer.invoke('java:choose', id),
   checkJava: (id) => ipcRenderer.invoke('java:check', id),
   openInstance: (id) => ipcRenderer.invoke('profile:open', id),
+  getInstallation: (id) => ipcRenderer.invoke('installation:get', id),
+  startInstallation: (id) => ipcRenderer.invoke('installation:start', id),
+  cancelInstallation: (id) => ipcRenderer.invoke('installation:cancel', id),
 };
 contextBridge.exposeInMainWorld('space', api);

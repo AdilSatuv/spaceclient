@@ -442,14 +442,45 @@ main {
   max-width: 390px;
   margin-top: 10px;
 }
-.launch-disabled {
-  border-radius: 6px;
-  border: 1px solid #8c759f;
-  background: #c6a4ff0e;
-  padding: 8px 15px;
-  margin-top: 15px;
-  min-height: 35px;
+.installation-status {
+  margin-top: 14px;
+  color: var(--cyan);
   font-size: 11px;
+  line-height: 1.65;
+}
+.installation-progress progress {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 6px;
+  margin-top: 15px;
+  border: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #2d2440;
+  accent-color: var(--cyan);
+}
+.installation-progress progress::-webkit-progress-bar {
+  background: #2d2440;
+}
+.installation-progress progress::-webkit-progress-value {
+  background: linear-gradient(90deg, #c0a1f5, #a1e7e0);
+  border-radius: 8px;
+}
+.installation-counts {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+  font-size: 10px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.installation-card .installation-error {
+  color: #ffd7e5;
+}
+.installation-card .form-actions {
+  margin-top: 14px;
 }
 .app-footer {
   border-top: 1px solid #ffffff09;

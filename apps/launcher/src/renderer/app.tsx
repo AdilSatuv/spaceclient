@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import type { JavaInfo, LauncherApi, ProfileEdit, Result, Snapshot } from '../shared/contracts';
 import './style.css';
+import { InstallationCard } from './installation-card';
 
 declare global {
   interface Window {
@@ -174,7 +175,7 @@ function App() {
                   ? 'Добро пожаловать на борт.'
                   : view === 'profiles'
                     ? 'Каждой игре — своя орбита.'
-                    : 'Всё готово к новому миру.'}
+                    : 'Настроим твою орбиту.'}
               </h1>
             </div>
             <span className="version-pill">MINECRAFT 1.8.9</span>
@@ -259,17 +260,7 @@ function App() {
                           Управлять профилем <Icon kind="arrow" />
                         </button>
                       </section>
-                      <section className="panel flight-card">
-                        <span className="eyebrow">ПЕРЕД ПЕРВЫМ ПОЛЁТОМ</span>
-                        <h2>Готовим первую сборку.</h2>
-                        <p>
-                          Пока можно настроить память и Java. Вход Microsoft, установка Minecraft и
-                          запуск появятся на следующих этапах.
-                        </p>
-                        <button disabled className="launch-disabled">
-                          Запуск пока недоступен
-                        </button>
-                      </section>
+                      <InstallationCard profileId={profile.id} dirty={dirty} />
                     </div>
                   </>
                 )}

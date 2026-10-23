@@ -5,6 +5,7 @@ import { totalmem } from 'node:os';
 import { mkdirSync } from 'node:fs';
 import { ProfileStore } from './store.ts';
 import { inspectJava } from './java.ts';
+import { InstallationService } from './installation.ts';
 import { APP_URL, CSP, assetName, trustedSender } from './security.ts';
 import type { Result } from '../shared/contracts.ts';
 
@@ -21,6 +22,8 @@ let window: BrowserWindow | null = null;
 let store: ProfileStore;
 let checkingJava = false;
 let choosingJava = false;
+let installation: InstallationService | null = null;
+let shuttingDown = false;
 if (!app.requestSingleInstanceLock()) app.quit();
 else {
   app.on('second-instance', () => {
@@ -31,6 +34,9 @@ else {
     .whenReady()
     .then(async () => {
       store = await ProfileStore.open(app.getPath('userData'), Math.floor(totalmem() / 1048576));
+      installation = new InstallationService(async (id) =>
+        join(await store.instanceDirectory(id), 'minecraft'),
+      );
       protocol.handle('space', async (request) => {
         const name = request.method === 'GET' ? assetName(request.url) : null;
         if (!name) return new Response('Not found', { status: 404 });
@@ -143,6 +149,9 @@ else {
         if (error) throw new Error('Не удалось открыть папку профиля.');
         return null;
       });
+      handle('installation:get', (payload) => installation!.status(store.profile(payload).id));
+      handle('installation:start', (payload) => installation!.start(store.profile(payload).id));
+      handle('installation:cancel', (payload) => installation!.cancel(store.profile(payload).id));
       window.once('ready-to-show', () => window?.show());
       window.on('closed', () => {
         window = null;
@@ -158,3 +167,11 @@ else {
     });
 }
 app.on('window-all-closed', () => app.quit());
+app.on('before-quit', (event) => {
+  if (!installation?.running) return;
+  event.preventDefault();
+  if (!shuttingDown) {
+    shuttingDown = true;
+    void installation.shutdown().finally(() => app.quit());
+  }
+});

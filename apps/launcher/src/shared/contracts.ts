@@ -1,3 +1,4 @@
+import type { InstallationStatus } from './installation.ts';
 export type Profile = { id: string; name: string; memoryMb: number; javaPath: string | null };
 export type SavedState = { schemaVersion: 1; activeProfileId: string; profiles: Profile[] };
 export type Snapshot = SavedState & {
@@ -22,4 +23,7 @@ export type LauncherApi = {
   chooseJava(id: string): Promise<Result<Snapshot>>;
   checkJava(id: string): Promise<Result<JavaInfo>>;
   openInstance(id: string): Promise<Result<null>>;
+  getInstallation(id: string): Promise<Result<InstallationStatus>>;
+  startInstallation(id: string): Promise<Result<InstallationStatus>>;
+  cancelInstallation(id: string): Promise<Result<InstallationStatus>>;
 };

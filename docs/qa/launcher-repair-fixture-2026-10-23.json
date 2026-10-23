@@ -1,0 +1,9 @@
+{
+  "checkedAt": "2026-10-23T07:32:47.342Z",
+  "relativePath": "assets/objects/16/16f20c44b1662917db565be399caf1d68e020430",
+  "size": 73,
+  "expectedSha1": "16f20c44b1662917db565be399caf1d68e020430",
+  "damagedSha1": "709d0fd548a6977932c3e490d05ecd927d47b5e0",
+  "corruptionRejected": true,
+  "nextStep": "Use Space Client → Проверить и восстановить, then run audit-base-installation.mjs."
+}
