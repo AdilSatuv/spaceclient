@@ -29,6 +29,30 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
       - run: npm run check
+  web-firefox:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm run build --workspace @space/api
+      - run: npm run build --workspace @space/website
+      - run: npm run setup:web:firefox
+      - run: npm run check:web:firefox
+      - name: Save Firefox browser QA
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: space-website-firefox-${{ github.sha }}
+          path: |
+            .reports/website-firefox/run-*/report.json
+            .reports/website-firefox/run-*/failure.json
+            .reports/website-firefox/run-*/*.png
+          if-no-files-found: ignore
+          retention-days: 7
   game:
     runs-on: ubuntu-latest
     steps:

@@ -171,15 +171,21 @@ async function runWebsiteFlows({ browser, page, base, output, setScenario, resul
     await page.focus('#faq-sign-in summary');
     await page.keyboard.press('Enter');
     await page.focus('#faq-suggestions summary');
-    await page.keyboard.press('Space');
+    await page.keyboard.press(' ');
     assert.equal(await page.$$eval('main details[open]', (items) => items.length), 2);
-    await page.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'reduce' }]);
+    const wasPaused = await page.evaluate(
+      () => document.documentElement.dataset.motion === 'paused',
+    );
+    if (!wasPaused) {
+      await page.click('.motion-toggle');
+      await page.focus('#faq-suggestions summary');
+    }
     await page.waitForFunction(() => document.documentElement.dataset.motion === 'paused');
     // Capture the actual viewport: Chrome's full-page resize can expose offscreen fixed UI.
     await page.screenshot({ path: path.join(output, `help-faq-${width}.png`), fullPage: false });
     await page.evaluate(() => scrollTo(0, 0));
     await page.screenshot({ path: path.join(output, `help-top-${width}.png`), fullPage: false });
-    await page.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'no-preference' }]);
+    if (!wasPaused) await page.click('.motion-toggle');
     results.push({
       id: 'WEB-07',
       width,

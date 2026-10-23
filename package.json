@@ -17,8 +17,8 @@
     "build": "npm run build --workspace @space/api && npm run build --workspace @space/website && npm run build --workspace @space/launcher",
     "test": "node --test tests/*.test.cjs && npm run test --workspace @space/api && npm run test --workspace @space/launcher",
     "check": "npm run check --workspaces",
-    "format": "prettier --write apps/website/app apps/website/src apps/website/next.config.ts scripts/check-website*.cjs scripts/audit-website.cjs scripts/preview-web.cjs tests/website-*.test.cjs apps/launcher/src apps/launcher/scripts apps/launcher/test apps/api/src apps/api/test packages/content-contracts/src",
-    "format:check": "prettier --check apps/website/app apps/website/src apps/website/next.config.ts scripts/check-website*.cjs scripts/audit-website.cjs scripts/preview-web.cjs tests/website-*.test.cjs apps/launcher/src apps/launcher/scripts apps/launcher/test apps/api/src apps/api/test packages/content-contracts/src",
+    "format": "prettier --write apps/website/app apps/website/src apps/website/next.config.ts scripts/check-website*.cjs scripts/setup-website-firefox.cjs scripts/audit-website.cjs scripts/preview-web.cjs tests/website-*.test.cjs apps/launcher/src apps/launcher/scripts apps/launcher/test apps/api/src apps/api/test packages/content-contracts/src",
+    "format:check": "prettier --check apps/website/app apps/website/src apps/website/next.config.ts scripts/check-website*.cjs scripts/setup-website-firefox.cjs scripts/audit-website.cjs scripts/preview-web.cjs tests/website-*.test.cjs apps/launcher/src apps/launcher/scripts apps/launcher/test apps/api/src apps/api/test packages/content-contracts/src",
     "check:web:states": "node scripts/check-website-states.cjs",
     "audit:web": "node scripts/audit-website.cjs",
     "launcher": "npm run dev --workspace @space/launcher",
@@ -28,10 +28,14 @@
     "pretest": "npm run build:contracts",
     "precheck": "npm run build:contracts",
     "preview:web": "node scripts/preview-web.cjs --build",
-    "check:web:browser": "node scripts/check-website-browser.cjs"
+    "check:web:browser": "node scripts/check-website-browser.cjs",
+    "setup:web:firefox": "node scripts/setup-website-firefox.cjs",
+    "check:web:firefox": "node scripts/check-website-browser.cjs --firefox"
   },
   "devDependencies": {
+    "@puppeteer/browsers": "3.2.6",
     "lighthouse": "13.5.0",
-    "prettier": "3.9.10"
+    "prettier": "3.9.10",
+    "puppeteer-core": "25.16.0"
   }
 }

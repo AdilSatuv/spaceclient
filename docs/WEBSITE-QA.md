@@ -114,10 +114,21 @@ Next/Nest используют общий @space/content-contracts. API разд
 - Окончательный /help с новой формой: три sequential mobile Lighthouse 13.5.0 прогона, медиана Performance **99**, Accessibility **100**, SEO **63** (preview noindex), LCP **1966 мс**, CLS **0**. Условия и source hashes: [отчёт](qa/website-help-search-lighthouse-2026-10-24.json). Остальные страницы в этом срезе повторно не измерялись.
 - Сборка Next, 120 unit/HTTP tests, TypeScript, state fixtures и форматирование прошли. CI сохраняет только отчёты и PNG из собственного browser run, исключая каталог профиля. [Матрица приёмки](WEB-ACCEPTANCE.md) разделяет выполненные local-проверки и оставшиеся production-условия.
 
+## Firefox / Gecko — 24 октября 2026
+
+Добавлен самостоятельный Firefox-набор в той же test harness. Закреплён Firefox 158.0.1, проверены SHA-256 Windows/Linux из официального Mozilla SHA256SUMS. Локальная установка — распаковка в `.tools/browsers`; системная установка и личные профили не используются. Puppeteer Core и browser installer явно закреплены в корневых devDependencies, новых версий пакетов не добавлено.
+
+- **42 layouts:** семь маршрутов × 320/375/390/768/1024/1440 px, HTTP 200, один h1, отсутствие горизонтального overflow.
+- **20 flows:** поиск/категория/статус, каналы, reload/Back/reset, 14 fixture-новостей с пагинацией 12+2, FAQ/инструкции, keyboard/menu/focus, 404 и девять API-failure/retry случаев. Общий набор больше не использует Chrome-only media emulation для снимков: пауза включается кнопкой. Пробел передаётся стандартным символом, поддерживаемым обоими протоколами автоматизации.
+- **Reduced-motion:** второй Firefox-профиль с ui.prefersReducedMotion=1; настоящий matchMedia=true, CSS-декорация на паузе/с нулевой длительностью, переключатель disabled. Это начальная настройка отдельного профиля; изменение настройки ОС и live switching не проверялись.
+- Viewport-снимки помощи и главной осмотрены. Page/console errors и неуспешных собственных assets не зафиксировано; реальные скачивания не начинались. [Отчёт](qa/website-firefox-2026-10-24.json).
+- Первый запуск диагностического профиля и параллельный запуск второго профиля зависли на подключении automation; после перехода к последовательным профилям полный набор прошёл. Причина зависания не приписывается коду сайта. Личные процессы не завершались. Zoom 200% и clipboard в Firefox этим срезом не проверялись.
+- Повторный полный Chrome-набор после изменений общей harness сохранён [отдельным отчётом](qa/website-chrome-regression-2026-10-24.json). CI содержит независимые web и web-firefox jobs с JSON/PNG artifacts; каталоги профилей исключены. Performance/Lighthouse повторно не измерялись: продуктовый код сайта в этом срезе не менялся.
+
 ## Ещё проверить для публичного релиза
 
 - Дополнительные размеры и браузеры для keyboard/focus trap; полный проход пяти страниц на 390 и 1440 px записан выше.
-- Дополнительные движки Firefox/Safari и ручная проверка assistive technology. Chrome/Edge, настоящий 200% zoom, clipboard и live browser reduced-motion проверены выше.
+- Safari и ручная проверка assistive technology; дополнительные размеры/сценарии по необходимости. Gecko проверен в отдельном Firefox-срезе выше. Настоящий 200% zoom, clipboard и live browser reduced-motion проверены в Chrome.
 - Повторить SEO/performance на production HTTPS-origin; локальные три измерения выполнены и записаны выше.
 - Финальная библиотека tokens/components/control states в Figma; подтвердить облачную синхронизацию мобильного фона. Созданные шесть макетов не означают завершение SC-17.
 - Публичный hosting/origin/HTTPS, rebuild с production env, sitemap и rollback после размещения. Домен и хостинг ещё не выбраны.

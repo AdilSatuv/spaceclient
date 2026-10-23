@@ -81,3 +81,20 @@ React cache используется только для согласованн�
 Для отладки только этого набора: `node scripts/check-website-browser.cjs --flows-only`. Этот режим не проверяет 42 responsive layouts, clipboard и zoom — полный приёмочный запуск остаётся командой без флага. Отчёты, ошибки и viewport-снимки сохраняются в `.reports/website-browser/run-*`; файлы профиля браузера не коммитятся. Проверка ошибки localStorage использует внедрённый SecurityError чтения/записи; это не проверка настроек браузера или ОС.
 
 Сопоставление с ТЗ и оставшиеся условия публичного релиза — [WEB-ACCEPTANCE.md](WEB-ACCEPTANCE.md).
+
+## Firefox: второй движок
+
+Для отдельной проверки Gecko:
+
+```powershell
+npm.cmd run setup:web:firefox
+npm.cmd run check:web:firefox
+```
+
+Требуется уже собранный API и Next, как для Chrome-набора. Setup загружает **Firefox 158.0.1** из официального архива Mozilla в игнорируемый `.tools/browsers`, проверяет закреплённый SHA-256 до распаковки и не устанавливает браузер в систему. Поддержаны Windows x64 и Linux x64; для Linux нужен xz. Контрольные суммы взяты из [SHA256SUMS этой версии](https://archive.mozilla.org/pub/firefox/releases/158.0.1/SHA256SUMS). Для другой версии менять pin и checksum явно; `latest` не используется. `SPACE_FIREFOX_PATH` позволяет явно выбрать другой бинарник для отдельной проверки.
+
+Набор использует [Puppeteer с Firefox](https://pptr.dev/guides/configuration) через WebDriver BiDi, собственные временные профили и тот же изолированный fixture API, что Chrome. Проверяются семь маршрутов на шести ширинах и все 20 сценариев взаимодействия. Профили обычного и reduced-motion режимов запускаются последовательно. Reduced-motion задаётся Firefox preference `ui.prefersReducedMotion=1` только в тестовом профиле; настоящий matchMedia, остановка CSS-декорации и disabled-кнопка проверяются отдельно.
+
+Настоящий browser zoom 200%, clipboard success/denial и live media emulation остаются в Chrome-наборе; их прохождение в Firefox не заявляется. Запросы к fixture download URL блокируются перехватом, ссылки не нажимаются. JSON/PNG находятся в `.reports/website-firefox/run-*`; профиль браузера и сам бинарник не коммитятся и не попадают в CI artifacts. Команда `node scripts/check-website-browser.cjs --firefox --flows-only` пропускает responsive-матрицу и предназначена только для отладки.
+
+В Verify добавлен независимый `web-firefox` job: чистая установка зависимостей, сборка API/Next, setup закреплённой версии и браузерная проверка с сохранением JSON/PNG. Puppeteer Core 25.16.0 и browser installer 3.2.6 закреплены как прямые devDependencies корня; веб-проверки больше не зависят от случайного hoisting зависимостей лаунчера.

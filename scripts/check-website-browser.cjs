@@ -7,6 +7,8 @@ const { spawn } = require('node:child_process');
 const { randomUUID } = require('node:crypto');
 const puppeteer = require('puppeteer-core');
 const { runWebsiteFlows } = require('./check-website-flows.cjs');
+const { firefoxExecutable } = require('./setup-website-firefox.cjs');
+const { checkFirefoxMotion } = require('./check-website-firefox.cjs');
 const root = path.resolve(__dirname, '..');
 const production = require('../apps/api/dist/content/infrastructure/curated-catalog.js');
 const fakeHash = 'a'.repeat(64);
@@ -40,28 +42,42 @@ async function close(server) {
   await new Promise((resolve) => server.close(resolve));
 }
 async function main() {
-  const executable =
-    process.env.SPACE_CHROME_PATH ||
-    [
-      'C:/Program Files/Google/Chrome/Application/chrome.exe',
-      '/usr/bin/google-chrome',
-      '/usr/bin/google-chrome-stable',
-      '/opt/google/chrome/google-chrome',
-    ].find(existsSync);
-  assert.ok(executable, 'Set SPACE_CHROME_PATH to an installed Chrome binary.');
-  const output = path.join(root, '.reports/website-browser', `run-${randomUUID()}`);
-  const extension = path.join(output, 'zoom-extension');
-  await fs.mkdir(extension, { recursive: true });
-  await fs.writeFile(
-    path.join(extension, 'manifest.json'),
-    JSON.stringify({
-      manifest_version: 3,
-      name: 'Space QA zoom',
-      version: '1.0',
-      permissions: ['tabs'],
-    }),
+  const firefox = process.argv.includes('--firefox');
+  const executable = firefox
+    ? process.env.SPACE_FIREFOX_PATH || firefoxExecutable()
+    : process.env.SPACE_CHROME_PATH ||
+      [
+        'C:/Program Files/Google/Chrome/Application/chrome.exe',
+        '/usr/bin/google-chrome',
+        '/usr/bin/google-chrome-stable',
+        '/opt/google/chrome/google-chrome',
+      ].find(existsSync);
+  assert.ok(
+    executable && existsSync(executable),
+    firefox
+      ? 'Run npm run setup:web:firefox first, or set SPACE_FIREFOX_PATH.'
+      : 'Set SPACE_CHROME_PATH to an installed Chrome binary.',
   );
-  await fs.writeFile(path.join(extension, 'control.html'), '<title>Space QA zoom</title>');
+  const output = path.join(
+    root,
+    firefox ? '.reports/website-firefox' : '.reports/website-browser',
+    `run-${randomUUID()}`,
+  );
+  const extension = path.join(output, 'zoom-extension');
+  await fs.mkdir(output, { recursive: true });
+  if (!firefox) {
+    await fs.mkdir(extension, { recursive: true });
+    await fs.writeFile(
+      path.join(extension, 'manifest.json'),
+      JSON.stringify({
+        manifest_version: 3,
+        name: 'Space QA zoom',
+        version: '1.0',
+        permissions: ['tabs'],
+      }),
+    );
+    await fs.writeFile(path.join(extension, 'control.html'), '<title>Space QA zoom</title>');
+  }
   const scenario = { release: false, pagination: false, fault: null, delayMs: 0 };
   const fixtureUpdates = Array.from({ length: 14 }, (_, i) => ({
     ...production.updates[0],
@@ -182,15 +198,42 @@ async function main() {
       headless: true,
       defaultViewport: null,
       userDataDir: path.join(output, 'browser-data'),
-      enableExtensions: true,
-      args: ['--enable-unsafe-extension-debugging', '--window-size=1440,1000'],
-      downloadBehavior: { policy: 'deny' },
+      ...(firefox
+        ? {
+            browser: 'firefox',
+            protocolTimeout: 30000,
+            extraPrefsFirefox: {
+              'ui.prefersReducedMotion': 0,
+              'browser.shell.checkDefaultBrowser': false,
+            },
+          }
+        : {
+            enableExtensions: true,
+            args: ['--enable-unsafe-extension-debugging', '--window-size=1440,1000'],
+            downloadBehavior: { policy: 'deny' },
+          }),
     });
-    const extensionId = await browser.installExtension(extension);
-    const control = await browser.newPage();
-    await control.goto(`chrome-extension://${extensionId}/control.html`);
+    let control;
+    if (!firefox) {
+      const extensionId = await browser.installExtension(extension);
+      control = await browser.newPage();
+      await control.goto(`chrome-extension://${extensionId}/control.html`);
+    }
     const page = await browser.newPage();
     await page.setCacheEnabled(false);
+    if (firefox) {
+      await page.setRequestInterception(true);
+      page.on('request', (request) => {
+        if (
+          /^https:\/\/github\.com\/AdilSatuv\/spaceclient\/releases\/download\//.test(request.url())
+        ) {
+          errors.push('Unexpected fixture download request');
+          void request.abort();
+        } else {
+          void request.continue();
+        }
+      });
+    }
     page.on('pageerror', (error) => errors.push(error.message));
     page.on('console', (message) => {
       if (message.type() !== 'error') return;
@@ -243,141 +286,145 @@ async function main() {
       checks.push(
         'Seven routes at six widths, including 320 px: no horizontal overflow, one h1 and HTTP 200.',
       );
-      await page.setViewport(null);
-      await goto('/');
-      const before = await page.evaluate(() => ({ width: innerWidth, dpr: devicePixelRatio }));
-      const zoom = await control.evaluate(async (origin) => {
-        const tab = (await chrome.tabs.query({})).find((item) => item.url.startsWith(origin));
-        await chrome.tabs.setZoom(tab.id, 2);
-        return chrome.tabs.getZoom(tab.id);
-      }, base);
-      assert.equal(zoom, 2);
-      await page.waitForFunction((width) => innerWidth < width * 0.6, {}, before.width);
-      for (const route of routes) {
-        await goto(route);
-        assert.ok(
-          await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1),
-          `${route}: 200% zoom overflow`,
-        );
-        const clipped = await page.$$eval('h1, h2, h3, p, li, summary', (elements) =>
-          elements
-            .filter((element) => {
-              if (element.closest('[aria-hidden="true"]') || !element.getClientRects().length)
-                return false;
-              const range = document.createRange();
-              range.selectNodeContents(element);
-              return [...range.getClientRects()].some(
-                (rect) => rect.width > 1 && (rect.left < -1 || rect.right > innerWidth + 1),
-              );
-            })
-            .map((element) => element.textContent.slice(0, 80)),
-        );
-        assert.deepEqual(clipped, [], `${route}: clipped text at 200%`);
-      }
-      const after = await page.evaluate(() => ({ width: innerWidth, dpr: devicePixelRatio }));
-      // Full-page capture can change CDP metrics at browser zoom; preserve the actual viewport.
-      await page.screenshot({ path: path.join(output, 'zoom-200.png'), fullPage: false });
-      await control.evaluate(async (origin) => {
-        const tab = (await chrome.tabs.query({})).find((item) => item.url.startsWith(origin));
-        await chrome.tabs.setZoom(tab.id, 1);
-      }, base);
-      checks.push({
-        browserZoom: zoom,
-        before,
-        after,
-        method: 'chrome.tabs.setZoom; real browser zoom, not CSS zoom or pinch scaling.',
-      });
-      await goto('/');
-      await page.waitForFunction(() => !document.querySelector('.motion-toggle').disabled);
-      await page.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'reduce' }]);
-      await page.waitForFunction(
-        () =>
-          document.querySelector('.motion-toggle').disabled &&
-          document.documentElement.dataset.motion === 'paused',
-      );
-      const animation = await page.$eval('.starfield', (element) => ({
-        state: getComputedStyle(element).animationPlayState,
-        duration: getComputedStyle(element).animationDuration,
-      }));
-      assert.ok(animation.state === 'paused' || animation.duration === '0s');
-      await page.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'no-preference' }]);
-      await page.waitForFunction(
-        () =>
-          !document.querySelector('.motion-toggle').disabled &&
-          document.documentElement.dataset.motion === 'active',
-      );
-      checks.push(
-        'Reduced-motion changed live without reload, pauses decoration and restores the normal control afterwards.',
-      );
-      await page.setViewport({ width: 390, height: 900 });
-      await goto('/');
-      await page.click('.menu-trigger');
-      await page.waitForSelector('dialog[open]');
-      await page.keyboard.press('Escape');
-      await page.waitForFunction(
-        () =>
-          !document.querySelector('dialog').open &&
-          document.activeElement === document.querySelector('.menu-trigger'),
-      );
-      checks.push('Mobile menu Escape restores focus to its trigger.');
-      scenario.release = true;
-      await goto('/download');
-      await browser
-        .defaultBrowserContext()
-        .overridePermissions(base, [
-          'clipboard-read',
-          'clipboard-write',
-          'clipboard-sanitized-write',
-        ]);
-      await page.bringToFront();
-      let previous;
-      try {
-        previous = await page.evaluate(() => navigator.clipboard.readText());
-        await page.click('.hash-block button');
-        await page.waitForFunction(
-          () => document.querySelector('.hash-block [role=status]').textContent.length > 0,
-        );
-        assert.equal(
-          await page.$eval('.hash-block [role=status]', (element) => element.textContent),
-          'Скопировано',
-        );
-        assert.ok(
-          (await page.evaluate(() => navigator.clipboard.readText())) === fakeHash,
-          'Clipboard does not contain the fixture hash',
-        );
-      } finally {
-        if (previous !== undefined)
-          await page.evaluate(
-            async ({ expected, saved }) => {
-              if ((await navigator.clipboard.readText()) === expected)
-                await navigator.clipboard.writeText(saved);
-            },
-            { expected: fakeHash, saved: previous },
+      if (!firefox) {
+        await page.setViewport(null);
+        await goto('/');
+        const before = await page.evaluate(() => ({ width: innerWidth, dpr: devicePixelRatio }));
+        const zoom = await control.evaluate(async (origin) => {
+          const tab = (await chrome.tabs.query({})).find((item) => item.url.startsWith(origin));
+          await chrome.tabs.setZoom(tab.id, 2);
+          return chrome.tabs.getZoom(tab.id);
+        }, base);
+        assert.equal(zoom, 2);
+        await page.waitForFunction((width) => innerWidth < width * 0.6, {}, before.width);
+        for (const route of routes) {
+          await goto(route);
+          assert.ok(
+            await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1),
+            `${route}: 200% zoom overflow`,
           );
+          const clipped = await page.$$eval('h1, h2, h3, p, li, summary', (elements) =>
+            elements
+              .filter((element) => {
+                if (element.closest('[aria-hidden="true"]') || !element.getClientRects().length)
+                  return false;
+                const range = document.createRange();
+                range.selectNodeContents(element);
+                return [...range.getClientRects()].some(
+                  (rect) => rect.width > 1 && (rect.left < -1 || rect.right > innerWidth + 1),
+                );
+              })
+              .map((element) => element.textContent.slice(0, 80)),
+          );
+          assert.deepEqual(clipped, [], `${route}: clipped text at 200%`);
+        }
+        const after = await page.evaluate(() => ({ width: innerWidth, dpr: devicePixelRatio }));
+        // Full-page capture can change CDP metrics at browser zoom; preserve the actual viewport.
+        await page.screenshot({ path: path.join(output, 'zoom-200.png'), fullPage: false });
+        await control.evaluate(async (origin) => {
+          const tab = (await chrome.tabs.query({})).find((item) => item.url.startsWith(origin));
+          await chrome.tabs.setZoom(tab.id, 1);
+        }, base);
+        checks.push({
+          browserZoom: zoom,
+          before,
+          after,
+          method: 'chrome.tabs.setZoom; real browser zoom, not CSS zoom or pinch scaling.',
+        });
+        await goto('/');
+        await page.waitForFunction(() => !document.querySelector('.motion-toggle').disabled);
+        await page.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'reduce' }]);
+        await page.waitForFunction(
+          () =>
+            document.querySelector('.motion-toggle').disabled &&
+            document.documentElement.dataset.motion === 'paused',
+        );
+        const animation = await page.$eval('.starfield', (element) => ({
+          state: getComputedStyle(element).animationPlayState,
+          duration: getComputedStyle(element).animationDuration,
+        }));
+        assert.ok(animation.state === 'paused' || animation.duration === '0s');
+        await page.emulateMediaFeatures([
+          { name: 'prefers-reduced-motion', value: 'no-preference' },
+        ]);
+        await page.waitForFunction(
+          () =>
+            !document.querySelector('.motion-toggle').disabled &&
+            document.documentElement.dataset.motion === 'active',
+        );
+        checks.push(
+          'Reduced-motion changed live without reload, pauses decoration and restores the normal control afterwards.',
+        );
+        await page.setViewport({ width: 390, height: 900 });
+        await goto('/');
+        await page.click('.menu-trigger');
+        await page.waitForSelector('dialog[open]');
+        await page.keyboard.press('Escape');
+        await page.waitForFunction(
+          () =>
+            !document.querySelector('dialog').open &&
+            document.activeElement === document.querySelector('.menu-trigger'),
+        );
+        checks.push('Mobile menu Escape restores focus to its trigger.');
+        scenario.release = true;
+        await goto('/download');
+        await browser
+          .defaultBrowserContext()
+          .overridePermissions(base, [
+            'clipboard-read',
+            'clipboard-write',
+            'clipboard-sanitized-write',
+          ]);
+        await page.bringToFront();
+        let previous;
+        try {
+          previous = await page.evaluate(() => navigator.clipboard.readText());
+          await page.click('.hash-block button');
+          await page.waitForFunction(
+            () => document.querySelector('.hash-block [role=status]').textContent.length > 0,
+          );
+          assert.equal(
+            await page.$eval('.hash-block [role=status]', (element) => element.textContent),
+            'Скопировано',
+          );
+          assert.ok(
+            (await page.evaluate(() => navigator.clipboard.readText())) === fakeHash,
+            'Clipboard does not contain the fixture hash',
+          );
+        } finally {
+          if (previous !== undefined)
+            await page.evaluate(
+              async ({ expected, saved }) => {
+                if ((await navigator.clipboard.readText()) === expected)
+                  await navigator.clipboard.writeText(saved);
+              },
+              { expected: fakeHash, saved: previous },
+            );
+        }
+        checks.push(
+          'Clipboard success verified by reading the fake SHA-256 back; previous clipboard restored when still unchanged.',
+        );
+        await page.goto(deniedBase + '/download', { waitUntil: 'networkidle0' });
+        await page.click('.hash-block button');
+        await page.waitForFunction(() =>
+          document
+            .querySelector('.hash-block [role=status]')
+            .textContent.includes('Не удалось скопировать'),
+        );
+        await page.focus('.hash-block input');
+        await page.keyboard.down('Control');
+        await page.keyboard.press('A');
+        await page.keyboard.up('Control');
+        assert.equal(
+          await page.$eval('.hash-block input', (input) =>
+            input.value.slice(input.selectionStart, input.selectionEnd),
+          ),
+          fakeHash,
+        );
+        checks.push(
+          'Actual Permissions-Policy clipboard denial shows fallback; the complete hash remains keyboard-selectable.',
+        );
       }
-      checks.push(
-        'Clipboard success verified by reading the fake SHA-256 back; previous clipboard restored when still unchanged.',
-      );
-      await page.goto(deniedBase + '/download', { waitUntil: 'networkidle0' });
-      await page.click('.hash-block button');
-      await page.waitForFunction(() =>
-        document
-          .querySelector('.hash-block [role=status]')
-          .textContent.includes('Не удалось скопировать'),
-      );
-      await page.focus('.hash-block input');
-      await page.keyboard.down('Control');
-      await page.keyboard.press('A');
-      await page.keyboard.up('Control');
-      assert.equal(
-        await page.$eval('.hash-block input', (input) =>
-          input.value.slice(input.selectionStart, input.selectionEnd),
-        ),
-        fakeHash,
-      );
-      checks.push(
-        'Actual Permissions-Policy clipboard denial shows fallback; the complete hash remains keyboard-selectable.',
-      );
     }
     await runWebsiteFlows({
       browser,
@@ -387,19 +434,34 @@ async function main() {
       setScenario: (value) => Object.assign(scenario, value),
       results: flows,
     });
+    const browserVersion = await browser.version();
+    if (firefox) {
+      // Run Firefox profiles sequentially, including on Windows.
+      await browser.close();
+      browser = undefined;
+      await checkFirefoxMotion({ executable, base, output, errors });
+      checks.push(
+        'A separate Firefox profile with ui.prefersReducedMotion=1 exposes the real reduced-motion media query, pauses animation and disables the motion toggle.',
+      );
+    }
     assert.deepEqual(errors, []);
     const report = {
       schemaVersion: 1,
       checkedAt: new Date().toISOString(),
-      browser: await browser.version(),
+      browser: browserVersion,
+      protocol: firefox ? 'webDriverBiDi' : 'cdp',
       realAccountUsed: false,
       realDownloadsStarted: false,
       layouts,
       checks,
       flows,
       errors,
-      scope:
-        'Isolated production Next with fixture API, own Chrome profile and test-only tabs extension. No personal browser session, real release download or public HTTPS audit.',
+      skipped: firefox
+        ? [
+            '200% browser zoom, clipboard success/denial and live media emulation remain covered by the Chrome suite; they are not asserted for Firefox.',
+          ]
+        : [],
+      scope: `Isolated production Next with fixture API and own ${firefox ? 'Firefox profiles over WebDriver BiDi' : 'Chrome profile and test-only tabs extension'}. No personal browser session, real release download or public HTTPS audit.`,
     };
     await fs.writeFile(path.join(output, 'report.json'), JSON.stringify(report, null, 2) + '\n');
     console.log(
