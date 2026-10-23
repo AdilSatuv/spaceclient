@@ -13,6 +13,7 @@
 - [Установка инструментов](docs/TOOLCHAIN.md) — локальный JDK и команды Gradle.
 - [Игровой загрузчик](docs/ADR-001-game-loader.md) — решение и ограничения прототипа.
 - [Лаунчер](docs/LAUNCHER.md) — Electron-каркас, профили, Java, запуск из исходников и ограничения.
+- [Подготовка установки](docs/INSTALLER.md) — проверенный downloader, возобновление и оставшиеся этапы SC-09.
 - [Next.js и NestJS](docs/WEB.md) — запуск сайта, API и проверки.
 - [Подробный план из 45 шагов](docs/IMPLEMENTATION-PLAN.md).
 - [Трекер задач](docs/TRACKING.md) — GitHub Issues, milestones и CLI.
