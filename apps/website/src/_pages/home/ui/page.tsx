@@ -1,4 +1,3 @@
-import { getImageProps } from 'next/image';
 import Link from 'next/link';
 import { Arrow } from '@/shared/ui/icons';
 import HudPreview from './hud-preview';
@@ -27,30 +26,13 @@ const steps = [
   },
 ];
 export default function Home() {
-  const shared = {
-    alt: '',
-    fill: true,
-    sizes: '100vw',
-    loading: 'eager' as const,
-    fetchPriority: 'high' as const,
-  };
-  const desktop = getImageProps({ ...shared, src: '/images/space-hero-v2.png', quality: 85 }).props;
-  const mobile = getImageProps({
-    ...shared,
-    src: '/images/space-hero-mobile-v1.png',
-    quality: 80,
-  }).props;
   return (
     <>
       <section className="hero">
-        <picture>
-          <source media="(max-width: 760px)" srcSet={mobile.srcSet} sizes={mobile.sizes} />
-          <img {...desktop} className="hero-art" />
-        </picture>
         <div className="hero-shade" />
         <CosmicScene />
         <div className="container hero-content">
-          <p className="eyebrow rule-label">MINECRAFT. НА СВОЕЙ ОРБИТЕ.</p>
+          <p className="eyebrow rule-label">SPACE CLIENT / MINECRAFT НА СВОЕЙ ОРБИТЕ</p>
           <h1>
             ТВОЙ МИР.
             <br />
@@ -76,7 +58,7 @@ export default function Home() {
         </div>
         <div className="container hero-bottom">
           <span>01 / ИССЛЕДУЙ НОВУЮ ОРБИТУ</span>
-          <span className="concept-label">Концепт мира</span>
+          <span className="concept-label">ECLIPSE / 01</span>
         </div>
       </section>
       <div className="capability-strip" data-reveal>

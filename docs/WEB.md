@@ -6,6 +6,8 @@
 
 Спецификация — [WEBSITE-SPEC.md](WEBSITE-SPEC.md), дизайн — [FIGMA-DESIGN.md](FIGMA-DESIGN.md), фактические проверки — [WEBSITE-QA.md](WEBSITE-QA.md). Маршруты и контентный API уже реализованы. Очередь приёмки: SC-16…SC-24; сайт поддерживает отсутствие alpha-сборки.
 
+Текущая визуальная тема — [Eclipse](design/ECLIPSE.md): почти чёрный CSS/SVG-фон со звёздами и астероидами, выбранный Ringworld, янтарные кнопки, мягкий белый текст и адаптивная медная планета. Новая палитра уже в сайте и DTCG JSON; облачная Figma пока хранит предыдущий срез.
+
 ```powershell
 npm.cmd ci
 npm.cmd run api

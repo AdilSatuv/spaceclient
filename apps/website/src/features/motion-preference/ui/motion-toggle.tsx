@@ -15,6 +15,11 @@ export function SpaceMotion() {
   useEffect(() => {
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
     const update = () => setReduced(preference.matches);
+    const updateVisibility = () => {
+      document.documentElement.dataset.pageVisible = document.hidden ? 'hidden' : 'visible';
+    };
+    updateVisibility();
+    document.addEventListener('visibilitychange', updateVisibility);
     update();
     try {
       setPaused(window.localStorage.getItem(preferenceKey) === 'paused');
@@ -23,7 +28,10 @@ export function SpaceMotion() {
     }
     setReady(true);
     preference.addEventListener('change', update);
-    return () => preference.removeEventListener('change', update);
+    return () => {
+      preference.removeEventListener('change', update);
+      document.removeEventListener('visibilitychange', updateVisibility);
+    };
   }, []);
 
   useEffect(() => {

@@ -17,15 +17,24 @@ export function Arrow() {
 export function OrbitMark({ className = '' }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 48 48" fill="none" aria-hidden="true">
-      <path d="m24 7 4.5 12.5L41 24l-12.5 4.5L24 41l-4.5-12.5L7 24l12.5-4.5Z" fill="currentColor" />
+      <circle cx="24" cy="24" r="12" fill="currentColor" />
       <ellipse
         cx="24"
         cy="24"
-        rx="24"
-        ry="8"
-        transform="rotate(-42 24 24)"
+        rx="23"
+        ry="6"
+        transform="rotate(-28 24 24)"
+        stroke="var(--bg)"
+        strokeWidth="5"
+      />
+      <ellipse
+        cx="24"
+        cy="24"
+        rx="23"
+        ry="6"
+        transform="rotate(-28 24 24)"
         stroke="currentColor"
-        strokeWidth="1.4"
+        strokeWidth="2"
       />
     </svg>
   );

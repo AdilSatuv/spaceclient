@@ -1,0 +1,360 @@
+{
+  "schemaVersion": 1,
+  "clientDate": "2026-10-24",
+  "conditions": "Final amber controls, Ringworld, background asteroids, black starfield and copper rocky planet: three sequential default mobile Lighthouse runs of homepage only, local production Next.js with real Nest API, fresh headless Chrome profiles. Browser suites finished before measurement. No public HTTPS-origin measurement; preview intentionally noindex. CSS/SVG hero, no hero bitmap; HUD illustration still uses next/image. Other routes were not remeasured after the final visual revision; the earlier fifteen-run blue-planet iteration is excluded from this report.",
+  "median": [
+    {
+      "route": "/",
+      "runs": 3,
+      "performance": 99,
+      "accessibility": 100,
+      "seo": 66,
+      "lcpMs": 2204,
+      "cls": 0
+    }
+  ],
+  "sourceHashEncoding": "SHA-256 of UTF-8 text with LF line endings",
+  "sourceHashes": {
+    "apps/website/src/_app/styles/globals.css": "21e8781bb7e953ce3bdd0cf2f7ac6b08739fa439332809ecd4aac5c456a468e3",
+    "apps/website/src/_app/styles/tokens.css": "f719573bdf7298067c6634ae1a21842605c33880033ff99f15c461216fbcd19c",
+    "apps/website/src/_app/ui/root-layout.tsx": "b1fdfdef4d1d2d09f78dd11b8f123fe3c717abf60a47653d963b9c76c4f2d92a",
+    "apps/website/src/_app/ui/space-backdrop.tsx": "397304d187c9a663b20620a1853699c8dbf68740a5dadb7e7913c810f9dd0fc4",
+    "apps/website/src/_pages/home/ui/page.tsx": "332c840d5c4a31e9657b936fa443e323793b9cc37347f9a89f828ff84748c12b",
+    "apps/website/src/_pages/home/ui/cosmic-scene.tsx": "5ea91e16bade3bd321c97c5087694c9c1621755f7271bd1ba822bf74bbefe394",
+    "apps/website/src/_pages/home/ui/cosmic-activity.tsx": "1e9998c4de1db50926062304a4088101f83dd7a808f6abd5c615224ece9e4307",
+    "apps/website/src/features/motion-preference/ui/motion-toggle.tsx": "b50e211eb6c92922cd0a069b16ad90895b11a9043010185c6b565330a3fdf722",
+    "apps/website/src/shared/ui/icons.tsx": "2f569d4f7a5494f71c8ef155607b211ff267e05ab5e5cfd44684544044b869a9",
+    "apps/website/app/icon.svg": "5d45711fa2ff26aa0af4cb9fff26f8e1e2800d90d82b379b1ea6b58c9ab0f58a",
+    "apps/website/public/brand/space-mark.svg": "fa79565666f9b9d01b2477a80491d5575e22188852b7abb9b642de863e4a76f3",
+    "apps/website/public/brand/space-wordmark.svg": "3e18b70a9267f1cd130a558cec7bb3ad87bec39c14e4d1a1017638275c620772",
+    "apps/website/public/brand/space-mark-nova.svg": "7fb7297ba5d544c2988f24ea6b17a75c4c3664cc3d6ae6dda5f0226245db62e3",
+    "apps/website/public/brand/space-mark-vector.svg": "811ff2810cc42cc9dfb5eaabff6ef4eb80fcdd845daadb3aa571979b099f38ab",
+    "apps/website/public/brand/space-mark-pixel.svg": "2fddc49ffb5e7ab9f8cdacb029d398a73addb9cc37128377e928af21f512bfdc",
+    "apps/website/public/brand/logo-concepts.html": "b462f503e54f4677e4120e02485563b74776221c52885450c2447e51890ac2bf",
+    "docs/design/space-dark.tokens.json": "e99c991c6f199e4465728d7e9528cc0e4e14dca5ea35011651afc9f0a114d728",
+    "docs/design/control-states.tokens.json": "125821535ed5e59cc376d20cb12f4dd4460ace2cb8d734479cb0537b6c51918e",
+    "docs/design/navigation.tokens.json": "9142fda5d4b79a7c44addbb51d0a06f09e93a4e232c577398750746d5ec755ab",
+    "scripts/check-website-eclipse.cjs": "195b1ba537edb37f8aa0f5b53772cef697284cfe836ff263fdf869396f02c220",
+    "scripts/check-website-flows.cjs": "01e11e666d2578a034728579014ad6f94fb35ead35dd7908a2631d85b9b7204b"
+  },
+  "runs": [
+    {
+      "route": "/",
+      "run": 1,
+      "version": "13.5.0",
+      "fetchedAt": "2026-10-23T23:30:50.641Z",
+      "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+      "settings": {
+        "output": [
+          "json"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": [
+          "performance",
+          "accessibility",
+          "seo"
+        ],
+        "skipAudits": null
+      },
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "seo": 66
+      },
+      "lcpMs": 2196.7763,
+      "cls": 0,
+      "failures": [
+        {
+          "id": "is-crawlable",
+          "title": "Page is blocked from indexing",
+          "details": [
+            {
+              "source": {
+                "type": "node",
+                "lhId": "1-39-META",
+                "path": "1,HTML,0,HEAD,13,META",
+                "selector": "head > meta",
+                "boundingRect": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "snippet": "<meta name=\"robots\" content=\"noindex, nofollow\" />",
+                "nodeLabel": "head > meta"
+              }
+            },
+            {
+              "source": {
+                "type": "source-location",
+                "url": "http://127.0.0.1:59750/robots.txt",
+                "urlProvider": "network",
+                "line": 1,
+                "column": 0
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/",
+      "run": 2,
+      "version": "13.5.0",
+      "fetchedAt": "2026-10-23T23:31:01.886Z",
+      "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+      "settings": {
+        "output": [
+          "json"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": [
+          "performance",
+          "accessibility",
+          "seo"
+        ],
+        "skipAudits": null
+      },
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "seo": 66
+      },
+      "lcpMs": 2214.8624,
+      "cls": 0,
+      "failures": [
+        {
+          "id": "is-crawlable",
+          "title": "Page is blocked from indexing",
+          "details": [
+            {
+              "source": {
+                "type": "node",
+                "lhId": "1-39-META",
+                "path": "1,HTML,0,HEAD,13,META",
+                "selector": "head > meta",
+                "boundingRect": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "snippet": "<meta name=\"robots\" content=\"noindex, nofollow\" />",
+                "nodeLabel": "head > meta"
+              }
+            },
+            {
+              "source": {
+                "type": "source-location",
+                "url": "http://127.0.0.1:59750/robots.txt",
+                "urlProvider": "network",
+                "line": 1,
+                "column": 0
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "route": "/",
+      "run": 3,
+      "version": "13.5.0",
+      "fetchedAt": "2026-10-23T23:31:13.146Z",
+      "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+      "settings": {
+        "output": [
+          "json"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": [
+          "performance",
+          "accessibility",
+          "seo"
+        ],
+        "skipAudits": null
+      },
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "seo": 66
+      },
+      "lcpMs": 2204.4325,
+      "cls": 0,
+      "failures": [
+        {
+          "id": "is-crawlable",
+          "title": "Page is blocked from indexing",
+          "details": [
+            {
+              "source": {
+                "type": "node",
+                "lhId": "1-39-META",
+                "path": "1,HTML,0,HEAD,13,META",
+                "selector": "head > meta",
+                "boundingRect": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "snippet": "<meta name=\"robots\" content=\"noindex, nofollow\" />",
+                "nodeLabel": "head > meta"
+              }
+            },
+            {
+              "source": {
+                "type": "source-location",
+                "url": "http://127.0.0.1:59750/robots.txt",
+                "urlProvider": "network",
+                "line": 1,
+                "column": 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -31,6 +31,10 @@ async function checkFirefoxMotion({ executable, base, output, errors }) {
       duration: getComputedStyle(element).animationDuration,
     }));
     assert.ok(animation.state === 'paused' || animation.duration === '0s');
+    assert.equal(
+      await page.$eval('.planet-assembly', (element) => getComputedStyle(element).animationName),
+      'none',
+    );
     assert.match(
       await page.$eval('.motion-toggle', (element) => element.textContent),
       /Движение уменьшено/,

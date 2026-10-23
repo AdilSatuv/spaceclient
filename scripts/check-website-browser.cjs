@@ -344,6 +344,13 @@ async function main() {
           duration: getComputedStyle(element).animationDuration,
         }));
         assert.ok(animation.state === 'paused' || animation.duration === '0s');
+        assert.equal(
+          await page.$eval(
+            '.planet-assembly',
+            (element) => getComputedStyle(element).animationName,
+          ),
+          'none',
+        );
         await page.emulateMediaFeatures([
           { name: 'prefers-reduced-motion', value: 'no-preference' },
         ]);

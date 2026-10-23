@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Header from './header';
 import { Footer } from './footer';
+import { SpaceBackdrop } from './space-backdrop';
 import { pageMetadata } from '@/shared/lib/metadata';
 export const metadata: Metadata = pageMetadata(
   '/',
@@ -11,6 +12,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="ru" data-motion="paused">
       <body>
+        <SpaceBackdrop />
         <a className="skip" href="#main">
           Перейти к содержимому
         </a>

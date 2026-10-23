@@ -1,0 +1,852 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Space Client — космические знаки E–J</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #030407;
+        color: #edf5ff;
+        font:
+          16px/1.6 'Segoe UI',
+          Arial,
+          sans-serif;
+      }
+      a {
+        color: inherit;
+        text-underline-offset: 5px;
+      }
+      button {
+        font: inherit;
+        cursor: pointer;
+      }
+      main {
+        max-width: 1200px;
+        margin: auto;
+        padding: 48px 24px 64px;
+      }
+      .eyebrow {
+        font:
+          12px Consolas,
+          monospace;
+        letter-spacing: 3px;
+        color: #77e7ed;
+      }
+      h1 {
+        font-size: clamp(32px, 5vw, 56px);
+        line-height: 1.1;
+        letter-spacing: -2px;
+        margin: 20px 0;
+      }
+      header p {
+        max-width: 760px;
+        color: #a7b8cf;
+      }
+      .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin: 28px 0;
+      }
+      .toolbar label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 44px;
+        cursor: pointer;
+      }
+      .toolbar input {
+        width: 20px;
+        height: 20px;
+        accent-color: #77e7ed;
+      }
+      .toolbar a {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+      }
+      .concept {
+        border: 1px solid #2b3441;
+        border-radius: 18px;
+        padding: 26px;
+        background: radial-gradient(ellipse at 50% 30%, #14202c55, transparent 65%), #090c12;
+        transition: border-color 0.18s;
+      }
+      .concept.selected {
+        border-color: #77e7ed;
+        box-shadow: 0 0 0 1px #77e7ed;
+      }
+      .card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+      }
+      .number {
+        color: #77e7ed;
+        font:
+          18px Consolas,
+          monospace;
+      }
+      .category {
+        color: #a7b8cf;
+        font-size: 12px;
+      }
+      .hero-mark {
+        height: 190px;
+        display: grid;
+        place-items: center;
+        color: var(--ink);
+      }
+      .wordmark {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 14px;
+        letter-spacing: 2px;
+        font-size: 18px;
+      }
+      .wordmark svg,
+      .small-sizes svg {
+        color: var(--ink);
+      }
+      h2 {
+        font-size: 23px;
+        margin: 28px 0 8px;
+      }
+      .concept p {
+        color: #a7b8cf;
+        min-height: 78px;
+        margin: 0;
+        font-size: 15px;
+      }
+      .small-sizes {
+        border-top: 1px solid #25303d;
+        margin-top: 20px;
+        padding-top: 18px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+      .small-sizes span {
+        color: #a7b8cf;
+        font-size: 12px;
+        margin-right: auto;
+      }
+      .actions {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        margin-top: 24px;
+      }
+      .actions button {
+        min-height: 44px;
+        border: 1px solid #566b83;
+        border-radius: 9px;
+        padding: 9px 20px;
+        background: #132238;
+        color: #edf5ff;
+      }
+      .actions button[aria-pressed='true'] {
+        background: #77e7ed;
+        color: #04202a;
+      }
+      .actions a {
+        font-size: 14px;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+      }
+      a:focus-visible,
+      button:focus-visible,
+      input:focus-visible {
+        outline: 2px solid #77e7ed;
+        outline-offset: 5px;
+      }
+      .mono .hero-mark,
+      .mono .wordmark svg,
+      .mono .small-sizes svg {
+        color: #edf5ff;
+      }
+      .selection {
+        min-height: 60px;
+        margin-top: 26px;
+        color: #a7b8cf;
+        border-left: 2px solid #77e7ed;
+        padding-left: 18px;
+      }
+      @media (max-width: 640px) {
+        main {
+          padding: 28px 18px;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .concept {
+          padding: 22px;
+        }
+        .hero-mark {
+          height: 170px;
+        }
+        .concept p {
+          min-height: 0;
+        }
+        .category {
+          font-size: 11px;
+        }
+        .small-sizes {
+          gap: 15px;
+        }
+        .wordmark {
+          font-size: 16px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+        }
+      }
+
+      :root {
+        --warm: #f4bd82;
+      }
+      body {
+        color: #f4efe7;
+      }
+      .eyebrow,
+      .number {
+        color: var(--warm);
+      }
+      .concept {
+        background: radial-gradient(ellipse at 50% 30%, #3a2b1f22, transparent 65%), #0b0b10;
+        border-color: #353239;
+      }
+      .concept p,
+      header p,
+      .category,
+      .small-sizes span,
+      .selection {
+        color: #b7b4af;
+      }
+      .concept.selected {
+        border-color: var(--warm);
+        box-shadow: 0 0 0 1px var(--warm);
+      }
+      .actions button {
+        background: #191a21;
+        border-color: #8b8079;
+        color: #f4efe7;
+      }
+      .actions button[aria-pressed='true'] {
+        background: var(--warm);
+        color: #28170c;
+      }
+      a:focus-visible,
+      button:focus-visible,
+      input:focus-visible {
+        outline-color: var(--warm);
+      }
+      .toolbar input {
+        accent-color: var(--warm);
+      }
+      .selection {
+        border-color: var(--warm);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <p class="eyebrow">SPACE CLIENT / COSMIC SYMBOLS — ROUND 02</p>
+        <h1>Космос без монограммы.</h1>
+        <p>
+          Шесть новых направлений: планета, комета, ракета, затмение, шлем и созвездие. На сайте
+          выбран E — Ringworld. Остальные знаки сохранены для сравнения.
+        </p>
+      </header>
+      <div class="toolbar">
+        <label><input type="checkbox" id="mono" />Один цвет</label><a href="/">Сайт ↗</a
+        ><a href="logo-concepts.html">Первые варианты A–D ↗</a>
+      </div>
+      <div class="grid">
+        <article class="concept selected" style="--ink: #f4bd82" data-concept="E">
+          <div class="card-top">
+            <span class="number">E</span><span class="category">Планета / спокойная геометрия</span>
+          </div>
+          <div class="hero-mark">
+            <svg width="144" height="144" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <circle cx="24" cy="24" r="12" fill="currentColor" />
+              <ellipse
+                cx="24"
+                cy="24"
+                rx="23"
+                ry="6"
+                transform="rotate(-28 24 24)"
+                stroke="#030407"
+                stroke-width="5"
+              />
+              <ellipse
+                cx="24"
+                cy="24"
+                rx="23"
+                ry="6"
+                transform="rotate(-28 24 24)"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+            </svg>
+          </div>
+          <div class="wordmark">
+            <svg width="32" height="32" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <circle cx="24" cy="24" r="12" fill="currentColor" />
+              <ellipse
+                cx="24"
+                cy="24"
+                rx="23"
+                ry="6"
+                transform="rotate(-28 24 24)"
+                stroke="#030407"
+                stroke-width="5"
+              />
+              <ellipse
+                cx="24"
+                cy="24"
+                rx="23"
+                ry="6"
+                transform="rotate(-28 24 24)"
+                stroke="currentColor"
+                stroke-width="2"
+              /></svg
+            ><strong>SPACE CLIENT</strong>
+          </div>
+          <h2>Ringworld</h2>
+          <p>
+            Чистый силуэт планеты с наклонённым кольцом. Простой космический знак, который хорошо
+            читается в иконке.
+          </p>
+          <div class="small-sizes">
+            <span>В малом размере</span
+            ><svg width="32" height="32" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <circle cx="24" cy="24" r="12" fill="currentColor" />
+              <ellipse
+                cx="24"
+                cy="24"
+                rx="23"
+                ry="6"
+                transform="rotate(-28 24 24)"
+                stroke="#030407"
+                stroke-width="5"
+              />
+              <ellipse
+                cx="24"
+                cy="24"
+                rx="23"
+                ry="6"
+                transform="rotate(-28 24 24)"
+                stroke="currentColor"
+                stroke-width="2"
+              /></svg
+            ><svg width="20" height="20" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <circle cx="24" cy="24" r="12" fill="currentColor" />
+              <ellipse
+                cx="24"
+                cy="24"
+                rx="23"
+                ry="6"
+                transform="rotate(-28 24 24)"
+                stroke="#030407"
+                stroke-width="5"
+              />
+              <ellipse
+                cx="24"
+                cy="24"
+                rx="23"
+                ry="6"
+                transform="rotate(-28 24 24)"
+                stroke="currentColor"
+                stroke-width="2"
+              /></svg
+            ><svg width="16" height="16" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <circle cx="24" cy="24" r="12" fill="currentColor" />
+              <ellipse
+                cx="24"
+                cy="24"
+                rx="23"
+                ry="6"
+                transform="rotate(-28 24 24)"
+                stroke="#030407"
+                stroke-width="5"
+              />
+              <ellipse
+                cx="24"
+                cy="24"
+                rx="23"
+                ry="6"
+                transform="rotate(-28 24 24)"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+            </svg>
+          </div>
+          <div class="actions">
+            <button data-choice="E" aria-pressed="true">Выбрать E</button
+            ><a href="space-mark-ringworld.svg" download>SVG ↓</a>
+          </div>
+        </article>
+        <article class="concept" style="--ink: #ffd9b4" data-concept="F">
+          <div class="card-top">
+            <span class="number">F</span><span class="category">Комета / движение</span>
+          </div>
+          <div class="hero-mark">
+            <svg width="144" height="144" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <circle cx="32" cy="16" r="10" fill="currentColor" />
+              <circle cx="34" cy="14" r="2.5" fill="#030407" />
+              <path
+                d="m7 40 16-16M5 25l12-12m7 30 11-11"
+                stroke="currentColor"
+                stroke-width="4"
+                stroke-linecap="round"
+              />
+              <circle cx="7" cy="33" r="1.5" fill="currentColor" />
+            </svg>
+          </div>
+          <div class="wordmark">
+            <svg width="32" height="32" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <circle cx="32" cy="16" r="10" fill="currentColor" />
+              <circle cx="34" cy="14" r="2.5" fill="#030407" />
+              <path
+                d="m7 40 16-16M5 25l12-12m7 30 11-11"
+                stroke="currentColor"
+                stroke-width="4"
+                stroke-linecap="round"
+              />
+              <circle cx="7" cy="33" r="1.5" fill="currentColor" /></svg
+            ><strong>SPACE CLIENT</strong>
+          </div>
+          <h2>Comet</h2>
+          <p>
+            Яркое ядро и три траектории. Лёгкий динамичный знак для клиента, который хочется
+            запустить.
+          </p>
+          <div class="small-sizes">
+            <span>В малом размере</span
+            ><svg width="32" height="32" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <circle cx="32" cy="16" r="10" fill="currentColor" />
+              <circle cx="34" cy="14" r="2.5" fill="#030407" />
+              <path
+                d="m7 40 16-16M5 25l12-12m7 30 11-11"
+                stroke="currentColor"
+                stroke-width="4"
+                stroke-linecap="round"
+              />
+              <circle cx="7" cy="33" r="1.5" fill="currentColor" /></svg
+            ><svg width="20" height="20" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <circle cx="32" cy="16" r="10" fill="currentColor" />
+              <circle cx="34" cy="14" r="2.5" fill="#030407" />
+              <path
+                d="m7 40 16-16M5 25l12-12m7 30 11-11"
+                stroke="currentColor"
+                stroke-width="4"
+                stroke-linecap="round"
+              />
+              <circle cx="7" cy="33" r="1.5" fill="currentColor" /></svg
+            ><svg width="16" height="16" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <circle cx="32" cy="16" r="10" fill="currentColor" />
+              <circle cx="34" cy="14" r="2.5" fill="#030407" />
+              <path
+                d="m7 40 16-16M5 25l12-12m7 30 11-11"
+                stroke="currentColor"
+                stroke-width="4"
+                stroke-linecap="round"
+              />
+              <circle cx="7" cy="33" r="1.5" fill="currentColor" />
+            </svg>
+          </div>
+          <div class="actions">
+            <button data-choice="F" aria-pressed="false">Выбрать F</button
+            ><a href="space-mark-comet.svg" download>SVG ↓</a>
+          </div>
+        </article>
+        <article class="concept" style="--ink: #f4efe7" data-concept="G">
+          <div class="card-top">
+            <span class="number">G</span><span class="category">Ракета / исследование</span>
+          </div>
+          <div class="hero-mark">
+            <svg width="144" height="144" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <path
+                d="M24 3c-8 8-11 17-10 27h20c1-10-2-19-10-27ZM14 23l-8 9v8l10-7Zm20 0 8 9v8l-10-7Z"
+                fill="currentColor"
+              />
+              <circle cx="24" cy="17" r="4.5" fill="#030407" />
+              <path d="m20 35 4 10 4-10Z" fill="currentColor" opacity=".6" />
+            </svg>
+          </div>
+          <div class="wordmark">
+            <svg width="32" height="32" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <path
+                d="M24 3c-8 8-11 17-10 27h20c1-10-2-19-10-27ZM14 23l-8 9v8l10-7Zm20 0 8 9v8l-10-7Z"
+                fill="currentColor"
+              />
+              <circle cx="24" cy="17" r="4.5" fill="#030407" />
+              <path d="m20 35 4 10 4-10Z" fill="currentColor" opacity=".6" /></svg
+            ><strong>SPACE CLIENT</strong>
+          </div>
+          <h2>Lift Off</h2>
+          <p>
+            Лаконичная ракета с круглым иллюминатором и двумя плавниками. Вертикальный знак с
+            энергией старта.
+          </p>
+          <div class="small-sizes">
+            <span>В малом размере</span
+            ><svg width="32" height="32" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <path
+                d="M24 3c-8 8-11 17-10 27h20c1-10-2-19-10-27ZM14 23l-8 9v8l10-7Zm20 0 8 9v8l-10-7Z"
+                fill="currentColor"
+              />
+              <circle cx="24" cy="17" r="4.5" fill="#030407" />
+              <path d="m20 35 4 10 4-10Z" fill="currentColor" opacity=".6" /></svg
+            ><svg width="20" height="20" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <path
+                d="M24 3c-8 8-11 17-10 27h20c1-10-2-19-10-27ZM14 23l-8 9v8l10-7Zm20 0 8 9v8l-10-7Z"
+                fill="currentColor"
+              />
+              <circle cx="24" cy="17" r="4.5" fill="#030407" />
+              <path d="m20 35 4 10 4-10Z" fill="currentColor" opacity=".6" /></svg
+            ><svg width="16" height="16" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <path
+                d="M24 3c-8 8-11 17-10 27h20c1-10-2-19-10-27ZM14 23l-8 9v8l10-7Zm20 0 8 9v8l-10-7Z"
+                fill="currentColor"
+              />
+              <circle cx="24" cy="17" r="4.5" fill="#030407" />
+              <path d="m20 35 4 10 4-10Z" fill="currentColor" opacity=".6" />
+            </svg>
+          </div>
+          <div class="actions">
+            <button data-choice="G" aria-pressed="false">Выбрать G</button
+            ><a href="space-mark-liftoff.svg" download>SVG ↓</a>
+          </div>
+        </article>
+        <article class="concept" style="--ink: #eab798" data-concept="H">
+          <div class="card-top">
+            <span class="number">H</span><span class="category">Затмение / мягкие формы</span>
+          </div>
+          <div class="hero-mark">
+            <svg width="144" height="144" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <path
+                d="M31 4C10-2-2 20 10 35c8 11 24 10 32-2C18 40 10 12 31 4Z"
+                fill="currentColor"
+              />
+              <path
+                d="m37 7 2.5 6.5L46 16l-6.5 2.5L37 25l-2.5-6.5L28 16l6.5-2.5Z"
+                fill="currentColor"
+              />
+            </svg>
+          </div>
+          <div class="wordmark">
+            <svg width="32" height="32" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <path
+                d="M31 4C10-2-2 20 10 35c8 11 24 10 32-2C18 40 10 12 31 4Z"
+                fill="currentColor"
+              />
+              <path
+                d="m37 7 2.5 6.5L46 16l-6.5 2.5L37 25l-2.5-6.5L28 16l6.5-2.5Z"
+                fill="currentColor"
+              /></svg
+            ><strong>SPACE CLIENT</strong>
+          </div>
+          <h2>Eclipse</h2>
+          <p>
+            Полумесяц и отдельная звезда. Более мягкий, атмосферный характер без монограммы и острых
+            траекторий.
+          </p>
+          <div class="small-sizes">
+            <span>В малом размере</span
+            ><svg width="32" height="32" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <path
+                d="M31 4C10-2-2 20 10 35c8 11 24 10 32-2C18 40 10 12 31 4Z"
+                fill="currentColor"
+              />
+              <path
+                d="m37 7 2.5 6.5L46 16l-6.5 2.5L37 25l-2.5-6.5L28 16l6.5-2.5Z"
+                fill="currentColor"
+              /></svg
+            ><svg width="20" height="20" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <path
+                d="M31 4C10-2-2 20 10 35c8 11 24 10 32-2C18 40 10 12 31 4Z"
+                fill="currentColor"
+              />
+              <path
+                d="m37 7 2.5 6.5L46 16l-6.5 2.5L37 25l-2.5-6.5L28 16l6.5-2.5Z"
+                fill="currentColor"
+              /></svg
+            ><svg width="16" height="16" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <path
+                d="M31 4C10-2-2 20 10 35c8 11 24 10 32-2C18 40 10 12 31 4Z"
+                fill="currentColor"
+              />
+              <path
+                d="m37 7 2.5 6.5L46 16l-6.5 2.5L37 25l-2.5-6.5L28 16l6.5-2.5Z"
+                fill="currentColor"
+              />
+            </svg>
+          </div>
+          <div class="actions">
+            <button data-choice="H" aria-pressed="false">Выбрать H</button
+            ><a href="space-mark-eclipse.svg" download>SVG ↓</a>
+          </div>
+        </article>
+        <article class="concept" style="--ink: #e7d8c1" data-concept="I">
+          <div class="card-top">
+            <span class="number">I</span><span class="category">Шлем / персонаж бренда</span>
+          </div>
+          <div class="hero-mark">
+            <svg width="144" height="144" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <path
+                d="M24 3C13 3 6 11 6 22v8l6 9v5h24v-5l6-9v-8C42 11 35 3 24 3Z"
+                fill="currentColor"
+              />
+              <rect x="12" y="13" width="24" height="17" rx="7" fill="#030407" />
+              <path
+                d="M16 18h8M16 36h16"
+                stroke="#030407"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M3 20v10m42-10v10"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+          </div>
+          <div class="wordmark">
+            <svg width="32" height="32" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <path
+                d="M24 3C13 3 6 11 6 22v8l6 9v5h24v-5l6-9v-8C42 11 35 3 24 3Z"
+                fill="currentColor"
+              />
+              <rect x="12" y="13" width="24" height="17" rx="7" fill="#030407" />
+              <path
+                d="M16 18h8M16 36h16"
+                stroke="#030407"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M3 20v10m42-10v10"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              /></svg
+            ><strong>SPACE CLIENT</strong>
+          </div>
+          <h2>Explorer</h2>
+          <p>
+            Шлем исследователя с широким визором. Подходит для дружелюбного бренда и будущего
+            маскота Space Client.
+          </p>
+          <div class="small-sizes">
+            <span>В малом размере</span
+            ><svg width="32" height="32" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <path
+                d="M24 3C13 3 6 11 6 22v8l6 9v5h24v-5l6-9v-8C42 11 35 3 24 3Z"
+                fill="currentColor"
+              />
+              <rect x="12" y="13" width="24" height="17" rx="7" fill="#030407" />
+              <path
+                d="M16 18h8M16 36h16"
+                stroke="#030407"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M3 20v10m42-10v10"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              /></svg
+            ><svg width="20" height="20" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <path
+                d="M24 3C13 3 6 11 6 22v8l6 9v5h24v-5l6-9v-8C42 11 35 3 24 3Z"
+                fill="currentColor"
+              />
+              <rect x="12" y="13" width="24" height="17" rx="7" fill="#030407" />
+              <path
+                d="M16 18h8M16 36h16"
+                stroke="#030407"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M3 20v10m42-10v10"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              /></svg
+            ><svg width="16" height="16" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <path
+                d="M24 3C13 3 6 11 6 22v8l6 9v5h24v-5l6-9v-8C42 11 35 3 24 3Z"
+                fill="currentColor"
+              />
+              <rect x="12" y="13" width="24" height="17" rx="7" fill="#030407" />
+              <path
+                d="M16 18h8M16 36h16"
+                stroke="#030407"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M3 20v10m42-10v10"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+          </div>
+          <div class="actions">
+            <button data-choice="I" aria-pressed="false">Выбрать I</button
+            ><a href="space-mark-explorer.svg" download>SVG ↓</a>
+          </div>
+        </article>
+        <article class="concept" style="--ink: #c5b9ac" data-concept="J">
+          <div class="card-top">
+            <span class="number">J</span><span class="category">Созвездие / тонкие линии</span>
+          </div>
+          <div class="hero-mark">
+            <svg width="144" height="144" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <path
+                d="m7 35 11-24 20-4-5 23-15 10-11-5m11-24 15 19"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <g fill="currentColor">
+                <circle cx="7" cy="35" r="3" />
+                <circle cx="18" cy="11" r="3.5" />
+                <circle cx="33" cy="30" r="3" />
+                <circle cx="18" cy="40" r="2.5" />
+                <path d="m38 1 2 4 4 2-4 2-2 4-2-4-4-2 4-2Z" />
+              </g>
+            </svg>
+          </div>
+          <div class="wordmark">
+            <svg width="32" height="32" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <path
+                d="m7 35 11-24 20-4-5 23-15 10-11-5m11-24 15 19"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <g fill="currentColor">
+                <circle cx="7" cy="35" r="3" />
+                <circle cx="18" cy="11" r="3.5" />
+                <circle cx="33" cy="30" r="3" />
+                <circle cx="18" cy="40" r="2.5" />
+                <path d="m38 1 2 4 4 2-4 2-2 4-2-4-4-2 4-2Z" />
+              </g></svg
+            ><strong>SPACE CLIENT</strong>
+          </div>
+          <h2>Star Map</h2>
+          <p>
+            Пять звёзд, соединённых собственной траекторией. Воздушный знак навигации и ночного
+            неба.
+          </p>
+          <div class="small-sizes">
+            <span>В малом размере</span
+            ><svg width="32" height="32" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <path
+                d="m7 35 11-24 20-4-5 23-15 10-11-5m11-24 15 19"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <g fill="currentColor">
+                <circle cx="7" cy="35" r="3" />
+                <circle cx="18" cy="11" r="3.5" />
+                <circle cx="33" cy="30" r="3" />
+                <circle cx="18" cy="40" r="2.5" />
+                <path d="m38 1 2 4 4 2-4 2-2 4-2-4-4-2 4-2Z" />
+              </g></svg
+            ><svg width="20" height="20" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <path
+                d="m7 35 11-24 20-4-5 23-15 10-11-5m11-24 15 19"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <g fill="currentColor">
+                <circle cx="7" cy="35" r="3" />
+                <circle cx="18" cy="11" r="3.5" />
+                <circle cx="33" cy="30" r="3" />
+                <circle cx="18" cy="40" r="2.5" />
+                <path d="m38 1 2 4 4 2-4 2-2 4-2-4-4-2 4-2Z" />
+              </g></svg
+            ><svg width="16" height="16" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <path
+                d="m7 35 11-24 20-4-5 23-15 10-11-5m11-24 15 19"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <g fill="currentColor">
+                <circle cx="7" cy="35" r="3" />
+                <circle cx="18" cy="11" r="3.5" />
+                <circle cx="33" cy="30" r="3" />
+                <circle cx="18" cy="40" r="2.5" />
+                <path d="m38 1 2 4 4 2-4 2-2 4-2-4-4-2 4-2Z" />
+              </g>
+            </svg>
+          </div>
+          <div class="actions">
+            <button data-choice="J" aria-pressed="false">Выбрать J</button
+            ><a href="space-mark-starmap.svg" download>SVG ↓</a>
+          </div>
+        </article>
+      </div>
+      <p class="selection" role="status" aria-live="polite">
+        Выбран E — Ringworld. Знак уже применён к сайту; остальные варианты можно сравнить.
+      </p>
+    </main>
+    <script>
+      document
+        .querySelector('#mono')
+        .addEventListener('change', (event) =>
+          document.body.classList.toggle('mono', event.target.checked),
+        );
+      document.querySelectorAll('[data-choice]').forEach((button) =>
+        button.addEventListener('click', () => {
+          document
+            .querySelectorAll('[data-choice]')
+            .forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+          document
+            .querySelectorAll('.concept')
+            .forEach((card) =>
+              card.classList.toggle('selected', card.dataset.concept === button.dataset.choice),
+            );
+          document.querySelector('.selection').textContent =
+            'Отмечен вариант ' +
+            button.dataset.choice +
+            '. Сообщи эту букву в чате — после выбора применим его к сайту.';
+        }),
+      );
+    </script>
+  </body>
+</html>
