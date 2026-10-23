@@ -15,7 +15,8 @@ const release = {
   channel: 'alpha',
   publishedAt: '2026-01-01T00:00:00.000Z',
   minecraftVersions: ['1.8.9'],
-  changelogSlug: 'qa-only',
+  // Next prefetches this link; keep the fixture connected to a served article.
+  changelogSlug: production.updates[0].slug,
   artifacts: [
     {
       platform: 'windows',
