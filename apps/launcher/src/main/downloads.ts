@@ -4,6 +4,14 @@ import { mkdir, lstat, open, rename, unlink } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 
 export type DownloadArtifact = { url: string; sha1: string; size: number; relativePath: string };
+export class DownloadFailure extends Error {
+  readonly retryable: boolean;
+  constructor(message: string, retryable = false, cause?: unknown) {
+    super(message, { cause });
+    this.name = 'DownloadFailure';
+    this.retryable = retryable;
+  }
+}
 type DownloadOptions = {
   signal?: AbortSignal;
   onProgress?: (received: number, total: number) => void;
@@ -157,15 +165,24 @@ export async function downloadArtifact(
       : AbortSignal.timeout(30000);
     const headers: Record<string, string> = { 'Accept-Encoding': 'identity' };
     if (offset > 0) headers.Range = `bytes=${offset}-`;
-    const response = await (options.fetcher ?? fetch)(artifact.url, {
-      headers,
-      signal,
-      redirect: 'error',
-    });
+    let response: Response;
+    try {
+      response = await (options.fetcher ?? fetch)(artifact.url, {
+        headers,
+        signal,
+        redirect: 'error',
+      });
+    } catch (error) {
+      signal.throwIfAborted();
+      throw new DownloadFailure('Не удалось связаться с сервером загрузки.', true, error);
+    }
     const ranged = response.status === 206;
     if (response.status !== 200 && !ranged) {
       await response.body?.cancel();
-      throw new Error(`Сервер загрузки вернул HTTP ${response.status}. Повторите позже.`);
+      throw new DownloadFailure(
+        `Сервер загрузки вернул HTTP ${response.status}. Повторите позже.`,
+        response.status === 429 || response.status >= 500,
+      );
     }
     if (
       ranged &&
@@ -190,7 +207,18 @@ export async function downloadArtifact(
       options.onProgress?.(received, artifact.size);
       while (true) {
         signal.throwIfAborted();
-        const { done, value } = await reader.read();
+        let chunk: ReadableStreamReadResult<Uint8Array>;
+        try {
+          chunk = await reader.read();
+        } catch (error) {
+          signal.throwIfAborted();
+          throw new DownloadFailure(
+            'Соединение прервалось. Сохранённую часть можно продолжить.',
+            true,
+            error,
+          );
+        }
+        const { done, value } = chunk;
         if (done) break;
         if (received + value.byteLength > artifact.size)
           throw new Error('Ответ превысил размер файла из манифеста.');
@@ -209,10 +237,16 @@ export async function downloadArtifact(
       await file?.close();
     }
     if (received !== artifact.size)
-      throw new Error('Загрузка оборвалась. При повторе продолжим с сохранённой части.');
+      throw new DownloadFailure(
+        'Загрузка оборвалась. При повторе продолжим с сохранённой части.',
+        true,
+      );
     if (!(await matches(partial, artifact, signal))) {
       await unlink(partial);
-      throw new Error('Хеш файла не совпал. Повреждённая загрузка удалена; повторите попытку.');
+      throw new DownloadFailure(
+        'Хеш файла не совпал. Повреждённая загрузка удалена; повторите попытку.',
+        true,
+      );
     }
     await rename(partial, target);
     return { path: target, fromCache: false };
