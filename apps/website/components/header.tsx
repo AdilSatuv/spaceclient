@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Arrow, OrbitMark } from './icons';
 import { SpaceMotion } from './space-motion';
 const links = [
@@ -14,8 +14,32 @@ export default function Header() {
   const path = usePathname();
   const dialog = useRef<HTMLDialogElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
+  const brand = useRef<HTMLAnchorElement>(null);
+  const desktopNav = useRef<HTMLElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const close = () => dialog.current?.close();
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [menuOpen]);
+
+  useEffect(() => {
+    const desktop = window.matchMedia('(min-width: 761px)');
+    const closeOnDesktop = () => {
+      if (desktop.matches) dialog.current?.close();
+    };
+    desktop.addEventListener('change', closeOnDesktop);
+    return () => desktop.removeEventListener('change', closeOnDesktop);
+  }, []);
+
+  useEffect(() => {
+    dialog.current?.close();
+  }, [path]);
   const nav = links.map(([href, label]) => (
     <Link
       key={href}
@@ -29,11 +53,11 @@ export default function Header() {
   return (
     <header className="site-header">
       <div className="container header-inner">
-        <Link className="brand" href="/" aria-label="Space Client — главная">
+        <Link className="brand" href="/" aria-label="Space Client — главная" ref={brand}>
           <OrbitMark />
           <span>SPACE CLIENT</span>
         </Link>
-        <nav className="desktop-nav" aria-label="Главная навигация">
+        <nav className="desktop-nav" aria-label="Главная навигация" ref={desktopNav}>
           {nav}
         </nav>
         <SpaceMotion />
@@ -49,7 +73,6 @@ export default function Header() {
           onClick={() => {
             dialog.current?.showModal();
             setMenuOpen(true);
-            document.body.style.overflow = 'hidden';
           }}
         >
           Меню{' '}
@@ -84,8 +107,11 @@ export default function Header() {
           }}
           onClose={() => {
             setMenuOpen(false);
-            document.body.style.overflow = '';
-            trigger.current?.focus();
+            const focusTarget = trigger.current?.getClientRects().length
+              ? trigger.current
+              : (desktopNav.current?.querySelector<HTMLAnchorElement>('[aria-current="page"]') ??
+                brand.current);
+            focusTarget?.focus();
           }}
         >
           <div className="menu-top">

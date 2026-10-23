@@ -8,9 +8,10 @@ export default function Retry() {
     <button
       className="button secondary"
       disabled={pending}
+      aria-busy={pending}
       onClick={() => start(() => router.refresh())}
     >
-      {pending ? 'Проверяем каталог…' : 'Повторить запрос'}
+      {pending ? 'Повторяем запрос…' : 'Повторить запрос'}
     </button>
   );
 }

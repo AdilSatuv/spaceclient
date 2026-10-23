@@ -3,23 +3,32 @@
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 
+const preferenceKey = 'space.motion';
+
 export function SpaceMotion() {
   const path = usePathname();
   const [paused, setPaused] = useState(false);
   const [reduced, setReduced] = useState(false);
+  const [ready, setReady] = useState(false);
   const seen = useRef(new WeakSet<Element>());
 
   useEffect(() => {
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
     const update = () => setReduced(preference.matches);
     update();
+    try {
+      setPaused(window.localStorage.getItem(preferenceKey) === 'paused');
+    } catch {
+      // The control still works for this visit when browser storage is unavailable.
+    }
+    setReady(true);
     preference.addEventListener('change', update);
     return () => preference.removeEventListener('change', update);
   }, []);
 
   useEffect(() => {
-    document.documentElement.dataset.motion = paused || reduced ? 'paused' : 'active';
-    if (paused || reduced || !('IntersectionObserver' in window)) return;
+    document.documentElement.dataset.motion = !ready || paused || reduced ? 'paused' : 'active';
+    if (!ready || paused || reduced || !('IntersectionObserver' in window)) return;
     const animations = new Set<Animation>();
     const observer = new IntersectionObserver(
       (entries) => {
@@ -47,7 +56,7 @@ export function SpaceMotion() {
       observer.disconnect();
       animations.forEach((animation) => animation.cancel());
     };
-  }, [path, paused, reduced]);
+  }, [path, paused, reduced, ready]);
 
   return (
     <button
@@ -60,8 +69,16 @@ export function SpaceMotion() {
             : 'Приостановить анимации'
       }
       aria-pressed={paused || reduced}
-      disabled={reduced}
-      onClick={() => setPaused((value) => !value)}
+      disabled={!ready || reduced}
+      onClick={() => {
+        const nextPaused = !paused;
+        setPaused(nextPaused);
+        try {
+          window.localStorage.setItem(preferenceKey, nextPaused ? 'paused' : 'active');
+        } catch {
+          // Storage restrictions must not prevent pausing the current page.
+        }
+      }}
       title={
         reduced
           ? 'Используется настройка уменьшения движения системы'

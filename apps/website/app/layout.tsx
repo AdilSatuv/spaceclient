@@ -10,7 +10,7 @@ export const metadata: Metadata = pageMetadata(
 );
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="ru">
+    <html lang="ru" data-motion="paused">
       <body>
         <a className="skip" href="#main">
           Перейти к содержимому
