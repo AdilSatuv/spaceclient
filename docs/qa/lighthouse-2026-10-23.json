@@ -1,0 +1,221 @@
+{
+  "date": "2026-10-23",
+  "sourceBase": "dae90f2",
+  "sourceDigests": {
+    "apps/website/app/globals.css": "2989fdd6af48e3de245deade721e98976c8426c63d44c73f77e8467be01eaffd",
+    "apps/website/components/header.tsx": "28343b9cb14d9f6ca60ab7f01dd5790b8d2cac7941a9604909b560909fa9e173",
+    "apps/website/components/hud-preview.tsx": "81f40e85b1fdc37087e28cd6da25f0926522aaffc9240472fec6eeeb0217131b",
+    "apps/website/next.config.ts": "32d344e96f0142e80bf32b7fb52985b33376e1210b4b8204dccd08727bd911ee"
+  },
+  "environment": {
+    "tool": "13.5.0",
+    "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+    "screen": {
+      "mobile": true,
+      "width": 412,
+      "height": 823,
+      "deviceScaleFactor": 1.75,
+      "disabled": false
+    },
+    "throttling": {
+      "rttMs": 150,
+      "throughputKbps": 1638.4,
+      "requestLatencyMs": 562.5,
+      "downloadThroughputKbps": 1474.5600000000002,
+      "uploadThroughputKbps": 675,
+      "cpuSlowdownMultiplier": 4
+    },
+    "method": "simulate",
+    "production": true,
+    "target": "http://127.0.0.1:3000",
+    "indexable": false,
+    "api": "local NestJS, real versioned content"
+  },
+  "runs": [
+    {
+      "route": "/",
+      "run": 1,
+      "scores": {
+        "performance": 98,
+        "accessibility": 100,
+        "seo": 66
+      },
+      "lcpMs": 2467,
+      "cls": 0,
+      "fetchedAt": "2026-10-23T00:35:00.761Z"
+    },
+    {
+      "route": "/",
+      "run": 2,
+      "scores": {
+        "performance": 98,
+        "accessibility": 100,
+        "seo": 66
+      },
+      "lcpMs": 2453,
+      "cls": 0,
+      "fetchedAt": "2026-10-23T00:35:11.875Z"
+    },
+    {
+      "route": "/",
+      "run": 3,
+      "scores": {
+        "performance": 98,
+        "accessibility": 100,
+        "seo": 66
+      },
+      "lcpMs": 2451,
+      "cls": 0,
+      "fetchedAt": "2026-10-23T00:35:23.025Z"
+    },
+    {
+      "route": "/features",
+      "run": 1,
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "seo": 63
+      },
+      "lcpMs": 1506,
+      "cls": 0,
+      "fetchedAt": "2026-10-23T00:35:34.171Z"
+    },
+    {
+      "route": "/features",
+      "run": 2,
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "seo": 63
+      },
+      "lcpMs": 1807,
+      "cls": 0,
+      "fetchedAt": "2026-10-23T00:35:45.301Z"
+    },
+    {
+      "route": "/features",
+      "run": 3,
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "seo": 63
+      },
+      "lcpMs": 1956,
+      "cls": 0,
+      "fetchedAt": "2026-10-23T00:35:56.397Z"
+    },
+    {
+      "route": "/download",
+      "run": 1,
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "seo": 63
+      },
+      "lcpMs": 1508,
+      "cls": 0,
+      "fetchedAt": "2026-10-23T00:36:07.445Z"
+    },
+    {
+      "route": "/download",
+      "run": 2,
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "seo": 63
+      },
+      "lcpMs": 1507,
+      "cls": 0,
+      "fetchedAt": "2026-10-23T00:36:18.576Z"
+    },
+    {
+      "route": "/download",
+      "run": 3,
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "seo": 63
+      },
+      "lcpMs": 1957,
+      "cls": 0,
+      "fetchedAt": "2026-10-23T00:36:29.577Z"
+    },
+    {
+      "route": "/updates",
+      "run": 1,
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "seo": 63
+      },
+      "lcpMs": 1504,
+      "cls": 0,
+      "fetchedAt": "2026-10-23T00:36:40.659Z"
+    },
+    {
+      "route": "/updates",
+      "run": 2,
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "seo": 63
+      },
+      "lcpMs": 1955,
+      "cls": 0,
+      "fetchedAt": "2026-10-23T00:36:51.707Z"
+    },
+    {
+      "route": "/updates",
+      "run": 3,
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "seo": 63
+      },
+      "lcpMs": 1955,
+      "cls": 0,
+      "fetchedAt": "2026-10-23T00:37:02.774Z"
+    },
+    {
+      "route": "/help",
+      "run": 1,
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "seo": 63
+      },
+      "lcpMs": 1506,
+      "cls": 0,
+      "fetchedAt": "2026-10-23T00:37:13.738Z"
+    },
+    {
+      "route": "/help",
+      "run": 2,
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "seo": 63
+      },
+      "lcpMs": 1955,
+      "cls": 0,
+      "fetchedAt": "2026-10-23T00:37:24.739Z"
+    },
+    {
+      "route": "/help",
+      "run": 3,
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "seo": 63
+      },
+      "lcpMs": 1955,
+      "cls": 0,
+      "fetchedAt": "2026-10-23T00:37:35.786Z"
+    }
+  ],
+  "limitations": [
+    "Local laboratory, not field data or production HTTPS measurement",
+    "SEO crawlability intentionally fails on preview; other scored SEO audits passed",
+    "Browser zoom and reduced-motion emulation not yet verified"
+  ]
+}

@@ -16,6 +16,13 @@ const base = process.env.SPACE_SITE_URL || 'http://127.0.0.1:3000';
     const html = await response.text();
     assert.equal(response.status, 200, route);
     assert.equal((html.match(/<h1(?:\s|>)/g) || []).length, 1, route);
+    const head = html.slice(0, html.indexOf('</head>'));
+    assert.match(
+      head,
+      /<meta name="description" content="[^"]+"/,
+      `${route}: description belongs in head`,
+    );
+    assert.match(head, /<title>[^<]+<\/title>/, `${route}: title belongs in head`);
     assert.ok(html.includes('SPACE'), route);
     console.log('200', route);
   }
@@ -27,7 +34,7 @@ const base = process.env.SPACE_SITE_URL || 'http://127.0.0.1:3000';
   assert.match(html, /Ничего не найдено/);
   html = await (await fetch(base + '/help?q=zzzzzz')).text();
   assert.match(html, /Ответ пока не найден/);
-  console.log('Route, heading, 404 and filter checks passed.');
+  console.log('Route, head metadata, heading, 404 and filter checks passed.');
 })().catch((error) => {
   console.error(error.message);
   process.exitCode = 1;

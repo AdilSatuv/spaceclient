@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Arrow, OrbitMark } from './icons';
 const links = [
   ['/features', 'Возможности'],
@@ -13,6 +13,7 @@ export default function Header() {
   const path = usePathname();
   const dialog = useRef<HTMLDialogElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const close = () => dialog.current?.close();
   const nav = links.map(([href, label]) => (
     <Link
@@ -40,8 +41,12 @@ export default function Header() {
         <button
           className="menu-trigger secondary"
           ref={trigger}
+          aria-haspopup="dialog"
+          aria-expanded={menuOpen}
+          aria-controls="mobile-navigation"
           onClick={() => {
             dialog.current?.showModal();
+            setMenuOpen(true);
             document.body.style.overflow = 'hidden';
           }}
         >
@@ -57,9 +62,26 @@ export default function Header() {
           </svg>
         </button>
         <dialog
+          id="mobile-navigation"
           ref={dialog}
           aria-labelledby="menu-title"
+          onKeyDown={(event) => {
+            if (event.key !== 'Tab') return;
+            const controls = Array.from(
+              event.currentTarget.querySelectorAll<HTMLElement>('button, a[href]'),
+            ).filter((control) => control.getClientRects().length > 0);
+            const first = controls[0];
+            const last = controls.at(-1);
+            if (event.shiftKey && document.activeElement === first) {
+              event.preventDefault();
+              last?.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+              event.preventDefault();
+              first?.focus();
+            }
+          }}
           onClose={() => {
+            setMenuOpen(false);
             document.body.style.overflow = '';
             trigger.current?.focus();
           }}

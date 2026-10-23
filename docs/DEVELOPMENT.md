@@ -46,3 +46,5 @@ git push origin main
 Для Next.js-кода установлен локальный Prettier 3.9.10 (точная версия в package-lock). Использовать `npm.cmd run format` перед проверкой; CI выполняет `format:check`. Не форматировать auto-generated next-env.d.ts и AGENTS.md от Next dev. Встроенные руководства установленной Next.js доступны в node_modules/next/dist/docs и учитываются при смене API/конвенций.
 
 Node.js для workspace теперь требуется версии 24+; CI использует 24. Контрактные тесты читают erasable TypeScript напрямую через встроенную поддержку Node, без отдельного компилятора тестов.
+
+Для воспроизводимого локального mobile lab установлен Lighthouse 13.5.0. Команда `npm.cmd run audit:web -- / /features /download /updates /help` делает по три последовательных прогона запущенной production-сборки; Chrome запускается в отдельном headless-профиле. Полные отчёты игнорируются в `.reports/`, условия и проверенные результаты фиксируются в WEBSITE-QA.md. Не запускать build или несколько серий замеров одновременно.

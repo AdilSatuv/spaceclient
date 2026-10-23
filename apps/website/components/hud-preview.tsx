@@ -15,7 +15,7 @@ export default function HudPreview() {
           alt=""
           fill
           sizes="(max-width: 760px) 100vw, 1200px"
-          quality={80}
+          quality={75}
         />
         <div className="hud-scene-shade" />
         <div className="hud-widgets">
