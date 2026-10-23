@@ -1,0 +1,270 @@
+{
+  "color": {
+    "background": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.023529411764705882,
+          0.0392156862745098,
+          0.0784313725490196
+        ],
+        "alpha": 1,
+        "hex": "#060A14"
+      }
+    },
+    "surface": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.050980392156862744,
+          0.0784313725490196,
+          0.1450980392156863
+        ],
+        "alpha": 1,
+        "hex": "#0D1425"
+      }
+    },
+    "raised": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0784313725490196,
+          0.12549019607843137,
+          0.2235294117647059
+        ],
+        "alpha": 1,
+        "hex": "#142039"
+      }
+    },
+    "border": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.14901960784313725,
+          0.2,
+          0.29411764705882354
+        ],
+        "alpha": 1,
+        "hex": "#26334B"
+      }
+    },
+    "text": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9411764705882353,
+          0.9607843137254902,
+          1
+        ],
+        "alpha": 1,
+        "hex": "#F0F5FF"
+      }
+    },
+    "muted": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6588235294117647,
+          0.7058823529411765,
+          0.792156862745098
+        ],
+        "alpha": 1,
+        "hex": "#A8B4CA"
+      }
+    },
+    "accent": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.615686274509804,
+          0.8627450980392157,
+          1
+        ],
+        "alpha": 1,
+        "hex": "#9DDCFF"
+      }
+    },
+    "on-accent": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.027450980392156862,
+          0.10196078431372549,
+          0.16862745098039217
+        ],
+        "alpha": 1,
+        "hex": "#071A2B"
+      }
+    },
+    "violet": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7058823529411765,
+          0.6392156862745098,
+          0.9568627450980393
+        ],
+        "alpha": 1,
+        "hex": "#B4A3F4"
+      }
+    },
+    "accent-hover": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7764705882352941,
+          0.9215686274509803,
+          1
+        ],
+        "alpha": 1,
+        "hex": "#C6EBFF"
+      }
+    },
+    "wordmark": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.37254901960784315,
+          0.4627450980392157,
+          0.5882352941176471
+        ],
+        "alpha": 1,
+        "hex": "#5F7696"
+      }
+    }
+  },
+  "space": {
+    "s4": {
+      "$type": "dimension",
+      "$value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "s8": {
+      "$type": "dimension",
+      "$value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "s12": {
+      "$type": "dimension",
+      "$value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "s16": {
+      "$type": "dimension",
+      "$value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "s24": {
+      "$type": "dimension",
+      "$value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "s32": {
+      "$type": "dimension",
+      "$value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "s48": {
+      "$type": "dimension",
+      "$value": {
+        "value": 48,
+        "unit": "px"
+      }
+    },
+    "s64": {
+      "$type": "dimension",
+      "$value": {
+        "value": 64,
+        "unit": "px"
+      }
+    }
+  },
+  "radius": {
+    "button": {
+      "$type": "dimension",
+      "$value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "panel": {
+      "$type": "dimension",
+      "$value": {
+        "value": 10,
+        "unit": "px"
+      }
+    }
+  },
+  "size": {
+    "touch-min": {
+      "$type": "dimension",
+      "$value": {
+        "value": 44,
+        "unit": "px"
+      }
+    },
+    "button": {
+      "$type": "dimension",
+      "$value": {
+        "value": 52,
+        "unit": "px"
+      }
+    },
+    "content-max": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1280,
+        "unit": "px"
+      }
+    },
+    "header-desktop": {
+      "$type": "dimension",
+      "$value": {
+        "value": 96,
+        "unit": "px"
+      }
+    }
+  },
+  "font": {
+    "body": {
+      "$type": "fontFamily",
+      "$value": "Segoe UI"
+    },
+    "mono": {
+      "$type": "fontFamily",
+      "$value": "Consolas"
+    }
+  },
+  "motion": {
+    "feedback": {
+      "$type": "duration",
+      "$value": {
+        "value": 0.18,
+        "unit": "s"
+      }
+    }
+  }
+}
