@@ -60,6 +60,20 @@ test('queued writes preserve both profiles and failed writes do not alter memory
     /Не удалось сохранить/,
   );
   assert.equal(store.profile('default').name, 'Моя орбита');
+  assert.equal(
+    (await fs.readdir(root)).some((file) => file.endsWith('.tmp')),
+    false,
+  );
+});
+test('oversized settings are backed up without parsing them into application state', async (t) => {
+  const { root, ProfileStore } = await fixture(t);
+  const original = 'x'.repeat(65537);
+  await fs.writeFile(path.join(root, 'settings.json'), original);
+  const store = await ProfileStore.open(root, 8192);
+  assert.ok(store.snapshot().warning);
+  assert.equal(store.snapshot().profiles.length, 1);
+  const backup = (await fs.readdir(root)).find((file) => file.startsWith('settings.invalid-'));
+  assert.equal((await fs.stat(path.join(root, backup))).size, 65537);
 });
 test('profile count is bounded and symlinked instance directories are refused', async (t) => {
   const { root, store } = await fixture(t);

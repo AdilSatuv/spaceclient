@@ -289,7 +289,10 @@ function App() {
                           key={item.id}
                           disabled={busy || (dirty && item.id !== profile.id)}
                           aria-pressed={item.id === profile.id}
-                          onClick={() => run(() => window.space.selectProfile(item.id), apply)}
+                          onClick={() => {
+                            if (item.id !== profile.id)
+                              void run(() => window.space.selectProfile(item.id), apply);
+                          }}
                         >
                           <span className="profile-symbol">
                             <Orbit small />

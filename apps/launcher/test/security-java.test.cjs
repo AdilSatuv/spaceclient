@@ -46,3 +46,20 @@ test('Java parser accepts the pinned 21 x64 runtime and reports unsuitable versi
   await assert.rejects(inspectJava(null), /выберите/);
   await assert.rejects(inspectJava('cmd.exe'), /java.exe/);
 });
+test('Java paths require a local Windows drive and reject both UNC spellings', async () => {
+  const { javaPath } = await import('../src/main/validation.ts');
+  assert.equal(
+    javaPath('C:\\Program Files\\Java\\bin\\java.exe'),
+    'C:\\Program Files\\Java\\bin\\java.exe',
+  );
+  assert.equal(javaPath('D:/Java/bin/java.exe'), 'D:/Java/bin/java.exe');
+  for (const value of [
+    '//server/share/java.exe',
+    '\\\\server\\share\\java.exe',
+    '\\\\?\\C:\\Java\\java.exe',
+    'C:java.exe',
+    '/usr/bin/java.exe',
+    'C:\\Java\\cmd.exe',
+  ])
+    assert.throws(() => javaPath(value), /локальный/);
+});

@@ -1,4 +1,4 @@
-import { isAbsolute, basename } from 'node:path';
+import { win32 } from 'node:path';
 import type { Profile, ProfileEdit, SavedState } from '../shared/contracts.ts';
 
 export const MAX_PROFILES = 10;
@@ -40,10 +40,12 @@ export function javaPath(value: unknown): string {
   if (
     typeof value !== 'string' ||
     value.length > 1024 ||
-    !isAbsolute(value) ||
-    basename(value).toLowerCase() !== 'java.exe' ||
+    !/^[a-z]:[\\/]/i.test(value) ||
+    !win32.isAbsolute(value) ||
+    win32.basename(value).toLowerCase() !== 'java.exe' ||
     value.includes('\0') ||
-    value.startsWith('\\\\')
+    value.startsWith('\\\\') ||
+    value.startsWith('//')
   )
     throw new Error('Выберите локальный файл java.exe.');
   return value;

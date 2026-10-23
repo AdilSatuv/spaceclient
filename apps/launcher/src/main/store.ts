@@ -1,4 +1,4 @@
-import { readFile, writeFile, mkdir, rename, copyFile, lstat } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, rename, copyFile, lstat, unlink } from 'node:fs/promises';
 import { constants } from 'node:fs';
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
@@ -41,7 +41,10 @@ export class ProfileStore {
     await mkdir(root, { recursive: true });
     let raw: string;
     try {
-      raw = await readFile(join(root, 'settings.json'), 'utf8');
+      const file = join(root, 'settings.json');
+      const metadata = await lstat(file);
+      // Valid settings fit comfortably below this bound. Preserve oversized input as corrupt.
+      raw = metadata.size <= 65536 ? await readFile(file, 'utf8') : '';
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code === 'ENOENT') return store;
       throw new Error('Не удалось прочитать настройки. Проверьте доступ к папке лаунчера.');
@@ -90,6 +93,7 @@ export class ProfileStore {
         await writeFile(temporary, JSON.stringify(verified, null, 2), { flag: 'wx', mode: 0o600 });
         await rename(temporary, join(this.root, 'settings.json'));
       } catch {
+        await unlink(temporary).catch(() => {});
         throw new Error('Не удалось сохранить настройки. Изменения не применены.');
       }
       this.state = verified;
