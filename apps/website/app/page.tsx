@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import { getImageProps } from 'next/image';
 import Link from 'next/link';
 import { Arrow } from '../components/icons';
 import HudPreview from '../components/hud-preview';
@@ -26,19 +26,26 @@ const steps = [
   },
 ];
 export default function Home() {
+  const shared = {
+    alt: '',
+    fill: true,
+    sizes: '100vw',
+    loading: 'eager' as const,
+    fetchPriority: 'high' as const,
+  };
+  const desktop = getImageProps({ ...shared, src: '/images/space-hero-v2.png', quality: 85 }).props;
+  const mobile = getImageProps({
+    ...shared,
+    src: '/images/space-hero-mobile-v1.png',
+    quality: 80,
+  }).props;
   return (
     <>
       <section className="hero">
-        <Image
-          className="hero-art"
-          src="/images/space-hero-v2.png"
-          alt=""
-          fill
-          sizes="100vw"
-          loading="eager"
-          fetchPriority="high"
-          quality={85}
-        />
+        <picture>
+          <source media="(max-width: 760px)" srcSet={mobile.srcSet} sizes={mobile.sizes} />
+          <img {...desktop} className="hero-art" />
+        </picture>
         <div className="hero-shade" />
         <div className="container hero-content">
           <p className="eyebrow rule-label">MINECRAFT. НА СВОЕЙ ОРБИТЕ.</p>

@@ -4,7 +4,16 @@ const { spawn } = require('node:child_process');
 const path = require('node:path');
 const root = path.resolve(__dirname, '..');
 const production = require(path.join(root, 'apps/api/dist/content.js'));
-let scenario = 'empty';
+const preview = process.argv.find((x) => x.startsWith('--preview='))?.slice('--preview='.length);
+if (
+  preview &&
+  !['empty', 'error', 'stable', 'prerelease', 'withdrawn', 'invalid', 'pagination'].includes(
+    preview,
+  )
+)
+  throw new Error('Unknown fixture scenario');
+let scenario = preview || 'empty';
+let previewBase = '';
 const release = (id, channel, extra = {}) => ({
   id,
   version: '0.1.0',
@@ -25,9 +34,31 @@ const release = (id, channel, extra = {}) => ({
   ],
   ...extra,
 });
-const fixture = http.createServer((req, res) => {
+const fixture = http.createServer(async (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   const url = new URL(req.url, 'http://localhost');
+  if (preview && !url.pathname.startsWith('/v1/')) {
+    try {
+      const response = await fetch(
+        previewBase + (url.pathname === '/__clipboard-denied' ? '/download' : req.url),
+        { redirect: 'manual' },
+      );
+      res.statusCode = response.status;
+      response.headers.forEach((value, key) => {
+        if (
+          !['connection', 'transfer-encoding', 'content-encoding', 'content-length'].includes(key)
+        )
+          res.setHeader(key, value);
+      });
+      res.setHeader('Permissions-Policy', 'clipboard-write=()');
+      res.setHeader('X-Space-Test-Only', 'clipboard-denied');
+      res.end(Buffer.from(await response.arrayBuffer()));
+    } catch {
+      res.statusCode = 502;
+      res.end('Test preview unavailable');
+    }
+    return;
+  }
   if (scenario === 'error') {
     res.statusCode = 503;
     res.end('{}');
@@ -92,6 +123,7 @@ async function freePort() {
   await new Promise((r) => fixture.listen(0, '127.0.0.1', r));
   const port = await freePort();
   const base = `http://127.0.0.1:${port}`;
+  previewBase = base;
   const child = spawn(
     process.execPath,
     [
@@ -124,6 +156,20 @@ async function freePort() {
       await new Promise((r) => setTimeout(r, 200));
     }
     assert.ok(ready, `Next failed to start: ${logs}`);
+    if (preview) {
+      console.log(`TEST FIXTURES ONLY (${preview}): ${base}/download`);
+      console.log(
+        `Clipboard denial: http://127.0.0.1:${fixture.address().port}/__clipboard-denied`,
+      );
+      console.log(
+        'No artifacts exist. Do not click download links. Ctrl+C stops both test servers.',
+      );
+      await new Promise((resolve) => {
+        process.once('SIGINT', resolve);
+        process.once('SIGTERM', resolve);
+      });
+      return;
+    }
     const page = async (route = '/download') => {
       const r = await fetch(base + route);
       return { status: r.status, html: await r.text() };

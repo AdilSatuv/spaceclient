@@ -86,7 +86,7 @@ export default async function Features({
                   <h2>{item.name}</h2>
                   <p>{item.summary}</p>
                   <details>
-                    <summary>Подробнее</summary>
+                    <summary aria-label={`Подробнее: ${item.name}`}>Подробнее</summary>
                     <p>{item.details}</p>
                     {item.releaseId && (
                       <Link className="text-link" href="/download">

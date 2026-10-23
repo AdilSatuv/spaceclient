@@ -16,7 +16,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           Перейти к содержимому
         </a>
         <Header />
-        <main id="main">{children}</main>
+        <main id="main" tabIndex={-1}>
+          {children}
+        </main>
         <Footer />
       </body>
     </html>

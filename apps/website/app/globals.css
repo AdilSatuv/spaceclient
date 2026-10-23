@@ -1025,7 +1025,7 @@ dialog nav a[aria-current] {
     display: block;
   }
   .hero-art {
-    object-position: 66% center;
+    object-position: center;
   }
   .hero-shade {
     background:
@@ -1446,4 +1446,12 @@ dialog nav a[aria-current] {
   .footer a {
     min-height: 44px;
   }
+}
+.brand,
+.github-link,
+.back-link {
+  min-height: 44px;
+}
+summary {
+  min-height: 44px;
 }
