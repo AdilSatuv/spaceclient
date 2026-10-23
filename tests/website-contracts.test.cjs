@@ -4,9 +4,9 @@ const {
   isReleaseList,
   isFeatureList,
   isUpdateList,
-  recommendedRelease,
   allowedDownload,
-} = require('../apps/website/lib/contracts.ts');
+} = require('@space/content-contracts');
+const { recommendedRelease } = require('../apps/website/lib/catalog.ts');
 const fixture = (id, channel, publishedAt, extra = {}) => ({
   id,
   version: '0.1.0',
@@ -84,4 +84,29 @@ test('website rejects unsafe download targets and invalid artifact metadata', ()
     Object.assign(item.artifacts[0], change);
     assert.equal(isReleaseList({ items: [item], total: 1 }), false);
   }
+});
+
+test('shared catalog validation rejects duplicate slugs and dangling release relationships', () => {
+  const { validateContent } = require('@space/content-contracts');
+  const note = {
+    id: 'one',
+    slug: 'one',
+    title: 'Test',
+    summary: 'Fixture',
+    type: 'development',
+    publishedAt: '2026-10-24T00:00:00.000Z',
+    blocks: [{ heading: 'Test', text: 'Test' }],
+  };
+  assert.doesNotThrow(() => validateContent({ features: [], releases: [], updates: [note] }));
+  for (const updates of [
+    [note, { ...note, id: 'two' }],
+    [{ ...note, releaseId: 'absent' }],
+    [null],
+  ]) {
+    assert.throws(() => validateContent({ features: [], releases: [], updates }));
+  }
+  for (const input of [null, {}, { features: null, releases: [], updates: [] }])
+    assert.throws(() => validateContent(input));
+  assert.equal(isUpdateList({ items: [], page: 1, pageSize: 12, total: 20 }), false);
+  assert.equal(isUpdateList({ items: [], page: 3, pageSize: 12, total: 20 }), true);
 });

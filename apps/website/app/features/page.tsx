@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { PageIntro } from '../../components/shell';
 import ContentError from '../../components/content-error';
-import { getFeatures } from '../../lib/api';
+import { getFeatures } from '../../lib/server/api';
 import { statusLabels } from '../../lib/content';
 import { pageMetadata } from '../../lib/metadata';
 export async function generateMetadata() {

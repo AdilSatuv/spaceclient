@@ -9,4 +9,7 @@ async function main() {
   await app.listen(port, host);
   console.log(`Space API: http://${host}:${port}/v1/health`);
 }
-main().catch(error => { console.error(error); process.exitCode = 1; });
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});

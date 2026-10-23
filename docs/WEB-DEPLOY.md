@@ -15,6 +15,7 @@
 2. Установить Node 24+, выполнить `npm ci` в чистой копии, затем `npm test` и `npm run format:check`.
 3. Задать final env **до build**: реальный `SPACE_SITE_URL`, `SPACE_SITE_INDEXABLE=false` для preview; `SPACE_API_URL` — приватный адрес API. Не менять origin только после сборки: у статических страниц metadata уже зафиксирована.
 4. Выполнить `npm run build`, `npm run check`, `npm run check:web:states`. Последняя команда поднимает временные localhost-серверы, а не публикует fixture-каталог.
+   Сборка API/Next автоматически собирает @space/content-contracts. При упаковке отдельных процессов включить `packages/content-contracts/package.json` и `dist` вместе с workspace-зависимостями; не копировать один `apps/api/dist`. Не запускать из разных commit общий пакет и приложение.
 5. Сохранить build/commit и предыдущее рабочее окружение. Не редактировать production каталог вручную ради демонстрации кнопки скачивания.
 
 ## Запуск

@@ -1,6 +1,27 @@
 {
-  "name": "@space/website", "version": "0.1.0", "private": true,
-  "scripts": { "dev": "next dev --hostname 127.0.0.1", "build": "next build", "start": "next start --hostname 127.0.0.1", "start:hosted": "next start --hostname 0.0.0.0", "check": "tsc --noEmit" },
-  "dependencies": { "next": "16.4.2", "react": "19.3.1", "react-dom": "19.3.1" },
-  "devDependencies": { "typescript": "5.9.3", "@types/react": "19.2.14", "@types/node": "24.10.1", "@types/react-dom": "19.2.3" }
+  "name": "@space/website",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1",
+    "build": "next build",
+    "start": "next start --hostname 127.0.0.1",
+    "start:hosted": "next start --hostname 0.0.0.0",
+    "check": "tsc --noEmit",
+    "prebuild": "npm run build --workspace @space/content-contracts",
+    "predev": "npm run build --workspace @space/content-contracts",
+    "precheck": "npm run build --workspace @space/content-contracts"
+  },
+  "dependencies": {
+    "next": "16.4.2",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "@space/content-contracts": "0.1.0"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "@types/react": "19.2.14",
+    "@types/node": "24.10.1",
+    "@types/react-dom": "19.2.3"
+  }
 }

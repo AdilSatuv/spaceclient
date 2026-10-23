@@ -1,3 +1,4 @@
+export type FeatureStatus = 'planned' | 'prototype' | 'verified' | 'released';
 export type Feature = {
   id: string;
   slug: string;
@@ -5,7 +6,7 @@ export type Feature = {
   summary: string;
   details: string;
   category: 'hud' | 'comfort' | 'launcher' | 'performance';
-  status: 'planned' | 'prototype' | 'verified' | 'released';
+  status: FeatureStatus;
   releaseId?: string;
 };
 export type Update = {
@@ -38,6 +39,20 @@ export type Release = {
   withdrawn?: boolean;
 };
 export type UpdateList = { items: Update[]; page: number; pageSize: number; total: number };
+export type ContentCatalog = { features: Feature[]; releases: Release[]; updates: Update[] };
+export const UPDATE_PAGE_SIZE = 12;
+export type UpdateQuery = { type: 'all' | Update['type']; page: number };
+export const validUpdateType = (value: unknown): value is UpdateQuery['type'] =>
+  typeof value === 'string' && ['all', 'development', 'release'].includes(value);
+export const validUpdatePage = (value: unknown): value is string =>
+  typeof value === 'string' && /^[1-9]\d{0,5}$/.test(value);
+export type ProjectStatus = {
+  name: string;
+  stage: 'development';
+  minecraft: string;
+  platforms: string[];
+  repository: string;
+};
 type RecordValue = Record<string, unknown>;
 const record = (x: unknown): x is RecordValue =>
   typeof x === 'object' && x !== null && !Array.isArray(x);
@@ -137,7 +152,13 @@ export function isRelease(x: unknown): x is Release {
   );
 }
 export function isFeatureList(x: unknown): x is { items: Feature[] } {
-  return record(x) && Array.isArray(x.items) && x.items.every(isFeature) && unique(x.items);
+  return (
+    record(x) &&
+    Array.isArray(x.items) &&
+    x.items.every(isFeature) &&
+    unique(x.items) &&
+    new Set(x.items.map((item) => item.slug)).size === x.items.length
+  );
 }
 export function isReleaseList(x: unknown): x is { items: Release[]; total: number } {
   return (
@@ -154,17 +175,70 @@ export function isUpdateList(x: unknown): x is UpdateList {
     Array.isArray(x.items) &&
     x.items.every(isUpdate) &&
     unique(x.items) &&
+    new Set(x.items.map((item) => item.slug)).size === x.items.length &&
     positive(x.page) &&
-    x.pageSize === 12 &&
-    x.items.length <= 12 &&
+    x.pageSize === UPDATE_PAGE_SIZE &&
+    x.items.length <= UPDATE_PAGE_SIZE &&
     Number.isSafeInteger(x.total) &&
-    Number(x.total) >= x.items.length
+    Number(x.total) >= x.items.length &&
+    x.items.length ===
+      Math.min(
+        UPDATE_PAGE_SIZE,
+        Math.max(0, Number(x.total) - (Number(x.page) - 1) * UPDATE_PAGE_SIZE),
+      )
   );
 }
 
-export function recommendedRelease(items: Release[]): Release | undefined {
-  const compatible = items
-    .filter((x) => !x.withdrawn && x.minecraftVersions.includes('1.8.9'))
-    .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt) || a.id.localeCompare(b.id));
-  return compatible.find((x) => x.channel === 'stable') || compatible[0];
+export function isProjectStatus(value: unknown): value is ProjectStatus {
+  return (
+    record(value) &&
+    text(value.name) &&
+    value.stage === 'development' &&
+    text(value.minecraft) &&
+    Array.isArray(value.platforms) &&
+    value.platforms.length > 0 &&
+    value.platforms.every(text) &&
+    value.repository === 'https://github.com/AdilSatuv/spaceclient'
+  );
+}
+
+export function validateContent(value: unknown): asserts value is ContentCatalog {
+  if (
+    !record(value) ||
+    !isFeatureList({ items: value.features }) ||
+    !isReleaseList({
+      items: value.releases,
+      total: Array.isArray(value.releases) ? value.releases.length : -1,
+    }) ||
+    !Array.isArray(value.updates) ||
+    !value.updates.every(isUpdate) ||
+    !unique(value.updates) ||
+    new Set(value.updates.map((item) => item.slug)).size !== value.updates.length
+  ) {
+    throw new Error('Invalid content catalog');
+  }
+  const catalog = value as ContentCatalog;
+  const ids = new Set(catalog.releases.map((item) => item.id));
+  for (const item of [...catalog.features, ...catalog.updates]) {
+    if (item.releaseId !== undefined && !ids.has(item.releaseId))
+      throw new Error('Unknown content release');
+  }
+  for (const release of catalog.releases) {
+    if (
+      !catalog.updates.some(
+        (item) =>
+          item.slug === release.changelogSlug &&
+          item.type === 'release' &&
+          item.releaseId === release.id,
+      )
+    ) {
+      throw new Error('Missing release changelog');
+    }
+    if (
+      new Set(release.artifacts.map((item) => `${item.platform}/${item.architecture}`)).size !==
+      release.artifacts.length
+    ) {
+      throw new Error('Duplicate release artifact');
+    }
+  }
 }

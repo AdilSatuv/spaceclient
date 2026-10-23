@@ -1,7 +1,8 @@
+import { updatesQuery } from '../../../lib/queries';
 import Link from 'next/link';
 import { PageIntro } from '../../../components/shell';
 import ContentError from '../../../components/content-error';
-import { getUpdates } from '../../../lib/api';
+import { getUpdates } from '../../../lib/server/api';
 import { pageMetadata } from '../../../lib/metadata';
 export async function generateMetadata({
   searchParams,
@@ -9,12 +10,7 @@ export async function generateMetadata({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const params = await searchParams;
-  const type =
-    typeof params.type === 'string' && ['development', 'release'].includes(params.type)
-      ? params.type
-      : 'all';
-  const page =
-    typeof params.page === 'string' && /^[1-9]\d{0,5}$/.test(params.page) ? Number(params.page) : 1;
+  const { type, page } = updatesQuery(params);
   const result = await getUpdates(type, page);
   return pageMetadata(
     '/updates',
@@ -29,12 +25,7 @@ export default async function Updates({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const params = await searchParams;
-  const type =
-    typeof params.type === 'string' && ['development', 'release'].includes(params.type)
-      ? params.type
-      : 'all';
-  const page =
-    typeof params.page === 'string' && /^[1-9]\d{0,5}$/.test(params.page) ? Number(params.page) : 1;
+  const { type, page } = updatesQuery(params);
   const result = await getUpdates(type, page);
   return (
     <div className="container page-content">

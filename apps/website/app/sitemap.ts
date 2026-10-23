@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { configuredOrigin, indexingEnabled } from '../lib/metadata';
-import { getUpdates } from '../lib/api';
+import { getUpdates } from '../lib/server/api';
 import { helpArticles } from '../lib/content';
 export const dynamic = 'force-dynamic';
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

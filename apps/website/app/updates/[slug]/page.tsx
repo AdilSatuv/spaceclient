@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { getUpdate } from '../../../lib/api';
-import { validSlug } from '../../../lib/contracts';
+import { getUpdate } from '../../../lib/server/api';
+import { validSlug } from '@space/content-contracts';
 import ContentError from '../../../components/content-error';
 import { pageMetadata } from '../../../lib/metadata';
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {

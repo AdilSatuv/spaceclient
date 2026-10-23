@@ -73,6 +73,12 @@ npm.cmd run audit:web -- / /features /download /updates /help
 
 Попытка проверить настоящий 200% zoom в настольном Chrome остановлена инструментом Computer Use: он не смог надёжно определить URL текущей вкладки. Ввод в приложение прекращён; масштабирование не считается проверенным. Предыдущие responsive и Lighthouse результаты выше относятся к указанным там срезам и не заменены новыми измерениями.
 
+## Архитектурный срез — 24 октября 2026
+
+Next/Nest используют общий @space/content-contracts. API разделён на HTTP/application/repository, его тестовые каталоги изолированы. Next читает API через server-only composition и единый bounded transport. Схема, ограничения и инструкции — [WEB-ARCHITECTURE.md](WEB-ARCHITECTURE.md).
+
+Прошли 16 общих тестов (контракты, транспорт, metadata, граф зависимостей и трекер), 9 API tests и 92 launcher tests. Production-сборка Next и state checks прошли: empty/error, unsafe artifact, stable/prerelease/withdrawn, фильтр/пагинация и настоящий 404. Новых Lighthouse, browser/clipboard/zoom и Figma-проверок в этом срезе нет; предыдущие визуальные результаты относятся к своим исходным срезам.
+
 ## Ещё проверить
 
 - Дополнительные размеры и браузеры для keyboard/focus trap; полный проход пяти страниц на 390 и 1440 px записан выше.

@@ -3,7 +3,9 @@ const http = require('node:http');
 const { spawn } = require('node:child_process');
 const path = require('node:path');
 const root = path.resolve(__dirname, '..');
-const production = require(path.join(root, 'apps/api/dist/content.js'));
+const production = require(
+  path.join(root, 'apps/api/dist/content/infrastructure/curated-catalog.js'),
+);
 const preview = process.argv.find((x) => x.startsWith('--preview='))?.slice('--preview='.length);
 if (
   preview &&

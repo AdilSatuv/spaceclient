@@ -1,6 +1,6 @@
 # API контента v1
 
-Этап SC-20. Данные versioned в `apps/api/src/content.ts`; записи проверяются при запуске. Публичных write-endpoints и базы нет.
+Этап SC-20, архитектурный срез от 24 октября: данные versioned в `apps/api/src/content/infrastructure/curated-catalog.ts`, общие типы и validators — `packages/content-contracts`. Весь каталог проверяется до обслуживания запросов. HTTP/application/repository разделены; см. [WEB-ARCHITECTURE.md](WEB-ARCHITECTURE.md). Публичных write-endpoints и базы нет.
 
 | Запрос | Ответ |
 |---|---|

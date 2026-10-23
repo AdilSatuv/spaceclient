@@ -2,6 +2,8 @@
 
 По выбору пользователя: Next.js + NestJS, оба на TypeScript. Один GitHub-репозиторий и npm workspaces.
 
+Архитектура после разделения от 24 октября — [WEB-ARCHITECTURE.md](WEB-ARCHITECTURE.md): общий @space/content-contracts, прикладной сервис и repository API, server-only клиент Next.js и автоматические проверки границ. Сборка общего пакета включена в prebuild/predev/precheck обоих приложений.
+
 Спецификация — [WEBSITE-SPEC.md](WEBSITE-SPEC.md), дизайн — [FIGMA-DESIGN.md](FIGMA-DESIGN.md), фактические проверки — [WEBSITE-QA.md](WEBSITE-QA.md). Маршруты и контентный API уже реализованы. Очередь приёмки: SC-16…SC-24; сайт поддерживает отсутствие alpha-сборки.
 
 ```powershell
@@ -41,7 +43,7 @@ API v1:
 
 ## UI и данные сайта
 
-Новый интерфейс основан на `docs/FIGMA-DESIGN.md`. Возможности, каталог загрузок и журнал читаются серверными компонентами Next.js из NestJS через `SPACE_API_URL`. Таймаут — 2,5 секунды, redirect API не разрешается, автоматических повторов нет. Невалидный JSON/контракт и отказ сервиса не превращаются в пустой каталог. Содержимое инструкций помощи хранится в `apps/website/lib/content.ts`.
+Новый интерфейс основан на `docs/FIGMA-DESIGN.md`. Возможности, каталог загрузок и журнал читаются серверными компонентами Next.js из NestJS через `lib/server/api.ts`. `SPACE_API_URL` — HTTP/HTTPS-origin без path/query/credentials, только серверная переменная. Таймаут — 2,5 секунды, включая чтение тела, JSON ограничен 1 МиБ, redirect API не разрешается, автоматических повторов нет. Невалидный JSON/контракт и отказ сервиса не превращаются в пустой каталог. Содержимое инструкций помощи хранится в `apps/website/lib/content.ts`.
 
 - `npm.cmd run format` — форматировать веб-код закреплённым Prettier 3.9.10.
 - `npm.cmd run format:check` — проверить формат без записи.

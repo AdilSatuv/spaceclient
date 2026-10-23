@@ -3,8 +3,8 @@ import { PageIntro } from '../../components/shell';
 import ContentError from '../../components/content-error';
 import CopyHash from '../../components/copy-hash';
 import { Arrow } from '../../components/icons';
-import { getReleases } from '../../lib/api';
-import { recommendedRelease } from '../../lib/contracts';
+import { getReleases } from '../../lib/server/api';
+import { recommendedRelease } from '../../lib/catalog';
 import { pageMetadata } from '../../lib/metadata';
 export async function generateMetadata() {
   const result = await getReleases();
