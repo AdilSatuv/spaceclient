@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "platform": "win32",
+  "electron": "45.0.0",
+  "realAccountUsed": false,
+  "encryptionAvailable": true,
+  "plaintextAbsent": true,
+  "cipherBytes": 263,
+  "restoredAfterProcessRestart": true,
+  "corruptionRejected": true,
+  "failedWritePreservedCiphertext": true,
+  "explicitResetClearedCache": true,
+  "recordedAt": "2026-10-23T09:13:00.759Z",
+  "scope": "Fake data only; no OAuth, Xbox, Minecraft ownership or game launch."
+}

@@ -12,6 +12,7 @@
     "test": "node --test test/*.test.cjs"
   },
   "dependencies": {
+    "@azure/msal-node": "7.1.1",
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "yauzl": "3.4.0"
