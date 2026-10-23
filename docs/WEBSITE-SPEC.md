@@ -177,7 +177,7 @@ Hover/press/focus/error/disabled состояния фиксируются дл�
 
 Next.js App Router, TypeScript strict. Server Components для контента и первичной загрузки; Client Components только для меню, поиска/фильтров, copy/retry и другой интерактивности.
 
-Предлагаемая структура: `app/` — routes/layout/loading/error/not-found; `components/layout`, `components/ui`, `components/features`; `lib/api`, `lib/content`, `lib/validation`; `public/` — собственные assets. Не создавать отдельную копию общей навигации на каждой странице.
+Структура по решению пользователя от 24 октября — FSD: `app/` содержит адаптеры Next, `src/_app` — инициализацию и общий layout, `src/_pages` — страницы, `src/features` — переиспользуемые действия, `src/entities` — доменные данные/правила, `src/shared` — API/UI/metadata. Подробности, public API и ограничения импортов — [WEB-ARCHITECTURE.md](WEB-ARCHITECTURE.md). `public/` хранит собственные assets. Не создавать отдельную копию общей навигации на каждой странице.
 
 NestJS вызывается с Next-сервера по `SPACE_API_URL`, не по адресу, зашитому в браузер. Браузерные query-фильтры применяются к уже безопасным DTO; для retry использовать ограниченный same-origin путь/серверное действие, не произвольный URL от клиента. Серверные секреты не попадают в NEXT_PUBLIC-переменные.
 

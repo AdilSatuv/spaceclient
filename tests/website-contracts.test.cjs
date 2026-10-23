@@ -6,7 +6,7 @@ const {
   isUpdateList,
   allowedDownload,
 } = require('@space/content-contracts');
-const { recommendedRelease } = require('../apps/website/lib/catalog.ts');
+const { recommendedRelease } = require('../apps/website/src/entities/release/index.ts');
 const fixture = (id, channel, publishedAt, extra = {}) => ({
   id,
   version: '0.1.0',

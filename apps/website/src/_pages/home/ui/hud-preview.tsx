@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { OrbitMark } from './icons';
+import { OrbitMark } from '@/shared/ui/icons';
 export default function HudPreview() {
   return (
     <figure className="hud-preview">

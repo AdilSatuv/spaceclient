@@ -1,9 +1,3 @@
-export const statusLabels: Record<string, string> = {
-  planned: 'В планах',
-  prototype: 'Прототип',
-  verified: 'Проверено',
-  released: 'В релизе',
-};
 export const helpArticles = [
   {
     slug: 'getting-started',

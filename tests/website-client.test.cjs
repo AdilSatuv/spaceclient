@@ -1,8 +1,8 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const http = require('node:http');
-const { createContentClient } = require('../apps/website/lib/server/content-client.ts');
-const { updatesQuery } = require('../apps/website/lib/queries.ts');
+const { createContentClient } = require('../apps/website/src/shared/api/index.ts');
+const { updatesQuery } = require('../apps/website/src/_pages/updates/model/query.ts');
 const json = (value, init) => Response.json(value, init);
 const note = {
   id: 'test',

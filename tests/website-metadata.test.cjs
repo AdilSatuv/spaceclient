@@ -4,7 +4,7 @@ const {
   configuredOrigin,
   indexingEnabled,
   pageMetadata,
-} = require('../apps/website/lib/metadata.ts');
+} = require('../apps/website/src/shared/lib/metadata.ts');
 test('preview metadata has no invented canonical or indexable pages', () => {
   const old = {
     node: process.env.NODE_ENV,

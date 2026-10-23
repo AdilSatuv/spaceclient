@@ -2,8 +2,8 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { Arrow, OrbitMark } from './icons';
-import { SpaceMotion } from './space-motion';
+import { Arrow, OrbitMark } from '@/shared/ui/icons';
+import { SpaceMotion } from '@/features/motion-preference';
 const links = [
   ['/features', 'Возможности'],
   ['/download', 'Загрузки'],

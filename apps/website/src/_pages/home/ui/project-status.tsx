@@ -1,4 +1,4 @@
-import { getProject } from '../lib/server/api';
+import { getProject } from '@/shared/api/index.server';
 export default async function ProjectStatus() {
   const result = await getProject();
   const label = result.ok

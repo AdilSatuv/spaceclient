@@ -79,6 +79,15 @@ Next/Nest используют общий @space/content-contracts. API разд
 
 Прошли 16 общих тестов (контракты, транспорт, metadata, граф зависимостей и трекер), 9 API tests и 92 launcher tests. Production-сборка Next и state checks прошли: empty/error, unsafe artifact, stable/prerelease/withdrawn, фильтр/пагинация и настоящий 404. Новых Lighthouse, browser/clipboard/zoom и Figma-проверок в этом срезе нет; предыдущие визуальные результаты относятся к своим исходным срезам.
 
+## FSD-перенос — 24 октября 2026
+
+Страницы и локальная логика перенесены в src/_pages, общий layout и metadata routes — в _app, управление анимациями — в features/motion-preference, политика релиза и данные помощи — в entities, инфраструктура — в shared. Next app содержит адаптеры и literal route config. CSS, ссылки и состояния страниц сохранены; CosmicScene выделена в локальный серверный UI главной.
+
+- Прошли 120 тестов (19 общих, 9 API, 92 launcher), build Next, typecheck и production state checks. Архитектурные тесты проверяют FSD-импорты, изоляцию слайсов, public API, client/server границу и тонкие route files.
+- В собственном headless Chrome: семь маршрутов × две ширины (390 и 1440 px), отсутствие горизонтального скролла, один h1, HTTP 200; неизвестная статья — HTTP 404. Пауза сохраняется после reload и снимается кнопкой; мобильное меню закрывается после перехода и освобождает body scroll. Page/hydration errors не зафиксированы. Снимок главной осмотрен.
+- [Отчёт](qa/website-fsd-2026-10-24.json). Личный браузер не использовался. Clipboard, настоящие загрузки, Lighthouse и публичный HTTPS-origin в этом прогоне не проверялись.
+- Первый общий test run завершился ошибкой worker файла launcher/auth-callback; отдельный прогон всех девяти тестов файла и повторный общий прогон прошли. Причина разового сбоя не установлена; исправление callback в этом срезе не заявляется, код лаунчера не изменён.
+
 ## Ещё проверить
 
 - Дополнительные размеры и браузеры для keyboard/focus trap; полный проход пяти страниц на 390 и 1440 px записан выше.
