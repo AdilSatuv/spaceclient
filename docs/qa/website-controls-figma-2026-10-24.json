@@ -1,0 +1,416 @@
+{
+  "date": "2026-10-24",
+  "scope": "SC-17 controls slice; remaining page and component acceptance stays open",
+  "file": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=23-61",
+  "review": {
+    "id": "23:61",
+    "width": 1640,
+    "height": 805,
+    "instances": 18
+  },
+  "collections": [
+    {
+      "id": "VariableCollectionId:7:4",
+      "count": 28
+    },
+    {
+      "id": "VariableCollectionId:23:2",
+      "count": 15
+    }
+  ],
+  "checks": {
+    "nativeTokenValuesMatchedSourceJson": 43,
+    "brokenAliases": [],
+    "missingCodeSyntax": [],
+    "unexpectedAllScopes": [],
+    "all18VariantsHeight52": true,
+    "all18VariantsUseSharedTextStyles": true,
+    "allPrimaryGradientStopsBound": true,
+    "aliases": 4,
+    "preservedPageFrames": [
+      "3:21692",
+      "3:21323",
+      "3:20957",
+      "3:20166",
+      "3:19673",
+      "3:18956"
+    ]
+  },
+  "components": [
+    {
+      "id": "23:32",
+      "name": "Space / Button",
+      "count": 12,
+      "properties": {
+        "Label#23:0": {
+          "type": "TEXT",
+          "defaultValue": "К загрузкам"
+        },
+        "Busy label#23:13": {
+          "type": "TEXT",
+          "defaultValue": "Обновляем…"
+        },
+        "Style": {
+          "type": "VARIANT",
+          "defaultValue": "Primary",
+          "variantOptions": [
+            "Primary",
+            "Secondary"
+          ]
+        },
+        "State": {
+          "type": "VARIANT",
+          "defaultValue": "Default",
+          "variantOptions": [
+            "Default",
+            "Hover",
+            "Pressed",
+            "Focus",
+            "Disabled",
+            "Busy"
+          ]
+        }
+      },
+      "variants": [
+        {
+          "id": "23:20",
+          "name": "Style=Primary, State=Default",
+          "height": 52
+        },
+        {
+          "id": "23:21",
+          "name": "Style=Primary, State=Hover",
+          "height": 52
+        },
+        {
+          "id": "23:22",
+          "name": "Style=Primary, State=Pressed",
+          "height": 52
+        },
+        {
+          "id": "23:23",
+          "name": "Style=Primary, State=Focus",
+          "height": 52
+        },
+        {
+          "id": "23:24",
+          "name": "Style=Primary, State=Disabled",
+          "height": 52
+        },
+        {
+          "id": "23:25",
+          "name": "Style=Primary, State=Busy",
+          "height": 52
+        },
+        {
+          "id": "23:26",
+          "name": "Style=Secondary, State=Default",
+          "height": 52
+        },
+        {
+          "id": "23:27",
+          "name": "Style=Secondary, State=Hover",
+          "height": 52
+        },
+        {
+          "id": "23:28",
+          "name": "Style=Secondary, State=Pressed",
+          "height": 52
+        },
+        {
+          "id": "23:29",
+          "name": "Style=Secondary, State=Focus",
+          "height": 52
+        },
+        {
+          "id": "23:30",
+          "name": "Style=Secondary, State=Disabled",
+          "height": 52
+        },
+        {
+          "id": "23:31",
+          "name": "Style=Secondary, State=Busy",
+          "height": 52
+        }
+      ]
+    },
+    {
+      "id": "23:53",
+      "name": "Space / Input",
+      "count": 6,
+      "properties": {
+        "Value#23:26": {
+          "type": "TEXT",
+          "defaultValue": "Найти модуль"
+        },
+        "State": {
+          "type": "VARIANT",
+          "defaultValue": "Default",
+          "variantOptions": [
+            "Default",
+            "Hover",
+            "Focus",
+            "ReadOnly",
+            "Error",
+            "Disabled"
+          ]
+        }
+      },
+      "variants": [
+        {
+          "id": "23:47",
+          "name": "State=Default",
+          "height": 52
+        },
+        {
+          "id": "23:48",
+          "name": "State=Hover",
+          "height": 52
+        },
+        {
+          "id": "23:49",
+          "name": "State=Focus",
+          "height": 52
+        },
+        {
+          "id": "23:50",
+          "name": "State=ReadOnly",
+          "height": 52
+        },
+        {
+          "id": "23:51",
+          "name": "State=Error",
+          "height": 52
+        },
+        {
+          "id": "23:52",
+          "name": "State=Disabled",
+          "height": 52
+        }
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "id": "VariableID:7:5",
+      "name": "color/background",
+      "web": "var(--bg)"
+    },
+    {
+      "id": "VariableID:7:6",
+      "name": "color/surface",
+      "web": "var(--surface)"
+    },
+    {
+      "id": "VariableID:7:7",
+      "name": "color/raised",
+      "web": "var(--raised)"
+    },
+    {
+      "id": "VariableID:7:8",
+      "name": "color/border",
+      "web": "var(--line)"
+    },
+    {
+      "id": "VariableID:7:9",
+      "name": "color/text",
+      "web": "var(--text)"
+    },
+    {
+      "id": "VariableID:7:10",
+      "name": "color/muted",
+      "web": "var(--muted)"
+    },
+    {
+      "id": "VariableID:7:11",
+      "name": "color/accent",
+      "web": "var(--accent)"
+    },
+    {
+      "id": "VariableID:7:12",
+      "name": "color/on-accent",
+      "web": "var(--on-accent)"
+    },
+    {
+      "id": "VariableID:7:13",
+      "name": "color/violet",
+      "web": "var(--violet)"
+    },
+    {
+      "id": "VariableID:7:14",
+      "name": "color/accent-hover",
+      "web": "var(--accent-hover)"
+    },
+    {
+      "id": "VariableID:7:15",
+      "name": "color/wordmark",
+      "web": "var(--wordmark)"
+    },
+    {
+      "id": "VariableID:7:16",
+      "name": "space/s4",
+      "web": "var(--space-s4)"
+    },
+    {
+      "id": "VariableID:7:17",
+      "name": "space/s8",
+      "web": "var(--space-s8)"
+    },
+    {
+      "id": "VariableID:7:18",
+      "name": "space/s12",
+      "web": "var(--space-s12)"
+    },
+    {
+      "id": "VariableID:7:19",
+      "name": "space/s16",
+      "web": "var(--space-s16)"
+    },
+    {
+      "id": "VariableID:7:20",
+      "name": "space/s24",
+      "web": "var(--space-s24)"
+    },
+    {
+      "id": "VariableID:7:21",
+      "name": "space/s32",
+      "web": "var(--space-s32)"
+    },
+    {
+      "id": "VariableID:7:22",
+      "name": "space/s48",
+      "web": "var(--space-s48)"
+    },
+    {
+      "id": "VariableID:7:23",
+      "name": "space/s64",
+      "web": "var(--space-s64)"
+    },
+    {
+      "id": "VariableID:7:24",
+      "name": "radius/button",
+      "web": "var(--radius-button)"
+    },
+    {
+      "id": "VariableID:7:25",
+      "name": "radius/panel",
+      "web": "var(--radius-panel)"
+    },
+    {
+      "id": "VariableID:7:26",
+      "name": "size/touch-min",
+      "web": "var(--size-touch-min)"
+    },
+    {
+      "id": "VariableID:7:27",
+      "name": "size/button",
+      "web": "var(--size-button)"
+    },
+    {
+      "id": "VariableID:7:28",
+      "name": "size/content-max",
+      "web": "var(--size-content-max)"
+    },
+    {
+      "id": "VariableID:7:29",
+      "name": "size/header-desktop",
+      "web": "var(--size-header-desktop)"
+    },
+    {
+      "id": "VariableID:7:30",
+      "name": "font/body",
+      "web": "var(--font-body)"
+    },
+    {
+      "id": "VariableID:7:31",
+      "name": "font/mono",
+      "web": "var(--font-mono)"
+    },
+    {
+      "id": "VariableID:7:32",
+      "name": "motion/feedback",
+      "web": "var(--motion-feedback)"
+    },
+    {
+      "id": "VariableID:23:3",
+      "name": "color/cyan",
+      "web": "var(--cyan)"
+    },
+    {
+      "id": "VariableID:23:4",
+      "name": "color/border",
+      "web": "var(--control-border)"
+    },
+    {
+      "id": "VariableID:23:5",
+      "name": "color/field-background",
+      "web": "var(--control-field-background)"
+    },
+    {
+      "id": "VariableID:23:6",
+      "name": "color/secondary-background",
+      "web": "var(--control-secondary-background)"
+    },
+    {
+      "id": "VariableID:23:7",
+      "name": "color/secondary-hover",
+      "web": "var(--control-secondary-hover)"
+    },
+    {
+      "id": "VariableID:23:8",
+      "name": "color/secondary-pressed",
+      "web": "var(--control-secondary-pressed)"
+    },
+    {
+      "id": "VariableID:23:9",
+      "name": "color/primary-start",
+      "web": "var(--control-primary-start)"
+    },
+    {
+      "id": "VariableID:23:10",
+      "name": "color/primary-end",
+      "web": "var(--control-primary-end)"
+    },
+    {
+      "id": "VariableID:23:11",
+      "name": "color/primary-hover-start",
+      "web": "var(--control-primary-hover-start)"
+    },
+    {
+      "id": "VariableID:23:12",
+      "name": "color/primary-hover-end",
+      "web": "var(--control-primary-hover-end)"
+    },
+    {
+      "id": "VariableID:23:13",
+      "name": "color/primary-pressed-start",
+      "web": "var(--control-primary-pressed-start)"
+    },
+    {
+      "id": "VariableID:23:14",
+      "name": "color/primary-pressed-end",
+      "web": "var(--control-primary-pressed-end)"
+    },
+    {
+      "id": "VariableID:23:15",
+      "name": "color/disabled-background",
+      "web": "var(--control-disabled-background)"
+    },
+    {
+      "id": "VariableID:23:16",
+      "name": "color/disabled-text",
+      "web": "var(--control-disabled-text)"
+    },
+    {
+      "id": "VariableID:23:17",
+      "name": "color/danger",
+      "web": "var(--control-danger)"
+    }
+  ],
+  "limitations": [
+    "Figma Inter fallback; website retains system Segoe UI.",
+    "Timing variable scopes cannot be assigned through the Figma API; other 42 variables use targeted scopes.",
+    "Existing FIG backup predates this component slice.",
+    "No animation prototype, full screen acceptance, public hosting or installer is claimed."
+  ]
+}

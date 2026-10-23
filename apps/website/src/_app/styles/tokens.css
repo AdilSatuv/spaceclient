@@ -1,0 +1,46 @@
+/* Generated from docs/design token files by scripts/sync-website-tokens.cjs. */
+:root {
+  --bg: #080615;
+  --surface: #131024;
+  --raised: #201936;
+  --line: #3c3057;
+  --text: #f5f0ff;
+  --muted: #bcb2d0;
+  --accent: #c6a4ff;
+  --on-accent: #1b0c35;
+  --violet: #9e8aff;
+  --accent-hover: #dfcaff;
+  --wordmark: #88739f;
+  --space-s4: 4px;
+  --space-s8: 8px;
+  --space-s12: 12px;
+  --space-s16: 16px;
+  --space-s24: 24px;
+  --space-s32: 32px;
+  --space-s48: 48px;
+  --space-s64: 64px;
+  --radius-button: 10px;
+  --radius-panel: 10px;
+  --size-touch-min: 44px;
+  --size-button: 52px;
+  --size-content-max: 1280px;
+  --size-header-desktop: 96px;
+  --font-body: 'Segoe UI';
+  --font-mono: 'Consolas';
+  --motion-feedback: 0.18s;
+  --cyan: #8de8f5;
+  --control-border: #87719f;
+  --control-field-background: #171127;
+  --control-secondary-background: #201936;
+  --control-secondary-hover: #302347;
+  --control-secondary-pressed: #3c2a54;
+  --control-primary-start: #dbbcff;
+  --control-primary-end: #a996ff;
+  --control-primary-hover-start: #ebdaff;
+  --control-primary-hover-end: #c7baff;
+  --control-primary-pressed-start: #c6a4ff;
+  --control-primary-pressed-end: #9e8aff;
+  --control-disabled-background: #2b2539;
+  --control-disabled-text: #bcb2d0;
+  --control-danger: #ff91ae;
+}

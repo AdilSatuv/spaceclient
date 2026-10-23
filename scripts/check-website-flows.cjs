@@ -1,5 +1,6 @@
 const assert = require('node:assert/strict');
 const path = require('node:path');
+const { checkWebsiteControls } = require('./check-website-controls.cjs');
 
 async function runWebsiteFlows({ browser, page, base, output, setScenario, results = [] }) {
   const goto = async (route) => {
@@ -25,6 +26,7 @@ async function runWebsiteFlows({ browser, page, base, output, setScenario, resul
   const formValues = () =>
     page.$eval('.filter-form', (form) => Object.fromEntries(new FormData(form)));
   setScenario({ release: false, pagination: false, fault: null, delayMs: 0 });
+  await checkWebsiteControls({ page, base, results });
 
   for (const width of [390, 1440]) {
     await page.setViewport({ width, height: 900 });
@@ -61,6 +63,10 @@ async function runWebsiteFlows({ browser, page, base, output, setScenario, resul
     assert.equal(page.url(), filteredUrl);
     assert.deepEqual(await formValues(), { q: 'CPS', category: 'hud', status: 'prototype' });
     assert.match(await text('.catalog'), /CPS Counter/);
+    await follow('.filter-reset');
+    assert.deepEqual(await formValues(), { q: '', category: '', status: '' });
+    assert.equal(await page.$$eval('.catalog article', (items) => items.length), 6);
+    assert.equal(await page.$('.filter-reset'), null);
     results.push({
       id: 'WEB-03',
       width,
@@ -151,6 +157,9 @@ async function runWebsiteFlows({ browser, page, base, output, setScenario, resul
     await page.goBack({ waitUntil: 'networkidle0' });
     await page.waitForSelector('#faq-sign-in');
     assert.equal(await page.$eval('input[name=q]', (item) => item.value), 'вХоД');
+    await follow('.filter-reset');
+    assert.equal(await page.$eval('input[name=q]', (item) => item.value), '');
+    assert.equal(await page.$('.filter-reset'), null);
     await goto('/help?q=предложение');
     assert.equal(await page.$$eval('main details', (items) => items.length), 1);
     assert.match(await text('#faq-suggestions'), /GitHub Issues/);
@@ -284,7 +293,7 @@ async function runWebsiteFlows({ browser, page, base, output, setScenario, resul
       await page.evaluate((marker) => {
         document.documentElement.dataset.qaDocument = marker;
       }, documentMarker);
-      setScenario({ fault: null, delayMs: 700 });
+      setScenario({ fault: null, delayMs: 1000 });
       await page.click('.empty-state button');
       await page.waitForFunction(() => {
         const button = document.querySelector('.empty-state button');
@@ -292,6 +301,18 @@ async function runWebsiteFlows({ browser, page, base, output, setScenario, resul
           button?.disabled &&
           button.getAttribute('aria-busy') === 'true' &&
           button.textContent.includes('Повторяем запрос')
+        );
+      });
+      await page.hover('.empty-state button');
+      await page.waitForFunction(() => {
+        const button = document.querySelector('.empty-state button');
+        if (!button?.disabled) return false;
+        const css = getComputedStyle(button);
+        return (
+          css.transform === 'none' &&
+          css.boxShadow === 'none' &&
+          css.cursor === 'progress' &&
+          css.opacity === '1'
         );
       });
       await page.waitForFunction(() => !document.querySelector('#content-error-title'));

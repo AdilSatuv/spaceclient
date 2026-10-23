@@ -1,0 +1,53 @@
+{
+  "checkedAt": "2026-10-23T20:55:13.735Z",
+  "results": [
+    {
+      "name": "features",
+      "width": 320,
+      "overflow": false,
+      "resetVisible": true,
+      "fontSize": "16px",
+      "fieldHeight": 52
+    },
+    {
+      "name": "help",
+      "width": 320,
+      "overflow": false,
+      "resetVisible": true,
+      "fontSize": "16px",
+      "fieldHeight": 52
+    },
+    {
+      "name": "features",
+      "width": 390,
+      "overflow": false,
+      "resetVisible": true,
+      "fontSize": "16px",
+      "fieldHeight": 52
+    },
+    {
+      "name": "help",
+      "width": 390,
+      "overflow": false,
+      "resetVisible": true,
+      "fontSize": "16px",
+      "fieldHeight": 52
+    },
+    {
+      "name": "features",
+      "width": 1440,
+      "overflow": false,
+      "resetVisible": true,
+      "fontSize": "16px",
+      "fieldHeight": 52
+    },
+    {
+      "name": "help",
+      "width": 1440,
+      "overflow": false,
+      "resetVisible": true,
+      "fontSize": "16px",
+      "fieldHeight": 52
+    }
+  ]
+}

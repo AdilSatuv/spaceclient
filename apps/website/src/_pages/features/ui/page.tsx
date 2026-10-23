@@ -76,9 +76,16 @@ export default async function Features({
         <ContentError title="Не удалось загрузить возможности." />
       ) : (
         <>
-          <p className="result-count" role="status">
-            Найдено: {items.length}
-          </p>
+          <div className="filter-results">
+            <p className="result-count" role="status">
+              Найдено: {items.length}
+            </p>
+            {(q || category || status) && (
+              <Link className="filter-reset" href="/features">
+                Сбросить фильтры
+              </Link>
+            )}
+          </div>
           {items.length ? (
             <div className="catalog">
               {items.map((item) => (

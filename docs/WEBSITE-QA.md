@@ -134,3 +134,17 @@ Next/Nest используют общий @space/content-contracts. API разд
 - Публичный hosting/origin/HTTPS, rebuild с production env, sitemap и rollback после размещения. Домен и хостинг ещё не выбраны.
 
 SC-19, SC-21 и SC-22 закрыты после проверки собственных критериев и записи результатов в Issues. SC-17/18/23 остаются открытыми для завершения визуальной системы и общей приёмки; SC-24 — для публичного размещения.
+
+## Controls / Figma и сайт — 24 октября 2026
+
+В облачном файле Figma созданы Space / Button (12 variants) и Space / Input (6 states), два shared text styles и три effect styles. Витрина содержит 18 instances, main components расположены отдельно. Осмотрен снимок 1640×805 после исправления обрезанного focus ring. Проверены все 43 значения относительно versioned JSON, code syntax, scopes, aliases и привязки компонентов, включая точки градиентов. [Native QA](qa/website-controls-figma-2026-10-24.json), [витрина](design/control-states-figma.png).
+
+CSS генерируется из Foundations и Controls. Убраны конкурирующие старые стили кнопок; hover/pressed исключены для disabled. Поисковые поля/select используют 52 px, шрифт 16 px и более заметную границу. Компактные hash controls сохраняют отдельные размеры, описанные в CONTROL-STATES.md. Активные фильтры каталога и помощи сбрасываются при непустой выдаче. Проверка дрейфа и 19 пар контрастов включена в CI: текст ≥4.5:1, выбранные границы и focus ≥3:1.
+
+- 120 unit/HTTP tests, production build, TypeScript, format, state fixtures, реальные маршруты/head metadata/404 прошли.
+- [Chrome](qa/website-controls-chrome-2026-10-24.json): 42 layouts, 6 zoom/motion/menu/clipboard checks, 21 flow.
+- [Firefox](qa/website-controls-firefox-2026-10-24.json): 42 layouts, 2 browser/motion checks, 21 flow.
+- Новый WEB-CONTROLS использует настоящий указатель и клавиатуру: hover/press соответствует токенам, layout не сдвигается, outline 2 px / offset 5 px. WEB-03/07 проверяют сброс непустой выдачи; все девять WEB-09 проверяют busy под указателем без transform и glow. Page/asset errors отсутствуют. Личные аккаунты и браузерные профили не использовались.
+- Дополнительно осмотрены отфильтрованные features/help на 320/390/1440 px с настоящим API: [шесть проверок](qa/website-controls-layout-2026-10-24.json), reset остаётся в границах viewport, поля имеют 16 px / 52 px, overflow отсутствует. Проверка выявила неверно размещённое CSS-правило размера шрифта; правило исправлено, размер поля теперь проверяется общей browser harness.
+- На окончательном коде выполнены 15 mobile Lighthouse-прогонов: по три для /, /features, /download, /updates и /help. Медианы Performance **98/99/99/99/99**, Accessibility **100** на всех страницах, LCP **2487/1959/1958/1961/1958 мс**, CLS **0**. Preview SEO 63–66 из-за намеренного noindex. [Условия, все прогоны и source hashes](qa/website-controls-lighthouse-2026-10-24.json). Первые замеры до исправления CSS не используются как итоговая приёмка.
+- В Figma используется Inter вместо недоступного Segoe UI; на сайте сохранён системный Segoe UI. Timing scopes не поддерживаются API; остальные 42 переменные имеют конкретные scopes. Старый FIG не включает новый срез. Полная библиотека и приёмка экранов, Safari, assistive technology и публичный HTTPS/SEO остаются открытыми.

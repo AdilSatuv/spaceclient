@@ -32,10 +32,17 @@ export default async function Help({
         </label>
         <button className="button">Найти</button>
       </FilterForm>
-      <p className="result-count" role="status">
-        Найдено: {items.length + questions.length} · Инструкции: {items.length} · Ответы:{' '}
-        {questions.length}
-      </p>
+      <div className="filter-results">
+        <p className="result-count" role="status">
+          Найдено: {items.length + questions.length} · Инструкции: {items.length} · Ответы:{' '}
+          {questions.length}
+        </p>
+        {q && (
+          <Link className="filter-reset" href="/help">
+            Сбросить поиск
+          </Link>
+        )}
+      </div>
       {items.length > 0 && (
         <section className="help-results" aria-labelledby="help-articles-title">
           <h2 id="help-articles-title">Инструкции</h2>
