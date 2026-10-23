@@ -1,6 +1,6 @@
 # Microsoft-вход Space — реализация и настройка
 
-На 23.10.2026 реализован первый слой SC-08: зашифрованный кеш MSAL в main-процессе. Настоящего входа, Xbox/XSTS, проверки владения и launch ещё нет. Собственный Application (client) ID пока не предоставлен владельцем; чужие регистрации не используются. SC-06 и SC-08 остаются открытыми.
+На 23.10.2026 реализованы зашифрованный кеш MSAL и ограниченный loopback callback в main-процессе. Настоящего входа, Xbox/XSTS, проверки владения и launch ещё нет. Собственный Application (client) ID пока не предоставлен владельцем; чужие регистрации не используются. SC-06 и SC-08 остаются открытыми.
 
 ## Хранилище
 
@@ -22,7 +22,7 @@
 
 - 9 тестов хранилища: восстановление и app binding, отсутствие plaintext, недоступность ОС и ошибка encrypt, повреждение/лимиты/schema, опасные keys, очередь после ошибки, rotation, junction/hard link, SDK finally после failed read, настоящая библиотека MSAL с двумя **вымышленными** аккаунтами и запрещённой сетью.
 - Настоящий Electron 45/Windows DPAPI в двух отдельных процессах: запись fake cache, восстановление после restart, отклонение повреждения, сохранение ciphertext при failed write и явный reset. [Отчёт](qa/launcher-auth-vault-2026-10-23.json).
-- Этот smoke добавлен в Windows CI. Ни один из этих тестов не проверяет реальную лицензию, refresh или OAuth consent.
+- Smoke прошёл в Windows CI вместе с web/game/launcher: [04edd1f](https://github.com/AdilSatuv/spaceclient/actions/runs/39930860045). Ни один из этих тестов не проверяет реальную лицензию, refresh или OAuth consent.
 
 ```powershell
 npm.cmd run test:launcher
@@ -41,8 +41,20 @@ Smoke не создаёт BrowserWindow и не открывает Microsoft. В
 4. Проверить доступность Xbox/Minecraft API именно для этой регистрации. Наличие GUID или стандартного Graph User.Read не подтверждает доступ к Minecraft. Точные scopes/approval и результаты реального обмена надо зафиксировать в SC-06; ограничения нельзя обходить чужим ID. Агент пока не подтвердил текущую политику Minecraft для сторонних регистраций по доступному первичному источнику.
 5. После настройки владелец проходит consent/вход в системном браузере самостоятельно. Только после проверки Microsoft → Xbox/XSTS → Minecraft profile/ownership можно разрешать игру. Покупки, согласия и изменения аккаунта автоматически не выполняются.
 
-## Следующий слой
+## Локальный callback
 
-Используем MSAL для `getAuthCodeUrl`/`acquireTokenByCode`, PKCE S256 и проверяемого state, а не пишем token/refresh protocol самостоятельно. В установленном MSAL 7.1.1 исходник `acquireTokenInteractive` создаёт свой loopback server; публичный InteractiveRequest не предоставляет AbortSignal. Его запуск как есть не удовлетворяет нашим требованиям отмены и ограниченного ожидания. Выбранный путь — небольшой main-only callback с ограничением body/времени/метода, проверкой state и закрытием listener; URL открывается только через системный браузер после allowlist-проверки.
+`listenForMicrosoftCode` открывает временный HTTP listener **только на 127.0.0.1**, с портом ОС и redirect URI `http://localhost:<port>`. Он ничего не открывает в браузере и не делает token exchange. State — 32 случайных байта (256 бит), сравнение через timingSafeEqual; accepted state расходуется один раз, после чего listener закрывается. Неверный запрос не расходует ожидаемую сессию.
 
-Обязательные проверки следующего слоя: неверный/replayed state, лишние/повторные параметры, неверный host/path/method, oversized/медленный body, отказ consent, timeout/cancel/quit и запрет открытия произвольного URL. До этих проверок кнопка входа не должна изображать завершённую авторизацию.
+Принимается только POST `/`, точный Host `localhost:<port>` и form-urlencoded без content encoding. OAuth в query, другой path/Host/method/media type, неизвестные/повторные параметры и несовпадение state отвергаются. Body ≤64 КиБ, code ≤16 КиБ, client_info ≤8 КиБ. Headers ≤8 КиБ, не более 8 соединений; IO deadline 5 с, общее ожидание по умолчанию 3 минуты. AbortSignal/close/timeout закрывают listener и принятые сокеты. Origin не используется как доказательство: браузерный ответ обязан пройти state и будущий PKCE token exchange.
+
+Browser page всегда содержит общий текст «вернитесь в Space Client», no-store/CSP/no-referrer и не отражает code/state/provider details. Ответ провайдера `error` превращается в фиксированную ошибку, без raw error_description. Полученный код сам по себе не считается успешным входом.
+
+9 тестов с настоящим локальным HTTP/TCP, **без Microsoft и браузера**: верный/повторный ответ; отсутствующий/неверный/дублированный state; host/path/query/method/media/encoding; declared/chunked oversize; provider refusal и отсутствие отражения данных; cancel/timeout/уже отменённый запрос; медленный незавершённый body. Это дополняет 9 vault tests; общий launcher-набор — **76 tests**. Реальная браузерная доставка, PKCE/code exchange, app quit и лицензия этим набором не подтверждены.
+
+## Следующий слой и найденные ограничения
+
+Кандидат для следующего слоя — MSAL `getAuthCodeUrl`/`acquireTokenByCode` и CryptoProvider PKCE S256, с нашим callback/state. В установленном MSAL 7.1.1 исходник `acquireTokenInteractive` создаёт свой loopback server; публичный InteractiveRequest не предоставляет AbortSignal. Его запуск как есть не удовлетворяет нашим требованиям отмены и ограниченного ожидания. URL должен открываться только через системный браузер после allowlist-проверки. При отмене во время token exchange требуется также остановить/отбросить поздний результат и не сохранить отменённую сессию; простого Promise.race недостаточно.
+
+Найден первичный [Xbox GDK website authentication guide](https://learn.microsoft.com/en-us/gaming/gdk/docs/services/fundamentals/s2s-auth-calls/service-authentication/live-website-authentication?view=gdk-2604): он описывает consumers authority, XboxLive.signin/XboxLive.offline_access и обмен U token → XSTS, но относится к confidential website flow с secret и собственным relying party. Это **не готовая инструкция для Minecraft native public client**. Нельзя копировать secret в Electron, считать web-flow доказательством доступа Minecraft или подставлять чужой relying party. Различия scopes/автоматически добавляемых MSAL OIDC scopes и разрешений собственной регистрации требуют отдельного SC-06 smoke с владельцем до выбора окончательного token flow.
+
+Остаются проверки PKCE/scopes/registration, запрета открытия произвольного URL, token exchange/refresh и отмены на каждом сетевом этапе, quit, Xbox/XSTS/профиля/владения. До них кнопка входа не должна изображать завершённую авторизацию.
