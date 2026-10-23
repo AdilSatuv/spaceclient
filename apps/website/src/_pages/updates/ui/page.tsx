@@ -1,6 +1,7 @@
 import { updatesQuery } from '../model/query';
 import Link from 'next/link';
 import { PageIntro } from '@/shared/ui/page-intro';
+import { FilterForm } from '@/shared/ui/filter-form';
 import ContentError from '@/shared/ui/content-error';
 import { getUpdates } from '@/shared/api/index.server';
 import { pageMetadata } from '@/shared/lib/metadata';
@@ -32,7 +33,7 @@ export default async function Updates({
       <PageIntro label="БОРТОВОЙ ЖУРНАЛ" title="Не релизы. Путь к ним.">
         Реальные изменения проекта. Заметки разработки ещё не означают выпуск клиента.
       </PageIntro>
-      <form key={type} className="filter-form" action="/updates">
+      <FilterForm key={type} action="/updates">
         <label>
           Тип записи
           <select name="type" defaultValue={type}>
@@ -42,7 +43,7 @@ export default async function Updates({
           </select>
         </label>
         <button className="button">Показать</button>
-      </form>
+      </FilterForm>
       {!result.ok ? (
         <ContentError title="Не удалось загрузить журнал." />
       ) : (

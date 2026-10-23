@@ -67,11 +67,15 @@ apps/website/
     entities/release/          выбор рекомендуемой сборки
     entities/help-article/     переиспользуемые данные инструкций
     shared/api/                HTTP-клиент и server composition
-    shared/ui/                 иконки, PageIntro, loading, retry, error
+    shared/ui/                 иконки, PageIntro, FilterForm, loading, retry, error
     shared/lib/                preview/noindex/canonical metadata
 ```
 
 Папка Next `app` подключает публичные экспорты страниц, общий layout и boundaries. `dynamic`/`dynamicParams` остаются статическими литералами именно здесь. Разметка и metadata-функции живут в соответствующих слайсах. Подробности статьи журнала сохраняют HTTP 404 без предшествующего loading boundary; статические help-параметры также сохранены.
+
+`shared/ui/filter-form.tsx` — небольшой Client Component для общей формы GET-фильтров. Парсинг query, фильтрация и содержимое остаются серверными. При восстановлении страницы через историю форма возвращается к server-rendered default values: браузер не должен подставлять несохранённый следующий запрос поверх результатов предыдущего. Обработчики pageshow/popstate и таймер очищаются при размонтировании. Поведение проверяется настоящими Back-переходами четырёх разделов, а не вызовом reset из теста. Причина отложенного восстановления описана в [порядке событий History API](https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event#when_popstate_is_sent); восстановление использует стандартный [form.reset()](https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement/reset).
+
+FAQ помощи принадлежит локальному `help/model/faq.ts`; его вопросы и ответы участвуют в том же серверном поиске, что заголовки/summary инструкций. Переиспользуемые статьи остаются в entities/help-article; отдельный API или БД для поиска не добавлены.
 
 Правило импортов: `_app → _pages → features → entities → shared`, с возможностью пропускать ненужные слои. Слайсы одного слоя не импортируют друг друга. Внешний потребитель обращается к `index.ts` или `index.server.ts`; внутренние файлы слайса используют относительные импорты. `_app` и `shared` состоят из сегментов, а не бизнес-слайсов; их сегменты могут взаимодействовать между собой. Основание — [правила слоёв FSD](https://fsd.how/docs/reference/layers/).
 

@@ -890,8 +890,15 @@ input::placeholder {
   border-color: #a98bcd;
   color: var(--text);
 }
-.article-links h2 {
+.article-links :is(h2, h3) {
   font-size: 26px;
+}
+.help-results + .help-results {
+  margin-top: 40px;
+}
+.help-results > h2 {
+  font-size: 28px;
+  margin-bottom: 24px;
 }
 .article-links .eyebrow {
   margin-bottom: 20px;
@@ -1307,7 +1314,7 @@ dialog nav a[aria-current] {
   .filter-form .button {
     width: 100%;
   }
-  .article-links h2 {
+  .article-links :is(h2, h3) {
     font-size: 23px;
   }
   .article-body h2 {

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { PageIntro } from '@/shared/ui/page-intro';
+import { FilterForm } from '@/shared/ui/filter-form';
 import ContentError from '@/shared/ui/content-error';
 import { getFeatures } from '@/shared/api/index.server';
 import { statusLabels } from '../model/status-labels';
@@ -44,7 +45,7 @@ export default async function Features({
       <PageIntro label="ТВОЙ ИНСТРУМЕНТАРИЙ" title="Твой интерфейс. Твои правила.">
         От базового HUD до будущих профилей. Каждая возможность — со своим реальным статусом.
       </PageIntro>
-      <form key={`${q}|${category}|${status}`} className="filter-form" action="/features">
+      <FilterForm key={`${q}|${category}|${status}`} action="/features">
         <label>
           Поиск
           <input name="q" defaultValue={q} placeholder="Например, координаты" maxLength={120} />
@@ -70,7 +71,7 @@ export default async function Features({
           </select>
         </label>
         <button className="button">Найти</button>
-      </form>
+      </FilterForm>
       {!result.ok ? (
         <ContentError title="Не удалось загрузить возможности." />
       ) : (

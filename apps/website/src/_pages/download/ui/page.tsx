@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { PageIntro } from '@/shared/ui/page-intro';
+import { FilterForm } from '@/shared/ui/filter-form';
 import ContentError from '@/shared/ui/content-error';
 import CopyHash from './copy-hash';
 import { Arrow } from '@/shared/ui/icons';
@@ -67,7 +68,7 @@ export default async function Download({
             </div>
           ) : (
             <>
-              <form key={channel} className="filter-form" action="/download">
+              <FilterForm key={channel} action="/download">
                 <label>
                   Канал
                   <select name="channel" defaultValue={channel}>
@@ -78,7 +79,7 @@ export default async function Download({
                   </select>
                 </label>
                 <button className="button">Показать</button>
-              </form>
+              </FilterForm>
               <div className="release-list">
                 {items.map((release) => (
                   <article className="page-panel" key={release.id}>

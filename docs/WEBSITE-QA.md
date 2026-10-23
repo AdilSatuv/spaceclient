@@ -102,6 +102,18 @@ Next/Nest используют общий @space/content-contracts. API разд
 - Три последовательных mobile Lighthouse-прогона каждой из пяти страниц: Performance **98/99/99/100/99**, Accessibility **100** везде, median LCP **2484/1958/1957/1658/1957 мс**, CLS **0**. Серверный Image cache прогрет, Chrome-профили отдельные, обычный mobile throttling Lighthouse 13.5.0. Preview SEO 63–66 из-за намеренного noindex. [Условия, прогоны и source hashes](qa/website-mvp-lighthouse-2026-10-24.json). Эти числа не являются измерением публичного HTTPS-origin.
 - Все 120 unit/HTTP tests, TypeScript, Next/API build, route/head metadata и production state checks прошли. Поведение preview проверено с настоящим API, browser fixtures остаются отдельным тестовым процессом.
 
+## Пользовательские сценарии — 24 октября 2026
+
+Приёмка WEB-03/04/06/07/09/10 дополнена настоящими действиями в Chrome на production-сборке. Найдены и исправлены два несоответствия: поиск помощи игнорировал FAQ, а Back мог показывать несохранённый следующий запрос/канал поверх результатов предыдущего URL. FAQ теперь участвует в поиске, пустой результат содержит ссылку на обращение, а общая FilterForm восстанавливает серверные default values после восстановления истории.
+
+- Полный прогон: **42** сочетания маршрутов/ширины, **6** проверок zoom/motion/menu/clipboard, **20** дополнительных сценариев. [Отчёт](qa/website-user-flows-2026-10-24.json).
+- На 390/1440 px: поиск/категория/статус и reload/Back/reset возможностей; смена канала загрузок и Back; 14 fixture-новостей с пагинацией 12+2, статья, Back и сброс страницы при смене типа; поиск FAQ/инструкций без учёта регистра, пустой результат, ссылки и независимое открытие FAQ клавиатурой.
+- Skip link, Tab/Shift+Tab в меню, видимый focus, Escape, переход и расширение до desktop освобождают scroll. Unknown route/help/update сохраняют настоящий HTTP 404.
+- HTTP 503, invalid JSON и timeout воспроизведены отдельно для features/download/updates. Все девять случаев показывают ошибку вместо ложного empty. Нажатие retry включает busy/disabled, повторно запрашивает API и восстанавливает содержимое; DOM-маркер подтверждает отсутствие перезагрузки документа.
+- Внедрённый localStorage SecurityError на чтении и записи не мешает паузе/возобновлению; это тест fallback, а не изменение настроек браузера/ОС. Viewport-снимки помощи осмотрены; reduced-motion включён только в тестовой вкладке. Full-page capture не используется для этих снимков: изменение viewport в Chrome может показать скрытый fixed skip-link, хотя в настоящем viewport его rect.top=-100.
+- Окончательный /help с новой формой: три sequential mobile Lighthouse 13.5.0 прогона, медиана Performance **99**, Accessibility **100**, SEO **63** (preview noindex), LCP **1966 мс**, CLS **0**. Условия и source hashes: [отчёт](qa/website-help-search-lighthouse-2026-10-24.json). Остальные страницы в этом срезе повторно не измерялись.
+- Сборка Next, 120 unit/HTTP tests, TypeScript, state fixtures и форматирование прошли. CI сохраняет только отчёты и PNG из собственного browser run, исключая каталог профиля. [Матрица приёмки](WEB-ACCEPTANCE.md) разделяет выполненные local-проверки и оставшиеся production-условия.
+
 ## Ещё проверить для публичного релиза
 
 - Дополнительные размеры и браузеры для keyboard/focus trap; полный проход пяти страниц на 390 и 1440 px записан выше.
