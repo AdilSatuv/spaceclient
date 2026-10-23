@@ -52,3 +52,4 @@ jobs:
       - run: npm run build:launcher
         env:
           SPACE_REQUIRE_GAME_BUNDLE: '1'
+      - run: npm run check:ui --workspace @space/launcher

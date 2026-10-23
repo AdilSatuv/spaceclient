@@ -85,9 +85,9 @@ else {
         minWidth: 1000,
         minHeight: 680,
         show: false,
-        backgroundColor: '#080615',
+        backgroundColor: '#0c0e12',
         titleBarStyle: 'hidden',
-        titleBarOverlay: { color: '#0c0919', symbolColor: '#f5f0ff', height: 38 },
+        titleBarOverlay: { color: '#0f1217', symbolColor: '#f2f4f7', height: 38 },
         webPreferences: {
           preload: join(__dirname, 'preload.cjs'),
           sandbox: true,

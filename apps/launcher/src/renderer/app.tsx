@@ -1,7 +1,30 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import {
+  ArrowRight,
+  Check,
+  ChevronRight,
+  CircleHelp,
+  Cpu,
+  FolderOpen,
+  HardDrive,
+  LayoutDashboard,
+  Layers3,
+  LoaderCircle,
+  LockKeyhole,
+  Monitor,
+  Plus,
+  Settings2,
+  ShieldCheck,
+  Terminal,
+  UserRound,
+} from 'lucide-react';
 import type { JavaInfo, LauncherApi, ProfileEdit, Result, Snapshot } from '../shared/contracts';
-import './style.css';
+import { Button } from './components/ui/button';
+import { Badge } from './components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card';
+import { Input } from './components/ui/input';
+import { cn } from './lib/utils';
 import { InstallationCard } from './installation-card';
 
 declare global {
@@ -10,52 +33,34 @@ declare global {
   }
 }
 type View = 'home' | 'profiles' | 'settings';
-function Orbit({ small = false }: { small?: boolean }) {
+const navigation = [
+  { id: 'home', label: 'Обзор', icon: LayoutDashboard },
+  { id: 'profiles', label: 'Профили', icon: Layers3 },
+  { id: 'settings', label: 'Настройки', icon: Settings2 },
+] as const;
+const titles = {
+  home: ['Твоя следующая орбита.', 'Всё для игры — в одном месте.'],
+  profiles: ['Профили игры', 'Отдельные настройки для каждого твоего мира.'],
+  settings: ['Настройки лаунчера', 'Java, память и файлы на твоём устройстве.'],
+};
+const gb = (mb: number) =>
+  new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 }).format(mb / 1024) + ' ГБ';
+function SpaceMark({ className }: { className?: string }) {
   return (
-    <svg
-      className={small ? 'orbit-logo small' : 'orbit-logo'}
-      viewBox="0 0 48 48"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path d="m24 7 4.5 12.5L41 24l-12.5 4.5L24 41l-4.5-12.5L7 24l12.5-4.5Z" fill="currentColor" />
+    <svg className={cn('space-mark', className)} viewBox="0 0 40 40" fill="none" aria-hidden="true">
+      <path d="m20 6 4 10 10 4-10 4-4 10-4-10-10-4 10-4Z" fill="currentColor" />
       <ellipse
-        cx="24"
-        cy="24"
-        rx="24"
-        ry="8"
-        transform="rotate(-42 24 24)"
+        cx="20"
+        cy="20"
+        rx="20"
+        ry="7"
+        transform="rotate(-38 20 20)"
         stroke="currentColor"
         strokeWidth="1.4"
       />
     </svg>
   );
 }
-function Icon({ kind }: { kind: View | 'arrow' | 'folder' }) {
-  const paths = {
-    home: 'm3 10 9-7 9 7v11h-6v-7H9v7H3z',
-    profiles: 'M4 5h16v14H4zM8 9h8M8 13h5',
-    settings: 'M4 7h16M4 17h16M9 4v6m6 4v6',
-    arrow: 'M5 12h14m-5-5 5 5-5 5',
-    folder: 'M3 6h7l2 3h9v11H3z',
-  };
-  return (
-    <svg
-      className="icon"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d={paths[kind]} />
-    </svg>
-  );
-}
-const gb = (mb: number) =>
-  new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 }).format(mb / 1024) + ' ГБ';
 function App() {
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
   const [view, setView] = useState<View>('home');
@@ -64,6 +69,9 @@ function App() {
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [java, setJava] = useState<Record<string, JavaInfo>>({});
+  const heading = useRef<HTMLHeadingElement>(null);
+  const main = useRef<HTMLElement>(null);
+  const previousView = useRef<View>('home');
   const profile = snapshot?.profiles.find((item) => item.id === snapshot.activeProfileId);
   const dirty = !!(
     draft &&
@@ -94,10 +102,17 @@ function App() {
     void load();
   }, []);
   const changeView = (next: View) => {
+    if (next === view) return;
     setView(next);
     setError('');
     setNotice('');
   };
+  useEffect(() => {
+    if (previousView.current === view) return;
+    previousView.current = view;
+    if (main.current) main.current.scrollTop = 0;
+    heading.current?.focus({ preventScroll: true });
+  }, [view]);
   const checkJava = () =>
     profile &&
     run(
@@ -107,436 +122,526 @@ function App() {
         setNotice(result.message);
       },
     );
+  const openFolder = () =>
+    profile &&
+    run(
+      () => window.space.openInstance(profile.id),
+      () => setNotice('Папка профиля открыта.'),
+    );
+  const chooseJava = () =>
+    profile &&
+    run(
+      () => window.space.chooseJava(profile.id),
+      (value) => {
+        apply(value);
+        setJava((current) => {
+          const next = { ...current };
+          delete next[profile.id];
+          return next;
+        });
+      },
+    );
+  const javaLabel =
+    profile &&
+    (java[profile.id]?.usable
+      ? 'Проверена · 21 x64'
+      : profile.javaPath
+        ? 'Нужна проверка'
+        : 'Не выбрана');
 
   return (
     <>
+      <Button className="skip-link" onClick={() => main.current?.focus()}>
+        К содержимому
+      </Button>
       <div className="titlebar">
-        <span className="title-mark">✦</span> SPACE CLIENT{' '}
-        <span className="title-version">Лаунчер · 0.1.0</span>
+        <SpaceMark />
+        <span>SPACE CLIENT</span>
+        <span className="title-version">Лаунчер</span>
       </div>
       <div className="app-shell">
         <aside className="sidebar">
           <div className="brand">
-            <Orbit />
-            <span>
-              SPACE<span className="brand-sub">CLIENT</span>
+            <span className="brand-mark">
+              <SpaceMark />
             </span>
+            <div className="brand-copy">
+              space<span>Игровой клиент</span>
+            </div>
           </div>
-          <div className="nav-label">ТВОЯ ОРБИТА</div>
+          <p className="nav-caption">ПРОСТРАНСТВО</p>
           <nav aria-label="Разделы лаунчера">
-            {(
-              [
-                ['home', 'Обзор'],
-                ['profiles', 'Профили'],
-                ['settings', 'Настройки'],
-              ] as const
-            ).map(([id, label]) => (
-              <button
+            {navigation.map(({ id, label, icon: Icon }) => (
+              <Button
                 key={id}
+                variant="ghost"
+                className="nav-item"
+                aria-label={label}
                 aria-current={view === id ? 'page' : undefined}
                 onClick={() => changeView(id)}
               >
-                <Icon kind={id} />
-                {label}
+                <Icon aria-hidden="true" />
+                <span className="nav-text">{label}</span>
                 {id === 'profiles' && dirty && (
                   <span className="draft-dot" aria-label="Есть несохранённые изменения" />
                 )}
-              </button>
+              </Button>
             ))}
           </nav>
           <div className="sidebar-bottom">
-            <div className="local-profile">
-              <span className="avatar">
-                <Orbit small />
+            <div className="account-summary">
+              <span className="account-avatar">
+                <UserRound aria-hidden="true" />
               </span>
-              <div>
-                <strong>Локальный профиль</strong>
-                <span>Аккаунт не подключён</span>
+              <div className="account-copy">
+                <strong>Твой аккаунт</strong>
+                <span>Microsoft не подключён</span>
               </div>
+              <LockKeyhole className="account-lock" aria-hidden="true" />
             </div>
-            <div className="build-label">
-              <span /> Версия в разработке
+            <div className="build-caption">
+              <span className="status-dot" />
+              Development · 0.1.0
             </div>
           </div>
         </aside>
-        <main id="main" aria-busy={busy}>
-          <header className="page-header">
-            <div>
-              <p className="eyebrow">
-                SPACE CLIENT /{' '}
-                {view === 'home'
-                  ? 'НАЧАЛО ПУТИ'
-                  : view === 'profiles'
-                    ? 'ТВОИ ПРОФИЛИ'
-                    : 'ТВОЁ УСТРОЙСТВО'}
-              </p>
-              <h1>
-                {view === 'home'
-                  ? 'Добро пожаловать на борт.'
-                  : view === 'profiles'
-                    ? 'Каждой игре — своя орбита.'
-                    : 'Настроим твою орбиту.'}
-              </h1>
-            </div>
-            <span className="version-pill">MINECRAFT 1.8.9</span>
-          </header>
-          {error && (
-            <div className="feedback error" role="alert">
-              {error}
-            </div>
-          )}
-          <div className="feedback-slot" role="status" aria-live="polite">
-            {busy ? <span>Выполняем действие…</span> : notice && <span>{notice}</span>}
-          </div>
-          {snapshot?.warning && <div className="feedback warning">{snapshot.warning}</div>}
-          {!snapshot ? (
-            <section className="panel startup">
-              <Orbit />
-              <h2>{busy ? 'Поднимаемся на орбиту…' : 'Не удалось загрузить профиль'}</h2>
-              <p>Настройки хранятся на этом устройстве.</p>
-              {!busy && (
-                <button className="primary" onClick={load}>
-                  Повторить
-                </button>
+        <main id="main" ref={main} tabIndex={-1} aria-busy={busy}>
+          <div className="main-content">
+            <header className="page-header">
+              <div>
+                <div className="breadcrumb">
+                  Space Client <ChevronRight aria-hidden="true" />
+                  {navigation.find((item) => item.id === view)?.label}
+                </div>
+                <h1 ref={heading} tabIndex={-1}>
+                  {titles[view][0]}
+                </h1>
+                <p>{titles[view][1]}</p>
+              </div>
+              <Badge variant="outline" className="edition-badge">
+                <Monitor aria-hidden="true" />
+                Windows x64
+              </Badge>
+            </header>
+            {error && (
+              <div className="feedback error" role="alert">
+                <CircleHelp aria-hidden="true" />
+                {error}
+              </div>
+            )}
+            <div className="feedback-slot" role="status" aria-live="polite">
+              {busy ? (
+                <>
+                  <LoaderCircle className="spinner" aria-hidden="true" />
+                  Выполняем действие…
+                </>
+              ) : (
+                notice
               )}
-            </section>
-          ) : (
-            profile &&
-            draft && (
-              <>
-                {view === 'home' && (
-                  <>
-                    <section className="launch-hero">
-                      <div className="hero-art" aria-hidden="true" />
-                      <div className="hero-copy">
-                        <span className="hero-tag">
-                          <span /> НОВАЯ ОРБИТА MINECRAFT
-                        </span>
-                        <h2>
-                          Твой мир.
-                          <br />
-                          <em>Твой космос.</em>
-                        </h2>
-                        <p>
-                          Знакомая игра. Своя атмосфера.
-                          <br />
-                          Настрой профиль для первого полёта.
-                        </p>
-                        <div className="hero-actions">
-                          <button className="primary" onClick={() => changeView('profiles')}>
-                            Настроить профиль <Icon kind="arrow" />
-                          </button>
-                          <span>Java Edition · Windows x64</span>
-                        </div>
-                      </div>
-                      <span className="hero-coordinate" aria-hidden="true">
-                        01 / SPACE UNIVERSE
-                      </span>
-                    </section>
-                    <div className="home-grid">
-                      <section className="panel profile-card">
-                        <div className="section-heading">
-                          <span className="eyebrow">ТЕКУЩИЙ ПРОФИЛЬ</span>
-                          <Icon kind="profiles" />
-                        </div>
-                        <h2>{profile.name}</h2>
-                        <dl>
-                          <div>
-                            <dt>Память</dt>
-                            <dd>{gb(profile.memoryMb)}</dd>
-                          </div>
-                          <div>
-                            <dt>Java</dt>
-                            <dd>
-                              {java[profile.id]?.usable
-                                ? 'Проверена'
-                                : profile.javaPath
-                                  ? 'Нужна проверка'
-                                  : 'Не выбрана'}
-                            </dd>
-                          </div>
-                        </dl>
-                        <button className="text-button" onClick={() => changeView('profiles')}>
-                          Управлять профилем <Icon kind="arrow" />
-                        </button>
-                      </section>
-                      <InstallationCard profileId={profile.id} dirty={dirty} />
-                    </div>
-                  </>
-                )}
-                {view === 'profiles' && (
-                  <div className="profiles-grid">
-                    <section className="panel profile-list">
-                      <div className="section-heading">
-                        <h2>Профили</h2>
-                        <span className="count">{snapshot.profiles.length}/10</span>
-                      </div>
-                      <p className="muted small-text">
-                        Свои настройки и папка игры для каждой орбиты.
-                      </p>
-                      {snapshot.profiles.map((item) => (
-                        <button
-                          className="profile-option"
-                          key={item.id}
-                          disabled={busy || (dirty && item.id !== profile.id)}
-                          aria-pressed={item.id === profile.id}
-                          onClick={() => {
-                            if (item.id !== profile.id)
-                              void run(() => window.space.selectProfile(item.id), apply);
-                          }}
+            </div>
+            {snapshot?.warning && <div className="feedback warning">{snapshot.warning}</div>}
+            {!snapshot ? (
+              <Card className="startup">
+                <CardContent>
+                  <SpaceMark />
+                  <h2>{busy ? 'Загружаем твой профиль…' : 'Не удалось загрузить профиль'}</h2>
+                  <p>Настройки хранятся на этом устройстве.</p>
+                  {!busy && <Button onClick={load}>Повторить</Button>}
+                </CardContent>
+              </Card>
+            ) : (
+              profile &&
+              draft && (
+                <div className="view-content" key={view}>
+                  {view === 'home' && (
+                    <>
+                      <div className="home-feature-grid">
+                        <section
+                          className="launch-hero"
+                          aria-label="Space Client для Minecraft Java"
                         >
-                          <span className="profile-symbol">
-                            <Orbit small />
+                          <div className="hero-art" aria-hidden="true" />
+                          <div className="hero-content">
+                            <Badge variant="outline" className="hero-badge">
+                              <SpaceMark />
+                              JAVA EDITION · 1.8.9
+                            </Badge>
+                            <div>
+                              <p className="hero-kicker">ЗНАКОМЫЙ МИР. НОВАЯ АТМОСФЕРА.</p>
+                              <h2>
+                                За пределами
+                                <br />
+                                <span>обычной игры.</span>
+                              </h2>
+                              <p className="hero-description">
+                                Твои настройки. Твой ритм.
+                                <br />
+                                Твой Minecraft со Space Client.
+                              </p>
+                            </div>
+                          </div>
+                          <span className="hero-caption" aria-hidden="true">
+                            SPACE / 001
                           </span>
-                          <span>
-                            <strong>{item.name}</strong>
-                            <small>{gb(item.memoryMb)} · Minecraft 1.8.9</small>
-                          </span>
-                          {item.id === profile.id && (
-                            <span className="selected-mark" aria-hidden="true">
-                              ●
-                            </span>
-                          )}
-                        </button>
-                      ))}
-                      <button
-                        className="secondary full"
-                        disabled={busy || dirty || snapshot.profiles.length >= 10}
-                        onClick={() =>
-                          run(
-                            () => window.space.createProfile(),
-                            (value) => {
-                              apply(value);
-                              setNotice('Новый профиль создан.');
-                            },
-                          )
-                        }
-                      >
-                        + Создать профиль
-                      </button>
-                      {dirty && (
-                        <p className="inline-hint">
-                          Сохраните или отмените изменения, чтобы переключить профиль.
-                        </p>
-                      )}
-                    </section>
-                    <section className="panel profile-form">
-                      <div className="section-heading">
-                        <h2>Настройки профиля</h2>
-                        <span className="status-chip">Локально</span>
+                        </section>
+                        <Card className="current-profile">
+                          <CardHeader>
+                            <div className="card-eyebrow">
+                              АКТИВНЫЙ ПРОФИЛЬ
+                              <Layers3 aria-hidden="true" />
+                            </div>
+                            <CardTitle>
+                              <h2>{profile.name}</h2>
+                            </CardTitle>
+                            <CardDescription>Готовим всё к твоей игре</CardDescription>
+                          </CardHeader>
+                          <CardContent>
+                            <dl className="profile-facts">
+                              <div>
+                                <dt>
+                                  <Cpu aria-hidden="true" />
+                                  Память
+                                </dt>
+                                <dd>{gb(profile.memoryMb)}</dd>
+                              </div>
+                              <div>
+                                <dt>
+                                  <Terminal aria-hidden="true" />
+                                  Java
+                                </dt>
+                                <dd>{javaLabel}</dd>
+                              </div>
+                            </dl>
+                            <Button
+                              variant="outline"
+                              className="w-full"
+                              onClick={() => changeView('profiles')}
+                            >
+                              Управлять профилем
+                              <ArrowRight aria-hidden="true" />
+                            </Button>
+                          </CardContent>
+                        </Card>
                       </div>
-                      <form
-                        onSubmit={(event) => {
-                          event.preventDefault();
-                          void run(
-                            () => window.space.saveProfile(draft),
-                            (value) => {
-                              apply(value);
-                              setNotice('Профиль сохранён.');
-                            },
-                          );
-                        }}
-                      >
-                        <label htmlFor="profile-name">Название</label>
-                        <input
-                          id="profile-name"
-                          maxLength={40}
-                          required
-                          disabled={busy}
-                          value={draft.name}
-                          onChange={(event) => setDraft({ ...draft, name: event.target.value })}
-                        />
-                        <div className="range-heading">
-                          <label htmlFor="memory">Память для игры</label>
-                          <output htmlFor="memory">{gb(draft.memoryMb)}</output>
-                        </div>
-                        <input
-                          id="memory"
-                          type="range"
-                          min={1024}
-                          max={snapshot.maxMemoryMb}
-                          step={256}
-                          disabled={busy}
-                          value={draft.memoryMb}
-                          onChange={(event) =>
-                            setDraft({ ...draft, memoryMb: Number(event.target.value) })
-                          }
-                        />
-                        <div className="range-limits">
-                          <span>1 ГБ</span>
-                          <span>{gb(snapshot.maxMemoryMb)}</span>
-                        </div>
-                        <p className="inline-hint">
-                          На устройстве {gb(snapshot.totalMemoryMb)}. Часть памяти оставляем
-                          системе.
-                        </p>
-                        <div className="form-actions">
-                          <button
-                            className="primary"
-                            disabled={busy || !dirty || !draft.name.trim()}
-                          >
-                            Сохранить изменения
-                          </button>
-                          <button
-                            type="button"
-                            className="secondary"
-                            disabled={busy || !dirty}
-                            onClick={() => {
-                              apply(snapshot);
-                              setError('');
-                              setNotice('Изменения отменены.');
-                            }}
-                          >
-                            Отменить
-                          </button>
-                        </div>
-                      </form>
-                      <div className="java-section">
-                        <div className="section-heading">
-                          <h3>Java для этого профиля</h3>
-                          <span className="status-chip">21 · 64 бита</span>
-                        </div>
-                        <p className="file-path">
-                          {profile.javaPath || 'Файл java.exe ещё не выбран'}
-                        </p>
-                        <div className="form-actions">
-                          <button
-                            className="secondary"
-                            disabled={busy || dirty}
+                      <InstallationCard profileId={profile.id} dirty={dirty} />
+                      <div className="home-note">
+                        <ShieldCheck aria-hidden="true" />
+                        <span>
+                          Отдельная папка для каждого профиля. Твои другие установки Minecraft
+                          остаются на месте.
+                        </span>
+                      </div>
+                    </>
+                  )}
+                  {view === 'profiles' && (
+                    <div className="profiles-grid">
+                      <Card className="profile-list">
+                        <CardHeader>
+                          <div className="section-heading">
+                            <CardTitle>
+                              <h2>Твои профили</h2>
+                            </CardTitle>
+                            <Badge variant="secondary">{snapshot.profiles.length} / 10</Badge>
+                          </div>
+                          <CardDescription>Свои настройки для каждой игры.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="profile-options">
+                            {snapshot.profiles.map((item) => (
+                              <Button
+                                variant="ghost"
+                                className="profile-option"
+                                key={item.id}
+                                disabled={busy || (dirty && item.id !== profile.id)}
+                                aria-pressed={item.id === profile.id}
+                                onClick={() => {
+                                  if (item.id !== profile.id)
+                                    void run(() => window.space.selectProfile(item.id), apply);
+                                }}
+                              >
+                                <span className="profile-symbol">
+                                  <SpaceMark />
+                                </span>
+                                <span className="profile-option-copy">
+                                  <strong>{item.name}</strong>
+                                  <small>{gb(item.memoryMb)} · 1.8.9</small>
+                                </span>
+                                {item.id === profile.id && (
+                                  <Check className="selected-mark" aria-hidden="true" />
+                                )}
+                              </Button>
+                            ))}
+                          </div>
+                          <Button
+                            variant="outline"
+                            className="w-full create-profile"
+                            disabled={busy || dirty || snapshot.profiles.length >= 10}
                             onClick={() =>
                               run(
-                                () => window.space.chooseJava(profile.id),
+                                () => window.space.createProfile(),
                                 (value) => {
                                   apply(value);
-                                  setJava((current) => {
-                                    const next = { ...current };
-                                    delete next[profile.id];
-                                    return next;
-                                  });
+                                  setNotice('Новый профиль создан.');
                                 },
                               )
                             }
                           >
-                            Выбрать Java
-                          </button>
-                          <button
-                            className="secondary"
-                            disabled={busy || dirty || !profile.javaPath}
-                            onClick={checkJava}
+                            <Plus aria-hidden="true" />
+                            Создать профиль
+                          </Button>
+                          {dirty && (
+                            <p className="inline-hint">
+                              Сохраните или отмените изменения перед сменой профиля.
+                            </p>
+                          )}
+                        </CardContent>
+                      </Card>
+                      <Card className="profile-form">
+                        <CardHeader>
+                          <div className="section-heading">
+                            <CardTitle>
+                              <h2>Настройки профиля</h2>
+                            </CardTitle>
+                            <Badge variant="outline">Локально</Badge>
+                          </div>
+                          <CardDescription>Изменения применяются после сохранения.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <form
+                            onSubmit={(event) => {
+                              event.preventDefault();
+                              void run(
+                                () => window.space.saveProfile(draft),
+                                (value) => {
+                                  apply(value);
+                                  setNotice('Профиль сохранён.');
+                                },
+                              );
+                            }}
                           >
-                            Проверить Java
-                          </button>
-                        </div>
-                        {java[profile.id] && (
-                          <p
-                            className={
-                              java[profile.id].usable ? 'java-result success' : 'java-result'
-                            }
-                            role="status"
+                            <div className="form-field">
+                              <label htmlFor="profile-name">Название профиля</label>
+                              <Input
+                                id="profile-name"
+                                maxLength={40}
+                                required
+                                disabled={busy}
+                                value={draft.name}
+                                aria-describedby="name-hint"
+                                onChange={(event) =>
+                                  setDraft({ ...draft, name: event.target.value })
+                                }
+                              />
+                              <p id="name-hint" className="inline-hint">
+                                До 40 символов. Например, «Основной» или «PvP».
+                              </p>
+                            </div>
+                            <div className="form-field">
+                              <div className="range-heading">
+                                <label htmlFor="memory">Память для игры</label>
+                                <output htmlFor="memory" className="memory-value">
+                                  {gb(draft.memoryMb)}
+                                </output>
+                              </div>
+                              <input
+                                id="memory"
+                                className="memory-range"
+                                type="range"
+                                min={1024}
+                                max={snapshot.maxMemoryMb}
+                                step={256}
+                                disabled={busy}
+                                value={draft.memoryMb}
+                                aria-valuetext={gb(draft.memoryMb)}
+                                aria-describedby="memory-hint"
+                                onChange={(event) =>
+                                  setDraft({ ...draft, memoryMb: Number(event.target.value) })
+                                }
+                              />
+                              <div className="range-limits">
+                                <span>1 ГБ</span>
+                                <span>{gb(snapshot.maxMemoryMb)}</span>
+                              </div>
+                              <p id="memory-hint" className="inline-hint">
+                                Всего {gb(snapshot.totalMemoryMb)}. Часть памяти оставляем системе.
+                              </p>
+                            </div>
+                            <div className="form-actions">
+                              <Button type="submit" disabled={busy || !dirty || !draft.name.trim()}>
+                                Сохранить изменения
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                disabled={busy || !dirty}
+                                onClick={() => {
+                                  apply(snapshot);
+                                  setError('');
+                                  setNotice('Изменения отменены.');
+                                }}
+                              >
+                                Отменить
+                              </Button>
+                            </div>
+                          </form>
+                          <section className="java-section" aria-labelledby="java-heading">
+                            <div className="section-heading">
+                              <h3 id="java-heading">
+                                <Terminal aria-hidden="true" />
+                                Java для этого профиля
+                              </h3>
+                              <Badge variant="secondary">21 · x64</Badge>
+                            </div>
+                            <p className="file-path">
+                              {profile.javaPath || 'Файл java.exe ещё не выбран'}
+                            </p>
+                            <div className="form-actions">
+                              <Button
+                                variant="outline"
+                                disabled={busy || dirty}
+                                onClick={chooseJava}
+                              >
+                                <FolderOpen aria-hidden="true" />
+                                Выбрать Java
+                              </Button>
+                              <Button
+                                variant="secondary"
+                                disabled={busy || dirty || !profile.javaPath}
+                                onClick={checkJava}
+                              >
+                                Проверить Java
+                              </Button>
+                            </div>
+                            {java[profile.id] && (
+                              <p
+                                className={cn('java-result', java[profile.id].usable && 'success')}
+                                role="status"
+                              >
+                                {java[profile.id].message}
+                              </p>
+                            )}
+                          </section>
+                          <Button
+                            variant="ghost"
+                            className="folder-action"
+                            disabled={busy}
+                            onClick={openFolder}
                           >
-                            {java[profile.id].message}
-                          </p>
-                        )}
+                            <FolderOpen aria-hidden="true" />
+                            Открыть папку игры
+                            <ArrowRight aria-hidden="true" />
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  )}
+                  {view === 'settings' && (
+                    <>
+                      <div className="settings-grid">
+                        <Card>
+                          <CardHeader>
+                            <span className="section-icon">
+                              <Terminal aria-hidden="true" />
+                            </span>
+                            <CardTitle>
+                              <h2>Среда для игры</h2>
+                            </CardTitle>
+                            <CardDescription>Проверка Java в активном профиле.</CardDescription>
+                          </CardHeader>
+                          <CardContent>
+                            <dl className="diagnostic-list">
+                              <div>
+                                <dt>Профиль</dt>
+                                <dd>{profile.name}</dd>
+                              </div>
+                              <div>
+                                <dt>Память устройства</dt>
+                                <dd>{gb(snapshot.totalMemoryMb)}</dd>
+                              </div>
+                              <div>
+                                <dt>Выделено игре</dt>
+                                <dd>{gb(profile.memoryMb)}</dd>
+                              </div>
+                              <div>
+                                <dt>Java</dt>
+                                <dd>{javaLabel}</dd>
+                              </div>
+                            </dl>
+                            <Button disabled={busy || !profile.javaPath} onClick={checkJava}>
+                              <ShieldCheck aria-hidden="true" />
+                              Проверить Java
+                            </Button>
+                            {!profile.javaPath && (
+                              <p className="inline-hint">
+                                Сначала выберите java.exe в разделе «Профили».
+                              </p>
+                            )}
+                            {java[profile.id] && (
+                              <p
+                                className={cn('java-result', java[profile.id].usable && 'success')}
+                                role="status"
+                              >
+                                {java[profile.id].message}
+                              </p>
+                            )}
+                          </CardContent>
+                        </Card>
+                        <Card>
+                          <CardHeader>
+                            <span className="section-icon">
+                              <HardDrive aria-hidden="true" />
+                            </span>
+                            <CardTitle>
+                              <h2>Хранилище</h2>
+                            </CardTitle>
+                            <CardDescription>
+                              Настройки и игровые файлы на устройстве.
+                            </CardDescription>
+                          </CardHeader>
+                          <CardContent>
+                            <p className="field-caption">Папка данных лаунчера</p>
+                            <p className="file-path storage-path">{snapshot.dataRoot}</p>
+                            <Button variant="outline" disabled={busy} onClick={openFolder}>
+                              <FolderOpen aria-hidden="true" />
+                              Папка текущего профиля
+                            </Button>
+                            <p className="inline-hint storage-hint">
+                              Каждый профиль получает отдельную папку. Лаунчер не использует
+                              .minecraft других установок.
+                            </p>
+                          </CardContent>
+                        </Card>
                       </div>
-                      <button
-                        className="text-button"
-                        disabled={busy}
-                        onClick={() =>
-                          run(
-                            () => window.space.openInstance(profile.id),
-                            () => setNotice('Папка профиля открыта.'),
-                          )
-                        }
-                      >
-                        <Icon kind="folder" /> Открыть папку игры
-                      </button>
-                    </section>
-                  </div>
-                )}
-                {view === 'settings' && (
-                  <div className="settings-grid">
-                    <section className="panel">
-                      <span className="eyebrow">ПРОВЕРКА СРЕДЫ</span>
-                      <h2>На одной частоте.</h2>
-                      <p className="muted">
-                        Проверим Java выбранного профиля перед установкой игры.
-                      </p>
-                      <div className="diagnostic-row">
-                        <span>Профиль</span>
-                        <strong>{profile.name}</strong>
-                      </div>
-                      <div className="diagnostic-row">
-                        <span>Память устройства</span>
-                        <strong>{gb(snapshot.totalMemoryMb)}</strong>
-                      </div>
-                      <div className="diagnostic-row">
-                        <span>Выделено игре</span>
-                        <strong>{gb(profile.memoryMb)}</strong>
-                      </div>
-                      <div className="diagnostic-row">
-                        <span>Java</span>
-                        <strong>
-                          {java[profile.id]?.usable
-                            ? 'Проверена'
-                            : profile.javaPath
-                              ? 'Не проверена'
-                              : 'Не выбрана'}
-                        </strong>
-                      </div>
-                      <button
-                        className="primary"
-                        disabled={busy || !profile.javaPath}
-                        onClick={checkJava}
-                      >
-                        Проверить Java <Icon kind="arrow" />
-                      </button>
-                      {!profile.javaPath && (
-                        <p className="inline-hint">
-                          Сначала выберите java.exe в разделе «Профили».
-                        </p>
-                      )}
-                      {java[profile.id] && (
-                        <p className="java-result" role="status">
-                          {java[profile.id].message}
-                        </p>
-                      )}
-                    </section>
-                    <section className="panel storage-card">
-                      <Orbit />
-                      <h2>Всё на своём месте.</h2>
-                      <p className="muted">
-                        Настройки лаунчера хранятся локально. У каждого профиля будет отдельная
-                        папка игры.
-                      </p>
-                      <label>Папка данных</label>
-                      <p className="file-path">{snapshot.dataRoot}</p>
-                      <button
-                        className="secondary"
-                        disabled={busy}
-                        onClick={() =>
-                          run(
-                            () => window.space.openInstance(profile.id),
-                            () => setNotice('Папка профиля открыта.'),
-                          )
-                        }
-                      >
-                        Папка текущего профиля
-                      </button>
-                      <p className="inline-hint">
-                        Лаунчер не использует папку .minecraft других установок.
-                      </p>
-                    </section>
-                  </div>
-                )}
-              </>
-            )
-          )}
-          <footer className="app-footer">
-            <span>
-              <span className="status-dot" /> Настройки на этом устройстве
-            </span>
-            <span>SPACE CLIENT · СОБСТВЕННАЯ ОРБИТА</span>
-          </footer>
+                      <Card className="account-notice">
+                        <CardContent>
+                          <span className="section-icon">
+                            <LockKeyhole aria-hidden="true" />
+                          </span>
+                          <div>
+                            <h2>Microsoft-аккаунт</h2>
+                            <p>
+                              Вход и проверка владения Minecraft ещё в разработке. Запуск игры пока
+                              недоступен.
+                            </p>
+                          </div>
+                          <Badge variant="outline">В разработке</Badge>
+                        </CardContent>
+                      </Card>
+                    </>
+                  )}
+                </div>
+              )
+            )}
+            <footer className="app-footer">
+              <span>
+                <ShieldCheck aria-hidden="true" />
+                Настройки на этом устройстве
+              </span>
+              <span>
+                SPACE CLIENT <span className="footer-separator">/</span> 0.1.0
+              </span>
+            </footer>
+          </div>
         </main>
       </div>
     </>

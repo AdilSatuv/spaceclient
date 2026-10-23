@@ -13,6 +13,7 @@
 - [Установка инструментов](docs/TOOLCHAIN.md) — локальный JDK и команды Gradle.
 - [Игровой загрузчик](docs/ADR-001-game-loader.md) — решение и ограничения прототипа.
 - [Лаунчер](docs/LAUNCHER.md) — Electron-каркас, профили, Java, запуск из исходников и ограничения.
+- [Дизайн лаунчера](docs/LAUNCHER-DESIGN.md) — shadcn/ui, новая палитра и проверенные сценарии интерфейса.
 - [Microsoft-вход](docs/AUTH.md) — зашифрованный кеш, проверки Windows DPAPI и инструкции владельцу регистрации.
 - [Игровой bundle](docs/GAME-BUNDLE.md) — source stamp, проверка и установка собственного remapped JAR, CI pipeline.
 - [Подготовка установки](docs/INSTALLER.md) — проверенный downloader, возобновление и оставшиеся этапы SC-09.

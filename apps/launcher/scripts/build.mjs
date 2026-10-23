@@ -1,9 +1,19 @@
 import { build } from 'esbuild';
 import { mkdir, copyFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
+import { createRequire } from 'node:module';
+import { spawnSync } from 'node:child_process';
 import { prepareGameBundle } from './game-bundle.mjs';
 
 await mkdir('dist/renderer', { recursive: true });
+const require = createRequire(import.meta.url);
+const cssCli = resolve(dirname(require.resolve('@tailwindcss/cli/package.json')), 'dist/index.mjs');
+const css = spawnSync(
+  process.execPath,
+  [cssCli, '-i', 'src/renderer/style.css', '-o', 'dist/renderer/app.css', '--minify'],
+  { stdio: 'inherit', windowsHide: true },
+);
+if (css.error || css.status !== 0) throw new Error('Launcher CSS build failed.');
 const gameBundle = await prepareGameBundle(resolve('dist/game'));
 await build({
   entryPoints: ['src/main/index.ts'],
@@ -36,4 +46,7 @@ await build({
 });
 await copyFile('src/renderer/index.html', 'dist/renderer/index.html');
 await copyFile('../website/public/images/space-hero-v2.png', 'dist/renderer/hero.png');
+await mkdir('dist/licenses', { recursive: true });
+await copyFile('../../docs/licenses/shadcn-ui.md', 'dist/licenses/shadcn-ui.md');
+await copyFile('../../docs/licenses/lucide.txt', 'dist/licenses/lucide.txt');
 console.log('Space Launcher: main, sandboxed preload and renderer built.');
