@@ -1,0 +1,176 @@
+{
+  "checkedAt": "2026-10-23T21:12:19.587Z",
+  "clientDate": "2026-10-24",
+  "scope": "Real local API and own Chrome profile; header states and exact 760/761 breakpoint, keyboard/Escape/focus, no product code changes.",
+  "results": [
+    {
+      "width": 320,
+      "desktop": false,
+      "trigger": true,
+      "overflow": false,
+      "current": [
+        "/help"
+      ],
+      "dialog": {
+        "width": 282,
+        "height": 458.75,
+        "padding": "24px",
+        "background": "rgb(19, 16, 36)",
+        "border": "rgb(125, 99, 156)",
+        "radius": "10px",
+        "font": "\"Segoe UI\", Arial, sans-serif",
+        "fontSize": "16px",
+        "links": [
+          {
+            "label": "Возможности",
+            "height": 59.390625,
+            "current": null
+          },
+          {
+            "label": "Загрузки",
+            "height": 59.390625,
+            "current": null
+          },
+          {
+            "label": "Обновления",
+            "height": 59.390625,
+            "current": null
+          },
+          {
+            "label": "Помощь",
+            "height": 59.390625,
+            "current": "page"
+          },
+          {
+            "label": "GitHub",
+            "height": 59.390625,
+            "current": null
+          }
+        ],
+        "focused": "Закрыть ×"
+      }
+    },
+    {
+      "width": 390,
+      "desktop": false,
+      "trigger": true,
+      "overflow": false,
+      "current": [
+        "/help"
+      ],
+      "dialog": {
+        "width": 352,
+        "height": 458.75,
+        "padding": "24px",
+        "background": "rgb(19, 16, 36)",
+        "border": "rgb(125, 99, 156)",
+        "radius": "10px",
+        "font": "\"Segoe UI\", Arial, sans-serif",
+        "fontSize": "16px",
+        "links": [
+          {
+            "label": "Возможности",
+            "height": 59.390625,
+            "current": null
+          },
+          {
+            "label": "Загрузки",
+            "height": 59.390625,
+            "current": null
+          },
+          {
+            "label": "Обновления",
+            "height": 59.390625,
+            "current": null
+          },
+          {
+            "label": "Помощь",
+            "height": 59.390625,
+            "current": "page"
+          },
+          {
+            "label": "GitHub",
+            "height": 59.390625,
+            "current": null
+          }
+        ],
+        "focused": "Закрыть ×"
+      }
+    },
+    {
+      "width": 760,
+      "desktop": false,
+      "trigger": true,
+      "overflow": false,
+      "current": [
+        "/help"
+      ],
+      "dialog": {
+        "width": 430,
+        "height": 458.75,
+        "padding": "24px",
+        "background": "rgb(19, 16, 36)",
+        "border": "rgb(125, 99, 156)",
+        "radius": "10px",
+        "font": "\"Segoe UI\", Arial, sans-serif",
+        "fontSize": "16px",
+        "links": [
+          {
+            "label": "Возможности",
+            "height": 59.390625,
+            "current": null
+          },
+          {
+            "label": "Загрузки",
+            "height": 59.390625,
+            "current": null
+          },
+          {
+            "label": "Обновления",
+            "height": 59.390625,
+            "current": null
+          },
+          {
+            "label": "Помощь",
+            "height": 59.390625,
+            "current": "page"
+          },
+          {
+            "label": "GitHub",
+            "height": 59.390625,
+            "current": null
+          }
+        ],
+        "focused": "Закрыть ×"
+      }
+    },
+    {
+      "width": 761,
+      "desktop": true,
+      "trigger": false,
+      "overflow": false,
+      "current": [
+        "/help"
+      ]
+    },
+    {
+      "width": 1050,
+      "desktop": true,
+      "trigger": false,
+      "overflow": false,
+      "current": [
+        "/help"
+      ]
+    },
+    {
+      "width": 1440,
+      "desktop": true,
+      "trigger": false,
+      "overflow": false,
+      "current": [
+        "/help"
+      ]
+    }
+  ],
+  "resizeFocus": "/help"
+}

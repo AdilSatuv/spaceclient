@@ -43,4 +43,7 @@
   --control-disabled-background: #2b2539;
   --control-disabled-text: #bcb2d0;
   --control-danger: #ff91ae;
+  --navigation-header: #0b071be8;
+  --navigation-menu-border: #7d639c;
+  --navigation-backdrop: #020610db;
 }

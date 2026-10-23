@@ -1,0 +1,10 @@
+{
+  "checkedAt": "2026-10-23T21:14:43.231Z",
+  "mode": "Isolated VM module inputs, no source files changed",
+  "checks": [
+    "Current RGBA tokens and generated CSS agree",
+    "Alpha/HEX mismatch rejected",
+    "RGB/HEX mismatch rejected",
+    "Generated CSS drift rejected"
+  ]
+}

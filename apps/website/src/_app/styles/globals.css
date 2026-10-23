@@ -994,11 +994,11 @@ dialog {
   padding: 24px;
   background: var(--surface);
   color: var(--text);
-  border: 1px solid #7d639c;
+  border: 1px solid var(--navigation-menu-border);
   border-radius: 10px;
 }
 dialog::backdrop {
-  background: #020610db;
+  background: var(--navigation-backdrop);
   backdrop-filter: blur(8px);
 }
 .menu-top {
@@ -1024,6 +1024,9 @@ dialog nav a {
 }
 dialog nav a[aria-current] {
   color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
 }
 .skeleton {
   height: 220px;
@@ -1543,7 +1546,7 @@ body {
     radial-gradient(ellipse at 100% 65%, #249baa0c, transparent 42%), var(--bg);
 }
 .site-header {
-  background: #0b071be8;
+  background: var(--navigation-header);
   border-color: #c6a4ff24;
 }
 .brand > svg {

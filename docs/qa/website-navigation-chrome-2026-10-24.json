@@ -1,0 +1,312 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-23T21:12:59.071Z",
+  "browser": "Chrome/156.0.8078.47",
+  "protocol": "cdp",
+  "realAccountUsed": false,
+  "realDownloadsStarted": false,
+  "layouts": [
+    {
+      "route": "/",
+      "width": 320
+    },
+    {
+      "route": "/features",
+      "width": 320
+    },
+    {
+      "route": "/download",
+      "width": 320
+    },
+    {
+      "route": "/updates",
+      "width": 320
+    },
+    {
+      "route": "/help",
+      "width": 320
+    },
+    {
+      "route": "/help/launcher-status",
+      "width": 320
+    },
+    {
+      "route": "/updates/launcher-and-website",
+      "width": 320
+    },
+    {
+      "route": "/",
+      "width": 375
+    },
+    {
+      "route": "/features",
+      "width": 375
+    },
+    {
+      "route": "/download",
+      "width": 375
+    },
+    {
+      "route": "/updates",
+      "width": 375
+    },
+    {
+      "route": "/help",
+      "width": 375
+    },
+    {
+      "route": "/help/launcher-status",
+      "width": 375
+    },
+    {
+      "route": "/updates/launcher-and-website",
+      "width": 375
+    },
+    {
+      "route": "/",
+      "width": 390
+    },
+    {
+      "route": "/features",
+      "width": 390
+    },
+    {
+      "route": "/download",
+      "width": 390
+    },
+    {
+      "route": "/updates",
+      "width": 390
+    },
+    {
+      "route": "/help",
+      "width": 390
+    },
+    {
+      "route": "/help/launcher-status",
+      "width": 390
+    },
+    {
+      "route": "/updates/launcher-and-website",
+      "width": 390
+    },
+    {
+      "route": "/",
+      "width": 768
+    },
+    {
+      "route": "/features",
+      "width": 768
+    },
+    {
+      "route": "/download",
+      "width": 768
+    },
+    {
+      "route": "/updates",
+      "width": 768
+    },
+    {
+      "route": "/help",
+      "width": 768
+    },
+    {
+      "route": "/help/launcher-status",
+      "width": 768
+    },
+    {
+      "route": "/updates/launcher-and-website",
+      "width": 768
+    },
+    {
+      "route": "/",
+      "width": 1024
+    },
+    {
+      "route": "/features",
+      "width": 1024
+    },
+    {
+      "route": "/download",
+      "width": 1024
+    },
+    {
+      "route": "/updates",
+      "width": 1024
+    },
+    {
+      "route": "/help",
+      "width": 1024
+    },
+    {
+      "route": "/help/launcher-status",
+      "width": 1024
+    },
+    {
+      "route": "/updates/launcher-and-website",
+      "width": 1024
+    },
+    {
+      "route": "/",
+      "width": 1440
+    },
+    {
+      "route": "/features",
+      "width": 1440
+    },
+    {
+      "route": "/download",
+      "width": 1440
+    },
+    {
+      "route": "/updates",
+      "width": 1440
+    },
+    {
+      "route": "/help",
+      "width": 1440
+    },
+    {
+      "route": "/help/launcher-status",
+      "width": 1440
+    },
+    {
+      "route": "/updates/launcher-and-website",
+      "width": 1440
+    }
+  ],
+  "checks": [
+    "Seven routes at six widths, including 320 px: no horizontal overflow, one h1 and HTTP 200.",
+    {
+      "browserZoom": 2,
+      "before": {
+        "width": 1424,
+        "dpr": 1
+      },
+      "after": {
+        "width": 712,
+        "dpr": 2
+      },
+      "method": "chrome.tabs.setZoom; real browser zoom, not CSS zoom or pinch scaling."
+    },
+    "Reduced-motion changed live without reload, pauses decoration and restores the normal control afterwards.",
+    "Mobile menu Escape restores focus to its trigger.",
+    "Clipboard success verified by reading the fake SHA-256 back; previous clipboard restored when still unchanged.",
+    "Actual Permissions-Policy clipboard denial shows fallback; the complete hash remains keyboard-selectable."
+  ],
+  "flows": [
+    {
+      "id": "WEB-CONTROLS",
+      "result": "Real pointer hover/press match shared tokens; primary preserves layout; secondary has distinct surfaces; field is 52 px with visible 2 px focus and 5 px offset."
+    },
+    {
+      "id": "WEB-03",
+      "width": 390,
+      "result": "Search/category/status, detail Enter, reload, empty/reset and browser Back restore the query and results."
+    },
+    {
+      "id": "WEB-04",
+      "width": 390,
+      "result": "Release channel selection, empty channel and browser Back restore the alpha filter; no download is started."
+    },
+    {
+      "id": "WEB-06",
+      "width": 390,
+      "result": "Fourteen fixture notes paginate 12+2; article and filter Back preserve type/page; changing filter resets page."
+    },
+    {
+      "id": "WEB-07",
+      "width": 390,
+      "result": "Case-insensitive FAQ and article search, result counts, keyboard accordion/link, simultaneous open answers, empty/issue/reset and Back."
+    },
+    {
+      "id": "WEB-03",
+      "width": 1440,
+      "result": "Search/category/status, detail Enter, reload, empty/reset and browser Back restore the query and results."
+    },
+    {
+      "id": "WEB-04",
+      "width": 1440,
+      "result": "Release channel selection, empty channel and browser Back restore the alpha filter; no download is started."
+    },
+    {
+      "id": "WEB-06",
+      "width": 1440,
+      "result": "Fourteen fixture notes paginate 12+2; article and filter Back preserve type/page; changing filter resets page."
+    },
+    {
+      "id": "WEB-07",
+      "width": 1440,
+      "result": "Case-insensitive FAQ and article search, result counts, keyboard accordion/link, simultaneous open answers, empty/issue/reset and Back."
+    },
+    {
+      "id": "WEB-10",
+      "result": "Skip link, forward/reverse menu focus trap, focus visibility, Escape, route and desktop breakpoint cleanup."
+    },
+    {
+      "id": "WEB-09",
+      "route": "/features",
+      "fault": "http",
+      "result": "Failure differs from empty; real refresh shows busy/disabled state then recovers without reloading the browser document."
+    },
+    {
+      "id": "WEB-09",
+      "route": "/features",
+      "fault": "invalid",
+      "result": "Failure differs from empty; real refresh shows busy/disabled state then recovers without reloading the browser document."
+    },
+    {
+      "id": "WEB-09",
+      "route": "/features",
+      "fault": "timeout",
+      "result": "Failure differs from empty; real refresh shows busy/disabled state then recovers without reloading the browser document."
+    },
+    {
+      "id": "WEB-09",
+      "route": "/download",
+      "fault": "http",
+      "result": "Failure differs from empty; real refresh shows busy/disabled state then recovers without reloading the browser document."
+    },
+    {
+      "id": "WEB-09",
+      "route": "/download",
+      "fault": "invalid",
+      "result": "Failure differs from empty; real refresh shows busy/disabled state then recovers without reloading the browser document."
+    },
+    {
+      "id": "WEB-09",
+      "route": "/download",
+      "fault": "timeout",
+      "result": "Failure differs from empty; real refresh shows busy/disabled state then recovers without reloading the browser document."
+    },
+    {
+      "id": "WEB-09",
+      "route": "/updates",
+      "fault": "http",
+      "result": "Failure differs from empty; real refresh shows busy/disabled state then recovers without reloading the browser document."
+    },
+    {
+      "id": "WEB-09",
+      "route": "/updates",
+      "fault": "invalid",
+      "result": "Failure differs from empty; real refresh shows busy/disabled state then recovers without reloading the browser document."
+    },
+    {
+      "id": "WEB-09",
+      "route": "/updates",
+      "fault": "timeout",
+      "result": "Failure differs from empty; real refresh shows busy/disabled state then recovers without reloading the browser document."
+    },
+    {
+      "id": "WEB-01",
+      "result": "Unknown route, help article and update return HTTP 404 with a home link."
+    },
+    {
+      "id": "WEB-10",
+      "result": "Injected localStorage SecurityError on read/write does not prevent pause/resume; this checks the fallback, not an OS storage policy."
+    }
+  ],
+  "errors": [],
+  "skipped": [],
+  "scope": "Isolated production Next with fixture API and own Chrome profile and test-only tabs extension. No personal browser session, real release download or public HTTPS audit."
+}

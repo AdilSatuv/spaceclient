@@ -1,0 +1,31 @@
+{
+  "color": {
+    "header": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.043137254901960784, 0.027450980392156862, 0.10588235294117647],
+        "alpha": 0.9098039215686274,
+        "hex": "#0B071BE8"
+      }
+    },
+    "menu-border": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.49019607843137253, 0.38823529411764707, 0.611764705882353],
+        "alpha": 1,
+        "hex": "#7D639C"
+      }
+    },
+    "backdrop": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.00784313725490196, 0.023529411764705882, 0.06274509803921569],
+        "alpha": 0.8588235294117647,
+        "hex": "#020610DB"
+      }
+    }
+  }
+}

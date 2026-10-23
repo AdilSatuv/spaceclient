@@ -84,7 +84,7 @@ React cache используется только для согласованн�
 
 ## Токены и состояния управления
 
-Базовые значения хранятся в `docs/design/space-dark.tokens.json`, состояния — в `docs/design/control-states.tokens.json`. После изменения JSON выполнить `npm.cmd run tokens:web`, затем `npm.cmd run tokens:web:check`. Генерируемый `src/_app/styles/tokens.css` вручную не редактируется. Проверка ловит дрейф CSS и проверяет 19 цветовых пар; включена в `npm run check` и оба browser CI jobs.
+Базовые значения хранятся в `docs/design/space-dark.tokens.json`, состояния — в `docs/design/control-states.tokens.json`, навигация — в `docs/design/navigation.tokens.json`. После изменения JSON выполнить `npm.cmd run tokens:web`, затем `npm.cmd run tokens:web:check`. Генерируемый `src/_app/styles/tokens.css` вручную не редактируется. Проверка ловит дрейф CSS, несогласованные RGB/HEX/alpha и проверяет 20 цветовых пар; включена в `npm run check` и оба browser CI jobs. Статус новых Figma-компонентов навигации — в [NAVIGATION.md](design/NAVIGATION.md).
 
 Native components и витрина находятся в [Figma](https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=23-61), правила — в [CONTROL-STATES.md](design/CONTROL-STATES.md). Это versioned handoff, автоматического применения изменений из Figma в JSON нет. При обновлении палитры сверять обе стороны. Chrome и Firefox проверяют настоящие hover/press/focus и busy без hover-эффектов.
 
