@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 public final class SpaceClient implements ClientModInitializer {
     private static final Logger LOGGER = LogManager.getLogger("SpaceClient");
     public static HudConfig config = new HudConfig();
+    public static final ClickCounter clicks = new ClickCounter();
     private static Path configFile;
     @Override
     public void onInitializeClient() {

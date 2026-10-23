@@ -5,10 +5,10 @@ export type Release = { id: string; version: string; channel: 'alpha' | 'beta' |
 export type Update = { id: string; slug: string; type: 'development' | 'release'; title: string; summary: string; publishedAt: string; blocks: { heading: string; text: string }[]; releaseId?: string };
 
 export const features: Feature[] = [
-  { id: 'fps', slug: 'fps', name: 'FPS Counter', summary: 'Частота кадров прямо в игре.', category: 'hud', status: 'prototype', details: 'Показатель берётся из Minecraft. Проверка в мире ещё предстоит.' },
+  { id: 'fps', slug: 'fps', name: 'FPS Counter', summary: 'Частота кадров прямо в игре.', category: 'hud', status: 'prototype', details: 'Показатель берётся из Minecraft; отрисовка в тестовом мире проверена. Замеры производительности ещё не проводились.' },
   { id: 'coordinates', slug: 'coordinates', name: 'Координаты', summary: 'XYZ без отладочного экрана.', category: 'hud', status: 'prototype', details: 'В dev-моде реализован виджет положения игрока.' },
   { id: 'keys', slug: 'keystrokes', name: 'Keystrokes', summary: 'Состояния клавиш движения перед глазами.', category: 'hud', status: 'prototype', details: 'Использует игровые bindings; полноценный редактор ещё в планах.' },
-  { id: 'cps', slug: 'cps', name: 'CPS Counter', summary: 'Отдельный счётчик левой и правой кнопок.', category: 'hud', status: 'planned', details: 'Планируется скользящее окно в одну секунду; модуль ещё не завершён.' },
+  { id: 'cps', slug: 'cps', name: 'CPS Counter', summary: 'Отдельный счётчик левой и правой кнопок.', category: 'hud', status: 'prototype', details: 'Добавлено скользящее окно в одну секунду и тесты счётчика. Левый клик проверен в мире; полная игровая проверка правой кнопки, удержания и меню ещё впереди.' },
   { id: 'editor', slug: 'hud-editor', name: 'Редактор HUD', summary: 'Перемещение, масштаб и настройки виджетов.', category: 'comfort', status: 'planned', details: 'Цель — менять расположение модулей из самой игры.' },
   { id: 'profiles', slug: 'launch-profiles', name: 'Профили запуска', summary: 'Свои настройки памяти и игры.', category: 'launcher', status: 'planned', details: 'Пользовательского лаунчера пока нет.' }
 ];

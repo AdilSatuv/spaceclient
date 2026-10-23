@@ -32,6 +32,9 @@ public abstract class HudMixin {
                 + (client.options.backKey.isPressed() ? "[S] " : " S  ")
                 + (client.options.rightKey.isPressed() ? "[D]" : " D ");
             client.textRenderer.drawWithShadow(keys, 8, y, 0xB4F1CE);
+            y += 12;
         }
+        if (SpaceClient.config.cps) client.textRenderer.drawWithShadow(
+            "CPS " + SpaceClient.clicks.getLeftCps() + " L / " + SpaceClient.clicks.getRightCps() + " R", 8, y, 0xFFFFFF);
     }
 }

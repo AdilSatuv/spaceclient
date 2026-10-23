@@ -13,6 +13,7 @@ public final class HudConfig {
     public boolean fps = true;
     public boolean coordinates = true;
     public boolean keystrokes = true;
+    public boolean cps = true;
 
     public static HudConfig load(Path file) throws IOException {
         HudConfig config = new HudConfig();
@@ -24,6 +25,7 @@ public final class HudConfig {
         config.fps = read(properties, "fps");
         config.coordinates = read(properties, "coordinates");
         config.keystrokes = read(properties, "keystrokes");
+        config.cps = read(properties, "cps");
         return config;
     }
 
@@ -41,6 +43,7 @@ public final class HudConfig {
         properties.setProperty("fps", Boolean.toString(fps));
         properties.setProperty("coordinates", Boolean.toString(coordinates));
         properties.setProperty("keystrokes", Boolean.toString(keystrokes));
+        properties.setProperty("cps", Boolean.toString(cps));
         Path temporary = file.resolveSibling(file.getFileName() + ".tmp");
         try (OutputStream output = Files.newOutputStream(temporary)) { properties.store(output, "Space Client HUD"); }
         Files.move(temporary, file, StandardCopyOption.REPLACE_EXISTING);
