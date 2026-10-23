@@ -6,7 +6,7 @@
 |---|---|
 | color, 11 | background, surface, raised, border, text, muted, accent, on-accent, violet, accent-hover, wordmark |
 | space, 8 | 4, 8, 12, 16, 24, 32, 48, 64 px |
-| radius, 2 | button 6 px, panel 10 px |
+| radius, 2 | button 10 px, panel 10 px |
 | size, 4 | touch-min 44 px, button 52 px, content-max 1280 px, header-desktop 96 px |
 | font, 2 | Segoe UI, Consolas; в веб-CSS есть fallback-шрифты |
 | motion, 1 | feedback 0.18 s; reduced-motion отключает переходы в CSS |
@@ -18,3 +18,5 @@
 В файле остаётся исходная пробная Collection 1 с одной переменной background; новые привязки используют Space / Foundations. Пробная коллекция не является второй темой.
 
 [Space-Client-Website-Design.fig](Space-Client-Website-Design.fig) — актуальная локальная копия шести макетов, обеих иллюстраций, переменных и первого компонента. Это резервная копия Design-файла; облачная синхронизация последнего среза не подтверждена. Восстановление — Import file в Figma, без удаления исходного облачного файла.
+
+По запросу пользователя направление обновлено до Nebula: фон #080615, акцент #C6A4FF, violet #9E8AFF, текст #F5F0FF. JSON содержит 28 переменных; Import mode в Figma подтвердил 13 изменённых значений, включая цвета и радиус. Файл FIG обновлён (4 860 227 байт). Дополнительный cyan #8DE8F5 используется в коде как второй акцент; в исходной коллекции отдельной переменной cyan пока нет. Градиент заголовка, тонировка иллюстраций и анимации реализованы на сайте; наличие обновлённых Figma tokens не означает готовый анимированный Figma-прототип.

@@ -48,11 +48,24 @@ npm.cmd run audit:web -- / /features /download /updates /help
 
 `SPACE_LAB_RUNS` задаёт 1–5 прогонов (по умолчанию 3), `SPACE_LAB_OUTPUT` — папку отчётов, `SPACE_WEB_URL` — тестируемый origin. Требуется установленный Chrome; можно передать `CHROME_PATH`. Инструмент использует [официальный Lighthouse CLI](https://github.com/GoogleChrome/lighthouse#using-the-node-cli). Схема фокуса меню сверена с [WAI Dialog Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/); база UI/UX Pro Max дала рекомендации по видимому focus, но отдельного точного результата по focus trap не нашла.
 
+## Новый срез Nebula: цвет и движение
+
+После запроса пользователя обновлены палитра, CTA, градиент заголовка, звёзды, две орбиты, метеор, мягкое движение desktop-сцены, hover и reveal секций. Нет новой animation-зависимости: CSS + IntersectionObserver/Web Animations. Текст остаётся доступным без JavaScript; начальный HTML не скрывает секции. Reveal использует transform/opacity и срабатывает один раз для элемента, observer/animations очищаются при смене страницы и предпочтений. Пауза управляет CSS-анимациями и отменяет текущие reveal; настройки системы имеют приоритет. Кнопка находится в шапке и не перекрывает hero.
+
+- Пять страниц × 320/390/768/1024/1440: без горизонтального переполнения. Найден и исправлен тесный header на 320 px.
+- Пауза → computed animation-play-state=paused, aria-pressed=true; возобновление → running. На mobile отключён дрейф картинки; кнопка управления 44×44 px.
+- В меню 320 px проверены Shift+Tab/Tab по кругу, Escape и возврат фокуса. Консоль без зафиксированных warn/error.
+- Изолированный Chrome с `--force-prefers-reduced-motion` показал «Движение уменьшено» и доступность 100; полный скриншот сохранён. Настройки ОС не менялись. Динамическое переключение системной настройки вручную не проверялось.
+- Три итоговых mobile-прогона главной: медианы Performance **98**, Accessibility **100**, LCP **2.472 s**, CLS **0**. Внутренние страницы: одиночные проверки Performance 99/99/100/99, Accessibility 100, CLS 0; это не медианы. Preview SEO по-прежнему 63–66 из-за noindex.
+- Build, TypeScript, 11 unit/HTTP tests, production state checks и route/head metadata smoke проходят. Figma палитра обновлена; полный motion-прототип не заявляется.
+
+[Условия, отдельные результаты и отпечатки исходников](qa/nebula-2026-10-23.json). Предыдущая таблица из 15 прогонов выше относится к предыдущему визуальному срезу.
+
 ## Ещё проверить
 
 - Полный keyboard-проход всех страниц и focus trap/видимость фокуса на всех размерах; уже проверенные Escape/return-focus не заменяют весь проход.
 - Сверить фактическое содержимое системного clipboard в обычном пользовательском браузере; уже проверены UI feedback и ручное выделение.
-- 200% zoom, reflow и reduced-motion в браузере; media rule в CSS сама по себе не подтверждает приёмку.
+- 200% zoom/reflow и динамическое переключение системного reduced-motion. Начальный reduced-motion в отдельном Chrome проверен для нового среза выше.
 - Повторить SEO/performance на production HTTPS-origin; локальные три измерения выполнены и записаны выше.
 - Финальная библиотека tokens/components/control states в Figma; подтвердить облачную синхронизацию мобильного фона. Созданные шесть макетов не означают завершение SC-17.
 - Публичный hosting/origin/HTTPS, rebuild с production env, sitemap и rollback после размещения. Домен и хостинг ещё не выбраны.

@@ -2,6 +2,7 @@ import { getImageProps } from 'next/image';
 import Link from 'next/link';
 import { Arrow } from '../components/icons';
 import HudPreview from '../components/hud-preview';
+import { CosmicScene } from '../components/space-motion';
 const steps = [
   {
     n: '01',
@@ -47,12 +48,13 @@ export default function Home() {
           <img {...desktop} className="hero-art" />
         </picture>
         <div className="hero-shade" />
+        <CosmicScene />
         <div className="container hero-content">
           <p className="eyebrow rule-label">MINECRAFT. НА СВОЕЙ ОРБИТЕ.</p>
           <h1>
             ТВОЙ МИР.
             <br />
-            НОВАЯ ОРБИТА<span>.</span>
+            <span className="orbit-title">НОВАЯ ОРБИТА.</span>
           </h1>
           <p className="lead">
             Знакомый блочный мир. Свой взгляд на игру.
@@ -77,7 +79,7 @@ export default function Home() {
           <span className="concept-label">Концепт мира</span>
         </div>
       </section>
-      <div className="capability-strip">
+      <div className="capability-strip" data-reveal>
         <div className="container capability-grid">
           <div>
             <span>01</span>
@@ -99,7 +101,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <section className="container section">
+      <section className="container section" data-reveal>
         <div className="section-heading">
           <div>
             <p className="eyebrow">02 / В ЦЕНТРЕ — ТВОЙ МИР</p>
@@ -126,7 +128,7 @@ export default function Home() {
           </Link>
         </div>
       </section>
-      <section className="steps-section">
+      <section className="steps-section" data-reveal>
         <div className="container section">
           <p className="eyebrow">03 / ПЕРВОЕ ЗНАКОМСТВО</p>
           <h2>
@@ -148,7 +150,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="container section">
+      <section className="container section" data-reveal>
         <Link className="update-banner" href="/updates/first-contact">
           <div>
             <p className="eyebrow">БОРТОВОЙ ЖУРНАЛ</p>
@@ -171,7 +173,7 @@ export default function Home() {
           </div>
         </Link>
       </section>
-      <section className="container section faq-layout">
+      <section className="container section faq-layout" data-reveal>
         <div>
           <p className="eyebrow">04 / ЧАСТЫЕ ВОПРОСЫ</p>
           <h2>

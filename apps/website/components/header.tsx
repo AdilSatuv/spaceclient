@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { Arrow, OrbitMark } from './icons';
+import { SpaceMotion } from './space-motion';
 const links = [
   ['/features', 'Возможности'],
   ['/download', 'Загрузки'],
@@ -35,6 +36,7 @@ export default function Header() {
         <nav className="desktop-nav" aria-label="Главная навигация">
           {nav}
         </nav>
+        <SpaceMotion />
         <a className="github-link" href="https://github.com/AdilSatuv/spaceclient">
           GitHub <Arrow />
         </a>
