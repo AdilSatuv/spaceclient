@@ -6,8 +6,11 @@ import { mkdirSync } from 'node:fs';
 import { ProfileStore } from './store.ts';
 import { inspectJava } from './java.ts';
 import { InstallationService } from './installation.ts';
+import { installSpaceBundle } from './game-bundle.ts';
+import type { SpaceBundleManifest } from './game-bundle.ts';
 import { APP_URL, CSP, assetName, trustedSender } from './security.ts';
 import type { Result } from '../shared/contracts.ts';
+declare const __SPACE_GAME_BUNDLE__: SpaceBundleManifest | null;
 
 app.setName('Space Client');
 if (!app.isPackaged && process.env.SPACE_LAUNCHER_DATA) {
@@ -34,8 +37,23 @@ else {
     .whenReady()
     .then(async () => {
       store = await ProfileStore.open(app.getPath('userData'), Math.floor(totalmem() / 1048576));
-      installation = new InstallationService(async (id) =>
-        join(await store.instanceDirectory(id), 'minecraft'),
+      const spacePin = __SPACE_GAME_BUNDLE__;
+      installation = new InstallationService(
+        async (id) => join(await store.instanceDirectory(id), 'minecraft'),
+        {
+          space: spacePin
+            ? {
+                pin: spacePin,
+                install: (root, signal) =>
+                  installSpaceBundle(
+                    root,
+                    join(__dirname, 'game', 'space-client.jar'),
+                    spacePin,
+                    signal,
+                  ),
+              }
+            : null,
+        },
       );
       protocol.handle('space', async (request) => {
         const name = request.method === 'GET' ? assetName(request.url) : null;

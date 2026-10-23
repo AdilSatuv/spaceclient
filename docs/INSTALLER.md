@@ -1,6 +1,6 @@
 # Подготовка установки Minecraft
 
-SC-09 в работе. Реализованы downloader, очередь, resolver 1.8.9, Log4j, Fabric Loader/Legacy intermediary/patched LWJGL, natives и UI-подготовка. Собственный Space jar, Microsoft-вход и запуск остаются отдельными этапами.
+Реализованы downloader, очередь, resolver 1.8.9, Log4j, Fabric Loader/Legacy intermediary/patched LWJGL, natives и UI-подготовка, включая собственный development JAR из [game bundle](GAME-BUNDLE.md). Microsoft-вход и запуск ещё не реализованы; публичного установщика/релиза нет.
 
 ## Готовая часть
 
@@ -15,7 +15,7 @@ SC-09 в работе. Реализованы downloader, очередь, resolv
 
 ## Проверки
 
-11 offline-тестов downloader, семь resolver, по шесть очереди/распаковки/lifecycle. Проверены digest, Maven pins, согласованная замена LWJGL, ограничения, прогресс, повторы, отмена, metadata, ошибочные ZIP, job lock, нехватка места, сохранность receipt и shutdown. Вместе с профилями/IPC/Java — **46 тестов launcher**.
+11 offline-тестов downloader, семь resolver, по шесть очереди/распаковки/game bundle и девять lifecycle. Вместе с профилями/IPC/Java — **55 тестов launcher**. Проверены digest/pins, согласованная замена LWJGL, ограничения, прогресс, повторы, отмена, metadata, ошибочные ZIP, job lock, место, source stamp/bytecode, сохранность JAR/receipt и shutdown.
 
 Реальная сеть: скачан только JSON-metadata 1.8.9 размером 18 244 байта, SHA-1 `d546f1707a3f2b7d034eece5ea2e311eda875787`; повторный вызов использовал проверенный кеш. Затем создана часть в 128 байт: настоящий CDN ответил HTTP 206 на Range `bytes=128-`, итоговый размер и хеш проверены. [Результат и точный URL](qa/launcher-downloads-2026-10-23.json). Bulk assets, client.jar и чужие игровые файлы не скачивались этим smoke-test.
 
@@ -103,9 +103,11 @@ node apps/launcher/scripts/prepare-repair-fixture.mjs
 
 ## Дальнейшая очередь
 
+С собственным development JAR через окно подготовлены 768/768 файлов, 153 362 112 байт и 16 DLL; [актуальный аудит](qa/launcher-base-2026-10-23.json). В receipt указан `space-development`, но `launchReady=false`. Архитектура упаковки, защита от устаревшего JAR, режим без bundle и границы проверки — [GAME-BUNDLE.md](GAME-BUNDLE.md).
+
 После предыдущих UI-проверок добавлен loader snapshot. Актуальный полный набор 767/767 (146,2 МиБ) и 16 DLL подготовлен через окно и проверен аудитом. [Loader manifest и отдельная проверка](LOADER-MANIFEST.md) включают точные версии и границы class-loading smoke.
 
-1. Связать remapped Space jar с манифестом и сборкой лаунчера; перед запуском проверить полный runtime.
+1. Microsoft/ownership flow и контролируемый launch spec; перед запуском проверить полный runtime, logging config и classpath.
 2. Дополнить UI проверкой места/ошибок на реальном недостатке диска и отменой при закрытии приложения; эти пути пока проверены модельно.
 3. Проверять native generation перед использованием; предусмотреть очистку старых и брошенных генераций с учётом работающих процессов. Сейчас они не запускаются и автоматически не удаляются.
 4. Legacy Fabric loader и собственный remapped Space jar связать с контролируемым манифестом и проверенными хешами. Mojang-файлы не переупаковывать в репозиторий.

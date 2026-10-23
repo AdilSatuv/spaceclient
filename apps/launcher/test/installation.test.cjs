@@ -18,6 +18,16 @@ const plan = {
   blockers: ['Not a runnable Space build'],
   launchReady: false,
 };
+const spacePin = {
+  schemaVersion: 1,
+  channel: 'development',
+  modVersion: '0.1.0',
+  minecraftVersion: '1.8.9',
+  loaderVersion: '0.18.3',
+  gameSourceTree: 'a'.repeat(40),
+  sha256: 'b'.repeat(64),
+  size: 20,
+};
 async function fixture(t, overrides = {}) {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'space-install-'));
   assert.equal(path.dirname(root), os.tmpdir());
@@ -77,6 +87,74 @@ test('installation lifecycle records only fully prepared base files and returns 
     (await fs.readdir(path.join(root, 'alpha'))).some((name) => name.endsWith('.tmp')),
     false,
   );
+});
+test('a verified Space bundle extends counts and records development identity without enabling launch', async (t) => {
+  const { root, service } = await fixture(t, {
+    space: {
+      pin: spacePin,
+      install: async () => ({ ...spacePin, relativePath: 'mods/space-client.jar' }),
+    },
+  });
+  service.start('alpha');
+  await service.settled();
+  const status = service.status('alpha');
+  assert.equal(status.phase, 'prepared');
+  assert.equal(status.spaceVersion, '0.1.0');
+  assert.equal(status.totalFiles, 2);
+  assert.equal(status.completedFiles, 2);
+  assert.equal(status.totalBytes, 30);
+  assert.equal(status.verifiedBytes, 30);
+  const receipt = JSON.parse(
+    await fs.readFile(path.join(root, 'alpha/base-installation.json'), 'utf8'),
+  );
+  assert.equal(receipt.kind, 'space-development');
+  assert.equal(receipt.space.gameSourceTree, spacePin.gameSourceTree);
+  assert.equal(receipt.launchReady, false);
+});
+test('Space copy failure does not publish a new receipt or report the mod as installed', async (t) => {
+  const { root, service } = await fixture(t, {
+    space: {
+      pin: spacePin,
+      install: async () => {
+        throw new Error('bundle mismatch');
+      },
+    },
+  });
+  await fs.mkdir(path.join(root, 'alpha'));
+  await fs.writeFile(path.join(root, 'alpha/base-installation.json'), 'old receipt');
+  service.start('alpha');
+  await service.settled();
+  assert.equal(service.status('alpha').phase, 'error');
+  assert.equal(service.status('alpha').spaceVersion, null);
+  assert.equal(
+    await fs.readFile(path.join(root, 'alpha/base-installation.json'), 'utf8'),
+    'old receipt',
+  );
+});
+test('cancelling the Space installation stage waits for its abort and publishes no success', async (t) => {
+  let began;
+  const started = new Promise((resolve) => {
+    began = resolve;
+  });
+  const { root, service } = await fixture(t, {
+    space: {
+      pin: spacePin,
+      install: async (_root, signal) => {
+        began();
+        await new Promise((_resolve, reject) =>
+          signal.addEventListener('abort', () => reject(signal.reason), { once: true }),
+        );
+      },
+    },
+  });
+  service.start('alpha');
+  await started;
+  assert.equal(service.status('alpha').phase, 'installing');
+  await service.cancel('alpha');
+  assert.equal(service.status('alpha').phase, 'cancelled');
+  await assert.rejects(fs.stat(path.join(root, 'alpha/base-installation.json')), {
+    code: 'ENOENT',
+  });
 });
 test('a global job lock covers asynchronous root setup; invalid IDs are rejected', async (t) => {
   const { service } = await fixture(t);

@@ -2,7 +2,7 @@
 
 Собственный Minecraft Java PvP-клиент и сайт. Автор: AdilSatuv.
 
-Стадия на 23 октября 2026: первый игровой прототип, сайт на Next.js и API на NestJS. Пользовательского лаунчера и релиза пока нет.
+Стадия на 23 октября 2026: игровой прототип, сайт Next.js/API NestJS и desktop-лаунчер с профилями, Java, установкой/восстановлением файлов и development JAR Space. Microsoft-входа, запуска игры из лаунчера и публичного установщика пока нет.
 Репозиторий: https://github.com/AdilSatuv/spaceclient
 
 ## Документы
@@ -13,6 +13,7 @@
 - [Установка инструментов](docs/TOOLCHAIN.md) — локальный JDK и команды Gradle.
 - [Игровой загрузчик](docs/ADR-001-game-loader.md) — решение и ограничения прототипа.
 - [Лаунчер](docs/LAUNCHER.md) — Electron-каркас, профили, Java, запуск из исходников и ограничения.
+- [Игровой bundle](docs/GAME-BUNDLE.md) — source stamp, проверка и установка собственного remapped JAR, CI pipeline.
 - [Подготовка установки](docs/INSTALLER.md) — проверенный downloader, возобновление и оставшиеся этапы SC-09.
 - [Next.js и NestJS](docs/WEB.md) — запуск сайта, API и проверки.
 - [Подробный план из 45 шагов](docs/IMPLEMENTATION-PLAN.md).

@@ -6,6 +6,7 @@ import { downloadPlan } from './download-queue.ts';
 import { extractNatives } from './native-extraction.ts';
 import { VERSION_METADATA } from './version-plan.ts';
 import { profileId } from './validation.ts';
+import type { SpaceBundleManifest, InstalledSpace } from './game-bundle.ts';
 import type { InstallationStatus } from '../shared/installation.ts';
 
 type Dependencies = {
@@ -13,12 +14,17 @@ type Dependencies = {
   download: typeof downloadPlan;
   extract: typeof extractNatives;
   availableBytes: (root: string) => Promise<number>;
+  space: {
+    pin: SpaceBundleManifest;
+    install: (root: string, signal: AbortSignal) => Promise<InstalledSpace>;
+  } | null;
 };
 type Job = { id: string; controller: AbortController; done: Promise<void> };
 const defaults: Dependencies = {
   prepare: prepareVersionPlan,
   download: downloadPlan,
   extract: extractNatives,
+  space: null,
   availableBytes: async (root) => {
     const info = await statfs(root);
     return info.bavail * info.bsize;
@@ -53,6 +59,7 @@ export class InstallationService {
         verifiedBytes: 0,
         totalBytes: 0,
         retryCount: 0,
+        spaceVersion: null,
         message: 'Базовые файлы ещё не проверялись в этом сеансе.',
       },
     );
@@ -70,6 +77,7 @@ export class InstallationService {
       verifiedBytes: 0,
       totalBytes: 0,
       retryCount: 0,
+      spaceVersion: null,
       message: 'Проверяем официальные metadata Minecraft 1.8.9…',
     };
     this.statuses.set(id, status);
@@ -107,15 +115,18 @@ export class InstallationService {
       const root = await this.rootForProfile(job.id);
       signal.throwIfAborted();
       const plan = await this.dependencies.prepare(root, { signal });
+      const space = this.dependencies.space;
+      const totalFiles = plan.files.length + (space ? 1 : 0);
+      const totalBytes = plan.totalBytes + (space?.pin.size ?? 0);
       signal.throwIfAborted();
       // Conservative room for a full file set, native expansion and filesystem overhead.
-      if ((await this.dependencies.availableBytes(root)) < plan.totalBytes + 160 * 1024 * 1024)
+      if ((await this.dependencies.availableBytes(root)) < totalBytes + 160 * 1024 * 1024)
         throw new Error('Недостаточно свободного места. Освободите не менее 320 МиБ и повторите.');
       signal.throwIfAborted();
       this.update(job.id, {
         phase: 'downloading',
-        totalFiles: plan.files.length,
-        totalBytes: plan.totalBytes,
+        totalFiles,
+        totalBytes,
         message: 'Загружаем и проверяем базовые файлы Minecraft…',
       });
       await this.dependencies.download(root, plan.files, {
@@ -124,10 +135,10 @@ export class InstallationService {
           if (signal.aborted) return;
           this.update(job.id, {
             completedFiles: progress.completedFiles,
-            totalFiles: progress.totalFiles,
+            totalFiles,
             receivedBytes: progress.receivedBytes,
             verifiedBytes: progress.verifiedBytes,
-            totalBytes: progress.totalBytes,
+            totalBytes,
             retryCount: progress.retryCount,
             message:
               progress.state === 'retrying'
@@ -148,20 +159,34 @@ export class InstallationService {
         { signal },
       );
       signal.throwIfAborted();
+      let installedSpace: InstalledSpace | null = null;
+      if (space) {
+        this.update(job.id, {
+          phase: 'installing',
+          message: 'Проверяем и добавляем сборку Space Client…',
+        });
+        installedSpace = await space.install(root, signal);
+        if (installedSpace.sha256 !== space.pin.sha256 || installedSpace.size !== space.pin.size)
+          throw new Error('Установленный Space не совпадает со сборкой лаунчера.');
+        signal.throwIfAborted();
+      }
       const receipt = {
         schemaVersion: 1,
-        kind: 'minecraft-base-only',
+        kind: installedSpace ? 'space-development' : 'minecraft-base-only',
         version: plan.version,
         loggingVersion: plan.loggingVersion,
         loaderVersion: plan.loaderVersion,
         metadataSha1: VERSION_METADATA.sha1,
         completedAt: new Date().toISOString(),
-        fileCount: plan.files.length,
-        verifiedBytes: plan.totalBytes,
+        fileCount: totalFiles,
+        verifiedBytes: totalBytes,
+        space: installedSpace,
         nativeDirectory: relative(root, natives.directory).replaceAll('\\', '/'),
         natives: natives.files,
         launchReady: false,
-        blockers: plan.blockers,
+        blockers: installedSpace
+          ? ['Не подтверждены Microsoft-вход, владение игрой и runtime.']
+          : plan.blockers,
       };
       receiptTemp = join(root, `base-installation-${randomUUID()}.tmp`);
       await writeFile(receiptTemp, JSON.stringify(receipt, null, 2) + '\n', {
@@ -174,10 +199,13 @@ export class InstallationService {
       signal.throwIfAborted();
       this.update(job.id, {
         phase: 'prepared',
-        completedFiles: plan.files.length,
-        receivedBytes: plan.totalBytes,
-        verifiedBytes: plan.totalBytes,
-        message: 'Базовые файлы проверены. Для запуска ещё нужны сборка Space и вход Microsoft.',
+        completedFiles: totalFiles,
+        receivedBytes: totalBytes,
+        verifiedBytes: totalBytes,
+        spaceVersion: installedSpace?.modVersion ?? null,
+        message: installedSpace
+          ? 'Сборка Space подготовлена. Для запуска ещё нужен Microsoft-вход и проверка игры.'
+          : 'Базовые файлы проверены. Для запуска ещё нужны сборка Space и вход Microsoft.',
       });
     } catch (error) {
       this.update(job.id, {

@@ -1,12 +1,22 @@
 {
-  "checkedAt": "2026-10-23T08:03:14.952Z",
+  "checkedAt": "2026-10-23T08:24:41.367Z",
   "version": "1.8.9",
   "platform": "windows-x64",
   "loggingVersion": "2.26.1",
   "loaderVersion": "0.18.3",
   "sha256PinnedArtifactCount": 13,
-  "verifiedFiles": 767,
-  "verifiedBytes": 153351771,
+  "verifiedFiles": 768,
+  "verifiedBytes": 153362112,
+  "spaceBundle": {
+    "schemaVersion": 1,
+    "channel": "development",
+    "modVersion": "0.1.0",
+    "minecraftVersion": "1.8.9",
+    "loaderVersion": "0.18.3",
+    "gameSourceTree": "637c3347d8a669ee6ff2a0cd280010cefd20479a",
+    "size": 10341,
+    "sha256": "13c9de3c087aeff8ad1df5e11f7f113534f6682e463390e3ccb9e28b014c49f3"
+  },
   "nativeFilesCheckedAgainstLocalReceipt": 16,
   "excludedLibraries": [
     "org.apache.logging.log4j:log4j-api:2.0-beta9",

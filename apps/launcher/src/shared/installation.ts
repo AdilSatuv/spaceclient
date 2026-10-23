@@ -3,6 +3,7 @@ export type InstallationPhase =
   | 'planning'
   | 'downloading'
   | 'extracting'
+  | 'installing'
   | 'cancelling'
   | 'prepared'
   | 'cancelled'
@@ -16,7 +17,8 @@ export type InstallationStatus = {
   verifiedBytes: number;
   totalBytes: number;
   retryCount: number;
+  spaceVersion: string | null;
   message: string;
 };
 export const installationRunning = (phase: InstallationPhase) =>
-  ['planning', 'downloading', 'extracting', 'cancelling'].includes(phase);
+  ['planning', 'downloading', 'extracting', 'installing', 'cancelling'].includes(phase);

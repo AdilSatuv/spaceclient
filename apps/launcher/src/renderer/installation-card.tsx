@@ -58,7 +58,13 @@ export function InstallationCard({ profileId, dirty }: { profileId: string; dirt
   return (
     <section className="panel flight-card installation-card" aria-label="Подготовка файлов игры">
       <span className="eyebrow">ПЕРЕД ПЕРВЫМ ПОЛЁТОМ</span>
-      <h2>{current?.phase === 'prepared' ? 'База для нового мира.' : 'Подготовим твой мир.'}</h2>
+      <h2>
+        {current?.phase === 'prepared'
+          ? current.spaceVersion
+            ? 'Space на твоей орбите.'
+            : 'База для нового мира.'
+          : 'Подготовим твой мир.'}
+      </h2>
       <p>
         Minecraft 1.8.9, Fabric Loader и обновлённые библиотеки. Около 147 МиБ, отдельная папка
         профиля.
@@ -66,6 +72,9 @@ export function InstallationCard({ profileId, dirty }: { profileId: string; dirt
       <div className="installation-status" role="status" aria-live="polite" aria-atomic="true">
         {current?.message || 'Проверяем состояние файлов…'}
       </div>
+      {current?.spaceVersion && (
+        <p className="inline-hint">Space {current.spaceVersion} · сборка для разработки</p>
+      )}
       {!!current?.totalBytes && (
         <div className="installation-progress">
           <progress
@@ -118,7 +127,9 @@ export function InstallationCard({ profileId, dirty }: { profileId: string; dirt
       </div>
       {dirty && <p className="inline-hint">Сначала сохраните или отмените изменения профиля.</p>}
       <p className="inline-hint">
-        Запуск появится после подключения Microsoft-входа и сборки Space.
+        {current?.spaceVersion
+          ? 'Запуск появится после Microsoft-входа и проверки профиля игры.'
+          : 'Запуск появится после подключения Microsoft-входа и сборки Space.'}
       </p>
     </section>
   );

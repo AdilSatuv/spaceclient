@@ -1,6 +1,6 @@
 # Space Launcher — первый desktop-каркас
 
-Приоритет пользователя: начать с самого лаунчера. SC-07 выполняется независимо от незавершённой игровой проверки SC-02. Это исходный прототип для Windows x64: профили, Java и подготовка базовых файлов Minecraft. Установщика приложения, Microsoft-входа, сборки Space в установочном манифесте и запуска игры пока нет.
+Приоритет пользователя: сначала лаунчер. Это исходный Windows x64 прототип: профили, Java, подготовка/восстановление файлов Minecraft и собственного development JAR Space. Установщика приложения, Microsoft-входа и запуска игры пока нет. SC-07 закрыт независимо от незавершённых игровых проверок SC-02.
 
 ## Стек и границы
 
@@ -55,6 +55,6 @@ npm.cmd run launcher
 - После явного разрешения пользователя осмотр возобновлён. Через окно проверены три раздела, независимые профили/RAM/Java, native picker, реальная Java 21 x64, сохранение и выбор после перезапуска, защита черновика активной карточки, Tab/focus/стрелка RAM/отмена. Подробности и ограничения — [LAUNCHER-QA.md](LAUNCHER-QA.md).
 - Таймаут/переполнение вывода реального Java-процесса, внешний frame/навигация в живом окне, полный keyboard-only маршрут, zoom и reduced-motion ещё требуют runtime-проверки.
 
-SC-09: downloader с SHA-1/дополнительным SHA-256, cache/cancel/resume, очередь, resolver 1.8.9 Windows x64, Log4j 2.26.1, [Fabric Loader/Legacy LWJGL manifest](LOADER-MANIFEST.md), natives и main-only lifecycle. Всего **46 тестов лаунчера** проходят. Через UI подготовлены 767 файлов/146,2 МиБ и 16 DLL; проверены отмена/продолжение/восстановление asset на предыдущем срезе и актуальный полный аудит. Legacy Log4j/LWJGL исключены из плана; запуск заблокирован до собственного Space jar и авторизации. Детали — [INSTALLER.md](INSTALLER.md).
+Установка: downloader/pins/cache/cancel/resume, очередь, resolver 1.8.9, Log4j 2.26.1, [loader/LWJGL manifest](LOADER-MANIFEST.md), natives и [собственный game bundle](GAME-BUNDLE.md). **55 launcher tests** проходят. Через UI подготовлены 768 файлов/146,3 МиБ и 16 DLL, включая проверенный Space JAR; выполнены отмена/продолжение/восстановление asset и полный аудит. Запуск остаётся заблокированным до авторизации/владения и runtime validation. Детали — [INSTALLER.md](INSTALLER.md).
 
 SC-07 закрыт с записью базовой UI-приёмки; дополнительные QA-пути сохраняются в LAUNCHER-QA. Далее: регистрация Microsoft public client и права API (SC-06), OAuth/OS token storage (SC-08), Legacy Fabric/Space manifest (SC-09), авторизованный запуск Java (SC-10). OAuth-регистрация и действия с аккаунтом выполняются с участием владельца.

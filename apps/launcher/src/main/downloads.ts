@@ -41,6 +41,26 @@ const hosts = new Set([
   'repo.legacyfabric.net',
 ]);
 
+export function validateRelativePath(value: unknown): string {
+  if (
+    typeof value !== 'string' ||
+    value.length > 220 ||
+    !/^[a-z0-9][a-z0-9._/+\-]*$/i.test(value) ||
+    value
+      .split('/')
+      .some(
+        (part) =>
+          !part ||
+          part === '.' ||
+          part === '..' ||
+          part.endsWith('.') ||
+          /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(part),
+      )
+  )
+    throw new Error('Недопустимый путь файла.');
+  return value;
+}
+
 export function validateArtifact(value: DownloadArtifact): DownloadArtifact {
   if (
     !value ||
@@ -54,22 +74,7 @@ export function validateArtifact(value: DownloadArtifact): DownloadArtifact {
     value.size > 512 * 1024 * 1024
   )
     throw new Error('Неверные размер или хеш файла.');
-  if (
-    typeof value.relativePath !== 'string' ||
-    value.relativePath.length > 220 ||
-    !/^[a-z0-9][a-z0-9._/+\-]*$/i.test(value.relativePath) ||
-    value.relativePath
-      .split('/')
-      .some(
-        (part) =>
-          !part ||
-          part === '.' ||
-          part === '..' ||
-          part.endsWith('.') ||
-          /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(part),
-      )
-  )
-    throw new Error('Недопустимый путь файла.');
+  validateRelativePath(value.relativePath);
   let url: URL;
   try {
     url = new URL(value.url);
@@ -168,6 +173,10 @@ async function targetPath(root: string, relativePath: string): Promise<string> {
       throw new Error('Путь установки содержит ссылку или файл вместо папки.');
   }
   return join(current, parts.at(-1)!);
+}
+
+export async function installationTarget(root: string, relativePath: string): Promise<string> {
+  return targetPath(root, validateRelativePath(relativePath));
 }
 
 /** Verify a local artifact without network requests. Never returns an unverified path. */

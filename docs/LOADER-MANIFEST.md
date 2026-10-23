@@ -27,4 +27,4 @@ node apps/launcher/scripts/smoke-loader.mjs
 
 Production downloader проверил все 11 pins обоими digest. На JDK 21 собственная smoke-программа загрузила определения ClassReader, MixinBootstrap, FabricLoader и KnotClient через `Class.forName(..., false, ...)`. Из intermediary jar прочитан header `v1 / official / intermediary`. Шесть patched LWJGL DLL распакованы с CRC/размером/SHA-256. [Отчёт](qa/launcher-loader-2026-10-23.json).
 
-`initialize=false` принципиален: эта проверка не запускает loader или Minecraft и не загружает DLL. Через окно лаунчера подготовлен весь обновлённый набор; [аудит всех файлов](qa/launcher-base-2026-10-23.json) прошёл. Полная совместимость установленной сборки проверяется отдельно после добавления remapped Space jar и Microsoft/ownership flow. `launchReady` остаётся false.
+`initialize=false` принципиален: эта проверка не запускает loader или Minecraft и не загружает DLL. Через окно подготовлен весь набор; [аудит](qa/launcher-base-2026-10-23.json) прошёл. [Remapped Space jar](GAME-BUNDLE.md) теперь включён в development-сборку. Полная совместимость проверяется после Microsoft/ownership flow; `launchReady` остаётся false.

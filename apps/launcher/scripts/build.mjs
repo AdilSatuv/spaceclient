@@ -1,7 +1,10 @@
 import { build } from 'esbuild';
 import { mkdir, copyFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import { prepareGameBundle } from './game-bundle.mjs';
 
 await mkdir('dist/renderer', { recursive: true });
+const gameBundle = await prepareGameBundle(resolve('dist/game'));
 await build({
   entryPoints: ['src/main/index.ts'],
   outfile: 'dist/main.cjs',
@@ -10,6 +13,7 @@ await build({
   target: 'node24',
   external: ['electron'],
   format: 'cjs',
+  define: { __SPACE_GAME_BUNDLE__: JSON.stringify(gameBundle) },
 });
 await build({
   entryPoints: ['src/preload.ts'],
