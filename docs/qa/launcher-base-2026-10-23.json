@@ -1,14 +1,16 @@
 {
-  "checkedAt": "2026-10-23T07:33:22.513Z",
+  "checkedAt": "2026-10-23T07:42:37.836Z",
   "version": "1.8.9",
   "platform": "windows-x64",
-  "verifiedFiles": 758,
-  "verifiedBytes": 145084967,
+  "loggingVersion": "2.26.1",
+  "sha256PinnedArtifactCount": 2,
+  "verifiedFiles": 760,
+  "verifiedBytes": 147451854,
   "nativeFilesCheckedAgainstLocalReceipt": 14,
   "excludedLibraries": [
     "org.apache.logging.log4j:log4j-api:2.0-beta9",
     "org.apache.logging.log4j:log4j-core:2.0-beta9"
   ],
   "launchReady": false,
-  "note": "Pinned plan files checked by SHA-1; extracted natives checked against local receipt SHA-256. This is a base file preparation audit, not a Space launch or authentication test."
+  "note": "Pinned plan files checked by SHA-1, logging overrides also by SHA-256; extracted natives checked against local receipt SHA-256. This is a base file preparation audit, not a Space launch or authentication test."
 }

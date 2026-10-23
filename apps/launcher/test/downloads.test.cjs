@@ -35,6 +35,35 @@ test('verified file is committed atomically and reused without another request',
   assert.equal(requests, 1);
   await assert.rejects(fs.stat(first.path + '.part'), { code: 'ENOENT' });
 });
+test('optional SHA-256 is checked for downloads and cache even when SHA-1 is correct', async (t) => {
+  const { root, downloadArtifact, verifiedCachedArtifact } = await fixture(t);
+  const strong = { ...artifact, sha256: createHash('sha256').update(bytes).digest('hex') };
+  const result = await downloadArtifact(root, strong, { fetcher: async () => new Response(bytes) });
+  assert.equal(await verifiedCachedArtifact(root, strong), result.path);
+  const wrong = { ...strong, sha256: '0'.repeat(64) };
+  await assert.rejects(verifiedCachedArtifact(root, wrong), /целостности/);
+  await assert.rejects(
+    downloadArtifact(root, wrong, { fetcher: async () => new Response(bytes) }),
+    /Хеш/,
+  );
+  assert.deepEqual(await fs.readFile(result.path), bytes);
+});
+test('Maven Central accepts only exact controlled logging URL, path, size and both hashes', async (t) => {
+  const { validateArtifact } = await fixture(t);
+  const { LOGGING_LIBRARIES } = await import('../src/main/logging-libraries.ts');
+  const pin = LOGGING_LIBRARIES[0];
+  assert.deepEqual(validateArtifact(pin), pin);
+  for (const changed of [
+    { sha1: '0'.repeat(40) },
+    { sha256: undefined },
+    { sha256: '0'.repeat(64) },
+    { size: pin.size + 1 },
+    { relativePath: 'libraries/other.jar' },
+    { url: pin.url.replace('2.26.1', '2.0-beta9') },
+    { url: pin.url + '.sha1' },
+  ])
+    assert.throws(() => validateArtifact({ ...pin, ...changed }));
+});
 test('cancelled download keeps its partial bytes and resumes with a verified range', async (t) => {
   const { root, downloadArtifact } = await fixture(t);
   const controller = new AbortController();

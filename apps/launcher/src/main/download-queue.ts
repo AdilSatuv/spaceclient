@@ -33,6 +33,7 @@ export function validatePlan(input: DownloadArtifact[]): DownloadArtifact[] {
     if (previous) {
       if (
         previous.sha1 !== artifact.sha1 ||
+        previous.sha256 !== artifact.sha256 ||
         previous.size !== artifact.size ||
         previous.url !== artifact.url
       )

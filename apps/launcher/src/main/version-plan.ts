@@ -1,6 +1,7 @@
 import { validateArtifact } from './downloads.ts';
 import type { DownloadArtifact } from './downloads.ts';
 import { validatePlan } from './download-queue.ts';
+import { LOGGING_LIBRARIES } from './logging-libraries.ts';
 
 export const VERSION_METADATA: Readonly<DownloadArtifact> = Object.freeze({
   url: 'https://piston-meta.mojang.com/v1/packages/d546f1707a3f2b7d034eece5ea2e311eda875787/1.8.9.json',
@@ -18,6 +19,7 @@ type JsonObject = Record<string, unknown>;
 export type VersionPlan = {
   version: '1.8.9';
   platform: 'windows-x64';
+  loggingVersion: '2.26.1';
   files: DownloadArtifact[];
   classpath: string[];
   natives: { archive: string; exclude: string[] }[];
@@ -156,6 +158,10 @@ export function buildVersionPlan(metadataInput: unknown, indexInput: unknown): V
       natives.push({ archive: artifact.relativePath, exclude: [...exclusions] });
     }
   }
+  for (const logging of LOGGING_LIBRARIES) {
+    files.push(validateArtifact(logging));
+    classpath.push(logging.relativePath);
+  }
   const objects = object(index.objects);
   const entries = Object.entries(objects);
   if (!entries.length || entries.length > 9000) throw new Error('Неверный размер asset index.');
@@ -183,6 +189,7 @@ export function buildVersionPlan(metadataInput: unknown, indexInput: unknown): V
   return {
     version: '1.8.9',
     platform: 'windows-x64',
+    loggingVersion: '2.26.1',
     files: unique,
     classpath,
     natives,
@@ -191,7 +198,6 @@ export function buildVersionPlan(metadataInput: unknown, indexInput: unknown): V
     totalBytes: unique.reduce((sum, artifact) => sum + artifact.size, 0),
     launchReady: false,
     blockers: [
-      'Требуется закреплённая совместимая замена legacy Log4j.',
       'Не добавлены Legacy Fabric loader и Space jar.',
       'Не выполнены загрузка всех файлов и распаковка natives.',
       'Не подтверждены Microsoft-вход, владение игрой и runtime.',

@@ -27,6 +27,7 @@ test('queue validates conflicts, total size, paths and Windows case collisions b
     /конфликт/,
   );
   assert.throws(() => validatePlan([file, { ...file, relativePath: 'version' }]), /каталог/);
+  assert.throws(() => validatePlan([file, { ...file, sha256: '0'.repeat(64) }]), /конфликт/);
   assert.throws(
     () => validatePlan([file, { ...file, relativePath: 'VERSION/CLIENT.JAR.PART' }]),
     /временной/,

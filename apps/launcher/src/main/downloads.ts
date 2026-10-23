@@ -2,8 +2,15 @@ import { createHash } from 'node:crypto';
 import { createReadStream } from 'node:fs';
 import { mkdir, lstat, open, rename, unlink } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
+import { LOGGING_LIBRARIES } from './logging-libraries.ts';
 
-export type DownloadArtifact = { url: string; sha1: string; size: number; relativePath: string };
+export type DownloadArtifact = {
+  url: string;
+  sha1: string;
+  sha256?: string;
+  size: number;
+  relativePath: string;
+};
 export class DownloadFailure extends Error {
   readonly retryable: boolean;
   constructor(message: string, retryable = false, cause?: unknown) {
@@ -26,6 +33,7 @@ const hosts = new Set([
   'piston-meta.mojang.com',
   'libraries.minecraft.net',
   'resources.download.minecraft.net',
+  'repo.maven.apache.org',
 ]);
 
 export function validateArtifact(value: DownloadArtifact): DownloadArtifact {
@@ -34,6 +42,8 @@ export function validateArtifact(value: DownloadArtifact): DownloadArtifact {
     typeof value !== 'object' ||
     typeof value.sha1 !== 'string' ||
     !/^[a-f0-9]{40}$/.test(value.sha1) ||
+    (value.sha256 !== undefined &&
+      (typeof value.sha256 !== 'string' || !/^[a-f0-9]{64}$/.test(value.sha256))) ||
     !Number.isSafeInteger(value.size) ||
     value.size < 1 ||
     value.size > 512 * 1024 * 1024
@@ -82,7 +92,25 @@ export function validateArtifact(value: DownloadArtifact): DownloadArtifact {
     url.pathname !== `/${value.sha1.slice(0, 2)}/${value.sha1}`
   )
     throw new Error('Хеш ресурса не совпадает с манифестом.');
-  return { url: url.href, sha1: value.sha1, size: value.size, relativePath: value.relativePath };
+  if (
+    url.hostname === 'repo.maven.apache.org' &&
+    !LOGGING_LIBRARIES.some(
+      (pin) =>
+        pin.url === url.href &&
+        pin.sha1 === value.sha1 &&
+        pin.sha256 === value.sha256 &&
+        pin.size === value.size &&
+        pin.relativePath === value.relativePath,
+    )
+  )
+    throw new Error('Maven Central разрешён только для закреплённых библиотек Log4j.');
+  return {
+    url: url.href,
+    sha1: value.sha1,
+    ...(value.sha256 ? { sha256: value.sha256 } : {}),
+    size: value.size,
+    relativePath: value.relativePath,
+  };
 }
 
 async function fileInfo(path: string) {
@@ -104,12 +132,17 @@ async function matches(
   const info = await fileInfo(path);
   if (!info || info.size !== artifact.size) return false;
   const digest = createHash('sha1');
+  const strongDigest = artifact.sha256 ? createHash('sha256') : null;
   for await (const chunk of createReadStream(path)) {
     signal?.throwIfAborted();
     digest.update(chunk);
+    strongDigest?.update(chunk);
   }
   signal?.throwIfAborted();
-  return digest.digest('hex') === artifact.sha1;
+  return (
+    digest.digest('hex') === artifact.sha1 &&
+    (!strongDigest || strongDigest.digest('hex') === artifact.sha256)
+  );
 }
 async function targetPath(root: string, relativePath: string): Promise<string> {
   const base = resolve(root);

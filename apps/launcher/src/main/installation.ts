@@ -152,6 +152,7 @@ export class InstallationService {
         schemaVersion: 1,
         kind: 'minecraft-base-only',
         version: plan.version,
+        loggingVersion: plan.loggingVersion,
         metadataSha1: VERSION_METADATA.sha1,
         completedAt: new Date().toISOString(),
         fileCount: plan.files.length,

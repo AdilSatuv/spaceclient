@@ -88,7 +88,17 @@ test('plan deduplicates hashed assets, selects Windows x64 natives and never bec
   assert.equal(plan.natives.length, 1);
   assert.match(plan.natives[0].archive, /natives-windows-64.jar$/);
   assert.deepEqual(plan.natives[0].exclude, ['META-INF/']);
-  assert.ok(!plan.files.some((file) => /log4j|example\/mac/.test(file.relativePath)));
+  assert.ok(!plan.files.some((file) => /2\.0-beta9|example\/mac/.test(file.relativePath)));
+  const logging = plan.files.filter((file) =>
+    file.url.startsWith('https://repo.maven.apache.org/'),
+  );
+  assert.equal(logging.length, 2);
+  assert.ok(
+    logging.every(
+      (file) => /\/2\.26\.1\//.test(file.relativePath) && /^[a-f0-9]{64}$/.test(file.sha256),
+    ),
+  );
+  assert.equal(plan.loggingVersion, '2.26.1');
   assert.deepEqual(plan.excludedLibraries, ['org.apache.logging.log4j:log4j-core:2.0-beta9']);
   assert.equal(plan.classpath.at(-1), 'versions/1.8.9/1.8.9.jar');
   assert.equal(plan.launchReady, false);

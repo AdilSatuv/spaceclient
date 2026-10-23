@@ -10,6 +10,7 @@ const result = {
   checkedAt: new Date().toISOString(),
   version: plan.version,
   platform: plan.platform,
+  loggingVersion: plan.loggingVersion,
   fileCount: plan.files.length,
   assetCount: plan.assetCount,
   classpathCount: plan.classpath.length,

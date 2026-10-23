@@ -1,10 +1,11 @@
 {
-  "checkedAt": "2026-10-23T02:53:50.911Z",
+  "checkedAt": "2026-10-23T07:40:35.142Z",
   "version": "1.8.9",
   "platform": "windows-x64",
-  "fileCount": 758,
+  "loggingVersion": "2.26.1",
+  "fileCount": 760,
   "assetCount": 734,
-  "classpathCount": 30,
+  "classpathCount": 32,
   "nativeArchives": [
     "libraries/org/lwjgl/lwjgl/lwjgl-platform/2.9.4-nightly-20150209/lwjgl-platform-2.9.4-nightly-20150209-natives-windows.jar",
     "libraries/net/java/jinput/jinput-platform/2.0.5/jinput-platform-2.0.5-natives-windows.jar",
@@ -15,11 +16,10 @@
     "org.apache.logging.log4j:log4j-api:2.0-beta9",
     "org.apache.logging.log4j:log4j-core:2.0-beta9"
   ],
-  "totalBytes": 145084967,
+  "totalBytes": 147451854,
   "downloadedMetadataBytes": 96738,
   "launchReady": false,
   "blockers": [
-    "Требуется закреплённая совместимая замена legacy Log4j.",
     "Не добавлены Legacy Fabric loader и Space jar.",
     "Не выполнены загрузка всех файлов и распаковка natives.",
     "Не подтверждены Microsoft-вход, владение игрой и runtime."
