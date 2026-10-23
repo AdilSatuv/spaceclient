@@ -17,6 +17,8 @@ Windows, исходная сборка Electron 45, окно 1180×760, изол
 
 ## Границы результата
 
+Повторная UI-подготовка с native cache сохранила ту же генерацию DLL: 7 папок до и после, `nativeCacheReused=true`, 29 202 000 байт повторно не скопированы. Индекс/файлы проверены до reuse, полный install audit снова прошёл. [Дисковое подтверждение](qa/launcher-native-cache-2026-10-23.json).
+
 В сборке с собственным JAR UI показал «Space 0.1.0 · сборка для разработки», 768/768 файлов и 146,3 МиБ. Аудит сверил установленный `mods/space-client.jar` с bundle по SHA-256/source tree/metadata; 16 DLL также проверены. [Game bundle](GAME-BUNDLE.md). Публичный release и live launch этим не подтверждены.
 
 После добавления loader manifest через окно подготовлены 767/767 файлов (146,2 МиБ) и 16 DLL. SHA-1 всего набора и SHA-256 всех 13 controlled artifacts проверены повторным аудитом. Это не запуск установленной игры; класс loader проверялся отдельно без инициализации. Подробнее — [LOADER-MANIFEST.md](LOADER-MANIFEST.md).

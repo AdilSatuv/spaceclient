@@ -5,7 +5,8 @@ import { crc32 } from 'node:zlib';
 import type { Readable } from 'node:stream';
 import { openPromise } from 'yauzl';
 import { validatePlan } from './download-queue.ts';
-import { validateArtifact, verifiedCachedArtifact } from './downloads.ts';
+import { validateRelativePath, verifiedCachedArtifact } from './downloads.ts';
+import { nativeCacheKey, findNativeCache, publishNativeCache } from './native-cache.ts';
 import type { DownloadArtifact } from './downloads.ts';
 
 const MAX_ENTRIES = 2048;
@@ -17,12 +18,7 @@ function entryName(raw: string): { name: string; directory: boolean } {
   const directory = raw.endsWith('/');
   const name = directory ? raw.slice(0, -1) : raw;
   // Reuse the Windows-safe artifact path policy, without trusting an archive's path separator.
-  validateArtifact({
-    relativePath: name,
-    size: 1,
-    sha1: '0'.repeat(40),
-    url: 'https://libraries.minecraft.net/validation-only',
-  });
+  validateRelativePath(name);
   return { name, directory };
 }
 
@@ -52,6 +48,9 @@ export async function extractNatives(
   const baseInfo = await lstat(base);
   if (!baseInfo.isDirectory() || baseInfo.isSymbolicLink())
     throw new Error('Каталог natives не может быть ссылкой.');
+  const key = nativeCacheKey(archives);
+  const cached = await findNativeCache(base, key, options.signal);
+  if (cached) return cached;
   const stage = await mkdtemp(join(base, 'run-'));
   const names = new Map<string, 'file' | 'directory'>();
   const files: ExtractedNative[] = [];
@@ -152,7 +151,13 @@ export async function extractNatives(
     }
     options.signal?.throwIfAborted();
     if (!files.length) throw new Error('Архивы не содержат файлов natives.');
-    return { directory: stage, files, totalBytes: files.reduce((sum, file) => sum + file.size, 0) };
+    await publishNativeCache(base, key, stage, files, options.signal);
+    return {
+      directory: stage,
+      files,
+      totalBytes: files.reduce((sum, file) => sum + file.size, 0),
+      fromCache: false as const,
+    };
   } catch (error) {
     // Only remove this call's fresh generation, never an existing installation.
     if (dirname(stage) !== base || !stage.startsWith(join(base, 'run-')))

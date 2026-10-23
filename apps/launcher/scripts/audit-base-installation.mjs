@@ -91,6 +91,7 @@ const result = {
   verifiedBytes: expectedBytes,
   spaceBundle: space,
   nativeFilesCheckedAgainstLocalReceipt: receipt.natives.length,
+  nativeCacheReused: receipt.nativeCacheReused === true,
   excludedLibraries: plan.excludedLibraries,
   launchReady: false,
   note: 'Pinned plan files checked by SHA-1, controlled logging/loader/LWJGL artifacts also by SHA-256; extracted natives checked against local receipt SHA-256. This is a base file preparation audit, not a Space launch or authentication test.',

@@ -1,0 +1,9 @@
+{
+  "checkedAt": "2026-10-23T08:53:47.958Z",
+  "cacheReused": true,
+  "sameGeneration": true,
+  "generationCountBefore": 7,
+  "generationCountAfter": 7,
+  "duplicateNativeBytesAvoided": 29202000,
+  "note": "Two completed UI preparations used one verified native generation; existing older generations were preserved. No game launch or DLL loading."
+}

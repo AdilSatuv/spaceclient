@@ -183,6 +183,7 @@ export class InstallationService {
         space: installedSpace,
         nativeDirectory: relative(root, natives.directory).replaceAll('\\', '/'),
         natives: natives.files,
+        nativeCacheReused: natives.fromCache,
         launchReady: false,
         blockers: installedSpace
           ? ['Не подтверждены Microsoft-вход, владение игрой и runtime.']

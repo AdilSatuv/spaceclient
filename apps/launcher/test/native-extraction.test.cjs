@@ -21,12 +21,15 @@ async function fixture(t, entries, countOverride) {
   return { root, artifact, ...(await import('../src/main/native-extraction.ts')) };
 }
 async function generations(root) {
-  return fs.readdir(path.join(root, 'natives')).catch((error) => {
-    if (error.code === 'ENOENT') return [];
-    throw error;
-  });
+  return fs
+    .readdir(path.join(root, 'natives'))
+    .then((names) => names.filter((name) => name.startsWith('run-')))
+    .catch((error) => {
+      if (error.code === 'ENOENT') return [];
+      throw error;
+    });
 }
-test('verified stored/deflated native files extract into fresh generations and exclude META-INF', async (t) => {
+test('verified native generations exclude META-INF and are reused only after hash verification', async (t) => {
   const { root, artifact, extractNatives } = await fixture(t, [
     { name: 'META-INF/', data: '' },
     { name: 'META-INF/MANIFEST.MF', data: 'not extracted' },
@@ -35,7 +38,10 @@ test('verified stored/deflated native files extract into fresh generations and e
   ]);
   const first = await extractNatives(root, [artifact]);
   const second = await extractNatives(root, [artifact]);
-  assert.notEqual(first.directory, second.directory);
+  assert.equal(first.directory, second.directory);
+  assert.equal(first.fromCache, false);
+  assert.equal(second.fromCache, true);
+  assert.equal((await generations(root)).length, 1);
   assert.equal(path.dirname(first.directory), path.join(root, 'natives'));
   assert.deepEqual(
     first.files.map((file) => file.relativePath),
@@ -48,6 +54,86 @@ test('verified stored/deflated native files extract into fresh generations and e
   );
   assert.equal(first.files[0].sha256, createHash('sha256').update('first').digest('hex'));
   await assert.rejects(fs.stat(path.join(first.directory, 'META-INF')), { code: 'ENOENT' });
+  await fs.writeFile(path.join(root, artifact.relativePath), Buffer.alloc(artifact.size));
+  await assert.rejects(extractNatives(root, [artifact]), /целостности/);
+  assert.equal((await generations(root)).length, 1);
+});
+test('corrupt or unexpected native files create a new verified generation without mutating the old one', async (t) => {
+  for (const mutate of [
+    async (directory) => fs.writeFile(path.join(directory, 'native.dll'), 'wrong'),
+    async (directory) => fs.writeFile(path.join(directory, 'extra.dll'), 'unexpected'),
+  ]) {
+    const { root, artifact, extractNatives } = await fixture(t, [
+      { name: 'native.dll', data: 'valid' },
+    ]);
+    const first = await extractNatives(root, [artifact]);
+    await mutate(first.directory);
+    const next = await extractNatives(root, [artifact]);
+    assert.notEqual(next.directory, first.directory);
+    assert.equal(next.fromCache, false);
+    assert.equal(await fs.readFile(path.join(next.directory, 'native.dll'), 'utf8'), 'valid');
+    const cached = await extractNatives(root, [artifact]);
+    assert.equal(cached.directory, next.directory);
+    assert.equal(cached.fromCache, true);
+    assert.equal((await generations(root)).length, 2);
+  }
+});
+test('malformed native cache metadata is ignored and rebuilt without trusting its paths or hashes', async (t) => {
+  for (const mutate of [
+    (value) => {
+      value.directory = '../outside';
+    },
+    (value) => {
+      value.files[0].relativePath = '../outside.dll';
+    },
+    (value) => {
+      value.files[0].sha256 = 'invalid';
+    },
+    (value) => {
+      value.files[0].size = -1;
+    },
+    (value) => {
+      value.key = '0'.repeat(64);
+    },
+    (value) => {
+      value.totalBytes++;
+    },
+  ]) {
+    const { root, artifact, extractNatives } = await fixture(t, [{ name: 'native.dll' }]);
+    const first = await extractNatives(root, [artifact]);
+    const name = (await fs.readdir(path.join(root, 'natives'))).find(
+      (name) => name.startsWith('cache-') && name.endsWith('.json'),
+    );
+    const index = path.join(root, 'natives', name);
+    const metadata = JSON.parse(await fs.readFile(index, 'utf8'));
+    mutate(metadata);
+    await fs.writeFile(index, JSON.stringify(metadata));
+    const next = await extractNatives(root, [artifact]);
+    assert.equal(next.fromCache, false);
+    assert.notEqual(next.directory, first.directory);
+    assert.equal((await extractNatives(root, [artifact])).fromCache, true);
+  }
+});
+test('cache generations containing a junction are not reused even if referenced bytes match', async (t) => {
+  const { root, artifact, extractNatives } = await fixture(t, [
+    { name: 'native.dll', data: 'valid' },
+  ]);
+  const first = await extractNatives(root, [artifact]);
+  const outside = path.join(root, 'outside');
+  await fs.mkdir(outside);
+  await fs.writeFile(path.join(outside, 'native.dll'), 'valid');
+  await fs.symlink(outside, path.join(first.directory, 'link'), 'junction');
+  const indexName = (await fs.readdir(path.join(root, 'natives'))).find(
+    (name) => name.startsWith('cache-') && name.endsWith('.json'),
+  );
+  const index = path.join(root, 'natives', indexName);
+  const metadata = JSON.parse(await fs.readFile(index, 'utf8'));
+  metadata.files[0].relativePath = 'link/native.dll';
+  await fs.writeFile(index, JSON.stringify(metadata));
+  const next = await extractNatives(root, [artifact]);
+  assert.equal(next.fromCache, false);
+  assert.notEqual(next.directory, first.directory);
+  assert.equal(await fs.readFile(path.join(outside, 'native.dll'), 'utf8'), 'valid');
 });
 test('ZIP traversal, absolute paths, backslashes, devices and links cannot escape staging', async (t) => {
   for (const entry of [
