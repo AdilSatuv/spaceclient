@@ -7,6 +7,15 @@ version = project.mod_version
 group = 'dev.spaceclient'
 base { archivesName = 'space-client' }
 
+// Bind distributed development jars to the committed game source tree.
+def gameSourceTree = providers.exec {
+    workingDir rootProject.projectDir.parentFile
+    commandLine 'git', 'rev-parse', 'HEAD:game'
+}.standardOutput.asText.map { it.trim() }
+def buildModVersion = project.version.toString()
+def buildMinecraftVersion = project.minecraft_version.toString()
+def buildLoaderVersion = project.loader_version.toString()
+
 repositories { mavenCentral() }
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -22,8 +31,19 @@ loom {
     log4jConfigs.setFrom(file('config/log4j2.xml'))
 }
 processResources {
-    inputs.property 'version', project.version
-    filesMatching('fabric.mod.json') { expand version: project.version }
+    inputs.property 'version', buildModVersion
+    inputs.property 'gameSourceTree', gameSourceTree
+    filesMatching('fabric.mod.json') { expand version: buildModVersion }
+    doLast {
+        def sourceTree = gameSourceTree.get()
+        if (!(sourceTree ==~ /[a-f0-9]{40}/)) throw new GradleException('Invalid game source tree')
+        new File(destinationDir, 'spaceclient-build.properties').text =
+            "schemaVersion=1\ngameSourceTree=${sourceTree}\nmodVersion=${buildModVersion}\nminecraftVersion=${buildMinecraftVersion}\nloaderVersion=${buildLoaderVersion}\nchannel=development\n"
+    }
+}
+tasks.withType(AbstractArchiveTask).configureEach {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
 }
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
