@@ -1,3 +1,4 @@
+import { UserFacingError } from './application/user-facing-error.ts';
 import { win32 } from 'node:path';
 import type { Profile, ProfileEdit, SavedState } from '../shared/contracts.ts';
 
@@ -7,17 +8,17 @@ export function memoryLimit(totalMb: number): number {
 }
 export function record(value: unknown): asserts value is Record<string, unknown> {
   if (!value || typeof value !== 'object' || Array.isArray(value))
-    throw new Error('Неверный формат настроек.');
+    throw new UserFacingError('Неверный формат настроек.');
 }
 export function profileId(value: unknown): string {
   if (typeof value !== 'string' || !/^[a-z0-9][a-z0-9-]{0,47}$/.test(value))
-    throw new Error('Неизвестный профиль.');
+    throw new UserFacingError('Неизвестный профиль.');
   return value;
 }
 export function editProfile(value: unknown, maxMemoryMb: number): ProfileEdit {
   record(value);
   if (Object.keys(value).some((key) => !['id', 'name', 'memoryMb'].includes(key)))
-    throw new Error('Неподдерживаемое поле профиля.');
+    throw new UserFacingError('Неподдерживаемое поле профиля.');
   const id = profileId(value.id);
   if (
     typeof value.name !== 'string' ||
@@ -25,7 +26,7 @@ export function editProfile(value: unknown, maxMemoryMb: number): ProfileEdit {
     value.name.trim().length > 40 ||
     /[\x00-\x1f\x7f]/.test(value.name)
   )
-    throw new Error('Имя должно содержать от 1 до 40 символов.');
+    throw new UserFacingError('Имя должно содержать от 1 до 40 символов.');
   if (
     typeof value.memoryMb !== 'number' ||
     !Number.isInteger(value.memoryMb) ||
@@ -33,7 +34,7 @@ export function editProfile(value: unknown, maxMemoryMb: number): ProfileEdit {
     value.memoryMb > maxMemoryMb ||
     value.memoryMb % 256 !== 0
   )
-    throw new Error(`Выберите от 1024 до ${maxMemoryMb} МБ с шагом 256 МБ.`);
+    throw new UserFacingError(`Выберите от 1024 до ${maxMemoryMb} МБ с шагом 256 МБ.`);
   return { id, name: value.name.trim(), memoryMb: value.memoryMb };
 }
 export function javaPath(value: unknown): string {
@@ -47,18 +48,18 @@ export function javaPath(value: unknown): string {
     value.startsWith('\\\\') ||
     value.startsWith('//')
   )
-    throw new Error('Выберите локальный файл java.exe.');
+    throw new UserFacingError('Выберите локальный файл java.exe.');
   return value;
 }
 export function savedState(value: unknown, maxMemoryMb: number): SavedState {
   record(value);
-  if (value.schemaVersion !== 1) throw new Error('Версия настроек не поддерживается.');
+  if (value.schemaVersion !== 1) throw new UserFacingError('Версия настроек не поддерживается.');
   if (
     !Array.isArray(value.profiles) ||
     value.profiles.length < 1 ||
     value.profiles.length > MAX_PROFILES
   )
-    throw new Error('Неверный список профилей.');
+    throw new UserFacingError('Неверный список профилей.');
   const profiles: Profile[] = value.profiles.map((raw) => {
     record(raw);
     const profile = editProfile(
@@ -68,9 +69,9 @@ export function savedState(value: unknown, maxMemoryMb: number): SavedState {
     return { ...profile, javaPath: raw.javaPath === null ? null : javaPath(raw.javaPath) };
   });
   if (new Set(profiles.map((profile) => profile.id)).size !== profiles.length)
-    throw new Error('Повторяющиеся профили.');
+    throw new UserFacingError('Повторяющиеся профили.');
   const activeProfileId = profileId(value.activeProfileId);
   if (!profiles.some((profile) => profile.id === activeProfileId))
-    throw new Error('Активный профиль не найден.');
+    throw new UserFacingError('Активный профиль не найден.');
   return { schemaVersion: 1, activeProfileId, profiles };
 }

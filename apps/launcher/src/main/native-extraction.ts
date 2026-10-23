@@ -1,3 +1,4 @@
+import { UserFacingError } from './application/user-facing-error.ts';
 import { createHash } from 'node:crypto';
 import { mkdir, lstat, mkdtemp, open, rm } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
@@ -38,7 +39,7 @@ export async function extractNatives(
         archive.size > MAX_FILE,
     )
   )
-    throw new Error('Неверный набор Windows native-архивов.');
+    throw new UserFacingError('Неверный набор Windows native-архивов.');
   const sources: string[] = [];
   for (const archive of archives)
     sources.push(await verifiedCachedArtifact(root, archive, options.signal));
@@ -47,7 +48,7 @@ export async function extractNatives(
   await mkdir(base, { recursive: true });
   const baseInfo = await lstat(base);
   if (!baseInfo.isDirectory() || baseInfo.isSymbolicLink())
-    throw new Error('Каталог natives не может быть ссылкой.');
+    throw new UserFacingError('Каталог natives не может быть ссылкой.');
   const key = nativeCacheKey(archives);
   const cached = await findNativeCache(base, key, options.signal);
   if (cached) return cached;
@@ -66,10 +67,11 @@ export async function extractNatives(
         strictFileNames: true,
       });
       try {
-        if (zip.entryCount > MAX_ENTRIES - count) throw new Error('Слишком много записей natives.');
+        if (zip.entryCount > MAX_ENTRIES - count)
+          throw new UserFacingError('Слишком много записей natives.');
         for await (const entry of zip.eachEntry()) {
           options.signal?.throwIfAborted();
-          if (++count > MAX_ENTRIES) throw new Error('Слишком много записей natives.');
+          if (++count > MAX_ENTRIES) throw new UserFacingError('Слишком много записей natives.');
           const { name, directory } = entryName(entry.fileName);
           const unixType = (entry.externalFileAttributes >>> 16) & 0xf000;
           if (
@@ -78,26 +80,27 @@ export async function extractNatives(
             ![0, 8].includes(entry.compressionMethod) ||
             (entry.externalFileAttributes & 0x400) !== 0
           )
-            throw new Error('Ссылки, специальные и зашифрованные ZIP entries запрещены.');
+            throw new UserFacingError('Ссылки, специальные и зашифрованные ZIP entries запрещены.');
           if (
             !Number.isSafeInteger(entry.uncompressedSize) ||
             entry.uncompressedSize < 0 ||
             entry.uncompressedSize > MAX_FILE ||
             (directory && entry.uncompressedSize !== 0)
           )
-            throw new Error('Неверный размер записи natives.');
+            throw new UserFacingError('Неверный размер записи natives.');
           declaredBytes += entry.uncompressedSize;
-          if (declaredBytes > MAX_TOTAL) throw new Error('Распаковка natives превышает 128 МиБ.');
+          if (declaredBytes > MAX_TOTAL)
+            throw new UserFacingError('Распаковка natives превышает 128 МиБ.');
           if (name === 'META-INF' || name.startsWith('META-INF/')) continue;
           const key = name.toLowerCase();
           const previous = names.get(key);
           if (previous && !(previous === 'directory' && directory))
-            throw new Error('Конфликт имён файлов natives.');
+            throw new UserFacingError('Конфликт имён файлов natives.');
           let parent = '';
           for (const part of key.split('/').slice(0, -1)) {
             parent = parent ? parent + '/' + part : part;
             if (names.get(parent) === 'file')
-              throw new Error('Файл natives конфликтует с каталогом.');
+              throw new UserFacingError('Файл natives конфликтует с каталогом.');
             names.set(parent, 'directory');
           }
           names.set(key, directory ? 'directory' : 'file');
@@ -108,7 +111,7 @@ export async function extractNatives(
           }
           await mkdir(dirname(target), { recursive: true });
           let stream: Readable | undefined;
-          const abort = () => stream?.destroy(new Error('Распаковка отменена.'));
+          const abort = () => stream?.destroy(new UserFacingError('Распаковка отменена.'));
           let destination;
           let size = 0,
             crc = 0;
@@ -126,13 +129,13 @@ export async function extractNatives(
               const bytes = Buffer.from(chunk);
               size += bytes.length;
               if (size > entry.uncompressedSize || size > MAX_FILE)
-                throw new Error('ZIP превысил объявленный размер.');
+                throw new UserFacingError('ZIP превысил объявленный размер.');
               crc = crc32(bytes, crc);
               digest.update(bytes);
               let offset = 0;
               while (offset < bytes.length) {
                 const result = await destination.write(bytes, offset, bytes.length - offset);
-                if (!result.bytesWritten) throw new Error('Не удалось записать natives.');
+                if (!result.bytesWritten) throw new UserFacingError('Не удалось записать natives.');
                 offset += result.bytesWritten;
               }
             }
@@ -142,7 +145,7 @@ export async function extractNatives(
             await destination?.close();
           }
           if (size !== entry.uncompressedSize || crc !== entry.crc32)
-            throw new Error('Проверка размера или CRC natives не пройдена.');
+            throw new UserFacingError('Проверка размера или CRC natives не пройдена.');
           files.push({ relativePath: name, size, sha256: digest.digest('hex') });
         }
       } finally {
@@ -150,7 +153,7 @@ export async function extractNatives(
       }
     }
     options.signal?.throwIfAborted();
-    if (!files.length) throw new Error('Архивы не содержат файлов natives.');
+    if (!files.length) throw new UserFacingError('Архивы не содержат файлов natives.');
     await publishNativeCache(base, key, stage, files, options.signal);
     return {
       directory: stage,
@@ -161,7 +164,7 @@ export async function extractNatives(
   } catch (error) {
     // Only remove this call's fresh generation, never an existing installation.
     if (dirname(stage) !== base || !stage.startsWith(join(base, 'run-')))
-      throw new Error('Не удалось проверить каталог очистки natives.', { cause: error });
+      throw new UserFacingError('Не удалось проверить каталог очистки natives.', { cause: error });
     await rm(stage, { recursive: true, force: true });
     if (options.signal?.aborted) throw options.signal.reason;
     throw error;

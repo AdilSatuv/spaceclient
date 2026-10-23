@@ -1,3 +1,4 @@
+import { UserFacingError } from './application/user-facing-error.ts';
 import { setTimeout as delay } from 'node:timers/promises';
 import { downloadArtifact, validateArtifact, DownloadFailure } from './downloads.ts';
 import type { DownloadArtifact } from './downloads.ts';
@@ -22,7 +23,7 @@ type QueueOptions = {
 };
 export function validatePlan(input: DownloadArtifact[]): DownloadArtifact[] {
   if (!Array.isArray(input) || input.length < 1 || input.length > 10000)
-    throw new Error('План должен содержать от 1 до 10000 файлов.');
+    throw new UserFacingError('План должен содержать от 1 до 10000 файлов.');
   const files = new Map<string, DownloadArtifact>();
   let total = 0;
   for (const raw of input) {
@@ -37,22 +38,23 @@ export function validatePlan(input: DownloadArtifact[]): DownloadArtifact[] {
         previous.size !== artifact.size ||
         previous.url !== artifact.url
       )
-        throw new Error('План содержит конфликтующие файлы.');
+        throw new UserFacingError('План содержит конфликтующие файлы.');
       continue;
     }
     total += artifact.size;
     if (total > 2 * 1024 * 1024 * 1024)
-      throw new Error('План превышает допустимые 2 ГиБ для текущего прототипа.');
+      throw new UserFacingError('План превышает допустимые 2 ГиБ для текущего прототипа.');
     files.set(key, artifact);
   }
   for (const key of files.keys()) {
-    if (files.has(key + '.part')) throw new Error('Файл плана конфликтует с временной загрузкой.');
+    if (files.has(key + '.part'))
+      throw new UserFacingError('Файл плана конфликтует с временной загрузкой.');
     let parent = '';
     for (const part of key.split('/').slice(0, -1)) {
       parent = parent ? parent + '/' + part : part;
-      if (files.has(parent)) throw new Error('Файл плана конфликтует с каталогом.');
+      if (files.has(parent)) throw new UserFacingError('Файл плана конфликтует с каталогом.');
       if (parent.endsWith('.part') && files.has(parent.slice(0, -5)))
-        throw new Error('Каталог плана конфликтует с временной загрузкой.');
+        throw new UserFacingError('Каталог плана конфликтует с временной загрузкой.');
     }
   }
   return [...files.values()];
@@ -74,7 +76,7 @@ export async function downloadPlan(
     retries < 0 ||
     retries > 2
   )
-    throw new Error('Неверные ограничения очереди загрузки.');
+    throw new UserFacingError('Неверные ограничения очереди загрузки.');
   options.signal?.throwIfAborted();
   const controller = new AbortController();
   const signal = options.signal

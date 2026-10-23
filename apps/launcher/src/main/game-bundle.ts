@@ -1,3 +1,4 @@
+import { UserFacingError } from './application/user-facing-error.ts';
 import { createHash, randomUUID } from 'node:crypto';
 import { lstat, readFile, writeFile, rename, unlink } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
@@ -27,7 +28,9 @@ const required = [
   'dev/spaceclient/mixin/HudMixin.class',
 ];
 function failure(): never {
-  throw new Error('Игровая сборка Space повреждена или несовместима. Пересоберите game и лаунчер.');
+  throw new UserFacingError(
+    'Игровая сборка Space повреждена или несовместима. Пересоберите game и лаунчер.',
+  );
 }
 function stamp(input: Buffer): Record<string, string> {
   const result: Record<string, string> = {};
@@ -92,7 +95,7 @@ export async function inspectSpaceJar(path: string, expectedTree?: string, signa
       }
       const stream = await zip.openReadStreamPromise(entry);
       stream.on('error', () => {});
-      const abort = () => stream.destroy(new Error('Проверка сборки отменена.'));
+      const abort = () => stream.destroy(new UserFacingError('Проверка сборки отменена.'));
       signal?.addEventListener('abort', abort, { once: true });
       const chunks: Buffer[] = [];
       let size = 0;
@@ -128,7 +131,9 @@ export async function inspectSpaceJar(path: string, expectedTree?: string, signa
   if (required.some((name) => !contents.has(name))) failure();
   const properties = stamp(contents.get('spaceclient-build.properties')!);
   if (expectedTree && properties.gameSourceTree !== expectedTree)
-    throw new Error('Игровой JAR собран из других исходников. Выполните game build заново.');
+    throw new UserFacingError(
+      'Игровой JAR собран из других исходников. Выполните game build заново.',
+    );
   let mod, mixin;
   try {
     mod = JSON.parse(contents.get('fabric.mod.json')!.toString('utf8'));
@@ -186,7 +191,7 @@ export async function installSpaceBundle(
     try {
       const existing = await lstat(target);
       if (!existing.isFile() || existing.isSymbolicLink())
-        throw new Error('Файл Space не может быть каталогом или ссылкой.');
+        throw new UserFacingError('Файл Space не может быть каталогом или ссылкой.');
       if (
         existing.size === pin.size &&
         createHash('sha256')

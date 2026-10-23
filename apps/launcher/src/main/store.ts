@@ -1,3 +1,4 @@
+import { UserFacingError } from './application/user-facing-error.ts';
 import { readFile, writeFile, mkdir, rename, copyFile, lstat, unlink } from 'node:fs/promises';
 import { constants } from 'node:fs';
 import { join } from 'node:path';
@@ -47,7 +48,9 @@ export class ProfileStore {
       raw = metadata.size <= 65536 ? await readFile(file, 'utf8') : '';
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code === 'ENOENT') return store;
-      throw new Error('Не удалось прочитать настройки. Проверьте доступ к папке лаунчера.');
+      throw new UserFacingError(
+        'Не удалось прочитать настройки. Проверьте доступ к папке лаунчера.',
+      );
     }
     try {
       store.state = savedState(JSON.parse(raw), store.maxMemoryMb);
@@ -60,7 +63,7 @@ export class ProfileStore {
           constants.COPYFILE_EXCL,
         );
       } catch {
-        throw new Error(
+        throw new UserFacingError(
           'Настройки повреждены, а резервную копию сохранить не удалось. Исходный файл оставлен без изменений.',
         );
       }
@@ -80,7 +83,7 @@ export class ProfileStore {
   }
   profile(id: unknown) {
     const profile = this.state.profiles.find((item) => item.id === profileId(id));
-    if (!profile) throw new Error('Профиль не найден.');
+    if (!profile) throw new UserFacingError('Профиль не найден.');
     return { ...profile };
   }
   private mutate(change: (state: SavedState) => void): Promise<Snapshot> {
@@ -94,7 +97,7 @@ export class ProfileStore {
         await rename(temporary, join(this.root, 'settings.json'));
       } catch {
         await unlink(temporary).catch(() => {});
-        throw new Error('Не удалось сохранить настройки. Изменения не применены.');
+        throw new UserFacingError('Не удалось сохранить настройки. Изменения не применены.');
       }
       this.state = verified;
       return this.snapshot();
@@ -106,14 +109,14 @@ export class ProfileStore {
     const parsed = editProfile(edit, this.maxMemoryMb);
     return this.mutate((state) => {
       const target = state.profiles.find((profile) => profile.id === parsed.id);
-      if (!target) throw new Error('Профиль не найден.');
+      if (!target) throw new UserFacingError('Профиль не найден.');
       Object.assign(target, parsed);
     });
   }
   create() {
     return this.mutate((state) => {
       if (state.profiles.length >= MAX_PROFILES)
-        throw new Error('Можно создать не больше 10 профилей.');
+        throw new UserFacingError('Можно создать не больше 10 профилей.');
       const id = randomUUID();
       state.profiles.push({
         id,
@@ -144,7 +147,7 @@ export class ProfileStore {
     for (const path of [instances, directory]) {
       try {
         if ((await lstat(path)).isSymbolicLink())
-          throw new Error('Каталог профиля не может быть ссылкой.');
+          throw new UserFacingError('Каталог профиля не может быть ссылкой.');
       } catch (error) {
         if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
       }

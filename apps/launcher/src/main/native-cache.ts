@@ -1,3 +1,4 @@
+import { UserFacingError } from './application/user-facing-error.ts';
 import { createHash, randomUUID } from 'node:crypto';
 import { createReadStream } from 'node:fs';
 import { lstat, readFile, writeFile, rename, unlink, readdir } from 'node:fs/promises';
@@ -16,14 +17,14 @@ export function nativeCacheKey(archives: DownloadArtifact[]): string {
     .digest('hex');
 }
 function indexPath(base: string, key: string) {
-  if (!/^[a-f0-9]{64}$/.test(key)) throw new Error('Неверный ключ кеша natives.');
+  if (!/^[a-f0-9]{64}$/.test(key)) throw new UserFacingError('Неверный ключ кеша natives.');
   return join(base, `cache-${key}.json`);
 }
 async function indexInfo(path: string) {
   try {
     const info = await lstat(path);
     if (!info.isFile() || info.isSymbolicLink())
-      throw new Error('Индекс кеша natives не может быть каталогом или ссылкой.');
+      throw new UserFacingError('Индекс кеша natives не может быть каталогом или ссылкой.');
     return info;
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null;
@@ -138,7 +139,7 @@ export async function publishNativeCache(
   signal?: AbortSignal,
 ) {
   if (dirname(directory) !== resolve(base) || !/^run-[a-z0-9]+$/i.test(basename(directory)))
-    throw new Error('Неверный каталог генерации natives.');
+    throw new UserFacingError('Неверный каталог генерации natives.');
   const target = indexPath(base, key);
   await indexInfo(target);
   signal?.throwIfAborted();
@@ -151,7 +152,7 @@ export async function publishNativeCache(
       totalBytes: files.reduce((sum, file) => sum + file.size, 0),
     }) + '\n';
   if (Buffer.byteLength(body) > MAX_INDEX)
-    throw new Error('Индекс natives превысил допустимый размер.');
+    throw new UserFacingError('Индекс natives превысил допустимый размер.');
   let temporary: string | undefined = join(base, `cache-${key}-${randomUUID()}.tmp`);
   try {
     await writeFile(temporary, body, { flag: 'wx', mode: 0o600, signal });

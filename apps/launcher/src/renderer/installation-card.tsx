@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useInstallation } from './hooks/use-installation';
 import {
   ArrowDownToLine,
   Check,
@@ -8,9 +8,6 @@ import {
   RefreshCw,
   Square,
 } from 'lucide-react';
-import { installationRunning } from '../shared/installation';
-import type { InstallationStatus } from '../shared/installation';
-import type { Result } from '../shared/contracts';
 import { Button } from './components/ui/button';
 import { Badge } from './components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card';
@@ -19,56 +16,7 @@ import { cn } from './lib/utils';
 const mib = (bytes: number) =>
   new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 }).format(bytes / 1048576) + ' МиБ';
 export function InstallationCard({ profileId, dirty }: { profileId: string; dirty: boolean }) {
-  const [status, setStatus] = useState<InstallationStatus | null>(null);
-  const [error, setError] = useState('');
-  const [acting, setActing] = useState(false);
-  const actingRef = useRef(false);
-  const currentProfile = useRef(profileId);
-  currentProfile.current = profileId;
-  const current = status?.profileId === profileId ? status : null;
-  const running = !!current && installationRunning(current.phase);
-  const prepared = current?.phase === 'prepared';
-  useEffect(() => {
-    let stopped = false;
-    let timer: ReturnType<typeof setTimeout>;
-    setError('');
-    const poll = async () => {
-      try {
-        const response = await window.space.getInstallation(profileId);
-        if (stopped) return;
-        if (response.ok) setStatus(response.value);
-        else setError(response.error);
-      } catch {
-        if (!stopped) setError('Не удалось получить состояние подготовки файлов.');
-      } finally {
-        if (!stopped) timer = setTimeout(poll, 650);
-      }
-    };
-    void poll();
-    return () => {
-      stopped = true;
-      clearTimeout(timer);
-    };
-  }, [profileId]);
-  const act = async (action: () => Promise<Result<InstallationStatus>>) => {
-    if (actingRef.current) return;
-    actingRef.current = true;
-    setActing(true);
-    setError('');
-    const requestedProfile = profileId;
-    try {
-      const response = await action();
-      if (currentProfile.current !== requestedProfile) return;
-      if (response.ok) setStatus(response.value);
-      else setError(response.error);
-    } catch {
-      if (currentProfile.current === requestedProfile)
-        setError('Не удалось связаться с лаунчером.');
-    } finally {
-      actingRef.current = false;
-      setActing(false);
-    }
-  };
+  const { current, running, prepared, error, acting, start, cancel } = useInstallation(profileId);
   return (
     <Card className="installation-card" aria-label="Подготовка файлов игры">
       <CardHeader>
@@ -157,17 +105,14 @@ export function InstallationCard({ profileId, dirty }: { profileId: string; dirt
           {running ? (
             <Button
               variant="outline"
-              disabled={acting || current.phase === 'cancelling'}
-              onClick={() => act(() => window.space.cancelInstallation(profileId))}
+              disabled={acting || current?.phase === 'cancelling'}
+              onClick={cancel}
             >
               <Square aria-hidden="true" />
-              {current.phase === 'cancelling' ? 'Останавливаем…' : 'Отменить подготовку'}
+              {current?.phase === 'cancelling' ? 'Останавливаем…' : 'Отменить подготовку'}
             </Button>
           ) : (
-            <Button
-              disabled={acting || dirty || !current}
-              onClick={() => act(() => window.space.startInstallation(profileId))}
-            >
+            <Button disabled={acting || dirty || !current} onClick={start}>
               {prepared ? <RefreshCw aria-hidden="true" /> : <ArrowDownToLine aria-hidden="true" />}
               {prepared
                 ? 'Проверить и восстановить'

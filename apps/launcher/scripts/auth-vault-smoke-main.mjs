@@ -3,7 +3,7 @@ import { readFile, writeFile, stat } from 'node:fs/promises';
 import { join } from 'node:path';
 import assert from 'node:assert/strict';
 import { EncryptedMsalVault } from '../src/main/auth-vault.ts';
-import { windowsCacheEncryption } from '../src/main/windows-cache-encryption.ts';
+import { windowsCacheEncryption } from '../src/main/electron/windows-cache-encryption.ts';
 
 // Only the development runner below starts this entry, with a fresh disposable root.
 const root = process.env.SPACE_AUTH_VAULT_SMOKE_ROOT;

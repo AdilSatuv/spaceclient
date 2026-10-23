@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "realAccountUsed": false,
+  "realDownloadsStarted": false,
+  "screenshots": [
+    "home-1180x760.png",
+    "profiles-1180x760.png",
+    "settings-1180x760.png",
+    "home-1000x680.png",
+    "profiles-1000x680.png",
+    "settings-1000x680.png",
+    "home-600x680.png",
+    "profiles-600x680.png",
+    "settings-600x680.png",
+    "home-500x380.png",
+    "profiles-500x380.png",
+    "settings-500x380.png"
+  ],
+  "checks": [
+    "Sandbox bridge remains limited to ten functions; no renderer Node globals.",
+    "Skip control focuses main without changing the exact trusted IPC URL.",
+    "Keyboard RAM editing, cancel, dirty lock and active-profile click retain their behavior.",
+    "Profile creation, name save, independent selection and actual settings persistence.",
+    "Four viewport sizes across three views have no horizontal scroll; long profile names wrap; reduced motion disables transitions."
+  ],
+  "contrast": [
+    {
+      "foreground": "foreground",
+      "background": "background",
+      "ratio": 17.53,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "muted-foreground",
+      "background": "card",
+      "ratio": 8.05,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "primary-foreground",
+      "background": "primary",
+      "ratio": 10.61,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "input",
+      "background": "background",
+      "ratio": 3.27,
+      "minimum": 3
+    },
+    {
+      "foreground": "ring",
+      "background": "background",
+      "ratio": 12.2,
+      "minimum": 3
+    }
+  ],
+  "checkedAt": "2026-10-23T17:45:03.632Z",
+  "rendererErrors": [],
+  "scope": "Isolated Electron renderer via temporary loopback DevTools; no native picker, real OAuth, physical-window inspection or downloads."
+}

@@ -1,3 +1,4 @@
+import { UserFacingError } from './application/user-facing-error.ts';
 import { execFile } from 'node:child_process';
 import { stat } from 'node:fs/promises';
 import type { JavaInfo } from '../shared/contracts.ts';
@@ -25,12 +26,12 @@ export function parseJava(output: string): JavaInfo {
   };
 }
 export async function inspectJava(path: string | null): Promise<JavaInfo> {
-  if (!path) throw new Error('Сначала выберите файл java.exe.');
+  if (!path) throw new UserFacingError('Сначала выберите файл java.exe.');
   const selected = javaPath(path);
   try {
     if (!(await stat(selected)).isFile()) throw new Error();
   } catch {
-    throw new Error('Java не найдена по сохранённому пути. Выберите файл заново.');
+    throw new UserFacingError('Java не найдена по сохранённому пути. Выберите файл заново.');
   }
   const environment = { ...process.env };
   for (const name of Object.keys(environment))
@@ -48,7 +49,7 @@ export async function inspectJava(path: string | null): Promise<JavaInfo> {
       (error, stdout, stderr) => {
         if (error)
           reject(
-            new Error(
+            new UserFacingError(
               'Java не ответила на проверку. Проверьте установку или выберите другой java.exe.',
             ),
           );

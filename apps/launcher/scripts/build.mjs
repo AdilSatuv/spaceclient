@@ -35,7 +35,7 @@ await build({
   format: 'cjs',
 });
 await build({
-  entryPoints: ['src/renderer/app.tsx'],
+  entryPoints: ['src/renderer/index.tsx'],
   outfile: 'dist/renderer/app.js',
   bundle: true,
   platform: 'browser',

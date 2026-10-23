@@ -8,11 +8,13 @@ Electron **45.0.0**, React/ReactDOM **19.3.1**, TypeScript **5.9.3**, esbuild **
 
 Начальный локальный срез стоимости: распакованный `node_modules/electron/dist` занимает 374 097 589 байт (~357 МиБ). Сумма WorkingSet64 процессов с точным путём этого electron.exe составила 376 340 480 байт (~359 МиБ). Working set может учитывать общие страницы несколько раз; это одиночный снимок, без подтверждённой UI-приёмки, а не private RAM, размер установщика или сравнительный benchmark.
 
-- `src/main/`: настройки на диске, native dialog, диагностика Java, фиксированные каталоги профилей, подготовка и проверка файлов.
+- `src/main/index.ts`: сборка зависимостей и lifecycle; `main/application`: команды и порты без Node/Electron; `main/electron`: окно, native dialog, shell, протокол и IPC. Остальные модули main владеют настройками на диске, Java, подготовкой и проверкой файлов.
 - `src/preload.ts`: десять конкретных функций через contextBridge; ipcRenderer/send/execute/fs наружу не передаются. Три installation-функции принимают только ID существующего профиля: get/start/cancel; progress опрашивается с интервалом 650 мс, прямых IPC event streams наружу нет.
-- `src/shared/contracts.ts`: типы IPC-результатов и профилей; неизвестные значения повторно валидируются в main.
-- `src/renderer/`: React и CSS, локальные ресурсы; нет Node.js и сетевых запросов.
+- `src/shared/ipc.ts`: единая типизированная карта команд; `models.ts` и `installation.ts`: данные. `contracts.ts` — совместимый экспорт типов; неизвестные значения повторно валидируются в main.
+- `src/renderer/`: React и CSS, локальные ресурсы; нет Node.js и сетевых запросов. `model/LauncherSession` владеет черновиком и состоянием команд; hooks подключают модель/API, pages отображают экраны. Только `index.tsx` получает window.space.
 - `scripts/build.mjs`: отдельные main/preload CJS bundles и статический renderer. Нет dev-server с ослабленной CSP.
+
+Подробная схема, правила импортов и дальнейшего расширения — [ARCHITECTURE.md](ARCHITECTURE.md). Автотесты проверяют границы зависимостей и отсутствие runtime-циклов; неизвестные исключения заменяются безопасным сообщением на границе dispatcher и асинхронного статуса установки.
 
 Следуем [официальным рекомендациям Electron](https://www.electronjs.org/docs/latest/tutorial/security): sandbox/contextIsolation=true, nodeIntegration=false, webSecurity=true. Renderer загружается через `space://app/index.html`; протокол отдаёт только четыре известных ресурса. CSP запрещает inline/eval, сеть, frames, формы и объекты. Все IPC проверяют точные webContents, mainFrame и URL. Окна, навигация, webview и browser permissions запрещены. Это реализованные ограничения и модельные тесты, а не независимый аудит или завершённое runtime-испытание всех обходов.
 
@@ -50,11 +52,11 @@ npm.cmd run launcher
 
 - Build main/preload/renderer и TypeScript проходят.
 - **10 Node-тестов**: независимость двух профилей после перезапуска store, изоляция папок, валидация RAM/имён/полей/ID, резервирование исходного файла при восстановлении и превышении размера, последовательные записи и ошибка сохранения с cleanup, лимит профилей/junction, sender/frame/URL, allowlist ресурсов, разбор версий Java и локальные Windows paths.
-- CI каркаса и последующих resolver/native-срезов прошёл для web/game и Windows launcher job. Визуальная проверка выполняется отдельно от CI.
+- CI каркаса и последующих resolver/native-срезов прошёл для web/game и Windows launcher job. Изолированная UI-проверка теперь включена в Windows job; проверка физического окна, native picker и живого входа остаётся отдельной.
 - Настоящий `inspectJava` с локальным `.tools/jdk-21/bin/java.exe` вернул usable=true, major=21, bits=64.
 - После явного разрешения пользователя осмотр возобновлён. Через окно проверены три раздела, независимые профили/RAM/Java, native picker, реальная Java 21 x64, сохранение и выбор после перезапуска, защита черновика активной карточки, Tab/focus/стрелка RAM/отмена. Подробности и ограничения — [LAUNCHER-QA.md](LAUNCHER-QA.md).
 - Таймаут/переполнение вывода реального Java-процесса, внешний frame/навигация в живом окне, полный keyboard-only маршрут, zoom и reduced-motion ещё требуют runtime-проверки.
 
-Установка: downloader/pins/cache/cancel/resume, очередь, resolver 1.8.9, Log4j 2.26.1, [loader/LWJGL manifest](LOADER-MANIFEST.md), natives и [собственный game bundle](GAME-BUNDLE.md). Через UI подготовлены 768 файлов/146,3 МиБ и 16 DLL; проверены отмена/продолжение/восстановление asset, полный аудит и reuse natives без новой копии DLL. Добавлены [хранилище будущей Microsoft-сессии и callback](AUTH.md) с MSAL 7.1.1 и асинхронным Windows DPAPI; **76 launcher tests** проходят. SC-09 закрыт по проверенным критериям установки; запуск остаётся заблокированным до авторизации/владения и runtime validation. Детали — [INSTALLER.md](INSTALLER.md).
+Установка: downloader/pins/cache/cancel/resume, очередь, resolver 1.8.9, Log4j 2.26.1, [loader/LWJGL manifest](LOADER-MANIFEST.md), natives и [собственный game bundle](GAME-BUNDLE.md). Через UI подготовлены 768 файлов/146,3 МиБ и 16 DLL; проверены отмена/продолжение/восстановление asset, полный аудит и reuse natives без новой копии DLL. Добавлены [хранилище будущей Microsoft-сессии и callback](AUTH.md) с MSAL 7.1.1 и асинхронным Windows DPAPI; **92 launcher tests** проходят после разделения архитектуры (см. ARCHITECTURE.md). SC-09 закрыт по проверенным критериям установки; запуск остаётся заблокированным до авторизации/владения и runtime validation. Детали — [INSTALLER.md](INSTALLER.md).
 
 SC-07 закрыт с записью базовой UI-приёмки; дополнительные QA-пути сохраняются в LAUNCHER-QA. Далее: регистрация Microsoft public client и права API (SC-06), OAuth/OS token storage (SC-08), Legacy Fabric/Space manifest (SC-09), авторизованный запуск Java (SC-10). OAuth-регистрация и действия с аккаунтом выполняются с участием владельца.

@@ -1,3 +1,4 @@
+import { UserFacingError } from './application/user-facing-error.ts';
 import { randomUUID } from 'node:crypto';
 import { writeFile, rename, unlink, statfs } from 'node:fs/promises';
 import { join, relative } from 'node:path';
@@ -67,7 +68,9 @@ export class InstallationService {
   start(input: unknown): InstallationStatus {
     const id = profileId(input);
     if (this.job)
-      throw new Error('Уже идёт подготовка файлов. Дождитесь её завершения или отмените.');
+      throw new UserFacingError(
+        'Уже идёт подготовка файлов. Дождитесь её завершения или отмените.',
+      );
     const status = {
       ...this.status(id),
       phase: 'planning' as const,
@@ -121,7 +124,9 @@ export class InstallationService {
       signal.throwIfAborted();
       // Conservative room for a full file set, native expansion and filesystem overhead.
       if ((await this.dependencies.availableBytes(root)) < totalBytes + 160 * 1024 * 1024)
-        throw new Error('Недостаточно свободного места. Освободите не менее 320 МиБ и повторите.');
+        throw new UserFacingError(
+          'Недостаточно свободного места. Освободите не менее 320 МиБ и повторите.',
+        );
       signal.throwIfAborted();
       this.update(job.id, {
         phase: 'downloading',
@@ -167,7 +172,7 @@ export class InstallationService {
         });
         installedSpace = await space.install(root, signal);
         if (installedSpace.sha256 !== space.pin.sha256 || installedSpace.size !== space.pin.size)
-          throw new Error('Установленный Space не совпадает со сборкой лаунчера.');
+          throw new UserFacingError('Установленный Space не совпадает со сборкой лаунчера.');
         signal.throwIfAborted();
       }
       const receipt = {
@@ -213,7 +218,7 @@ export class InstallationService {
         phase: signal.aborted ? 'cancelled' : 'error',
         message: signal.aborted
           ? 'Подготовка отменена. При повторе используем проверенные файлы и сохранённые части.'
-          : error instanceof Error
+          : error instanceof UserFacingError
             ? error.message
             : 'Не удалось подготовить файлы.',
       });

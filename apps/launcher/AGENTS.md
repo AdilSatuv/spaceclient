@@ -1,6 +1,8 @@
 # Space Launcher
 
 - Прочитать docs/LAUNCHER.md перед изменением desktop-архитектуры.
+- Границы слоёв описаны в docs/ARCHITECTURE.md. main/index собирает зависимости; main/application импортирует только application/shared; Electron API живёт в main/electron и точке сборки. Renderer-модель не зависит от React/DOM, только renderer/index читает window.space. Не обходить architecture.test.cjs для удобства.
+- Контракт команд хранится в shared/ipc.ts; preload перечисляет конкретные функции. В main вход остаётся unknown и проверяется до обращения к привилегированному порту. Пользовательские ошибки помечать UserFacingError с безопасным текстом; raw error.message/cause/stack в IPC и installation DTO не передавать.
 - Main владеет диском, диалогами и запуском процессов; renderer не получает Node, fs, shell, произвольные IPC или аргументы команд.
 - Не ослаблять sandbox, contextIsolation, CSP, проверку sender/mainFrame, запрет навигации и окон ради удобства разработки.
 - Renderer использует локальные shadcn/ui компоненты, Tailwind CLI и Lucide; см. docs/LAUNCHER-DESIGN.md. Не добавлять CDN, runtime CSS injection, inline style или hash navigation ради компонентов. После изменения интерфейса выполнить build, check:ui и осмотреть снимки; тест запускает отдельный userData, а не личный сеанс. Сохранять лицензии адаптированных компонентов.

@@ -206,6 +206,29 @@ test('low disk space stops before bulk downloads or native extraction', async (t
   assert.match(service.status('alpha').message, /места/);
   assert.equal(calls, 0);
 });
+
+test('installation status exposes intentional messages but redacts unexpected dependency errors', async (t) => {
+  const { UserFacingError } = await import('../src/main/application/user-facing-error.ts');
+  for (const failure of [
+    new Error('C:/private/account token=secret'),
+    new UserFacingError('Повторите загрузку.'),
+  ]) {
+    const { service } = await fixture(t, {
+      prepare: async () => {
+        throw failure;
+      },
+    });
+    service.start('alpha');
+    await service.settled();
+    const status = service.status('alpha');
+    assert.equal(status.phase, 'error');
+    assert.equal(
+      status.message,
+      failure instanceof UserFacingError ? failure.message : 'Не удалось подготовить файлы.',
+    );
+    assert.doesNotMatch(JSON.stringify(status), /private|secret/);
+  }
+});
 test('cancellation aborts active work, waits for settlement and leaves no successful receipt', async (t) => {
   let began;
   const started = new Promise((resolve) => {

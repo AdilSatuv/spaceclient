@@ -1,3 +1,4 @@
+import { UserFacingError } from './application/user-facing-error.ts';
 import { validateArtifact } from './downloads.ts';
 import type { DownloadArtifact } from './downloads.ts';
 import { validatePlan } from './download-queue.ts';
@@ -34,12 +35,12 @@ export type VersionPlan = {
 };
 function object(value: unknown): JsonObject {
   if (!value || typeof value !== 'object' || Array.isArray(value))
-    throw new Error('Ожидался объект metadata.');
+    throw new UserFacingError('Ожидался объект metadata.');
   return value as JsonObject;
 }
 function text(value: unknown, maximum = 220): string {
   if (typeof value !== 'string' || !value.length || value.length > maximum)
-    throw new Error('Неверное строковое поле metadata.');
+    throw new UserFacingError('Неверное строковое поле metadata.');
   return value;
 }
 function file(value: unknown, relativePath: string): DownloadArtifact {
@@ -55,7 +56,8 @@ function file(value: unknown, relativePath: string): DownloadArtifact {
 /** Only the OS-name rules used by pinned 1.8.9 are supported; unknown conditions fail closed. */
 export function allowedOnWindows(input: unknown): boolean {
   if (input === undefined) return true;
-  if (!Array.isArray(input) || input.length > 32) throw new Error('Неверные rules библиотеки.');
+  if (!Array.isArray(input) || input.length > 32)
+    throw new UserFacingError('Неверные rules библиотеки.');
   let allowed = false;
   for (const raw of input) {
     const rule = object(raw);
@@ -63,7 +65,7 @@ export function allowedOnWindows(input: unknown): boolean {
       Object.keys(rule).some((key) => !['action', 'os'].includes(key)) ||
       !['allow', 'disallow'].includes(rule.action as string)
     )
-      throw new Error('Неподдерживаемое условие rules.');
+      throw new UserFacingError('Неподдерживаемое условие rules.');
     let matches = true;
     if (rule.os !== undefined) {
       const os = object(rule.os);
@@ -71,7 +73,7 @@ export function allowedOnWindows(input: unknown): boolean {
         Object.keys(os).some((key) => key !== 'name') ||
         !['windows', 'linux', 'osx'].includes(os.name as string)
       )
-        throw new Error('Неподдерживаемое условие ОС.');
+        throw new UserFacingError('Неподдерживаемое условие ОС.');
       matches = os.name === 'windows';
     }
     if (matches) allowed = rule.action === 'allow';
@@ -84,7 +86,7 @@ function libraryFile(raw: unknown, coordinate: string, classifier?: string): Dow
   const expected = `${group.replaceAll('.', '/')}/${name}/${version}/${name}-${version}${classifier ? '-' + classifier : ''}.jar`;
   const source = object(raw);
   if (source.path !== expected || source.url !== `https://libraries.minecraft.net/${expected}`)
-    throw new Error('Путь библиотеки не совпадает с её координатами.');
+    throw new UserFacingError('Путь библиотеки не совпадает с её координатами.');
   return file(source, 'libraries/' + expected);
 }
 
@@ -99,7 +101,7 @@ export function buildVersionPlan(metadataInput: unknown, indexInput: unknown): V
     metadata.mainClass !== 'net.minecraft.client.main.Main' ||
     metadata.inheritsFrom !== undefined
   )
-    throw new Error('Поддерживаются только закреплённые metadata Minecraft 1.8.9.');
+    throw new UserFacingError('Поддерживаются только закреплённые metadata Minecraft 1.8.9.');
   const declaredIndex = object(metadata.assetIndex);
   const assetIndex = file(declaredIndex, ASSET_INDEX.relativePath);
   if (
@@ -108,11 +110,11 @@ export function buildVersionPlan(metadataInput: unknown, indexInput: unknown): V
     assetIndex.sha1 !== ASSET_INDEX.sha1 ||
     assetIndex.size !== ASSET_INDEX.size
   )
-    throw new Error('Asset index не совпадает с закреплённой версией.');
+    throw new UserFacingError('Asset index не совпадает с закреплённой версией.');
   if (index.virtual !== undefined && index.virtual !== false)
-    throw new Error('Virtual assets пока не поддерживаются.');
+    throw new UserFacingError('Virtual assets пока не поддерживаются.');
   if (index.map_to_resources !== undefined && index.map_to_resources !== false)
-    throw new Error('Копирование assets в resources пока не поддерживается.');
+    throw new UserFacingError('Копирование assets в resources пока не поддерживается.');
   const files: DownloadArtifact[] = [
     { ...VERSION_METADATA },
     { ...ASSET_INDEX },
@@ -122,14 +124,14 @@ export function buildVersionPlan(metadataInput: unknown, indexInput: unknown): V
   const natives: VersionPlan['natives'] = [];
   const excludedLibraries: string[] = [];
   if (!Array.isArray(metadata.libraries) || metadata.libraries.length > 256)
-    throw new Error('Неверный список библиотек.');
+    throw new UserFacingError('Неверный список библиотек.');
   const coordinates = new Set<string>();
   for (const raw of metadata.libraries) {
     const library = object(raw);
     const coordinate = text(library.name);
     if (!/^[a-z0-9_-]+(?:\.[a-z0-9_-]+)*:[a-z0-9_.-]+:[a-z0-9_.-]+$/i.test(coordinate))
-      throw new Error('Неверные координаты библиотеки.');
-    if (coordinates.has(coordinate)) throw new Error('Повтор координат библиотеки.');
+      throw new UserFacingError('Неверные координаты библиотеки.');
+    if (coordinates.has(coordinate)) throw new UserFacingError('Повтор координат библиотеки.');
     coordinates.add(coordinate);
     if (!allowedOnWindows(library.rules)) continue;
     // Replace original logging and LWJGL families as complete controlled sets.
@@ -151,7 +153,7 @@ export function buildVersionPlan(metadataInput: unknown, indexInput: unknown): V
       if (template === undefined) continue;
       const classifier = text(template, 64).replaceAll('${arch}', '64');
       if (!/^natives-windows(?:-64)?$/.test(classifier))
-        throw new Error('Неподдерживаемый Windows native classifier.');
+        throw new UserFacingError('Неподдерживаемый Windows native classifier.');
       const artifact = libraryFile(
         object(downloads.classifiers)[classifier],
         coordinate,
@@ -159,7 +161,7 @@ export function buildVersionPlan(metadataInput: unknown, indexInput: unknown): V
       );
       const exclusions = library.extract === undefined ? [] : object(library.extract).exclude;
       if (!Array.isArray(exclusions) || exclusions.some((item) => item !== 'META-INF/'))
-        throw new Error('Неподдерживаемые правила распаковки natives.');
+        throw new UserFacingError('Неподдерживаемые правила распаковки natives.');
       files.push(artifact);
       natives.push({ archive: artifact.relativePath, exclude: [...exclusions] });
     }
@@ -175,11 +177,13 @@ export function buildVersionPlan(metadataInput: unknown, indexInput: unknown): V
   }
   const objects = object(index.objects);
   const entries = Object.entries(objects);
-  if (!entries.length || entries.length > 9000) throw new Error('Неверный размер asset index.');
+  if (!entries.length || entries.length > 9000)
+    throw new UserFacingError('Неверный размер asset index.');
   let logicalAssetBytes = 0;
   for (const [name, value] of entries) {
     // Names are metadata labels only. On disk assets are always addressed by hash.
-    if (name.length > 256 || /[\u0000-\u001f]/.test(name)) throw new Error('Неверное имя ресурса.');
+    if (name.length > 256 || /[\u0000-\u001f]/.test(name))
+      throw new UserFacingError('Неверное имя ресурса.');
     const source = object(value);
     const hash = text(source.hash, 40);
     const artifact = file(
@@ -194,7 +198,7 @@ export function buildVersionPlan(metadataInput: unknown, indexInput: unknown): V
     files.push(artifact);
   }
   if (declaredIndex.totalSize !== logicalAssetBytes)
-    throw new Error('Суммарный размер assets не совпадает с metadata.');
+    throw new UserFacingError('Суммарный размер assets не совпадает с metadata.');
   const unique = validatePlan(files);
   classpath.push('versions/1.8.9/1.8.9.jar');
   return {

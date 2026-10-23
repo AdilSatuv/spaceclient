@@ -1,3 +1,4 @@
+import { UserFacingError } from './application/user-facing-error.ts';
 import { createHash } from 'node:crypto';
 import { createReadStream } from 'node:fs';
 import { mkdir, lstat, open, rename, unlink } from 'node:fs/promises';
@@ -12,7 +13,7 @@ export type DownloadArtifact = {
   size: number;
   relativePath: string;
 };
-export class DownloadFailure extends Error {
+export class DownloadFailure extends UserFacingError {
   readonly retryable: boolean;
   constructor(message: string, retryable = false, cause?: unknown) {
     super(message, { cause });
@@ -57,7 +58,7 @@ export function validateRelativePath(value: unknown): string {
           /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(part),
       )
   )
-    throw new Error('Недопустимый путь файла.');
+    throw new UserFacingError('Недопустимый путь файла.');
   return value;
 }
 
@@ -73,13 +74,13 @@ export function validateArtifact(value: DownloadArtifact): DownloadArtifact {
     value.size < 1 ||
     value.size > 512 * 1024 * 1024
   )
-    throw new Error('Неверные размер или хеш файла.');
+    throw new UserFacingError('Неверные размер или хеш файла.');
   validateRelativePath(value.relativePath);
   let url: URL;
   try {
     url = new URL(value.url);
   } catch {
-    throw new Error('Недопустимый источник файла.');
+    throw new UserFacingError('Недопустимый источник файла.');
   }
   if (
     url.protocol !== 'https:' ||
@@ -91,17 +92,17 @@ export function validateArtifact(value: DownloadArtifact): DownloadArtifact {
     url.hash ||
     !/^\/[a-z0-9._/+\-]+(?:\/[a-z0-9._+\-]+)*$/i.test(url.pathname)
   )
-    throw new Error('Недопустимый источник файла.');
+    throw new UserFacingError('Недопустимый источник файла.');
   if (
     ['launcher.mojang.com', 'piston-data.mojang.com'].includes(url.hostname) &&
     !url.pathname.startsWith(`/v1/objects/${value.sha1}/`)
   )
-    throw new Error('Хеш источника не совпадает с манифестом.');
+    throw new UserFacingError('Хеш источника не совпадает с манифестом.');
   if (
     url.hostname === 'resources.download.minecraft.net' &&
     url.pathname !== `/${value.sha1.slice(0, 2)}/${value.sha1}`
   )
-    throw new Error('Хеш ресурса не совпадает с манифестом.');
+    throw new UserFacingError('Хеш ресурса не совпадает с манифестом.');
   if (
     controlledHosts.has(url.hostname) &&
     !controlled.some(
@@ -113,7 +114,9 @@ export function validateArtifact(value: DownloadArtifact): DownloadArtifact {
         pin.relativePath === value.relativePath,
     )
   )
-    throw new Error('Этот Maven-источник разрешён только для закреплённых библиотек Space.');
+    throw new UserFacingError(
+      'Этот Maven-источник разрешён только для закреплённых библиотек Space.',
+    );
   return {
     url: url.href,
     sha1: value.sha1,
@@ -127,7 +130,7 @@ async function fileInfo(path: string) {
   try {
     const info = await lstat(path);
     if (!info.isFile() || info.isSymbolicLink())
-      throw new Error('Файл загрузки не может быть каталогом или ссылкой.');
+      throw new UserFacingError('Файл загрузки не может быть каталогом или ссылкой.');
     return info;
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null;
@@ -158,7 +161,7 @@ async function targetPath(root: string, relativePath: string): Promise<string> {
   const base = resolve(root);
   await mkdir(base, { recursive: true });
   if ((await lstat(base)).isSymbolicLink())
-    throw new Error('Каталог установки не может быть ссылкой.');
+    throw new UserFacingError('Каталог установки не может быть ссылкой.');
   let current = base;
   const parts = relativePath.split('/');
   for (const part of parts.slice(0, -1)) {
@@ -170,7 +173,7 @@ async function targetPath(root: string, relativePath: string): Promise<string> {
     }
     const info = await lstat(current);
     if (!info.isDirectory() || info.isSymbolicLink())
-      throw new Error('Путь установки содержит ссылку или файл вместо папки.');
+      throw new UserFacingError('Путь установки содержит ссылку или файл вместо папки.');
   }
   return join(current, parts.at(-1)!);
 }
@@ -189,7 +192,7 @@ export async function verifiedCachedArtifact(
   signal?.throwIfAborted();
   const path = await targetPath(root, artifact.relativePath);
   if (!(await matches(path, artifact, signal)))
-    throw new Error('Архив отсутствует или не прошёл проверку целостности.');
+    throw new UserFacingError('Архив отсутствует или не прошёл проверку целостности.');
   return path;
 }
 
@@ -203,7 +206,7 @@ export async function downloadArtifact(
   options.signal?.throwIfAborted();
   const target = await targetPath(root, artifact.relativePath);
   const lock = process.platform === 'win32' ? target.toLowerCase() : target;
-  if (active.has(lock)) throw new Error('Этот файл уже загружается.');
+  if (active.has(lock)) throw new UserFacingError('Этот файл уже загружается.');
   active.add(lock);
   try {
     if (await matches(target, artifact, options.signal)) {
@@ -252,13 +255,13 @@ export async function downloadArtifact(
           `bytes ${offset}-${artifact.size - 1}/${artifact.size}`)
     ) {
       await response.body?.cancel();
-      throw new Error('Сервер вернул неверный диапазон файла.');
+      throw new UserFacingError('Сервер вернул неверный диапазон файла.');
     }
     if (!ranged) offset = 0;
     const declared = response.headers.get('content-length');
     if (!response.body || (declared !== null && Number(declared) !== artifact.size - offset)) {
       await response.body?.cancel();
-      throw new Error('Размер ответа не совпадает с манифестом.');
+      throw new UserFacingError('Размер ответа не совпадает с манифестом.');
     }
     const reader = response.body.getReader();
     let file;
@@ -282,11 +285,12 @@ export async function downloadArtifact(
         const { done, value } = chunk;
         if (done) break;
         if (received + value.byteLength > artifact.size)
-          throw new Error('Ответ превысил размер файла из манифеста.');
+          throw new UserFacingError('Ответ превысил размер файла из манифеста.');
         let written = 0;
         while (written < value.byteLength) {
           const result = await file.write(value, written, value.byteLength - written);
-          if (result.bytesWritten === 0) throw new Error('Не удалось записать файл загрузки.');
+          if (result.bytesWritten === 0)
+            throw new UserFacingError('Не удалось записать файл загрузки.');
           written += result.bytesWritten;
         }
         received += value.byteLength;

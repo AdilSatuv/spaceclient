@@ -1,5 +1,5 @@
 import { app, safeStorage } from 'electron';
-import type { CacheEncryption } from './auth-vault.ts';
+import type { CacheEncryption } from '../auth-vault.ts';
 
 // Windows-only until other platforms' key-provider policies are explicitly validated.
 export const windowsCacheEncryption: CacheEncryption = {

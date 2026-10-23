@@ -1,15 +1,22 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import type { LauncherApi } from './shared/contracts.ts';
+import { channels } from './shared/ipc.ts';
+import type { LauncherApi, CommandArgs, CommandName, CommandOutput } from './shared/ipc.ts';
+import type { Result } from './shared/models.ts';
+
+const invoke = <K extends CommandName>(
+  channel: K,
+  ...args: CommandArgs<K>
+): Promise<Result<CommandOutput<K>>> => ipcRenderer.invoke(channel, ...args);
 const api: LauncherApi = {
-  getState: () => ipcRenderer.invoke('state:get'),
-  saveProfile: (edit) => ipcRenderer.invoke('profile:save', edit),
-  createProfile: () => ipcRenderer.invoke('profile:create'),
-  selectProfile: (id) => ipcRenderer.invoke('profile:select', id),
-  chooseJava: (id) => ipcRenderer.invoke('java:choose', id),
-  checkJava: (id) => ipcRenderer.invoke('java:check', id),
-  openInstance: (id) => ipcRenderer.invoke('profile:open', id),
-  getInstallation: (id) => ipcRenderer.invoke('installation:get', id),
-  startInstallation: (id) => ipcRenderer.invoke('installation:start', id),
-  cancelInstallation: (id) => ipcRenderer.invoke('installation:cancel', id),
+  getState: () => invoke(channels.getState),
+  saveProfile: (edit) => invoke(channels.saveProfile, edit),
+  createProfile: () => invoke(channels.createProfile),
+  selectProfile: (id) => invoke(channels.selectProfile, id),
+  chooseJava: (id) => invoke(channels.chooseJava, id),
+  checkJava: (id) => invoke(channels.checkJava, id),
+  openInstance: (id) => invoke(channels.openInstance, id),
+  getInstallation: (id) => invoke(channels.getInstallation, id),
+  startInstallation: (id) => invoke(channels.startInstallation, id),
+  cancelInstallation: (id) => invoke(channels.cancelInstallation, id),
 };
 contextBridge.exposeInMainWorld('space', api);
