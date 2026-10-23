@@ -27,3 +27,15 @@ jobs:
           java-version: '21'
       - run: bash ./gradlew build --no-daemon
         working-directory: game
+  launcher:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm run test:launcher
+      - run: npm run check --workspace @space/launcher
+      - run: npm run build:launcher

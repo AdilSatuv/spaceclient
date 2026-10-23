@@ -1,0 +1,23 @@
+{
+  "name": "@space/launcher",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/main.cjs",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "start": "electron .",
+    "dev": "npm run build && electron .",
+    "check": "tsc --noEmit",
+    "test": "node --test test/*.test.cjs"
+  },
+  "dependencies": { "react": "19.3.1", "react-dom": "19.3.1" },
+  "devDependencies": {
+    "electron": "45.0.0",
+    "esbuild": "0.28.2",
+    "typescript": "5.9.3",
+    "@types/node": "24.10.1",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3"
+  }
+}

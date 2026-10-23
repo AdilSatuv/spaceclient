@@ -47,4 +47,6 @@ git push origin main
 
 Node.js для workspace теперь требуется версии 24+; CI использует 24. Контрактные тесты читают erasable TypeScript напрямую через встроенную поддержку Node, без отдельного компилятора тестов.
 
+Лаунчер находится в `apps/launcher`; инструкция — LAUNCHER.md. `npm.cmd run launcher` собирает и запускает Electron-приложение, `npm.cmd run build:launcher` собирает без запуска, `npm.cmd run test:launcher` проверяет store/валидацию/IPC/Java parser. Общие test/build/check включают новый workspace; CI отдельно повторяет проверки лаунчера на Windows. Форматирование включает launcher src/scripts/test. Для ручной UI-проверки задавать SPACE_LAUNCHER_DATA в `.reports/launcher-desktop`, чтобы сохранить личные настройки отдельно.
+
 Для воспроизводимого локального mobile lab установлен Lighthouse 13.5.0. Команда `npm.cmd run audit:web -- / /features /download /updates /help` делает по три последовательных прогона запущенной production-сборки; Chrome запускается в отдельном headless-профиле. Полные отчёты игнорируются в `.reports/`, условия и проверенные результаты фиксируются в WEBSITE-QA.md. Не запускать build или несколько серий замеров одновременно.
