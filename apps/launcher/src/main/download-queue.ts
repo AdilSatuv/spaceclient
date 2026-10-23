@@ -45,8 +45,7 @@ export function validatePlan(input: DownloadArtifact[]): DownloadArtifact[] {
     files.set(key, artifact);
   }
   for (const key of files.keys()) {
-    if (files.has(key + '.part'))
-      throw new Error('Файл плана конфликтует с временной загрузкой.');
+    if (files.has(key + '.part')) throw new Error('Файл плана конфликтует с временной загрузкой.');
     let parent = '';
     for (const part of key.split('/').slice(0, -1)) {
       parent = parent ? parent + '/' + part : part;
