@@ -1,0 +1,49 @@
+{
+  "checkedAt": "2026-10-23T07:57:34.218Z",
+  "version": "1.8.9",
+  "loaderVersion": "0.18.3",
+  "lwjglVersion": "2.9.4+legacyfabric.17",
+  "javaMajor": 21,
+  "artifactCount": 11,
+  "verifiedBytes": 7734742,
+  "classesLoadedWithoutInitialization": [
+    "org.objectweb.asm.ClassReader",
+    "org.spongepowered.asm.launch.MixinBootstrap",
+    "net.fabricmc.loader.api.FabricLoader",
+    "net.fabricmc.loader.impl.launch.knot.KnotClient"
+  ],
+  "mappingHeader": "v1\tofficial\tintermediary",
+  "nativeFiles": [
+    {
+      "relativePath": "lwjgl-windows-i386.dll",
+      "size": 349696,
+      "sha256": "dcf69e482711441e514fc43a1d1623caee5745ac4e7d7b62a3c587399b3d311d"
+    },
+    {
+      "relativePath": "lwjgl-windows-amd64.dll",
+      "size": 380416,
+      "sha256": "becee01761c27453aca454238b32fc44e7a30ca10ea3a59898c03259db7a4abf"
+    },
+    {
+      "relativePath": "lwjgl-windows-aarch64.dll",
+      "size": 376832,
+      "sha256": "30673a134eb884bdecd82df612c92d9501c4c52792f324140f1c9e4a769d22b3"
+    },
+    {
+      "relativePath": "OpenAL-i386.dll",
+      "size": 1309696,
+      "sha256": "63974f4c5767c45e421a4b8fe98e0885f1ab831a2d117bc42be6b86e7e74d42e"
+    },
+    {
+      "relativePath": "OpenAL-aarch64.dll",
+      "size": 1370624,
+      "sha256": "39124c36750e75e1bb2f09487b6a73df69c394a607d8e2d268cbb1e7311af23f"
+    },
+    {
+      "relativePath": "OpenAL-amd64.dll",
+      "size": 1487360,
+      "sha256": "1e4fe04805bc7b9d2488250aaa12b01ea8230cc9b51a356bb1376e180e6b1816"
+    }
+  ],
+  "note": "Pinned artifacts verified by both digests. Class loading used initialize=false; loader was not started, DLLs not loaded, and Minecraft was not launched."
+}

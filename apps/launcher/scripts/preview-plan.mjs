@@ -11,6 +11,8 @@ const result = {
   version: plan.version,
   platform: plan.platform,
   loggingVersion: plan.loggingVersion,
+  loaderVersion: plan.loaderVersion,
+  mainClass: plan.mainClass,
   fileCount: plan.files.length,
   assetCount: plan.assetCount,
   classpathCount: plan.classpath.length,

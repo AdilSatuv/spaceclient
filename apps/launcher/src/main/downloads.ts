@@ -3,6 +3,7 @@ import { createReadStream } from 'node:fs';
 import { mkdir, lstat, open, rename, unlink } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { LOGGING_LIBRARIES } from './logging-libraries.ts';
+import { LOADER_LIBRARIES } from './loader-libraries.ts';
 
 export type DownloadArtifact = {
   url: string;
@@ -26,6 +27,8 @@ type DownloadOptions = {
   fetcher?: typeof fetch;
 };
 const active = new Set<string>();
+const controlled = [...LOGGING_LIBRARIES, ...LOADER_LIBRARIES];
+const controlledHosts = new Set(controlled.map((artifact) => new URL(artifact.url).hostname));
 const hosts = new Set([
   'launcher.mojang.com',
   'piston-data.mojang.com',
@@ -34,6 +37,8 @@ const hosts = new Set([
   'libraries.minecraft.net',
   'resources.download.minecraft.net',
   'repo.maven.apache.org',
+  'maven.fabricmc.net',
+  'repo.legacyfabric.net',
 ]);
 
 export function validateArtifact(value: DownloadArtifact): DownloadArtifact {
@@ -52,7 +57,7 @@ export function validateArtifact(value: DownloadArtifact): DownloadArtifact {
   if (
     typeof value.relativePath !== 'string' ||
     value.relativePath.length > 220 ||
-    !/^[a-z0-9][a-z0-9._/-]*$/i.test(value.relativePath) ||
+    !/^[a-z0-9][a-z0-9._/+\-]*$/i.test(value.relativePath) ||
     value.relativePath
       .split('/')
       .some(
@@ -93,8 +98,8 @@ export function validateArtifact(value: DownloadArtifact): DownloadArtifact {
   )
     throw new Error('Хеш ресурса не совпадает с манифестом.');
   if (
-    url.hostname === 'repo.maven.apache.org' &&
-    !LOGGING_LIBRARIES.some(
+    controlledHosts.has(url.hostname) &&
+    !controlled.some(
       (pin) =>
         pin.url === url.href &&
         pin.sha1 === value.sha1 &&
@@ -103,7 +108,7 @@ export function validateArtifact(value: DownloadArtifact): DownloadArtifact {
         pin.relativePath === value.relativePath,
     )
   )
-    throw new Error('Maven Central разрешён только для закреплённых библиотек Log4j.');
+    throw new Error('Этот Maven-источник разрешён только для закреплённых библиотек Space.');
   return {
     url: url.href,
     sha1: value.sha1,

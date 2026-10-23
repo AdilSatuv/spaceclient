@@ -60,8 +60,8 @@ export function InstallationCard({ profileId, dirty }: { profileId: string; dirt
       <span className="eyebrow">ПЕРЕД ПЕРВЫМ ПОЛЁТОМ</span>
       <h2>{current?.phase === 'prepared' ? 'База для нового мира.' : 'Подготовим твой мир.'}</h2>
       <p>
-        Файлы Minecraft 1.8.9 и обновлённые библиотеки журналирования. Около 141 МиБ, отдельная
-        папка профиля.
+        Minecraft 1.8.9, Fabric Loader и обновлённые библиотеки. Около 147 МиБ, отдельная папка
+        профиля.
       </p>
       <div className="installation-status" role="status" aria-live="polite" aria-atomic="true">
         {current?.message || 'Проверяем состояние файлов…'}

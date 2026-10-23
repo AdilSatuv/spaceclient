@@ -1,16 +1,20 @@
 {
-  "checkedAt": "2026-10-23T07:42:37.836Z",
+  "checkedAt": "2026-10-23T08:03:14.952Z",
   "version": "1.8.9",
   "platform": "windows-x64",
   "loggingVersion": "2.26.1",
-  "sha256PinnedArtifactCount": 2,
-  "verifiedFiles": 760,
-  "verifiedBytes": 147451854,
-  "nativeFilesCheckedAgainstLocalReceipt": 14,
+  "loaderVersion": "0.18.3",
+  "sha256PinnedArtifactCount": 13,
+  "verifiedFiles": 767,
+  "verifiedBytes": 153351771,
+  "nativeFilesCheckedAgainstLocalReceipt": 16,
   "excludedLibraries": [
     "org.apache.logging.log4j:log4j-api:2.0-beta9",
-    "org.apache.logging.log4j:log4j-core:2.0-beta9"
+    "org.apache.logging.log4j:log4j-core:2.0-beta9",
+    "org.lwjgl.lwjgl:lwjgl:2.9.4-nightly-20150209",
+    "org.lwjgl.lwjgl:lwjgl_util:2.9.4-nightly-20150209",
+    "org.lwjgl.lwjgl:lwjgl-platform:2.9.4-nightly-20150209"
   ],
   "launchReady": false,
-  "note": "Pinned plan files checked by SHA-1, logging overrides also by SHA-256; extracted natives checked against local receipt SHA-256. This is a base file preparation audit, not a Space launch or authentication test."
+  "note": "Pinned plan files checked by SHA-1, controlled logging/loader/LWJGL artifacts also by SHA-256; extracted natives checked against local receipt SHA-256. This is a base file preparation audit, not a Space launch or authentication test."
 }

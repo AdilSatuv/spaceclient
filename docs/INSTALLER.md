@@ -1,12 +1,12 @@
 # Подготовка установки Minecraft
 
-SC-09 в работе. Реализованы downloader, очередь, resolver 1.8.9, закреплённый Log4j override, natives и подготовка базовых файлов через окно. Legacy Fabric/Space, Microsoft-вход и запуск остаются отдельными этапами. Это ещё не полная установка Space Client.
+SC-09 в работе. Реализованы downloader, очередь, resolver 1.8.9, Log4j, Fabric Loader/Legacy intermediary/patched LWJGL, natives и UI-подготовка. Собственный Space jar, Microsoft-вход и запуск остаются отдельными этапами.
 
 ## Готовая часть
 
 `apps/launcher/src/main/downloads.ts` получает URL, размер/SHA-1, дополнительный SHA-256 для controlled artifacts и относительный путь из main. Этот API не выставлен в preload: renderer не может передать произвольный URL или путь.
 
-- Только HTTPS и фиксированные Mojang/Minecraft CDN; дополнительно два точных Maven Central Log4j URL с совпадением пути/размера/обоих hashes из локальных pins. Остальные Maven paths запрещены. Credentials, query, fragment и нестандартный порт отклоняются; redirect запрещён. Для object/resource URL хеш в пути должен совпасть с ожидаемым.
+- Только HTTPS и фиксированные Mojang/Minecraft CDN; дополнительно точные Log4j/Fabric/Legacy URL из локальных pins с совпадением path/size/обоих hashes. Остальные Maven paths запрещены. Credentials, query, fragment и нестандартный порт отклоняются; redirect запрещён. Для object/resource URL хеш в пути должен совпасть с ожидаемым.
 - Путь внутри выделенной папки; запрещены traversal, абсолютные пути, обратные слеши, Windows device filenames и ссылки/junction в проверяемых каталогах. Это проверка изоляции приложения, не защита от произвольного процесса того же владельца, который одновременно меняет файловую систему.
 - Предельный размер отдельного артефакта 512 МиБ. Ответ ограничен ожидаемым размером, Content-Length/Content-Range проверяются, timeout запроса 30 с.
 - Загрузка в `.part`; после проверки размера и всех объявленных hashes — rename. Старый файл не заменяется повреждённым. Корректный готовый файл повторно используется после проверки; SHA-256 применяется и к кешу, не только к сетевой загрузке.
@@ -15,7 +15,7 @@ SC-09 в работе. Реализованы downloader, очередь, resolv
 
 ## Проверки
 
-Десять offline-тестов downloader; по шесть тестов очереди, resolver, распаковки и install lifecycle. Проверены оба digest, Maven pins, ограничения, прогресс, повторы, отмена, metadata, ошибочные архивы, global job lock, недостаток места, сохранность предыдущего receipt при ошибке и shutdown. Вместе с профилями/IPC/Java — **44 теста launcher**.
+11 offline-тестов downloader, семь resolver, по шесть очереди/распаковки/lifecycle. Проверены digest, Maven pins, согласованная замена LWJGL, ограничения, прогресс, повторы, отмена, metadata, ошибочные ZIP, job lock, нехватка места, сохранность receipt и shutdown. Вместе с профилями/IPC/Java — **46 тестов launcher**.
 
 Реальная сеть: скачан только JSON-metadata 1.8.9 размером 18 244 байта, SHA-1 `d546f1707a3f2b7d034eece5ea2e311eda875787`; повторный вызов использовал проверенный кеш. Затем создана часть в 128 байт: настоящий CDN ответил HTTP 206 на Range `bytes=128-`, итоговый размер и хеш проверены. [Результат и точный URL](qa/launcher-downloads-2026-10-23.json). Bulk assets, client.jar и чужие игровые файлы не скачивались этим smoke-test.
 
@@ -43,7 +43,8 @@ node apps/launcher/scripts/smoke-download.mjs
 - Maven path и URL должны соответствовать координатам библиотеки. macOS-only библиотеки исключаются; `${arch}` для Windows natives заменяется на 64. Разрешено только исключение META-INF/ при будущей распаковке.
 - Assets записываются исключительно по hash в `assets/objects/<prefix>/<hash>`; логические имена не превращаются в файловые пути. Одинаковые объекты дедуплицируются; несовпадение размера одинакового hash отклоняется. virtual/map_to_resources пока не поддерживаются.
 - Исходные metadata содержат Log4j 2.0-beta9. Все удалённые `org.apache.logging.log4j` исключаются из файлов/classpath; вместо них добавляются локально закреплённые API/Core 2.26.1, как в game/build.gradle. Известная уязвимость старой версии подтверждается [Apache security advisories](https://logging.apache.org/security.html); legacy XML не считается заменой обновления библиотек.
-- Возвращаются blockers: Legacy Fabric/Space, установка/распаковка, авторизация/владение/runtime. `launchReady: false` сохраняется. Готовый список файлов не означает готовность игры.
+- Loader/intermediary и совместимый LWJGL добавляются из [фиксированного manifest](LOADER-MANIFEST.md); исходные LWJGL entries с native-архивом исключаются. Maven Fabric/canonical Legacy repo разрешены только для точных pins с обоими digest; redirects запрещены.
+- Blockers: собственный Space jar, авторизация/владение/runtime. `launchReady: false` сохраняется.
 
 Реальный preview, скачивающий только 96 738 байт двух JSON:
 
@@ -51,7 +52,7 @@ node apps/launcher/scripts/smoke-download.mjs
 node apps/launcher/scripts/preview-plan.mjs
 ```
 
-Текущий план: 760 уникальных файлов, 734 логические записи assets (часть hashes повторяется), 32 classpath entries с Log4j 2.26.1, четыре Windows native-архива, 147 451 854 байта. Полный plan.json хранится в игнорируемой `.reports/launcher-plan-smoke`; [краткий результат](qa/launcher-plan-2026-10-23.json) сохранён в репозитории. Архивы и игра этим preview не загружаются.
+Текущий план: 767 уникальных файлов, 734 логические записи assets, 39 classpath entries, четыре Windows native-архива, 153 351 771 байт. Plan.json хранится в игнорируемой `.reports/launcher-plan-smoke`; [краткий результат](qa/launcher-plan-2026-10-23.json). Архивы и игра этим preview не загружаются.
 
 ## Controlled Log4j override
 
@@ -76,7 +77,7 @@ node apps/launcher/scripts/preview-plan.mjs
 node apps/launcher/scripts/smoke-natives.mjs
 ```
 
-23.10.2026 скачаны четыре архива (8 806 644 байта), проверены hashes и распакованы 14 DLL (25 323 600 байт) с CRC/size checks. Windows x64 классификаторы Twitch выбраны корректно; общие LWJGL/JInput архивы содержат обе архитектуры. [Список файлов и SHA-256](qa/launcher-natives-2026-10-23.json). Данные находятся в игнорируемой `.reports/launcher-native-smoke`; бинарники не коммитятся. Успешная распаковка не подтверждает загрузку DLL или запуск игры.
+Первый срез до patched LWJGL: четыре архива (8 806 644 байта) и 14 DLL; [исходный отчёт](qa/launcher-natives-2026-10-23.json). Текущий loader manifest заменяет LWJGL native-архив; в полном наборе 16 DLL — [base audit](qa/launcher-base-2026-10-23.json). Twitch выбраны для x64; общие LWJGL/JInput содержат несколько архитектур. Бинарники остаются в .reports и не коммитятся. Распаковка не подтверждает загрузку DLL или запуск игры.
 
 ## Подготовка через окно
 
@@ -102,7 +103,9 @@ node apps/launcher/scripts/prepare-repair-fixture.mjs
 
 ## Дальнейшая очередь
 
-1. Закрепить Legacy Fabric/Space manifest; перед запуском проверить весь classpath в реальном runtime.
+После предыдущих UI-проверок добавлен loader snapshot. Актуальный полный набор 767/767 (146,2 МиБ) и 16 DLL подготовлен через окно и проверен аудитом. [Loader manifest и отдельная проверка](LOADER-MANIFEST.md) включают точные версии и границы class-loading smoke.
+
+1. Связать remapped Space jar с манифестом и сборкой лаунчера; перед запуском проверить полный runtime.
 2. Дополнить UI проверкой места/ошибок на реальном недостатке диска и отменой при закрытии приложения; эти пути пока проверены модельно.
 3. Проверять native generation перед использованием; предусмотреть очистку старых и брошенных генераций с учётом работающих процессов. Сейчас они не запускаются и автоматически не удаляются.
 4. Legacy Fabric loader и собственный remapped Space jar связать с контролируемым манифестом и проверенными хешами. Mojang-файлы не переупаковывать в репозиторий.

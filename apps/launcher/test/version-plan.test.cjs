@@ -85,7 +85,7 @@ test('plan deduplicates hashed assets, selects Windows x64 natives and never bec
     plan.files.filter((file) => file.relativePath.startsWith('assets/objects/')).length,
     1,
   );
-  assert.equal(plan.natives.length, 1);
+  assert.equal(plan.natives.length, 2);
   assert.match(plan.natives[0].archive, /natives-windows-64.jar$/);
   assert.deepEqual(plan.natives[0].exclude, ['META-INF/']);
   assert.ok(!plan.files.some((file) => /2\.0-beta9|example\/mac/.test(file.relativePath)));
@@ -99,6 +99,10 @@ test('plan deduplicates hashed assets, selects Windows x64 natives and never bec
     ),
   );
   assert.equal(plan.loggingVersion, '2.26.1');
+  assert.equal(plan.loaderVersion, '0.18.3');
+  assert.equal(plan.mainClass, 'net.fabricmc.loader.impl.launch.knot.KnotClient');
+  assert.ok(plan.natives.some((native) => native.archive.includes('2.9.4+legacyfabric.17')));
+  assert.ok(!plan.classpath.some((path) => path.includes('-natives-windows')));
   assert.deepEqual(plan.excludedLibraries, ['org.apache.logging.log4j:log4j-core:2.0-beta9']);
   assert.equal(plan.classpath.at(-1), 'versions/1.8.9/1.8.9.jar');
   assert.equal(plan.launchReady, false);
@@ -136,6 +140,22 @@ test('unsupported versions, modified index pins and legacy asset layouts fail cl
     mutate(metadata, index);
     assert.throws(() => buildVersionPlan(metadata, index));
   }
+});
+test('Legacy Fabric LWJGL override replaces the original jars and native archive together', async () => {
+  const { metadata, index, buildVersionPlan } = await fixture();
+  metadata.libraries.push(
+    library('org.lwjgl.lwjgl:lwjgl:2.9.4-nightly-20150209'),
+    library('org.lwjgl.lwjgl:lwjgl_util:2.9.4-nightly-20150209'),
+    library('org.lwjgl.lwjgl:lwjgl-platform:2.9.4-nightly-20150209', 'natives-windows'),
+  );
+  const plan = buildVersionPlan(metadata, index);
+  assert.ok(!plan.files.some((file) => file.relativePath.includes('20150209')));
+  assert.equal(plan.classpath.filter((path) => path.includes('2.9.4+legacyfabric.17')).length, 2);
+  assert.equal(
+    plan.natives.filter((file) => file.archive.includes('2.9.4+legacyfabric.17')).length,
+    1,
+  );
+  assert.ok(plan.natives.some((file) => file.archive.includes('example/native')));
 });
 test('library coordinate/path/source, classifier and extraction inconsistencies are rejected', async () => {
   for (const mutate of [

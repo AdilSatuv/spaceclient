@@ -25,7 +25,8 @@ const plan = await prepareVersionPlan(root);
 if (
   receipt.fileCount !== plan.files.length ||
   receipt.verifiedBytes !== plan.totalBytes ||
-  receipt.loggingVersion !== plan.loggingVersion
+  receipt.loggingVersion !== plan.loggingVersion ||
+  receipt.loaderVersion !== plan.loaderVersion
 )
   throw new Error('Receipt does not match pinned plan');
 for (const artifact of plan.files) await verifiedCachedArtifact(root, artifact);
@@ -57,13 +58,14 @@ const result = {
   version: plan.version,
   platform: plan.platform,
   loggingVersion: plan.loggingVersion,
+  loaderVersion: plan.loaderVersion,
   sha256PinnedArtifactCount: plan.files.filter((file) => file.sha256).length,
   verifiedFiles: plan.files.length,
   verifiedBytes: plan.totalBytes,
   nativeFilesCheckedAgainstLocalReceipt: receipt.natives.length,
   excludedLibraries: plan.excludedLibraries,
   launchReady: false,
-  note: 'Pinned plan files checked by SHA-1, logging overrides also by SHA-256; extracted natives checked against local receipt SHA-256. This is a base file preparation audit, not a Space launch or authentication test.',
+  note: 'Pinned plan files checked by SHA-1, controlled logging/loader/LWJGL artifacts also by SHA-256; extracted natives checked against local receipt SHA-256. This is a base file preparation audit, not a Space launch or authentication test.',
 };
 await mkdir(reports, { recursive: true });
 await writeFile(join(reports, 'base-audit.json'), JSON.stringify(result, null, 2) + '\n');

@@ -64,6 +64,31 @@ test('Maven Central accepts only exact controlled logging URL, path, size and bo
   ])
     assert.throws(() => validateArtifact({ ...pin, ...changed }));
 });
+test('Fabric sources accept only exact pinned artifacts, including plus-sign versions', async (t) => {
+  const { validateArtifact } = await fixture(t);
+  const { LOADER_LIBRARIES } = await import('../src/main/loader-libraries.ts');
+  for (const pin of LOADER_LIBRARIES) {
+    assert.equal(validateArtifact(pin).sha256, pin.sha256);
+    for (const change of [
+      { sha256: undefined },
+      { size: pin.size + 1 },
+      { relativePath: 'libraries/other.jar' },
+      { sha1: '0'.repeat(40) },
+    ])
+      assert.throws(() => validateArtifact({ ...pin, ...change }));
+  }
+  const loader = LOADER_LIBRARIES.find((file) => file.url.includes('/fabric-loader/'));
+  assert.throws(() =>
+    validateArtifact({ ...loader, url: loader.url.replaceAll('0.18.3', '0.20.1') }),
+  );
+  const mapping = LOADER_LIBRARIES.find((file) => file.url.includes('/intermediary/'));
+  assert.throws(() =>
+    validateArtifact({
+      ...mapping,
+      url: mapping.url.replace('repo.legacyfabric.net/legacyfabric/', 'maven.legacyfabric.net/'),
+    }),
+  );
+});
 test('cancelled download keeps its partial bytes and resumes with a verified range', async (t) => {
   const { root, downloadArtifact } = await fixture(t);
   const controller = new AbortController();
