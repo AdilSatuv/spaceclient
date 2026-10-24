@@ -17,7 +17,7 @@ Remote: `https://github.com/AdilSatuv/spaceclient`. Checkout: `C:\Users\user\Doc
 
 Команды: `./scripts/game.ps1 build`, `./scripts/game.ps1 runClient`, `npm.cmd run launcher`, `npm.cmd run preview:web`. GitHub CLI: `node scripts/github.cjs ...`. Runtime/tools/cache не коммитить. Java проверять локальным JDK через game.ps1.
 
-Codebase Memory: **два list_projects вернули `Transport closed`**. Обновление индекса не подтверждено. После восстановления использовать существующий индекс репозитория либо index_repository для этого checkout; проверить покрытие `game/src`.
+Codebase Memory: 24 октября сервис восстановлен. Для этого checkout выполнен `allow-root` и создан индекс `spaceclient` (moderate, persistence=false), HEAD a369359, 1056 nodes / 2966 edges. `game/src`: 206 nodes / 693 edges, записанных parse-проблем нет; partial parsing отмечен отдельно для game/build.gradle, game/gradlew и launcher/style.css. Проверка двух mixin-путей сразу после индексации дала `metadata_changed`: это не подтверждение свежести. Метод F8 из get_code_snippet сверен с исходником на диске; перед изменением продолжать сверять затронутые файлы. Документы и часть тестов исключены индексатором; читать их напрямую.
 
 Windows QA: skill `computer-use:computer-use`, `node_repl`, пакет `@oai/sky`. Ограничение native API другого Cua tool не означает недоступность этого плагина. Читать skill и guidance/api/confirmations. После перезапуска выбрать новый returned HWND и явно активировать окно перед снимком. Проверять собственный dev-клиент; при пользовательском прерывании остановить ввод.
 
@@ -27,6 +27,7 @@ Windows QA: skill `computer-use:computer-use`, `node_repl`, пакет `@oai/sky
 - SC-18 закрыта. Для сайта остаются #17 Figma, #23 полная внешняя/ручная приёмка, #24 отложенное размещение. Публичного релиза нет.
 - Добавлено меню HUD F9: поиск, независимые флаги, безопасное сохранение/восстановление. [HUD-MODULES.md](HUD-MODULES.md) содержит архитектуру и фактические проверки. Сборка и 19 Java-тестов прошли; поиск, переключение, Esc/Done, штатный перезапуск и отказ/повтор записи проверены в мире.
 - SC-04 открыта: этот срез не закрывает зависимость #2 и оставшуюся матрицу. SC-05 редактор ещё не начат.
+- В продолжении SC-02 пользователь попросил правый Shift для HUD: открытие меню перенесено с F9 на `KEY_RSHIFT`, F8 сохранён. Сборка и 19 тестов проходят. Новый dev-процесс открыт в том же мире при 1280×720 / GUI Auto; HUD помещается. Физический правый Shift и сценарий удержания F8 ещё ожидают ответа пользователя; полная матрица не принята. Автоматический ввод приостановлен на время ручной проверки.
 
 ## Следующий чат: SC-02 — матрица HUD
 
@@ -37,3 +38,5 @@ Windows QA: skill `computer-use:computer-use`, `node_repl`, пакет `@oai/sky
 5. Перед передачей обновить этот файл, commit/push, проверить CI на точном SHA. Сохранить модель и раздел.
 
 Настройки dev-инстанса игнорируются Git и отделены от пользовательского Minecraft. Смотреть фактический конфиг/окно: флаги после QA могут отличаться от defaults. Временное препятствие записи убрано.
+
+На текущем промежуточном этапе master/FPS/coordinates/keystrokes ON, CPS OFF. После QA вернуть master OFF, FPS ON, остальные OFF. В options.txt временно overrideWidth=1280, overrideHeight=720; исходный файл сохранён в `C:\Users\user\Documents\Codex\2026-10-24\space-client-sc02-hud-qa\work\sc02-options-original.txt`. Сайт `http://127.0.0.1:59750/` продолжает отвечать HTTP 200.

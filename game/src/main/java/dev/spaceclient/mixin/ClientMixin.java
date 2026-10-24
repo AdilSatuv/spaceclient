@@ -24,7 +24,7 @@ public abstract class ClientMixin {
         if (!Keyboard.getEventKeyState() || Keyboard.isRepeatEvent() || client.currentScreen != null
                 || client.player == null || !client.focused) return;
         if (Keyboard.getEventKey() == Keyboard.KEY_F8) SpaceClient.toggleHud();
-        if (Keyboard.getEventKey() == Keyboard.KEY_F9) client.setScreen(new HudModulesScreen());
+        if (Keyboard.getEventKey() == Keyboard.KEY_RSHIFT) client.setScreen(new HudModulesScreen());
     }
 
     // Observe the event already consumed by vanilla. Never call Mouse.next() here.
