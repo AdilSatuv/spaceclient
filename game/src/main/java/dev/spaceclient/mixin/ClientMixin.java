@@ -1,6 +1,7 @@
 package dev.spaceclient.mixin;
 
 import dev.spaceclient.SpaceClient;
+import dev.spaceclient.hud.HudModulesScreen;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -20,9 +21,10 @@ public abstract class ClientMixin {
     @Inject(method = "handleKeyInput()V", at = @At("HEAD"))
     private void spaceclient$keyEvent(CallbackInfo callback) {
         MinecraftClient client = MinecraftClient.getInstance();
-        if (Keyboard.getEventKey() == Keyboard.KEY_F8 && Keyboard.getEventKeyState()
-                && !Keyboard.isRepeatEvent() && client.currentScreen == null
-                && client.player != null && client.focused) SpaceClient.toggleHud();
+        if (!Keyboard.getEventKeyState() || Keyboard.isRepeatEvent() || client.currentScreen != null
+                || client.player == null || !client.focused) return;
+        if (Keyboard.getEventKey() == Keyboard.KEY_F8) SpaceClient.toggleHud();
+        if (Keyboard.getEventKey() == Keyboard.KEY_F9) client.setScreen(new HudModulesScreen());
     }
 
     // Observe the event already consumed by vanilla. Never call Mouse.next() here.

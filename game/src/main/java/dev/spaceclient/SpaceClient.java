@@ -2,27 +2,22 @@ package dev.spaceclient;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
-import java.io.IOException;
-import java.nio.file.Path;
+import dev.spaceclient.hud.HudSettings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public final class SpaceClient implements ClientModInitializer {
     private static final Logger LOGGER = LogManager.getLogger("SpaceClient");
-    public static HudConfig config = new HudConfig();
+    public static HudSettings hud;
     public static final ClickCounter clicks = new ClickCounter();
-    private static Path configFile;
     @Override
     public void onInitializeClient() {
-        configFile = FabricLoader.getInstance().getConfigDir().resolve("spaceclient-hud.properties");
-        try { config = HudConfig.load(configFile); }
-        catch (IOException exception) { LOGGER.warn("HUD config could not be loaded: " + exception.getMessage()); }
+        hud = HudSettings.open(FabricLoader.getInstance().getConfigDir().resolve("spaceclient-hud.properties"));
+        if (!hud.getNotice().isEmpty()) LOGGER.warn(hud.getNotice());
         LOGGER.info("Space Client 0.1.0 initialized");
     }
 
     public static void toggleHud() {
-        config.enabled = !config.enabled;
-        try { config.save(configFile); }
-        catch (IOException exception) { LOGGER.warn("HUD config could not be saved: " + exception.getMessage()); }
+        if (!hud.toggleHud() && !hud.getError().isEmpty()) LOGGER.warn(hud.getError());
     }
 }
