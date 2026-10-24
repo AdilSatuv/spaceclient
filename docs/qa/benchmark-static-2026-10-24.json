@@ -1,0 +1,1141 @@
+{
+  "schemaVersion": 1,
+  "metricDefinition": "average=1000/mean(interval); 1% low=1000/mean(slowest ceil(N*0.01) intervals); nearest-rank p95/p99; medians across runs",
+  "completeFrameComparison": true,
+  "allStartupMeasurementsPresent": false,
+  "variants": {
+    "vanilla": {
+      "runs": [
+        1,
+        2,
+        3
+      ],
+      "medianAverageFps": 835.608120745763,
+      "medianOnePercentLowFps": 447.98678464980685,
+      "averageFpsRange": [
+        727.5552344323328,
+        861.5816203470953
+      ],
+      "medianMaxSampledPrivateBytes": 1212497920,
+      "medianStartupMs": null
+    },
+    "space-hud-off": {
+      "runs": [
+        1,
+        2,
+        3
+      ],
+      "medianAverageFps": 890.5949391436193,
+      "medianOnePercentLowFps": 455.1384847472075,
+      "averageFpsRange": [
+        791.1596639039429,
+        913.7741915076151
+      ],
+      "medianMaxSampledPrivateBytes": 1238355968,
+      "medianStartupMs": null
+    },
+    "space-hud-on": {
+      "runs": [
+        1,
+        2,
+        3
+      ],
+      "medianAverageFps": 863.7868206138493,
+      "medianOnePercentLowFps": 426.129870680848,
+      "averageFpsRange": [
+        755.8859187915218,
+        891.7409527228388
+      ],
+      "medianMaxSampledPrivateBytes": 1240260608,
+      "medianStartupMs": null
+    }
+  },
+  "runs": [
+    {
+      "metadata": {
+        "schemaVersion": 1,
+        "status": "complete",
+        "variant": "vanilla",
+        "repetition": 1,
+        "processId": 9160,
+        "processStartedUtc": "2026-10-24T12:54:58.2317866Z",
+        "durationSeconds": 60,
+        "warmupSeconds": 30,
+        "startupMs": null,
+        "presentMon": {
+          "version": "2.3.1",
+          "sha256": "364e5d98d4d134bd54dd25c22ed2ca2f4883f8bc3ed6502bee0c151e3436d30c"
+        },
+        "conditions": {
+          "schemaVersion": 1,
+          "sceneId": "coast-fixed-camera-zero-sensitivity-720p-20261024",
+          "route": "74.5 / 90 / -20.5; yaw 180; pitch 15; creative flight; noon; fixed snapshot; static mouselook gain approximately zero (mouseSensitivity -1/3)",
+          "preset": "fast-distance8",
+          "javaVersion": "Temurin 21.0.12.1+1",
+          "minecraftVersion": "1.8.9",
+          "worldSnapshotSha256": "9592056bf46f1ca1737d31d6d54a596d98d2dc04e87414cc0f3da5ebe919a5c4",
+          "optionsSha256": "03ed3d088f51f3eb816d411bcb2912a6704c2aacd3731488073f648002fe270c",
+          "width": 1280,
+          "height": 720,
+          "ramMiB": 3072,
+          "resourcePacks": [],
+          "vsync": false,
+          "fpsLimit": 260
+        },
+        "hardware": {
+          "cpu": [
+            "12th Gen Intel(R) Core(TM) i5-12400F"
+          ],
+          "gpu": [
+            {
+              "name": "NVIDIA GeForce RTX 3060",
+              "driverVersion": "32.0.16.1088"
+            }
+          ],
+          "ramBytes": 16963067904,
+          "osBuild": "10.0.26200.0"
+        },
+        "source": {
+          "commit": "f1dcc2973e2df2b7ce63c655b242aec59a458120",
+          "gameSourceTree": null
+        },
+        "failure": null
+      },
+      "observedSeconds": 59.9778757,
+      "excludedInitialIntervals": 1,
+      "droppedPresents": 39322,
+      "frameMs": {
+        "samples": 50118,
+        "mean": 1.196733223592323,
+        "median": 1.1279,
+        "p95": 1.6286,
+        "p99": 1.9158,
+        "max": 4.8215,
+        "slowestOnePercentMean": 2.1126936254980073
+      },
+      "averageFps": 835.608120745763,
+      "onePercentLowFps": 473.32939709338046,
+      "memory": {
+        "workingSetBytes": {
+          "samples": 121,
+          "mean": 1054900054.7438016,
+          "median": 1051840512,
+          "p95": 1071144960,
+          "p99": 1071144960,
+          "max": 1071144960,
+          "slowestOnePercentMean": 1071144960
+        },
+        "privateBytes": {
+          "samples": 121,
+          "mean": 1201683159.801653,
+          "median": 1198559232,
+          "p95": 1218015232,
+          "p99": 1218015232,
+          "max": 1218015232,
+          "slowestOnePercentMean": 1218015232
+        }
+      },
+      "startupMs": null,
+      "limitations": [
+        "Present intervals, not displayed FPS or input latency.",
+        "OpenGL Runtime=Other has reduced instrumentation.",
+        "Startup was not measured; process age is not startup latency."
+      ],
+      "rawSha256": {
+        "capture.json": "6fab468106585928cf5bdf868817dd97443597f0f1f5ed95f1663265578e8a82",
+        "frames.csv": "191f55e6c5f5b294e9cebc70a789f427e04e885b96516513f5a18f66d40c8730",
+        "memory.json": "f0da4df6c49196b99e16bef5b409aced8213b09e22b386eb49af7a0e033b8d53"
+      }
+    },
+    {
+      "metadata": {
+        "schemaVersion": 1,
+        "status": "complete",
+        "variant": "space-hud-off",
+        "repetition": 1,
+        "processId": 18356,
+        "processStartedUtc": "2026-10-24T12:58:35.6205450Z",
+        "durationSeconds": 60,
+        "warmupSeconds": 30,
+        "startupMs": null,
+        "presentMon": {
+          "version": "2.3.1",
+          "sha256": "364e5d98d4d134bd54dd25c22ed2ca2f4883f8bc3ed6502bee0c151e3436d30c"
+        },
+        "conditions": {
+          "schemaVersion": 1,
+          "sceneId": "coast-fixed-camera-zero-sensitivity-720p-20261024",
+          "route": "74.5 / 90 / -20.5; yaw 180; pitch 15; creative flight; noon; fixed snapshot; static mouselook gain approximately zero (mouseSensitivity -1/3)",
+          "preset": "fast-distance8",
+          "javaVersion": "Temurin 21.0.12.1+1",
+          "minecraftVersion": "1.8.9",
+          "worldSnapshotSha256": "9592056bf46f1ca1737d31d6d54a596d98d2dc04e87414cc0f3da5ebe919a5c4",
+          "optionsSha256": "03ed3d088f51f3eb816d411bcb2912a6704c2aacd3731488073f648002fe270c",
+          "width": 1280,
+          "height": 720,
+          "ramMiB": 3072,
+          "resourcePacks": [],
+          "vsync": false,
+          "fpsLimit": 260
+        },
+        "hardware": {
+          "cpu": [
+            "12th Gen Intel(R) Core(TM) i5-12400F"
+          ],
+          "gpu": [
+            {
+              "name": "NVIDIA GeForce RTX 3060",
+              "driverVersion": "32.0.16.1088"
+            }
+          ],
+          "ramBytes": 16963067904,
+          "osBuild": "10.0.26200.0"
+        },
+        "source": {
+          "commit": "f1dcc2973e2df2b7ce63c655b242aec59a458120",
+          "gameSourceTree": "ad06bc5f13ca76788f6c0832e9f72e77843219ac"
+        },
+        "failure": null
+      },
+      "observedSeconds": 59.9677694,
+      "excludedInitialIntervals": 1,
+      "droppedPresents": 44018,
+      "frameMs": {
+        "samples": 54797,
+        "mean": 1.0943622716572055,
+        "median": 1.0168,
+        "p95": 1.5612,
+        "p99": 1.846,
+        "max": 88.0213,
+        "slowestOnePercentMean": 2.2166697080291975
+      },
+      "averageFps": 913.7741915076151,
+      "onePercentLowFps": 451.1272005828431,
+      "memory": {
+        "workingSetBytes": {
+          "samples": 121,
+          "mean": 1081087170.644628,
+          "median": 1088733184,
+          "p95": 1091387392,
+          "p99": 1091387392,
+          "max": 1091387392,
+          "slowestOnePercentMean": 1091387392
+        },
+        "privateBytes": {
+          "samples": 121,
+          "mean": 1237874264.8595042,
+          "median": 1245372416,
+          "p95": 1247715328,
+          "p99": 1247715328,
+          "max": 1247715328,
+          "slowestOnePercentMean": 1247715328
+        }
+      },
+      "startupMs": null,
+      "limitations": [
+        "Present intervals, not displayed FPS or input latency.",
+        "OpenGL Runtime=Other has reduced instrumentation.",
+        "Startup was not measured; process age is not startup latency."
+      ],
+      "rawSha256": {
+        "capture.json": "6e0a7e7e821f5fb58fe3e5f019de7d3e3fafad7272f13182bfbd71bc03843cde",
+        "frames.csv": "ac05e866244ba7c5cd2d8e0fe656daebbcd1472d7948433d58f4ecfa57b6d3cf",
+        "memory.json": "492c43ec776d0699c02717eb30b1f9d10ba56ccaf34fcaf904247e80e499a799"
+      }
+    },
+    {
+      "metadata": {
+        "schemaVersion": 1,
+        "status": "complete",
+        "variant": "space-hud-on",
+        "repetition": 1,
+        "processId": 18436,
+        "processStartedUtc": "2026-10-24T13:02:20.1862672Z",
+        "durationSeconds": 60,
+        "warmupSeconds": 30,
+        "startupMs": null,
+        "presentMon": {
+          "version": "2.3.1",
+          "sha256": "364e5d98d4d134bd54dd25c22ed2ca2f4883f8bc3ed6502bee0c151e3436d30c"
+        },
+        "conditions": {
+          "schemaVersion": 1,
+          "sceneId": "coast-fixed-camera-zero-sensitivity-720p-20261024",
+          "route": "74.5 / 90 / -20.5; yaw 180; pitch 15; creative flight; noon; fixed snapshot; static mouselook gain approximately zero (mouseSensitivity -1/3)",
+          "preset": "fast-distance8",
+          "javaVersion": "Temurin 21.0.12.1+1",
+          "minecraftVersion": "1.8.9",
+          "worldSnapshotSha256": "9592056bf46f1ca1737d31d6d54a596d98d2dc04e87414cc0f3da5ebe919a5c4",
+          "optionsSha256": "03ed3d088f51f3eb816d411bcb2912a6704c2aacd3731488073f648002fe270c",
+          "width": 1280,
+          "height": 720,
+          "ramMiB": 3072,
+          "resourcePacks": [],
+          "vsync": false,
+          "fpsLimit": 260
+        },
+        "hardware": {
+          "cpu": [
+            "12th Gen Intel(R) Core(TM) i5-12400F"
+          ],
+          "gpu": [
+            {
+              "name": "NVIDIA GeForce RTX 3060",
+              "driverVersion": "32.0.16.1088"
+            }
+          ],
+          "ramBytes": 16963067904,
+          "osBuild": "10.0.26200.0"
+        },
+        "source": {
+          "commit": "f1dcc2973e2df2b7ce63c655b242aec59a458120",
+          "gameSourceTree": "ad06bc5f13ca76788f6c0832e9f72e77843219ac"
+        },
+        "failure": null
+      },
+      "observedSeconds": 59.9777616,
+      "excludedInitialIntervals": 1,
+      "droppedPresents": 41022,
+      "frameMs": {
+        "samples": 51808,
+        "mean": 1.1576930512662267,
+        "median": 1.06615,
+        "p95": 1.6781,
+        "p99": 2.0852,
+        "max": 59.0624,
+        "slowestOnePercentMean": 2.6228828516377667
+      },
+      "averageFps": 863.7868206138493,
+      "onePercentLowFps": 381.259879516001,
+      "memory": {
+        "workingSetBytes": {
+          "samples": 121,
+          "mean": 1069265132.9586776,
+          "median": 1070964736,
+          "p95": 1086111744,
+          "p99": 1086242816,
+          "max": 1086435328,
+          "slowestOnePercentMean": 1086339072
+        },
+        "privateBytes": {
+          "samples": 121,
+          "mean": 1224120946.2479339,
+          "median": 1225453568,
+          "p95": 1239764992,
+          "p99": 1239896064,
+          "max": 1240088576,
+          "slowestOnePercentMean": 1239992320
+        }
+      },
+      "startupMs": null,
+      "limitations": [
+        "Present intervals, not displayed FPS or input latency.",
+        "OpenGL Runtime=Other has reduced instrumentation.",
+        "Startup was not measured; process age is not startup latency."
+      ],
+      "rawSha256": {
+        "capture.json": "2db6f3e054f7efe3f4baff93137fbc4896dbc1bb92caf8bdc014c18c1592cd07",
+        "frames.csv": "3431151d6842eb5b397d9ec827810009a9605ce76ed47f6994aac4277a4575d0",
+        "memory.json": "e63ee5e9b92ba40b628b60304952461ec380047b3a7e3f615f901c05fab4e7f0"
+      }
+    },
+    {
+      "metadata": {
+        "schemaVersion": 1,
+        "status": "complete",
+        "variant": "space-hud-off",
+        "repetition": 2,
+        "processId": 6616,
+        "processStartedUtc": "2026-10-24T13:29:24.2623311Z",
+        "durationSeconds": 60,
+        "warmupSeconds": 30,
+        "startupMs": null,
+        "presentMon": {
+          "version": "2.3.1",
+          "sha256": "364e5d98d4d134bd54dd25c22ed2ca2f4883f8bc3ed6502bee0c151e3436d30c"
+        },
+        "conditions": {
+          "schemaVersion": 1,
+          "sceneId": "coast-fixed-camera-zero-sensitivity-720p-20261024",
+          "route": "74.5 / 90 / -20.5; yaw 180; pitch 15; creative flight; noon; fixed snapshot; static mouselook gain approximately zero (mouseSensitivity -1/3)",
+          "preset": "fast-distance8",
+          "javaVersion": "Temurin 21.0.12.1+1",
+          "minecraftVersion": "1.8.9",
+          "worldSnapshotSha256": "9592056bf46f1ca1737d31d6d54a596d98d2dc04e87414cc0f3da5ebe919a5c4",
+          "optionsSha256": "03ed3d088f51f3eb816d411bcb2912a6704c2aacd3731488073f648002fe270c",
+          "width": 1280,
+          "height": 720,
+          "ramMiB": 3072,
+          "resourcePacks": [],
+          "vsync": false,
+          "fpsLimit": 260
+        },
+        "hardware": {
+          "cpu": [
+            "12th Gen Intel(R) Core(TM) i5-12400F"
+          ],
+          "gpu": [
+            {
+              "name": "NVIDIA GeForce RTX 3060",
+              "driverVersion": "32.0.16.1088"
+            }
+          ],
+          "ramBytes": 16963067904,
+          "osBuild": "10.0.26200.0"
+        },
+        "source": {
+          "commit": "f1dcc2973e2df2b7ce63c655b242aec59a458120",
+          "gameSourceTree": "ad06bc5f13ca76788f6c0832e9f72e77843219ac"
+        },
+        "failure": null
+      },
+      "observedSeconds": 59.9840995,
+      "excludedInitialIntervals": 1,
+      "droppedPresents": 36660,
+      "frameMs": {
+        "samples": 47457,
+        "mean": 1.2639673704616632,
+        "median": 1.1925,
+        "p95": 1.742,
+        "p99": 2.02,
+        "max": 5.2776,
+        "slowestOnePercentMean": 2.1971334736842105
+      },
+      "averageFps": 791.1596639039429,
+      "onePercentLowFps": 455.1384847472075,
+      "memory": {
+        "workingSetBytes": {
+          "samples": 121,
+          "mean": 1085862091.107438,
+          "median": 1086844928,
+          "p95": 1088589824,
+          "p99": 1088589824,
+          "max": 1088589824,
+          "slowestOnePercentMean": 1088589824
+        },
+        "privateBytes": {
+          "samples": 121,
+          "mean": 1236179807.2066116,
+          "median": 1236848640,
+          "p95": 1238355968,
+          "p99": 1238355968,
+          "max": 1238355968,
+          "slowestOnePercentMean": 1238355968
+        }
+      },
+      "startupMs": null,
+      "limitations": [
+        "Present intervals, not displayed FPS or input latency.",
+        "OpenGL Runtime=Other has reduced instrumentation.",
+        "Startup was not measured; process age is not startup latency."
+      ],
+      "rawSha256": {
+        "capture.json": "7d29ea536006cece25067519f71ef919cfafe83ce5b674261e3d436588b5ab9e",
+        "frames.csv": "31b7d585e417eedfd86d62ad01ca7c559f4c601a37e6f5fc14d324d05f798915",
+        "memory.json": "4daaf47f7be347fb8973d656e2d4783f1de539314b72f1af4f7d9198cd8ae40f"
+      }
+    },
+    {
+      "metadata": {
+        "schemaVersion": 1,
+        "status": "complete",
+        "variant": "space-hud-on",
+        "repetition": 2,
+        "processId": 27268,
+        "processStartedUtc": "2026-10-24T13:32:53.8705788Z",
+        "durationSeconds": 60,
+        "warmupSeconds": 30,
+        "startupMs": null,
+        "presentMon": {
+          "version": "2.3.1",
+          "sha256": "364e5d98d4d134bd54dd25c22ed2ca2f4883f8bc3ed6502bee0c151e3436d30c"
+        },
+        "conditions": {
+          "schemaVersion": 1,
+          "sceneId": "coast-fixed-camera-zero-sensitivity-720p-20261024",
+          "route": "74.5 / 90 / -20.5; yaw 180; pitch 15; creative flight; noon; fixed snapshot; static mouselook gain approximately zero (mouseSensitivity -1/3)",
+          "preset": "fast-distance8",
+          "javaVersion": "Temurin 21.0.12.1+1",
+          "minecraftVersion": "1.8.9",
+          "worldSnapshotSha256": "9592056bf46f1ca1737d31d6d54a596d98d2dc04e87414cc0f3da5ebe919a5c4",
+          "optionsSha256": "03ed3d088f51f3eb816d411bcb2912a6704c2aacd3731488073f648002fe270c",
+          "width": 1280,
+          "height": 720,
+          "ramMiB": 3072,
+          "resourcePacks": [],
+          "vsync": false,
+          "fpsLimit": 260
+        },
+        "hardware": {
+          "cpu": [
+            "12th Gen Intel(R) Core(TM) i5-12400F"
+          ],
+          "gpu": [
+            {
+              "name": "NVIDIA GeForce RTX 3060",
+              "driverVersion": "32.0.16.1088"
+            }
+          ],
+          "ramBytes": 16963067904,
+          "osBuild": "10.0.26200.0"
+        },
+        "source": {
+          "commit": "f1dcc2973e2df2b7ce63c655b242aec59a458120",
+          "gameSourceTree": "ad06bc5f13ca76788f6c0832e9f72e77843219ac"
+        },
+        "failure": null
+      },
+      "observedSeconds": 59.978180699999996,
+      "excludedInitialIntervals": 1,
+      "droppedPresents": 42689,
+      "frameMs": {
+        "samples": 53485,
+        "mean": 1.121401901467689,
+        "median": 1.044,
+        "p95": 1.6157,
+        "p99": 1.9022,
+        "max": 5.2806,
+        "slowestOnePercentMean": 2.106328411214954
+      },
+      "averageFps": 891.7409527228388,
+      "onePercentLowFps": 474.7597737729743,
+      "memory": {
+        "workingSetBytes": {
+          "samples": 121,
+          "mean": 1075107721.520661,
+          "median": 1072586752,
+          "p95": 1089400832,
+          "p99": 1089536000,
+          "max": 1089536000,
+          "slowestOnePercentMean": 1089536000
+        },
+        "privateBytes": {
+          "samples": 121,
+          "mean": 1234819664.3966942,
+          "median": 1232412672,
+          "p95": 1248264192,
+          "p99": 1248403456,
+          "max": 1248403456,
+          "slowestOnePercentMean": 1248403456
+        }
+      },
+      "startupMs": null,
+      "limitations": [
+        "Present intervals, not displayed FPS or input latency.",
+        "OpenGL Runtime=Other has reduced instrumentation.",
+        "Startup was not measured; process age is not startup latency."
+      ],
+      "rawSha256": {
+        "capture.json": "0b132b2d3ae9332f4f952c1721ade94a31ef0c72d0fb99593a6b280d682b8fe5",
+        "frames.csv": "6f7beadd2a86b70011c3b4ec2a952d5f20eddf022ceee36b5f04022b564e18f5",
+        "memory.json": "566aea280a694598cdbf254d921e430f86603c3efe5454e74e9fdc3fc6ab9bc3"
+      }
+    },
+    {
+      "metadata": {
+        "schemaVersion": 1,
+        "status": "complete",
+        "variant": "vanilla",
+        "repetition": 2,
+        "processId": 17536,
+        "processStartedUtc": "2026-10-24T13:36:29.0929325Z",
+        "durationSeconds": 60,
+        "warmupSeconds": 30,
+        "startupMs": null,
+        "presentMon": {
+          "version": "2.3.1",
+          "sha256": "364e5d98d4d134bd54dd25c22ed2ca2f4883f8bc3ed6502bee0c151e3436d30c"
+        },
+        "conditions": {
+          "schemaVersion": 1,
+          "sceneId": "coast-fixed-camera-zero-sensitivity-720p-20261024",
+          "route": "74.5 / 90 / -20.5; yaw 180; pitch 15; creative flight; noon; fixed snapshot; static mouselook gain approximately zero (mouseSensitivity -1/3)",
+          "preset": "fast-distance8",
+          "javaVersion": "Temurin 21.0.12.1+1",
+          "minecraftVersion": "1.8.9",
+          "worldSnapshotSha256": "9592056bf46f1ca1737d31d6d54a596d98d2dc04e87414cc0f3da5ebe919a5c4",
+          "optionsSha256": "03ed3d088f51f3eb816d411bcb2912a6704c2aacd3731488073f648002fe270c",
+          "width": 1280,
+          "height": 720,
+          "ramMiB": 3072,
+          "resourcePacks": [],
+          "vsync": false,
+          "fpsLimit": 260
+        },
+        "hardware": {
+          "cpu": [
+            "12th Gen Intel(R) Core(TM) i5-12400F"
+          ],
+          "gpu": [
+            {
+              "name": "NVIDIA GeForce RTX 3060",
+              "driverVersion": "32.0.16.1088"
+            }
+          ],
+          "ramBytes": 16963067904,
+          "osBuild": "10.0.26200.0"
+        },
+        "source": {
+          "commit": "f1dcc2973e2df2b7ce63c655b242aec59a458120",
+          "gameSourceTree": null
+        },
+        "failure": null
+      },
+      "observedSeconds": 59.973424200000004,
+      "excludedInitialIntervals": 1,
+      "droppedPresents": 40884,
+      "frameMs": {
+        "samples": 51672,
+        "mean": 1.1606561425917392,
+        "median": 1.1028,
+        "p95": 1.6023,
+        "p99": 1.9296,
+        "max": 40.9145,
+        "slowestOnePercentMean": 2.2322087040618936
+      },
+      "averageFps": 861.5816203470953,
+      "onePercentLowFps": 447.98678464980685,
+      "memory": {
+        "workingSetBytes": {
+          "samples": 121,
+          "mean": 1047848367.6033058,
+          "median": 1051799552,
+          "p95": 1055166464,
+          "p99": 1061441536,
+          "max": 1061441536,
+          "slowestOnePercentMean": 1061441536
+        },
+        "privateBytes": {
+          "samples": 121,
+          "mean": 1193382429.6198347,
+          "median": 1197064192,
+          "p95": 1200467968,
+          "p99": 1206910976,
+          "max": 1206910976,
+          "slowestOnePercentMean": 1206910976
+        }
+      },
+      "startupMs": null,
+      "limitations": [
+        "Present intervals, not displayed FPS or input latency.",
+        "OpenGL Runtime=Other has reduced instrumentation.",
+        "Startup was not measured; process age is not startup latency."
+      ],
+      "rawSha256": {
+        "capture.json": "66e4bd5f6009c21fd3387c3d5a25a10d005d45654d721ec5fcfb61af9132eab6",
+        "frames.csv": "500bdc0f26ec0de15f287f9ecfc254b8aa978bfd8105233bbd47e20b24610473",
+        "memory.json": "f0b341c0355d17370cf290458c5b5d9d78848407f0acb5184c8ea4be558dbf8a"
+      }
+    },
+    {
+      "metadata": {
+        "schemaVersion": 1,
+        "status": "complete",
+        "variant": "space-hud-on",
+        "repetition": 3,
+        "processId": 1892,
+        "processStartedUtc": "2026-10-24T13:39:48.8927548Z",
+        "durationSeconds": 60,
+        "warmupSeconds": 30,
+        "startupMs": null,
+        "presentMon": {
+          "version": "2.3.1",
+          "sha256": "364e5d98d4d134bd54dd25c22ed2ca2f4883f8bc3ed6502bee0c151e3436d30c"
+        },
+        "conditions": {
+          "schemaVersion": 1,
+          "sceneId": "coast-fixed-camera-zero-sensitivity-720p-20261024",
+          "route": "74.5 / 90 / -20.5; yaw 180; pitch 15; creative flight; noon; fixed snapshot; static mouselook gain approximately zero (mouseSensitivity -1/3)",
+          "preset": "fast-distance8",
+          "javaVersion": "Temurin 21.0.12.1+1",
+          "minecraftVersion": "1.8.9",
+          "worldSnapshotSha256": "9592056bf46f1ca1737d31d6d54a596d98d2dc04e87414cc0f3da5ebe919a5c4",
+          "optionsSha256": "03ed3d088f51f3eb816d411bcb2912a6704c2aacd3731488073f648002fe270c",
+          "width": 1280,
+          "height": 720,
+          "ramMiB": 3072,
+          "resourcePacks": [],
+          "vsync": false,
+          "fpsLimit": 260
+        },
+        "hardware": {
+          "cpu": [
+            "12th Gen Intel(R) Core(TM) i5-12400F"
+          ],
+          "gpu": [
+            {
+              "name": "NVIDIA GeForce RTX 3060",
+              "driverVersion": "32.0.16.1088"
+            }
+          ],
+          "ramBytes": 16963067904,
+          "osBuild": "10.0.26200.0"
+        },
+        "source": {
+          "commit": "f1dcc2973e2df2b7ce63c655b242aec59a458120",
+          "gameSourceTree": "ad06bc5f13ca76788f6c0832e9f72e77843219ac"
+        },
+        "failure": null
+      },
+      "observedSeconds": 59.966721,
+      "excludedInitialIntervals": 1,
+      "droppedPresents": 34534,
+      "frameMs": {
+        "samples": 45328,
+        "mean": 1.3229509574655887,
+        "median": 1.2428,
+        "p95": 1.8368,
+        "p99": 2.1399,
+        "max": 5.0258,
+        "slowestOnePercentMean": 2.346702422907487
+      },
+      "averageFps": 755.8859187915218,
+      "onePercentLowFps": 426.129870680848,
+      "memory": {
+        "workingSetBytes": {
+          "samples": 121,
+          "mean": 1069345157.2892562,
+          "median": 1069092864,
+          "p95": 1079795712,
+          "p99": 1083564032,
+          "max": 1083711488,
+          "slowestOnePercentMean": 1083637760
+        },
+        "privateBytes": {
+          "samples": 121,
+          "mean": 1226281738.5785124,
+          "median": 1226113024,
+          "p95": 1236529152,
+          "p99": 1240141824,
+          "max": 1240260608,
+          "slowestOnePercentMean": 1240201216
+        }
+      },
+      "startupMs": null,
+      "limitations": [
+        "Present intervals, not displayed FPS or input latency.",
+        "OpenGL Runtime=Other has reduced instrumentation.",
+        "Startup was not measured; process age is not startup latency."
+      ],
+      "rawSha256": {
+        "capture.json": "990f6737660328cc91f5e92227adc4978b5d8488a1a48b264bbb4251913c41ec",
+        "frames.csv": "6000f0236156662e62ec1e09578129f0320796cfc58b7c8c16b5b9217071b3de",
+        "memory.json": "8a0132374d81a47031616d442194911f1cdba698f2a786d78f6a2f9a5c18dacf"
+      }
+    },
+    {
+      "metadata": {
+        "schemaVersion": 1,
+        "status": "complete",
+        "variant": "vanilla",
+        "repetition": 3,
+        "processId": 3848,
+        "processStartedUtc": "2026-10-24T13:42:47.9460279Z",
+        "durationSeconds": 60,
+        "warmupSeconds": 30,
+        "startupMs": null,
+        "presentMon": {
+          "version": "2.3.1",
+          "sha256": "364e5d98d4d134bd54dd25c22ed2ca2f4883f8bc3ed6502bee0c151e3436d30c"
+        },
+        "conditions": {
+          "schemaVersion": 1,
+          "sceneId": "coast-fixed-camera-zero-sensitivity-720p-20261024",
+          "route": "74.5 / 90 / -20.5; yaw 180; pitch 15; creative flight; noon; fixed snapshot; static mouselook gain approximately zero (mouseSensitivity -1/3)",
+          "preset": "fast-distance8",
+          "javaVersion": "Temurin 21.0.12.1+1",
+          "minecraftVersion": "1.8.9",
+          "worldSnapshotSha256": "9592056bf46f1ca1737d31d6d54a596d98d2dc04e87414cc0f3da5ebe919a5c4",
+          "optionsSha256": "03ed3d088f51f3eb816d411bcb2912a6704c2aacd3731488073f648002fe270c",
+          "width": 1280,
+          "height": 720,
+          "ramMiB": 3072,
+          "resourcePacks": [],
+          "vsync": false,
+          "fpsLimit": 260
+        },
+        "hardware": {
+          "cpu": [
+            "12th Gen Intel(R) Core(TM) i5-12400F"
+          ],
+          "gpu": [
+            {
+              "name": "NVIDIA GeForce RTX 3060",
+              "driverVersion": "32.0.16.1088"
+            }
+          ],
+          "ramBytes": 16963067904,
+          "osBuild": "10.0.26200.0"
+        },
+        "source": {
+          "commit": "f1dcc2973e2df2b7ce63c655b242aec59a458120",
+          "gameSourceTree": null
+        },
+        "failure": null
+      },
+      "observedSeconds": 59.9844492,
+      "excludedInitialIntervals": 1,
+      "droppedPresents": 32845,
+      "frameMs": {
+        "samples": 43642,
+        "mean": 1.3744660922964005,
+        "median": 1.3099,
+        "p95": 1.8364,
+        "p99": 2.1371,
+        "max": 4.5027,
+        "slowestOnePercentMean": 2.3121473684210527
+      },
+      "averageFps": 727.5552344323328,
+      "onePercentLowFps": 432.49838382182884,
+      "memory": {
+        "workingSetBytes": {
+          "samples": 121,
+          "mean": 1052316088.0661157,
+          "median": 1055997952,
+          "p95": 1065418752,
+          "p99": 1065857024,
+          "max": 1065857024,
+          "slowestOnePercentMean": 1065857024
+        },
+        "privateBytes": {
+          "samples": 121,
+          "mean": 1199331006.413223,
+          "median": 1203204096,
+          "p95": 1212084224,
+          "p99": 1212497920,
+          "max": 1212497920,
+          "slowestOnePercentMean": 1212497920
+        }
+      },
+      "startupMs": null,
+      "limitations": [
+        "Present intervals, not displayed FPS or input latency.",
+        "OpenGL Runtime=Other has reduced instrumentation.",
+        "Startup was not measured; process age is not startup latency."
+      ],
+      "rawSha256": {
+        "capture.json": "c7202b33d877758f544bebda819a3ab745536c77cc0a0f8a6b28582e1635d5e7",
+        "frames.csv": "03bfd4915ebf9edf2e1d05788ac3f4bbef4d8da7430e590c93b776693d512b6a",
+        "memory.json": "a36bf6a592c9be0054e79eac4d97eaf5c1977217c907eb5f3c1614bd2f8f5555"
+      }
+    },
+    {
+      "metadata": {
+        "schemaVersion": 1,
+        "status": "complete",
+        "variant": "space-hud-off",
+        "repetition": 3,
+        "processId": 21456,
+        "processStartedUtc": "2026-10-24T13:46:26.1349307Z",
+        "durationSeconds": 60,
+        "warmupSeconds": 30,
+        "startupMs": null,
+        "presentMon": {
+          "version": "2.3.1",
+          "sha256": "364e5d98d4d134bd54dd25c22ed2ca2f4883f8bc3ed6502bee0c151e3436d30c"
+        },
+        "conditions": {
+          "schemaVersion": 1,
+          "sceneId": "coast-fixed-camera-zero-sensitivity-720p-20261024",
+          "route": "74.5 / 90 / -20.5; yaw 180; pitch 15; creative flight; noon; fixed snapshot; static mouselook gain approximately zero (mouseSensitivity -1/3)",
+          "preset": "fast-distance8",
+          "javaVersion": "Temurin 21.0.12.1+1",
+          "minecraftVersion": "1.8.9",
+          "worldSnapshotSha256": "9592056bf46f1ca1737d31d6d54a596d98d2dc04e87414cc0f3da5ebe919a5c4",
+          "optionsSha256": "03ed3d088f51f3eb816d411bcb2912a6704c2aacd3731488073f648002fe270c",
+          "width": 1280,
+          "height": 720,
+          "ramMiB": 3072,
+          "resourcePacks": [],
+          "vsync": false,
+          "fpsLimit": 260
+        },
+        "hardware": {
+          "cpu": [
+            "12th Gen Intel(R) Core(TM) i5-12400F"
+          ],
+          "gpu": [
+            {
+              "name": "NVIDIA GeForce RTX 3060",
+              "driverVersion": "32.0.16.1088"
+            }
+          ],
+          "ramBytes": 16963067904,
+          "osBuild": "10.0.26200.0"
+        },
+        "source": {
+          "commit": "f1dcc2973e2df2b7ce63c655b242aec59a458120",
+          "gameSourceTree": "ad06bc5f13ca76788f6c0832e9f72e77843219ac"
+        },
+        "failure": null
+      },
+      "observedSeconds": 59.979006900000016,
+      "excludedInitialIntervals": 1,
+      "droppedPresents": 42621,
+      "frameMs": {
+        "samples": 53417,
+        "mean": 1.1228449164123735,
+        "median": 1.0454,
+        "p95": 1.6081,
+        "p99": 1.8841,
+        "max": 7.1464,
+        "slowestOnePercentMean": 2.073042616822429
+      },
+      "averageFps": 890.5949391436193,
+      "onePercentLowFps": 482.3827507862841,
+      "memory": {
+        "workingSetBytes": {
+          "samples": 121,
+          "mean": 1061872766.9421488,
+          "median": 1061355520,
+          "p95": 1076760576,
+          "p99": 1077956608,
+          "max": 1078222848,
+          "slowestOnePercentMean": 1078089728
+        },
+        "privateBytes": {
+          "samples": 121,
+          "mean": 1214771369.2561984,
+          "median": 1214468096,
+          "p95": 1229598720,
+          "p99": 1230823424,
+          "max": 1231081472,
+          "slowestOnePercentMean": 1230952448
+        }
+      },
+      "startupMs": null,
+      "limitations": [
+        "Present intervals, not displayed FPS or input latency.",
+        "OpenGL Runtime=Other has reduced instrumentation.",
+        "Startup was not measured; process age is not startup latency."
+      ],
+      "rawSha256": {
+        "capture.json": "0f08c39a04ae51a87ba9e208568a97c6cb4247f118c62c13dc3169f9c23f7f54",
+        "frames.csv": "29c5054ca0b74b8c53d4e635bb6c6f087358a65054ab93fc52af5f5c1c60318d",
+        "memory.json": "08d071bad79f397e8f1f6887d6f42cb220646655e8a56d60147edc03d7b7e524"
+      }
+    }
+  ],
+  "sessionQualification": {
+    "kind": "exploratory-local-static-series",
+    "causalHudOverheadEstablished": false,
+    "officialAuthorizedBaseline": false,
+    "interruptedAfterRun": 3,
+    "interruption": "User paused the series after repetition 1; remaining runs resumed later on the same date. Background applications changed: Steam was visible in earlier window inventories and absent after resume. No background load or thermal telemetry was captured.",
+    "baseline": "Vanilla Minecraft main without Fabric or Space, using the same updated pinned LWJGL/Log4j as Space; not pristine official Minecraft distribution.",
+    "camera": "Static scene uses mouseSensitivity -1/3 in isolated benchmark instances. Saved NBT after every run confirms position and rotation. Sensitivity restored to 0.5 after the series.",
+    "startup": "Not measured. All startupMs remain null; process age and manual time to enter a world are not startup latency.",
+    "acceptance": "Nine captures passed structural/statistical validation. Full SC-13 remains open for startup timing, controlled repeat and official runtime/compatibility after SC-10."
+  },
+  "sceneVerification": [
+    {
+      "index": 0,
+      "variant": "vanilla",
+      "repetition": 1,
+      "captureDirectory": "20261024-185558-vanilla-1-a4cd13a0",
+      "position": [
+        74.5,
+        90,
+        -20.5
+      ],
+      "rotation": [
+        180,
+        15
+      ],
+      "exitCode": 0,
+      "processStartedUtc": "2026-10-24T12:54:58.2317866Z",
+      "allModulesEnabled": true,
+      "masterEnabled": true
+    },
+    {
+      "index": 1,
+      "variant": "space-hud-off",
+      "repetition": 1,
+      "captureDirectory": "20261024-185931-space-hud-off-1-e96fa04c",
+      "position": [
+        74.5,
+        90,
+        -20.5
+      ],
+      "rotation": [
+        180,
+        15
+      ],
+      "exitCode": 0,
+      "processStartedUtc": "2026-10-24T12:58:35.6205450Z",
+      "allModulesEnabled": true,
+      "masterEnabled": false
+    },
+    {
+      "index": 2,
+      "variant": "space-hud-on",
+      "repetition": 1,
+      "captureDirectory": "20261024-190309-space-hud-on-1-0adb29a2",
+      "position": [
+        74.5,
+        90,
+        -20.5
+      ],
+      "rotation": [
+        180,
+        15
+      ],
+      "exitCode": 0,
+      "processStartedUtc": "2026-10-24T13:02:20.1862672Z",
+      "allModulesEnabled": true,
+      "masterEnabled": true
+    },
+    {
+      "index": 3,
+      "variant": "space-hud-off",
+      "repetition": 2,
+      "captureDirectory": "20261024-193025-space-hud-off-2-61656b6f",
+      "position": [
+        74.5,
+        90,
+        -20.5
+      ],
+      "rotation": [
+        180,
+        15
+      ],
+      "exitCode": 0,
+      "processStartedUtc": "2026-10-24T13:29:24.2623311Z",
+      "allModulesEnabled": true,
+      "masterEnabled": false
+    },
+    {
+      "index": 4,
+      "variant": "space-hud-on",
+      "repetition": 2,
+      "captureDirectory": "20261024-193359-space-hud-on-2-25a468ce",
+      "position": [
+        74.5,
+        90,
+        -20.5
+      ],
+      "rotation": [
+        180,
+        15
+      ],
+      "exitCode": 0,
+      "processStartedUtc": "2026-10-24T13:32:53.8705788Z",
+      "allModulesEnabled": true,
+      "masterEnabled": true
+    },
+    {
+      "index": 5,
+      "variant": "vanilla",
+      "repetition": 2,
+      "captureDirectory": "20261024-193737-vanilla-2-0ee89d7e",
+      "position": [
+        74.5,
+        90,
+        -20.5
+      ],
+      "rotation": [
+        180,
+        15
+      ],
+      "exitCode": 0,
+      "processStartedUtc": "2026-10-24T13:36:29.0929325Z",
+      "allModulesEnabled": true,
+      "masterEnabled": true
+    },
+    {
+      "index": 6,
+      "variant": "space-hud-on",
+      "repetition": 3,
+      "captureDirectory": "20261024-194029-space-hud-on-3-7f24483a",
+      "position": [
+        74.5,
+        90,
+        -20.5
+      ],
+      "rotation": [
+        180,
+        15
+      ],
+      "exitCode": 0,
+      "processStartedUtc": "2026-10-24T13:39:48.8927548Z",
+      "allModulesEnabled": true,
+      "masterEnabled": true
+    },
+    {
+      "index": 7,
+      "variant": "vanilla",
+      "repetition": 3,
+      "captureDirectory": "20261024-194352-vanilla-3-4b02f3c1",
+      "position": [
+        74.5,
+        90,
+        -20.5
+      ],
+      "rotation": [
+        180,
+        15
+      ],
+      "exitCode": 0,
+      "processStartedUtc": "2026-10-24T13:42:47.9460279Z",
+      "allModulesEnabled": true,
+      "masterEnabled": true
+    },
+    {
+      "index": 8,
+      "variant": "space-hud-off",
+      "repetition": 3,
+      "captureDirectory": "20261024-194711-space-hud-off-3-a0e058da",
+      "position": [
+        74.5,
+        90,
+        -20.5
+      ],
+      "rotation": [
+        180,
+        15
+      ],
+      "exitCode": 0,
+      "processStartedUtc": "2026-10-24T13:46:26.1349307Z",
+      "allModulesEnabled": true,
+      "masterEnabled": false
+    }
+  ],
+  "presentation": {
+    "vanilla": {
+      "medianAverageFps": 835.608120745763,
+      "averageFpsRange": [
+        727.5552344323328,
+        861.5816203470953
+      ],
+      "medianOnePercentLowFps": 447.98678464980685,
+      "medianP95FrameMs": 1.6286,
+      "medianP99FrameMs": 1.9296,
+      "medianSampledWorkingSetMiB": 1003.11328125,
+      "medianMaxSampledPrivateMiB": 1156.328125
+    },
+    "space-hud-off": {
+      "medianAverageFps": 890.5949391436193,
+      "averageFpsRange": [
+        791.1596639039429,
+        913.7741915076151
+      ],
+      "medianOnePercentLowFps": 455.1384847472075,
+      "medianP95FrameMs": 1.6081,
+      "medianP99FrameMs": 1.8841,
+      "medianSampledWorkingSetMiB": 1036.49609375,
+      "medianMaxSampledPrivateMiB": 1180.98828125
+    },
+    "space-hud-on": {
+      "medianAverageFps": 863.7868206138493,
+      "averageFpsRange": [
+        755.8859187915218,
+        891.7409527228388
+      ],
+      "medianOnePercentLowFps": 426.129870680848,
+      "medianP95FrameMs": 1.6781,
+      "medianP99FrameMs": 2.0852,
+      "medianSampledWorkingSetMiB": 1021.3515625,
+      "medianMaxSampledPrivateMiB": 1182.8046875
+    }
+  }
+}
