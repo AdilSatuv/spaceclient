@@ -27,3 +27,4 @@
 - [SC-23: Пройти матрицу приёмки вебсайта](https://github.com/AdilSatuv/spaceclient/issues/23) — P0, W — Сайт: ТЗ, интерфейс и публикация
 - [SC-24: Подготовить и разместить сайт до игрового релиза](https://github.com/AdilSatuv/spaceclient/issues/24) — P1, W — Сайт: ТЗ, интерфейс и публикация
 - [SC-25: Добавить локальный вход по нику и запуск Space из лаунчера](https://github.com/AdilSatuv/spaceclient/issues/25) — P0, M4 — Установка и запуск игры
+- [SC-26: Привести интерфейс лаунчера к стилю сайта Eclipse](https://github.com/AdilSatuv/spaceclient/issues/26) — P1, M4 — Установка и запуск игры

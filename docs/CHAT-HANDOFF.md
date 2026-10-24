@@ -17,11 +17,19 @@ Remote: `https://github.com/AdilSatuv/spaceclient`. Checkout: `C:\Users\user\Doc
 
 Команды: `./scripts/game.ps1 build`, `./scripts/game.ps1 runClient`, `npm.cmd run launcher`, `npm.cmd run preview:web`. GitHub CLI: `node scripts/github.cjs ...`. Runtime/tools/cache не коммитить. Java проверять локальным JDK через game.ps1.
 
-Codebase Memory: 24 октября сервис восстановлен, для checkout выполнен `allow-root`. Индекс `spaceclient` пересоздан после добавления KeyPressGate в Git index (moderate, persistence=false): 1112 nodes / 3252 edges после SC-25 (явный reindex новых staged файлов). Граф находит KeyPressGate и новые LaunchService / prepareLocalLaunch; строки LaunchService 13–179 сверены с диском. Автообновления оказалось недостаточно: до явного reindex поиск показывал прежние строки и не видел нового класса. Проверка путей после reindex всё равно даёт `metadata_changed`, без записанных parse-проблем в game/src: свежесть/полнота этим не подтверждены, исходники сверять с диском. Partial parsing — game/build.gradle, game/gradlew, launcher/style.css; docs и часть тестов исключены индексатором, читать напрямую.
+Codebase Memory: после SC-26 выполнен явный reindex staged файлов (moderate, persistence=false): 1114 nodes / 3233 edges. Новый EclipseScene включён в индекс. Coverage launch-card/HomePage/EclipseScene всё равно возвращает metadata_changed при no_recorded_issue; полнота/свежесть этим не подтверждены, затронутые исходники сверены с диском. Автообновление ранее пропускало новые файлы — делать явный reindex. Partial parsing: game/build.gradle, game/gradlew и launcher/style.css; docs и часть тестов исключены, читать напрямую.
 
 Windows QA: skill `computer-use:computer-use`, `node_repl`, пакет `@oai/sky`. Ограничение native API другого Cua tool не означает недоступность этого плагина. Читать skill и guidance/api/confirmations. После перезапуска выбрать новый returned HWND и явно активировать окно перед снимком. Проверять собственный dev-клиент; при пользовательском прерывании остановить ввод.
 
-## Последний срез — SC-25: локальный ник и запуск
+## Последний срез — SC-26: интерфейс как у сайта
+
+По новому запросу пользователя лаунчер приведён к стилю сайта Eclipse / Ringworld: чёрное звёздное поле, медная планета, объёмный знак, янтарные кнопки, системная типографика. Обзор объединяет профиль/ник/запуск и подготовку в две панели; основные действия видны на 1000×680. Профили/настройки согласованы; исправлена устаревшая надпись о недоступности запуска. Приоритет этого среза — UI, собственную регистрацию автоматически не начинать.
+
+106 launcher tests, TypeScript, build, format:check, task graph и расширенный изолированный check:ui проходят. Проверены три экрана/четыре размера, 11 ролей палитры относительно сайта, unique SVG IDs, keyboard/profile/nickname/error guards, reduced-motion и forced-colors. Снимки осмотрены, обзор/профили проверены в настоящем окне. Игру повторно не запускали; прежняя игровая приёмка SC-25 сохраняется. Main/IPC/security/process и игровые исходники не менялись, кроме цветов native window. Детали — [LAUNCHER-DESIGN.md](LAUNCHER-DESIGN.md), [QA](qa/launcher-eclipse-2026-10-24.json).
+
+Лаунчер оставлен открытым на обзоре, использует игнорируемый тестовый .reports/launcher-desktop. Сайт оставлен работающим. Точный финальный SHA/Verify и закрытие после проверок — [issue #26](https://github.com/AdilSatuv/spaceclient/issues/26).
+
+## SC-25: локальный ник и запуск
 
 По новому выбору пользователя после завершённой SC-02 приоритет переключён на лаунчер. Добавлены сохраняемый локальный ник (settings v2 с миграцией v1), явный локальный статус, main-owned проверка установки/runtime и запуск Java без shell. Состояния/exit и ограниченный безопасный журнал доступны через 3 новые команды (13 bridge-функций всего). Profile lock действует до process close; подготовка файлов исключена с запуском.
 
@@ -41,7 +49,7 @@ Windows QA: skill `computer-use:computer-use`, `node_repl`, пакет `@oai/sky
 
 ## Текущий приоритет: лаунчер; оставшаяся приёмка HUD отложена
 
-1. Локальный ник/запуск SC-25 завершён; проверить актуальные Git/CI/#25 и сохранить чужие изменения. Следующий launcher-срез — собственная Space-регистрация, её backend/account scope сначала оформить отдельной задачей. Microsoft и публикация сайта отложены. Не начинать их автоматически.
+1. Локальный ник/запуск SC-25 и интерфейс Eclipse SC-26 завершены; проверить актуальные Git/CI/#26 и сохранить чужие изменения. Собственная Space-регистрация остаётся будущим отдельным срезом, её backend/account scope сначала оформить отдельной задачей. Microsoft и публикация сайта отложены. Не начинать их автоматически.
 2. При возвращении к HUD — SC-03: ненулевой RMB CPS, удержание обеих кнопок, клики меню, alt-tab и выход из мира со сбросом истории. Не выдавать unit-тесты за игровые проверки. Матрицу SC-02 не повторять без нового дефекта.
 3. Затем оставшаяся приёмка SC-04: полный круг Tab/левого Shift+Tab, удержание Space/Enter при переходах, повреждённый config при настоящем старте, геометрия самого меню при разных GUI scale и 720p/1080p. Правая клавиша Shift теперь закрывает меню, для обратного Tab использовать левую.
 4. SC-05 редактор начать после приёмки #3/#4 и проверки зависимостей. Microsoft-вход и публикацию сайта не расширять в эти задачи.

@@ -82,6 +82,58 @@ try {
   report.checks.push(
     'Sandbox bridge remains limited to thirteen functions; no renderer Node globals.',
   );
+  const siteTokens = await readFile(join(repo, 'apps/website/src/_app/styles/tokens.css'), 'utf8');
+  const tokenPairs = {
+    background: 'bg',
+    foreground: 'text',
+    card: 'surface',
+    secondary: 'raised',
+    primary: 'accent',
+    'primary-foreground': 'on-accent',
+    'muted-foreground': 'muted',
+    border: 'line',
+    input: 'control-border',
+    ring: 'accent',
+    copper: 'violet',
+  };
+  const expectedTokens = Object.fromEntries(
+    Object.entries(tokenPairs).map(([local, source]) => [
+      local,
+      siteTokens.match(new RegExp('--' + source + ':\\s*([^;]+);'))[1].trim(),
+    ]),
+  );
+  const actualTokens = await page.evaluate(
+    (keys) =>
+      Object.fromEntries(
+        keys.map((key) => [
+          key,
+          getComputedStyle(document.documentElement)
+            .getPropertyValue('--' + key)
+            .trim(),
+        ]),
+      ),
+    Object.keys(tokenPairs),
+  );
+  assert.deepEqual(
+    actualTokens,
+    expectedTokens,
+    'Launcher roles must match canonical Eclipse website tokens.',
+  );
+  assert.equal(
+    await page.$eval('.hero-art', (element) => getComputedStyle(element).backgroundImage),
+    'none',
+  );
+  assert.equal(
+    await page.evaluate(() => {
+      const ids = [...document.querySelectorAll('[id]')].map((element) => element.id);
+      return ids.length === new Set(ids).size;
+    }),
+    true,
+    'Ringworld gradient IDs must be unique.',
+  );
+  report.checks.push(
+    'Eleven Eclipse color roles match website tokens; vector scene replaces old bitmap; Ringworld IDs are unique.',
+  );
   await page.focus('.skip-link');
   await page.keyboard.press('Enter');
   assert.equal(await page.evaluate(() => document.activeElement.id), 'main');
@@ -212,6 +264,29 @@ try {
         { document: false, main: false },
         slug + ' has horizontal overflow at ' + viewport.width,
       );
+      if (slug === 'home' && viewport.width >= 1000) {
+        const controls = await page.evaluate(() =>
+          ['.launch-button', '.installation-actions button'].map((selector) => {
+            const rect = document.querySelector(selector).getBoundingClientRect();
+            return {
+              selector,
+              visible: rect.top >= 38 && rect.bottom <= innerHeight && rect.height >= 44,
+            };
+          }),
+        );
+        assert.ok(
+          controls.every((control) => control.visible),
+          'Main launch and prepare controls must fit the desktop viewport: ' +
+            JSON.stringify(controls),
+        );
+      }
+      if (slug === 'settings')
+        assert.equal(
+          await page.evaluate(() =>
+            document.body.innerText.includes('Запуск игры пока недоступен'),
+          ),
+          false,
+        );
       if (slug === 'profiles') {
         await page.focus('.folder-action');
         assert.equal(
@@ -299,6 +374,29 @@ try {
   );
   assert.equal(await page.evaluate(() => document.querySelectorAll('[style]').length), 0);
   await page.screenshot({ path: join(root, 'overview.png') });
+  const emulation = await page.createCDPSession();
+  await emulation.send('Emulation.setEmulatedMedia', {
+    features: [{ name: 'forced-colors', value: 'active' }],
+  });
+  assert.equal(await page.evaluate(() => matchMedia('(forced-colors: active)').matches), true);
+  assert.equal(
+    await page.$eval('.ringworld-rich', (element) => getComputedStyle(element).display),
+    'none',
+  );
+  assert.notEqual(
+    await page.$eval('.ringworld-flat', (element) => getComputedStyle(element).display),
+    'none',
+  );
+  assert.notEqual(
+    await page.$eval('.hero-content h2 span', (element) => getComputedStyle(element).color),
+    'rgba(0, 0, 0, 0)',
+  );
+  await page.screenshot({ path: join(root, 'forced-colors.png') });
+  report.screenshots.push('forced-colors.png');
+  report.checks.push(
+    'Launch and preparation controls visible at both desktop sizes; forced colors retain text and flat Ringworld.',
+  );
+  await emulation.detach();
   assert.deepEqual(errors, [], 'Renderer logged an error or CSP violation.');
   report.checkedAt = new Date().toISOString();
   report.rendererErrors = errors;

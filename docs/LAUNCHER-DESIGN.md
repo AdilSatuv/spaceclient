@@ -1,45 +1,51 @@
-# Space Launcher — shadcn/ui
+# Space Launcher — Eclipse / Ringworld
 
-Редизайн по просьбе пользователя: графитовая оболочка, голубой акцент, компактная навигация и спокойная космическая иллюстрация. Изменены **все три экрана лаунчера**: обзор, профили, настройки. Сайт этой итерацией не изменён.
+24 октября 2026 пользователь попросил применить **тот же стиль, что у сайта**. SC-26 переносит текущий Eclipse / Ringworld в обзор, профили и настройки. Локальный запуск SC-25, установка, формат настроек и границы привилегий сохранены.
+
+## Визуальная система
+
+Источник — [ECLIPSE.md](design/ECLIPSE.md), [токены сайта](../apps/website/src/_app/styles/tokens.css), его OrbitMark и CosmicScene. Лаунчер использует почти чёрный звёздный фон, медную планету с рельефом и луной, объёмный Ringworld, тёплый текст, янтарные кнопки и моноширинные подписи. Это адаптация утверждённого оформления сайта к desktop-сценарию.
+
+| Роль | HEX |
+| --- | --- |
+| Фон / поверхность / приподнятая поверхность | #030407 / #0D0E13 / #181920 |
+| Основной / вторичный текст | #F4EFE7 / #B7B4AF |
+| Янтарный / медный | #F4BD82 / #D09D80 |
+| Текст основной кнопки | #28170C |
+| Разделитель / граница контрола | #34343C / #8B8079 |
+| Основная кнопка, градиент | #F6D5A4 → #E6AD76 |
+
+Основной шрифт Segoe UI / Arial, крупный заголовок Arial Black / Segoe UI, подписи Consolas. Системные шрифты сохраняют кириллицу; внешние шрифты/CDN не подключены. `check:ui` сравнивает 11 цветовых ролей лаунчера с каноническим CSS токенов сайта, чтобы обнаруживать расхождение палитры.
+
+Ringworld перенесён как локальный React SVG. `useId` создаёт независимые gradient IDs для titlebar/sidebar/профилей. В forced-colors используется плоский системный вариант. Сцена Eclipse статична, написана на CSS/SVG и не требует покадрового JavaScript, таймеров, WebGL или bitmap. Короткое появление разделов и feedback учитывают reduced-motion. Поле файлов и путь Java остаются читаемыми на тёмной поверхности.
+
+## Компоновка и состояния
+
+В обзоре сначала компактная сцена Eclipse, затем две панели: **профиль/ник/запуск** и **файлы игры**. Название, RAM и Java активного профиля находятся рядом с запуском; «Настроить» ведёт в профили. Основное действие — янтарная «Играть локально», подготовка/восстановление — вторичная кнопка. Оба действия целиком видны без прокрутки на 1180×760 и 1000×680 в проверенном сценарии с обычным именем и без многострочных ошибок. Длинное имя и ошибки могут увеличить высоту; main прокручивается, keyboard focus не скрывается.
+
+Локальный статус, ограничения аккаунта и серверов остаются явными. В настройках исправлен устаревший текст «запуск недоступен»: локальный вход уже работает, Space-регистрация/Microsoft ещё не подключены. `running` по-прежнему означает процесс, а не доказательство входа в мир.
+
+`useInstallation` принадлежит HomePage и предоставляет один общий статус двум панелям. Во время подготовки кнопка запуска недоступна; во время проверки/игры UI блокирует подготовку. Main продолжает независимо проверять эти guards. Отмена активной подготовки остаётся доступна. Сообщения об ошибках, progress, exit code и сворачиваемый безопасный журнал сохранены. Никаких новых IPC-команд, параметров запуска или способов получить путь Java из renderer не добавлено.
+
+Профили и настройки используют те же поверхности, Ringworld, границы и кнопки. Сохраняются черновики, сохранение/отмена, независимые RAM/Java, native picker и ограничения смены профиля. Левое меню остаётся доступным; на узких размерах — иконки с aria-label, панели в одну колонку. Есть label, inline-ошибка ника, focus ring, skip-control без hash navigation, семантические статусы и вариант forced-colors. Проверка не является сертификацией WCAG.
 
 ## Компоненты и сборка
 
-Использованы реальные Button, Card, Input и Badge из официального registry shadcn/ui, вариант new-york-v4, полученные 23.10.2026. Это локальные исходники в `apps/launcher/src/renderer/components/ui`, а не похожие CSS-классы поверх старой библиотеки. Импорты `cn` адаптированы к локальной функции clsx/tailwind-merge, `Slot` — к отдельному @radix-ui/react-slot; обычная высота Button/Input увеличена до 44 px. [MIT-лицензия](licenses/shadcn-ui.md) сохранена. [Manual installation](https://ui.shadcn.com/docs/installation/manual), [button source](https://ui.shadcn.com/r/styles/new-york-v4/button.json), [card source](https://ui.shadcn.com/r/styles/new-york-v4/card.json).
+Локальные shadcn/ui Button/Card/Input/Badge, Lucide и статический Tailwind CLI сохранены. [Лицензии shadcn/ui](licenses/shadcn-ui.md) и [Lucide](licenses/lucide.txt) не менялись; новых зависимостей нет. Цвета native titlebar согласованы с Eclipse. Sandbox, contextIsolation, CSP, sender/mainFrame/URL и 13 функций bridge не ослаблены. Старый hero.png остаётся совместимым ресурсом сборки, но интерфейс его больше не запрашивает.
 
-Конфигурация — `apps/launcher/components.json`; alias `@/*` ведёт в src. Зависимости закреплены: Tailwind CSS/CLI 4.3.3, class-variance-authority 0.7.1, clsx 2.1.1, tailwind-merge 3.7.0, @radix-ui/react-slot 1.5.0, Lucide React 1.61.0. Иконки — единый Lucide outline set; собственный знак Space — SVG. [Лицензия Lucide](licenses/lucide.txt) сохранена; обе лицензии копируются в `dist/licenses`.
+## Приёмка SC-26
 
-Tailwind собирает статический `dist/renderer/app.css` перед esbuild. Сканирование ограничено исходниками renderer, внешних CSS/fonts/CDN нет. Сохранён существующий build без dev-server. RAM/progress используют native input/progress: не понадобились inline styles, которые нарушили бы действующую CSP. Sandbox, contextIsolation, точная проверка sender/mainFrame/URL и тринадцать preload-функций сохранены. Main изменён только в цветах фона/titlebar.
+Команды: `npm.cmd run test:launcher`, `npm.cmd run check --workspace @space/launcher`, `npm.cmd run build:launcher`, `npm.cmd run format:check`, `npm.cmd run check:ui --workspace @space/launcher`, `node --test tests/tasks.test.cjs`.
 
-## Визуальные правила
+106 launcher tests, TypeScript, build с source-stamped game bundle и форматирование проходят. Изолированный Electron использует новый disposable userData и временный loopback DevTools endpoint. Он не подключается к личному браузеру/лаунчеру.
 
-| Роль | Значение |
-| --- | --- |
-| Фон / sidebar | #0c0e12 / #0f1217 |
-| Карточки | #12151b |
-| Основной текст / вторичный | #f2f4f7 / #a2adbd |
-| Акцент / текст кнопки | #8bd8f7 / #08202a |
-| Focus ring / input border | #8bd8f7 / #586579 |
-| Шрифт | Локальный Segoe UI Variable / Segoe UI / Arial |
-| Радиусы | 8–14 px |
-| Движение | Появление раздела 220 ms, hover иллюстрации 650 ms; без автопрокрутки/карусели |
+Проверены три экрана × четыре viewport (1180×760, 1000×680, 600×680, 500×380), отсутствие горизонтальной прокрутки, видимость launch/prepare на обоих desktop-размерах, 40-символьные имена, keyboard RAM/cancel/dirty guards, запись и выбор профилей, ник/save/reload, missing-Java error/retry, запрет structured launch payload, совпадение палитры, уникальность SVG IDs, reduced-motion, forced-colors, отсутствие inline styles, Node globals и renderer/CSP ошибок. Снимки обзора, профилей, настроек, узкого режима и forced-colors осмотрены. Измеренные контрасты пар перечислены в JSON.
 
-Навигация постоянно доступна слева. Обзор показывает иллюстрацию, активный профиль и установку с одной основной кнопкой. Лишняя дублирующая кнопка баннера убрана. В небольшом окне 1000×680 кнопка подготовки видна без поиска внизу страницы. На узких viewport sidebar становится колонкой с подписанными aria-label иконками, карточки переходят в один столбец; main прокручивается отдельно.
+В настоящем окне дополнительно осмотрены профили и обзор с ранее сохранённым nickname/RAM/Java из `.reports/launcher-desktop`. Лаунчер оставлен открытым на обзоре. Игру в этом срезе не запускали: предыдущая фактическая приёмка запуска/мира — [LOCAL-LAUNCH.md](LOCAL-LAUNCH.md). Полную матрицу native picker, OS zoom, screen reader и HUD этот срез не повторяет.
 
-Формы сохраняют прежние ограничения/черновики. Есть видимые labels, focus ring, aria-valuetext RAM, сообщения busy/error/status. После смены раздела focus переходит к заголовку. Skip-control переводит focus в main **без hash-навигации**, чтобы не изменить точный IPC URL. Prefers-reduced-motion отключает анимации/переходы, включая hover иллюстрации. SC-25 добавляет карточку локального ника и запуска перед баннером: видимый label, inline-валидация, сохранение, busy/error/exit, сворачиваемый безопасный журнал. Ник явно локальный; Space-регистрация и Microsoft-вход ещё не подключены.
+- [Безопасный отчёт](qa/launcher-eclipse-2026-10-24.json)
+- [Настоящий обзор](qa/launcher-eclipse-2026-10-24.png)
+- [Настройки](qa/launcher-eclipse-settings-2026-10-24.png)
+- [Forced colors](qa/launcher-eclipse-forced-colors-2026-10-24.png)
 
-UI/UX Pro Max использован для композиции и проверки contrast/focus/motion. Первый gaming-запрос предложил витрину с 3D и фиолетовым акцентом; он не соответствовал просьбе о новом desktop-дизайне и не применён. Повторный запрос дал Minimalism & Swiss Style, подходящий для dashboard; его типографическая/сеточная логика адаптирована к тёмному космическому бренду. Это решение проекта, не автоматически выбранная палитра каталога.
-
-## Проверка
-
-```powershell
-npm.cmd run build:launcher
-npm.cmd run check:ui --workspace @space/launcher
-```
-
-Проверка запускает **отдельный экземпляр Electron** с новым disposable userData и временным loopback DevTools endpoint. Не подключается к личному браузеру или текущему окну пользователя. Puppeteer Core 25.16.0 закреплён как dev dependency; debug flags добавляет только тестовый runner. Скрипт включён в Windows CI после build.
-
-Проверены три экрана на 1180×760, 1000×680, 600×680 и 500×380: нет горизонтальной прокрутки; длинное имя на 40 символов переносится. Нижний control профиля виден при keyboard focus после автоматической прокрутки. Проверены создание двух профилей, запись имён в настоящий settings.json, переключение, RAM стрелкой, отмена, блокировка смены при dirty и сохранение черновика при клике активного профиля. Skip-control сохраняет exact URL. Проверено отсутствие Node globals, сохранение 13 bridge-функций, отсутствие inline style attributes и renderer/CSP ошибок.
-
-Измеренные пары contrast: foreground/background **17,53:1**, muted/card **8,05:1**, CTA text/fill **10,61:1**, input boundary/background **3,27:1**, focus/background **12,2:1**. Это проверка перечисленных пар, не сертификат WCAG всего приложения. [JSON-отчёт](qa/launcher-shadcn-2026-10-23.json), [обзор](qa/launcher-shadcn-overview.png).
-
-Снимки renderer осмотрены отдельно. Это **не** повторная приёмка native picker, OS zoom 200%, screen reader, полной матрицы клавиатуры, живой загрузки/отмены в новой оболочке или настоящего входа. 500×380 проверяет узкий layout, а не доказывает работу системного масштабирования. Прежние реальные install/repair проверки описаны в LAUNCHER-QA; новый настоящий локальный запуск — LOCAL-LAUNCH.md.
+Прежний голубой shadcn-срез и его измерения — исторические свидетельства в [launcher-shadcn-2026-10-23.json](qa/launcher-shadcn-2026-10-23.json) и [launcher-local-2026-10-24.json](qa/launcher-local-2026-10-24.json). Текущий внешний вид подтверждён SC-26.

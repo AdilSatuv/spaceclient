@@ -1,65 +1,55 @@
-import { useInstallation } from './hooks/use-installation';
+import type { useInstallation } from './hooks/use-installation';
 import {
   ArrowDownToLine,
-  Check,
   CircleCheck,
   LoaderCircle,
-  LockKeyhole,
   RefreshCw,
+  ShieldCheck,
   Square,
 } from 'lucide-react';
 import { Button } from './components/ui/button';
 import { Badge } from './components/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from './components/ui/card';
 import { cn } from './lib/utils';
-
 const mib = (bytes: number) =>
   new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 }).format(bytes / 1048576) + ' МиБ';
-export function InstallationCard({ profileId, dirty }: { profileId: string; dirty: boolean }) {
-  const { current, running, prepared, error, acting, start, cancel } = useInstallation(profileId);
+export function InstallationCard({
+  installation,
+  locked,
+}: {
+  installation: ReturnType<typeof useInstallation>;
+  locked: boolean;
+}) {
+  const { current, running, prepared, error, acting, start, cancel } = installation;
   return (
     <Card className="installation-card" aria-label="Подготовка файлов игры">
       <CardHeader>
-        <div className="installation-heading">
-          <span className={cn('section-icon', prepared && 'ready-icon')}>
-            {prepared ? <CircleCheck aria-hidden="true" /> : <ArrowDownToLine aria-hidden="true" />}
-          </span>
-          <div>
-            <CardTitle>
-              <h2>{prepared ? 'Файлы на месте.' : 'Ещё один шаг к игре.'}</h2>
-            </CardTitle>
-            <CardDescription>Minecraft 1.8.9 · Fabric Loader · Space Client</CardDescription>
-          </div>
-          <Badge variant="outline" className={cn('installation-badge', prepared && 'ready-badge')}>
-            {prepared ? 'Проверено' : running ? 'Подготовка' : 'Установка'}
+        <div className="section-heading">
+          <p className="card-eyebrow">02 / ФАЙЛЫ ИГРЫ</p>
+          <Badge variant="outline" className={cn(prepared && 'ready-badge')}>
+            {prepared ? 'Проверены' : running ? 'Подготовка' : 'Не проверены'}
           </Badge>
         </div>
+        <CardTitle>
+          <h2>Minecraft 1.8.9</h2>
+        </CardTitle>
+        <p className="installation-edition">Fabric Loader · Space Client</p>
       </CardHeader>
       <CardContent>
-        <div className="installation-steps" aria-label="Этапы подготовки">
-          <span className="completed-step">
-            <Check aria-hidden="true" />
-            Профиль создан
-          </span>
-          <Chevron />
-          <span className={prepared ? 'completed-step' : 'current-step'}>
-            {prepared ? <Check aria-hidden="true" /> : <span className="step-number">2</span>}Файлы
-            игры
-          </span>
-          <Chevron />
-          <span>
-            <LockKeyhole aria-hidden="true" />
-            Локальный запуск
-          </span>
-        </div>
         <div
           className={cn('installation-status', current?.phase === 'error' && 'installation-error')}
           role="status"
           aria-live="polite"
           aria-atomic="true"
         >
-          {running && <LoaderCircle className="spinner" aria-hidden="true" />}
-          {current?.message || 'Проверяем состояние файлов…'}
+          {running ? (
+            <LoaderCircle className="spinner" aria-hidden="true" />
+          ) : prepared ? (
+            <CircleCheck aria-hidden="true" />
+          ) : (
+            <ArrowDownToLine aria-hidden="true" />
+          )}
+          <span>{current?.message || 'Проверяем состояние файлов…'}</span>
         </div>
         {!!current?.totalBytes && (
           <div className="installation-progress">
@@ -89,19 +79,6 @@ export function InstallationCard({ profileId, dirty }: { profileId: string; dirt
           </p>
         )}
         <div className="installation-actions">
-          <div className="installation-footnote">
-            {current?.spaceVersion ? (
-              <>
-                <strong>Space {current.spaceVersion}</strong>
-                <span>Сборка для разработки</span>
-              </>
-            ) : (
-              <>
-                <strong>Около 147 МиБ</strong>
-                <span>Отдельная папка профиля</span>
-              </>
-            )}
-          </div>
           {running ? (
             <Button
               variant="outline"
@@ -112,7 +89,7 @@ export function InstallationCard({ profileId, dirty }: { profileId: string; dirt
               {current?.phase === 'cancelling' ? 'Останавливаем…' : 'Отменить подготовку'}
             </Button>
           ) : (
-            <Button disabled={acting || dirty || !current} onClick={start}>
+            <Button variant="outline" disabled={acting || locked || !current} onClick={start}>
               {prepared ? <RefreshCw aria-hidden="true" /> : <ArrowDownToLine aria-hidden="true" />}
               {prepared
                 ? 'Проверить и восстановить'
@@ -122,20 +99,18 @@ export function InstallationCard({ profileId, dirty }: { profileId: string; dirt
             </Button>
           )}
         </div>
-        {dirty && <p className="inline-hint">Сначала сохраните или отмените изменения профиля.</p>}
-        <p className="launch-disclaimer">
-          <LockKeyhole aria-hidden="true" />
-          Локальный запуск повторно проверяет файлы и Java. Для онлайн-входа Microsoft пока не
-          подключён.
-        </p>
+        <div className="installation-footnote">
+          <ShieldCheck aria-hidden="true" />
+          <p>
+            Отдельная папка профиля.
+            <br />
+            Файлы проверяются перед каждым запуском.
+          </p>
+        </div>
+        {current?.spaceVersion && (
+          <p className="build-note">SPACE {current.spaceVersion} / DEVELOPMENT</p>
+        )}
       </CardContent>
     </Card>
-  );
-}
-function Chevron() {
-  return (
-    <span className="step-chevron" aria-hidden="true">
-      /
-    </span>
   );
 }

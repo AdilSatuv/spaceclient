@@ -1,12 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import {
-  ChevronRight,
   CircleHelp,
   LayoutDashboard,
   Layers3,
   LoaderCircle,
-  LockKeyhole,
-  Monitor,
   Settings2,
   ShieldCheck,
   UserRound,
@@ -26,7 +23,7 @@ const navigation = [
   { id: 'settings', label: 'Настройки', icon: Settings2 },
 ] as const;
 const titles = {
-  home: ['Твоя следующая орбита.', 'Всё для игры — в одном месте.'],
+  home: ['Играть', 'Твоя следующая орбита начинается здесь.'],
   profiles: ['Профили игры', 'Отдельные настройки для каждого твоего мира.'],
   settings: ['Настройки лаунчера', 'Java, память и файлы на твоём устройстве.'],
 };
@@ -68,10 +65,10 @@ export function App() {
               <SpaceMark />
             </span>
             <div className="brand-copy">
-              space<span>Игровой клиент</span>
+              SPACE<span>JAVA CLIENT</span>
             </div>
           </div>
-          <p className="nav-caption">ПРОСТРАНСТВО</p>
+          <p className="nav-caption">НАВИГАЦИЯ</p>
           <nav aria-label="Разделы лаунчера">
             {navigation.map(({ id, label, icon: Icon }) => (
               <Button
@@ -97,9 +94,8 @@ export function App() {
               </span>
               <div className="account-copy">
                 <strong>{snapshot?.localNickname ?? 'Локальный игрок'}</strong>
-                <span>Без регистрации аккаунта</span>
+                <span>Локальный режим</span>
               </div>
-              <LockKeyhole className="account-lock" aria-hidden="true" />
             </div>
             <div className="build-caption">
               <span className="status-dot" />
@@ -111,18 +107,15 @@ export function App() {
           <div className="main-content">
             <header className="page-header">
               <div>
-                <div className="breadcrumb">
-                  Space Client <ChevronRight aria-hidden="true" />
-                  {navigation.find((item) => item.id === view)?.label}
-                </div>
+                <p className="page-eyebrow">SPACE CLIENT / ЛАУНЧЕР</p>
                 <h1 ref={heading} tabIndex={-1}>
                   {titles[view][0]}
                 </h1>
                 <p>{titles[view][1]}</p>
               </div>
               <Badge variant="outline" className="edition-badge">
-                <Monitor aria-hidden="true" />
-                Windows x64
+                <span className="status-dot" aria-hidden="true" />
+                ECLIPSE / 01
               </Badge>
             </header>
             {error && (

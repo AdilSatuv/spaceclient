@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "realAccountUsed": false,
+  "realDownloadsStarted": false,
+  "screenshots": [
+    "home-1180x760.png",
+    "profiles-1180x760.png",
+    "settings-1180x760.png",
+    "home-1000x680.png",
+    "profiles-1000x680.png",
+    "settings-1000x680.png",
+    "home-600x680.png",
+    "profiles-600x680.png",
+    "settings-600x680.png",
+    "home-500x380.png",
+    "profiles-500x380.png",
+    "settings-500x380.png",
+    "forced-colors.png"
+  ],
+  "checks": [
+    "Sandbox bridge remains limited to thirteen functions; no renderer Node globals.",
+    "Eleven Eclipse color roles match website tokens; vector scene replaces old bitmap; Ringworld IDs are unique.",
+    "Skip control focuses main without changing the exact trusted IPC URL.",
+    "Nickname inline validation/save/reload; local status; missing Java failure and retry; structured launch payload rejected.",
+    "Keyboard RAM editing, cancel, dirty lock and active-profile click retain their behavior.",
+    "Profile creation, name save, independent selection and actual settings persistence.",
+    "Four viewport sizes across three views have no horizontal scroll; long profile names wrap; reduced motion disables transitions.",
+    "Launch and preparation controls visible at both desktop sizes; forced colors retain text and flat Ringworld.",
+    "106 launcher tests, launcher TypeScript, source-stamped build, format:check and task graph passed."
+  ],
+  "contrast": [
+    {
+      "foreground": "foreground",
+      "background": "background",
+      "ratio": 17.91,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "muted-foreground",
+      "background": "card",
+      "ratio": 9.33,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "primary-foreground",
+      "background": "primary",
+      "ratio": 10.22,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "input",
+      "background": "background",
+      "ratio": 5.33,
+      "minimum": 3
+    },
+    {
+      "foreground": "ring",
+      "background": "background",
+      "ratio": 12.15,
+      "minimum": 3
+    }
+  ],
+  "checkedAt": "2026-10-24T02:06:21.854Z",
+  "rendererErrors": [],
+  "scope": "Isolated Electron renderer in disposable data; native overview/profiles inspected separately in .reports/launcher-desktop. No game launch, native picker, OAuth, screen reader or OS zoom acceptance repeated.",
+  "design": "Eclipse / Ringworld",
+  "nativeWindowInspected": true,
+  "launcherLeftOpen": true,
+  "realGameLaunched": false
+}

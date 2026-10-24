@@ -83,10 +83,13 @@ export function SettingsPage({ model }: { model: ReadyLauncherModel }) {
             <LockKeyhole aria-hidden="true" />
           </span>
           <div>
-            <h2>Microsoft-аккаунт</h2>
-            <p>Вход и проверка владения Minecraft ещё в разработке. Запуск игры пока недоступен.</p>
+            <h2>Локальный режим</h2>
+            <p>
+              Игра по нику доступна без регистрации. Space-регистрация и вход Microsoft ещё не
+              подключены; серверы с проверкой аккаунта недоступны.
+            </p>
           </div>
-          <Badge variant="outline">В разработке</Badge>
+          <Badge variant="outline">{snapshot.localNickname ?? 'Ник не сохранён'}</Badge>
         </CardContent>
       </Card>
     </>

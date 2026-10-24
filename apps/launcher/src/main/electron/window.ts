@@ -8,9 +8,9 @@ export function createLauncherWindow(preload: string): BrowserWindow {
     minWidth: 1000,
     minHeight: 680,
     show: false,
-    backgroundColor: '#0c0e12',
+    backgroundColor: '#030407',
     titleBarStyle: 'hidden',
-    titleBarOverlay: { color: '#0f1217', symbolColor: '#f2f4f7', height: 38 },
+    titleBarOverlay: { color: '#050507', symbolColor: '#f4efe7', height: 38 },
     webPreferences: {
       preload,
       sandbox: true,
