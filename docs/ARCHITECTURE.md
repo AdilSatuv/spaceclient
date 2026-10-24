@@ -8,7 +8,7 @@
 flowchart TD
   Entry[renderer/index: bridge + provider] --> UI[App / pages / components]
   UI --> State[LauncherSession / installation hook]
-  State --> API[LauncherApi: десять функций]
+  State --> API[LauncherApi: тринадцать функций]
   API --> Preload[preload: contextBridge]
   Preload --> IPC[Electron IPC: sender / frame / URL]
   IPC --> Dispatch[Dispatcher: Result и безопасные ошибки]
@@ -28,10 +28,10 @@ flowchart TD
 | --- | --- | --- |
 | `shared/models.ts`, `shared/installation.ts` | Данные профилей, результатов и установки | Только `shared` |
 | `shared/ipc.ts` | Каналы, входы, выходы, производный `LauncherApi` | Только `shared` |
-| `main/application` | Десять команд, порты, guards Java, обработка результата | `application`, `shared`; без Electron, Node и конкретных хранилищ |
+| `main/application` | Тринадцать команд, порты, guards Java, обработка результата | `application`, `shared`; без Electron, Node и конкретных хранилищ |
 | `main/electron` | Окно, native picker, shell, IPC и локальные assets | Прикладные интерфейсы, Electron и Node по назначению адаптера |
 | Остальные модули `main` | Файлы, очередь загрузок, проверка JAR, natives, auth vault/callback | Node, прикладные контракты, локальные инфраструктурные модули; без Electron, кроме точки сборки и адаптеров |
-| `preload.ts` | Десять явно перечисленных функций | Electron и `shared` |
+| `preload.ts` | Тринадцать явно перечисленных функций | Electron и `shared` |
 | `renderer/model` | Состояние профилей, черновик, ошибки, взаимное исключение команд | Модель и `shared`; без React, DOM и платформенных API |
 | `renderer/hooks` | Подключение модели к React, контекст API, polling установки | React, модель, типизированный API |
 | `renderer/pages`, `components` | Разметка, отображение и пользовательские события | Renderer и общие типы; без Node/Electron |
@@ -62,7 +62,7 @@ flowchart TD
 4. Добавить проверку полезного поведения: ошибки, повтор команды, сохранность данных, ограничения привилегий. TypeScript проверяет соответствие контракта, `architecture.test.cjs` — направления импортов и отсутствие runtime-циклов.
 5. Выполнить launcher tests, typecheck, build и изолированную UI-проверку. Изменение границ требует обновления этого документа и `apps/launcher/AGENTS.md`.
 
-Для Microsoft-входа следующим отдельным модулем станет прикладной workflow с портом авторизации и безопасным статусом аккаунта. Реальный запуск потребует отдельного порта процесса и проверки владения/установки/runtime перед запуском. Эти порты пока не созданы: соответствующих рабочих сценариев ещё нет.
+Для Microsoft-входа следующим отдельным модулем станет прикладной workflow с портом авторизации и безопасным статусом аккаунта. Локальный запуск SC-25 добавляет LaunchPort/LaunchService и main-owned prepareLocalLaunch: повторная проверка установки/runtime, один процесс на профиль, безопасный статус и журнал. Команды local:save / launch:get / launch:start увеличивают bridge до 13 функций. Прикладной слой исключает установку и запуск друг с другом; порт процесса резервирует профиль до первого await и освобождает только после close. Официальный онлайн-вход по-прежнему требует проверки владения/авторизации. Детали — [LOCAL-LAUNCH.md](LOCAL-LAUNCH.md).
 
 ## Проверено
 

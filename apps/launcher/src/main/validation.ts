@@ -3,6 +3,11 @@ import { win32 } from 'node:path';
 import type { Profile, ProfileEdit, SavedState } from '../shared/contracts.ts';
 
 export const MAX_PROFILES = 10;
+export function nickname(value: unknown): string {
+  if (typeof value !== 'string' || !/^[A-Za-z0-9_]{3,16}$/.test(value))
+    throw new UserFacingError('Ник: от 3 до 16 латинских букв, цифр или знаков _.');
+  return value;
+}
 export function memoryLimit(totalMb: number): number {
   return Math.max(1024, Math.min(16384, Math.floor((totalMb - 2048) / 256) * 256));
 }
@@ -53,7 +58,12 @@ export function javaPath(value: unknown): string {
 }
 export function savedState(value: unknown, maxMemoryMb: number): SavedState {
   record(value);
-  if (value.schemaVersion !== 1) throw new UserFacingError('Версия настроек не поддерживается.');
+  if (value.schemaVersion !== 1 && value.schemaVersion !== 2)
+    throw new UserFacingError('Версия настроек не поддерживается.');
+  const localNickname =
+    value.schemaVersion === 1 || value.localNickname === null
+      ? null
+      : nickname(value.localNickname);
   if (
     !Array.isArray(value.profiles) ||
     value.profiles.length < 1 ||
@@ -73,5 +83,5 @@ export function savedState(value: unknown, maxMemoryMb: number): SavedState {
   const activeProfileId = profileId(value.activeProfileId);
   if (!profiles.some((profile) => profile.id === activeProfileId))
     throw new UserFacingError('Активный профиль не найден.');
-  return { schemaVersion: 1, activeProfileId, profiles };
+  return { schemaVersion: 2, localNickname, activeProfileId, profiles };
 }

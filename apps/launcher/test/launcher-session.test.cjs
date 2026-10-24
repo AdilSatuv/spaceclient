@@ -170,3 +170,57 @@ test('an observer failure cannot turn a persisted save into a failed command', a
   assert.equal(session.getSnapshot().profile.name, 'Saved');
   assert.equal(session.getSnapshot().error, '');
 });
+
+test('nickname draft survives failed save and profile save; launch uses only saved identity and guards duplicates', async () => {
+  const { session, api, snapshot, calls } = await fixture();
+  snapshot.localNickname = 'SavedName';
+  await session.load();
+  calls.length = 0;
+  session.editNickname('ab');
+  assert.equal(await session.saveNickname(), false);
+  assert.ok(session.getSnapshot().nicknameError);
+  session.editNickname('SpaceTester');
+  api.saveNickname = async () => ({ ok: false, error: 'Disk full' });
+  assert.equal(await session.saveNickname(), false);
+  assert.equal(session.getSnapshot().nicknameDraft, 'SpaceTester');
+  api.startLaunch = async (id) => {
+    calls.push(['launch', id]);
+    return ok({ profileId: id, phase: 'checking', log: [] });
+  };
+  assert.equal(await session.startLaunch(), false);
+  assert.deepEqual(calls, []);
+  session.editDraft({ name: 'New Profile' });
+  await session.saveProfile();
+  assert.equal(session.getSnapshot().nicknameDraft, 'SpaceTester');
+  assert.equal(session.getSnapshot().nicknameDirty, true);
+  api.saveNickname = async (name) => {
+    snapshot.localNickname = name;
+    return ok(snapshot);
+  };
+  assert.equal(await session.saveNickname(), true);
+  assert.equal(session.getSnapshot().nicknameDirty, false);
+  assert.equal(await session.startLaunch(), true);
+  assert.equal(await session.startLaunch(), false);
+  assert.equal(calls.filter((x) => Array.isArray(x) && x[0] === 'launch').length, 1);
+});
+test('late polling cannot overwrite a new launch or another profile state', async () => {
+  const { session, api, snapshot } = await fixture();
+  snapshot.localNickname = 'SpaceTester';
+  await session.load();
+  const pending = deferred();
+  api.getLaunch = async () => pending.promise;
+  const refresh = session.refreshLaunch();
+  api.startLaunch = async (id) => ok({ profileId: id, phase: 'checking', log: [] });
+  await session.startLaunch();
+  pending.resolve(ok({ profileId: 'alpha', phase: 'idle', log: [] }));
+  await refresh;
+  assert.equal(session.getSnapshot().launch.phase, 'checking');
+  const pending2 = deferred();
+  api.getLaunch = async () => pending2.promise;
+  const refresh2 = session.refreshLaunch();
+  await session.selectProfile('beta');
+  pending2.resolve(ok({ profileId: 'alpha', phase: 'running', log: [] }));
+  await refresh2;
+  assert.equal(session.getSnapshot().profile.id, 'beta');
+  assert.notEqual(session.getSnapshot().launch.phase, 'running');
+});

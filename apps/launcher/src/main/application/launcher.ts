@@ -10,11 +10,19 @@ export class LauncherApplication {
 
   constructor(dependencies: LauncherDependencies) {
     this.dependencies = dependencies;
-    const { profiles, installation } = dependencies;
+    const { profiles, installation, launch } = dependencies;
     const noPayload = (payload: unknown) => {
       if (payload !== undefined) throw new UserFacingError('Действие не принимает параметры.');
     };
     this.commands = {
+      'local:save': (payload) => profiles.saveNickname(payload),
+      'launch:get': (payload) => launch.status(profiles.profile(payload).id),
+      'launch:start': (payload) => {
+        const profile = profiles.profile(payload);
+        if (installation.running)
+          throw new UserFacingError('Дождитесь завершения подготовки файлов.');
+        return launch.start(profile, profiles.snapshot().localNickname);
+      },
       'state:get': (payload) => {
         noPayload(payload);
         return profiles.snapshot();
@@ -33,15 +41,23 @@ export class LauncherApplication {
         return null;
       },
       'installation:get': (payload) => installation.status(profiles.profile(payload).id),
-      'installation:start': (payload) => installation.start(profiles.profile(payload).id),
+      'installation:start': (payload) => {
+        const id = profiles.profile(payload).id;
+        if (launch.running)
+          throw new UserFacingError('Сначала закройте игру и дождитесь завершения запуска.');
+        return installation.start(id);
+      },
       'installation:cancel': (payload) => installation.cancel(profiles.profile(payload).id),
     };
   }
   get running() {
-    return this.dependencies.installation.running;
+    return this.dependencies.installation.running || this.dependencies.launch.running;
   }
-  shutdown() {
-    return this.dependencies.installation.shutdown();
+  async shutdown() {
+    await Promise.all([
+      this.dependencies.installation.shutdown(),
+      this.dependencies.launch.shutdown(),
+    ]);
   }
 
   private async chooseJava(payload: unknown) {

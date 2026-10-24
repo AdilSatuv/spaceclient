@@ -25,14 +25,7 @@ export function parseJava(output: string): JavaInfo {
       : `Найдена Java ${major} · ${bits} бита. Для текущей сборки выберите Java 21 (64 бита).`,
   };
 }
-export async function inspectJava(path: string | null): Promise<JavaInfo> {
-  if (!path) throw new UserFacingError('Сначала выберите файл java.exe.');
-  const selected = javaPath(path);
-  try {
-    if (!(await stat(selected)).isFile()) throw new Error();
-  } catch {
-    throw new UserFacingError('Java не найдена по сохранённому пути. Выберите файл заново.');
-  }
+export function javaEnvironment(): NodeJS.ProcessEnv {
   const environment = { ...process.env };
   for (const name of Object.keys(environment))
     if (
@@ -41,6 +34,17 @@ export async function inspectJava(path: string | null): Promise<JavaInfo> {
       )
     )
       delete environment[name];
+  return environment;
+}
+export async function inspectJava(path: string | null): Promise<JavaInfo> {
+  if (!path) throw new UserFacingError('Сначала выберите файл java.exe.');
+  const selected = javaPath(path);
+  try {
+    if (!(await stat(selected)).isFile()) throw new Error();
+  } catch {
+    throw new UserFacingError('Java не найдена по сохранённому пути. Выберите файл заново.');
+  }
+  const environment = javaEnvironment();
   return new Promise((resolve, reject) => {
     execFile(
       selected,

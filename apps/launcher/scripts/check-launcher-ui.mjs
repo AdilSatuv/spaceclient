@@ -77,9 +77,11 @@ try {
       process: typeof window.process,
       functions: Object.keys(window.space).length,
     })),
-    { require: 'undefined', process: 'undefined', functions: 10 },
+    { require: 'undefined', process: 'undefined', functions: 13 },
   );
-  report.checks.push('Sandbox bridge remains limited to ten functions; no renderer Node globals.');
+  report.checks.push(
+    'Sandbox bridge remains limited to thirteen functions; no renderer Node globals.',
+  );
   await page.focus('.skip-link');
   await page.keyboard.press('Enter');
   assert.equal(await page.evaluate(() => document.activeElement.id), 'main');
@@ -114,6 +116,41 @@ try {
       name,
     );
   };
+  await page.focus('#local-nickname');
+  await page.keyboard.type('ab');
+  await page.keyboard.press('Tab');
+  assert.equal(
+    await page.$eval('#local-nickname', (input) => input.getAttribute('aria-invalid')),
+    'true',
+  );
+  await page.focus('#local-nickname');
+  await page.keyboard.down('Control');
+  await page.keyboard.press('KeyA');
+  await page.keyboard.up('Control');
+  await page.keyboard.type('SpaceTester');
+  await page.click('.nickname-form button[type="submit"]');
+  await page.waitForFunction(() =>
+    document.querySelector('.feedback-slot').textContent.includes('Локальный ник сохранён'),
+  );
+  assert.equal(
+    JSON.parse(await readFile(join(data, 'settings.json'), 'utf8')).localNickname,
+    'SpaceTester',
+  );
+  await page.reload();
+  await page.waitForSelector('#local-nickname');
+  assert.equal(await page.$eval('#local-nickname', (input) => input.value), 'SpaceTester');
+  await page.click('.launch-button');
+  await page.waitForFunction(() =>
+    document.querySelector('.local-launch').textContent.includes('Выберите Java'),
+  );
+  await page.waitForFunction(() => !document.querySelector('.launch-button').disabled);
+  const malicious = await page.evaluate(() =>
+    window.space.startLaunch({ id: 'default', args: ['bad'] }),
+  );
+  assert.equal(malicious.ok, false);
+  report.checks.push(
+    'Nickname inline validation/save/reload; local status; missing Java failure and retry; structured launch payload rejected.',
+  );
   await route('Профили');
   await save('Основной');
   await page.focus('#profile-name');

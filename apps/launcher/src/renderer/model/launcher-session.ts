@@ -6,6 +6,7 @@ import type {
   JavaInfo,
   Result,
 } from '../../shared/contracts.ts';
+import type { LaunchStatus } from '../../shared/launch.ts';
 
 export type LauncherState = Readonly<{
   snapshot: Snapshot | null;
@@ -17,6 +18,10 @@ export type LauncherState = Readonly<{
   busy: boolean;
   error: string;
   notice: string;
+  nicknameDraft: string;
+  nicknameDirty: boolean;
+  nicknameError: string;
+  launch: LaunchStatus | null;
 }>;
 export type ReadyLauncherModel = LauncherState & {
   snapshot: Snapshot;
@@ -39,7 +44,12 @@ export class LauncherSession {
     busy: false,
     error: '',
     notice: '',
+    nicknameDraft: '',
+    nicknameDirty: false,
+    nicknameError: '',
+    launch: null,
   };
+  private launchRevision = 0;
   constructor(api: LauncherApi) {
     this.api = api;
   }
@@ -57,6 +67,7 @@ export class LauncherSession {
     this.state = {
       ...next,
       profile,
+      nicknameDirty: next.nicknameDraft !== (next.snapshot?.localNickname ?? ''),
       dirty: !!(
         next.draft &&
         profile &&
@@ -84,6 +95,10 @@ export class LauncherSession {
     if (!active) throw new Error('Invalid snapshot');
     this.update({
       snapshot,
+      nicknameDraft:
+        !this.state.snapshot || !this.state.nicknameDirty
+          ? (snapshot.localNickname ?? '')
+          : this.state.nicknameDraft,
       draft: { id: active.id, name: active.name, memoryMb: active.memoryMb },
       notice,
       java,
@@ -112,12 +127,64 @@ export class LauncherSession {
   }
   private cleanDraft(): boolean {
     if (this.state.busy) return false;
-    if (!this.state.dirty) return true;
-    this.update({ error: 'Сначала сохраните или отмените изменения профиля.', notice: '' });
+    if (!this.state.dirty && !this.state.nicknameDirty) return true;
+    this.update({
+      error: this.state.nicknameDirty
+        ? 'Сначала сохраните локальный ник.'
+        : 'Сначала сохраните или отмените изменения профиля.',
+      notice: '',
+    });
     return false;
   }
   dismissFeedback = () => {
     if (this.state.error || this.state.notice) this.update({ error: '', notice: '' });
+  };
+  editNickname = (value: string) => {
+    if (!this.state.busy) this.update({ nicknameDraft: value, nicknameError: '' });
+  };
+  validateNickname = () => {
+    const valid = /^[A-Za-z0-9_]{3,16}$/.test(this.state.nicknameDraft);
+    this.update({ nicknameError: valid ? '' : 'От 3 до 16 латинских букв, цифр или знаков _.' });
+    return valid;
+  };
+  saveNickname = async () => {
+    if (this.state.dirty || !this.validateNickname()) return false;
+    const name = this.state.nicknameDraft;
+    return this.run(
+      () => this.api.saveNickname(name),
+      (value) => {
+        this.apply(value, 'Локальный ник сохранён.');
+        this.update({ nicknameDraft: value.localNickname ?? '' });
+      },
+    );
+  };
+  refreshLaunch = async () => {
+    const id = this.state.profile?.id;
+    const revision = this.launchRevision;
+    if (!id) return;
+    try {
+      const result = await this.api.getLaunch(id);
+      if (this.state.profile?.id !== id || revision !== this.launchRevision) return;
+      if (result.ok) this.update({ launch: result.value });
+    } catch {
+      /* Keep the last observed state; start still reports transport errors. */
+    }
+  };
+  startLaunch = async () => {
+    const profile = this.state.profile;
+    if (!profile || !this.cleanDraft() || !this.state.snapshot?.localNickname) return false;
+    if (
+      this.state.launch?.profileId === profile.id &&
+      ['checking', 'starting', 'running'].includes(this.state.launch.phase)
+    )
+      return false;
+    ++this.launchRevision;
+    return this.run(
+      () => this.api.startLaunch(profile.id),
+      (value) => {
+        if (this.state.profile?.id === profile.id) this.update({ launch: value });
+      },
+    );
   };
   editDraft = (change: Partial<Pick<ProfileEdit, 'name' | 'memoryMb'>>) => {
     const draft = this.state.draft;

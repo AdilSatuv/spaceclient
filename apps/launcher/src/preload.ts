@@ -8,6 +8,9 @@ const invoke = <K extends CommandName>(
   ...args: CommandArgs<K>
 ): Promise<Result<CommandOutput<K>>> => ipcRenderer.invoke(channel, ...args);
 const api: LauncherApi = {
+  saveNickname: (name) => invoke(channels.saveNickname, name),
+  getLaunch: (id) => invoke(channels.getLaunch, id),
+  startLaunch: (id) => invoke(channels.startLaunch, id),
   getState: () => invoke(channels.getState),
   saveProfile: (edit) => invoke(channels.saveProfile, edit),
   createProfile: () => invoke(channels.createProfile),

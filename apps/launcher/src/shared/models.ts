@@ -1,5 +1,10 @@
 export type Profile = { id: string; name: string; memoryMb: number; javaPath: string | null };
-export type SavedState = { schemaVersion: 1; activeProfileId: string; profiles: Profile[] };
+export type SavedState = {
+  schemaVersion: 2;
+  localNickname: string | null;
+  activeProfileId: string;
+  profiles: Profile[];
+};
 export type Snapshot = SavedState & {
   maxMemoryMb: number;
   totalMemoryMb: number;

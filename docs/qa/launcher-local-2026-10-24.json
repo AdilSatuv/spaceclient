@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 1,
+  "checkedDate": "2026-10-24",
+  "mode": "local",
+  "realAccountUsed": false,
+  "spaceRegistrationImplemented": false,
+  "microsoftLoginImplemented": false,
+  "ownershipConfirmed": false,
+  "game": {
+    "version": "1.8.9",
+    "loaderVersion": "0.18.3",
+    "spaceVersion": "0.1.0",
+    "javaMajor": 21,
+    "javaBits": 64,
+    "bundleSha256": "461b69200458575c169bda159432f10f8c6c6127a06a85176f46b98ead2ab945",
+    "localNicknamePersisted": true,
+    "worldCreatedAndEntered": true,
+    "spaceHudObserved": true,
+    "savedAndQuit": true,
+    "matchingJavaProcessCount": 1,
+    "launcherRestarted": true,
+    "existingWorldReentered": true
+  },
+  "live": {
+    "running": {
+      "status": {
+        "ok": true,
+        "value": {
+          "profileId": "default",
+          "mode": "local",
+          "phase": "running",
+          "message": "Локальная игра работает. Закройте её из меню Minecraft.",
+          "exitCode": null,
+          "log": [
+            "Начата локальная проверка установки и runtime.",
+            "Установка и Java проверены.",
+            "Процесс Java запущен.",
+            "Загрузчик начал запуск Minecraft.",
+            "Игровой мод Space инициализирован.",
+            "Звуковой движок инициализирован."
+          ]
+        }
+      },
+      "duplicate": {
+        "ok": false,
+        "error": "Игра этого профиля уже запускается или работает."
+      },
+      "installation": {
+        "ok": false,
+        "error": "Сначала закройте игру и дождитесь завершения запуска."
+      }
+    },
+    "exit": {
+      "ok": true,
+      "value": {
+        "profileId": "default",
+        "mode": "local",
+        "phase": "exited",
+        "message": "Игра завершена. Можно запустить снова.",
+        "exitCode": 0,
+        "log": [
+          "Начата локальная проверка установки и runtime.",
+          "Установка и Java проверены.",
+          "Процесс Java запущен.",
+          "Загрузчик начал запуск Minecraft.",
+          "Игровой мод Space инициализирован.",
+          "Звуковой движок инициализирован.",
+          "Процесс завершён с кодом 0."
+        ]
+      }
+    }
+  },
+  "ui": {
+    "schemaVersion": 1,
+    "realAccountUsed": false,
+    "realDownloadsStarted": false,
+    "screenshots": [
+      "home-1180x760.png",
+      "profiles-1180x760.png",
+      "settings-1180x760.png",
+      "home-1000x680.png",
+      "profiles-1000x680.png",
+      "settings-1000x680.png",
+      "home-600x680.png",
+      "profiles-600x680.png",
+      "settings-600x680.png",
+      "home-500x380.png",
+      "profiles-500x380.png",
+      "settings-500x380.png"
+    ],
+    "checks": [
+      "Sandbox bridge remains limited to thirteen functions; no renderer Node globals.",
+      "Skip control focuses main without changing the exact trusted IPC URL.",
+      "Nickname inline validation/save/reload; local status; missing Java failure and retry; structured launch payload rejected.",
+      "Keyboard RAM editing, cancel, dirty lock and active-profile click retain their behavior.",
+      "Profile creation, name save, independent selection and actual settings persistence.",
+      "Four viewport sizes across three views have no horizontal scroll; long profile names wrap; reduced motion disables transitions."
+    ],
+    "contrast": [
+      {
+        "foreground": "foreground",
+        "background": "background",
+        "ratio": 17.53,
+        "minimum": 4.5
+      },
+      {
+        "foreground": "muted-foreground",
+        "background": "card",
+        "ratio": 8.05,
+        "minimum": 4.5
+      },
+      {
+        "foreground": "primary-foreground",
+        "background": "primary",
+        "ratio": 10.61,
+        "minimum": 4.5
+      },
+      {
+        "foreground": "input",
+        "background": "background",
+        "ratio": 3.27,
+        "minimum": 3
+      },
+      {
+        "foreground": "ring",
+        "background": "background",
+        "ratio": 12.2,
+        "minimum": 3
+      }
+    ],
+    "checkedAt": "2026-10-24T01:37:07.005Z",
+    "rendererErrors": [],
+    "scope": "Isolated Electron renderer via temporary loopback DevTools; no native picker, real OAuth, physical-window inspection or downloads."
+  },
+  "checks": [
+    "test:launcher: 106 passed",
+    "check @space/launcher passed",
+    "build:launcher with source-stamped bundle passed",
+    "format:check passed",
+    "isolated check:ui passed; overview and narrow screenshots inspected"
+  ],
+  "limitations": [
+    "No Space or Microsoft account used",
+    "No online-mode server or ownership test",
+    "No clean Windows install or public installer",
+    "HUD SC-03/04 and performance acceptance remain separate"
+  ]
+}

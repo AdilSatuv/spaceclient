@@ -1,0 +1,39 @@
+# Локальный ник и запуск — SC-25
+
+По последующему выбору пользователя реализован временный локальный сценарий для одиночной игры. Ник **не является зарегистрированным Space/Microsoft-аккаунтом**, пароль не нужен, владение игрой этим режимом не подтверждается, доступ к online-mode серверам не предоставляется. Space-регистрация — отдельный будущий срез. Microsoft-вход отложен; SC-06/08 и официальный SC-10 остаются открытыми. Публичного установщика/релиза нет.
+
+## Пользовательский путь
+
+1. `npm.cmd run launcher` из checkout. Для тестов задать `SPACE_LAUNCHER_DATA` в игнорируемую `.reports/launcher-desktop`; личную `.minecraft` не использовать.
+2. На обзоре ввести и сохранить ник: 3–16 латинских букв, цифр или `_`, без пробелов. Главная карточка и sidebar явно показывают локальный статус.
+3. В профиле выбрать Java 21 x64, RAM. Через «Подготовить файлы» установить Minecraft 1.8.9, закреплённый Legacy Fabric и development bundle Space.
+4. Нажать «Играть локально». Перед каждым запуском заново проверяются runtime и установленные файлы. При повреждении/устаревшем Space — «Проверить и восстановить» и повторить.
+5. Закрыть мир через Save and Quit, затем Quit Game. Лаунчер показывает код выхода и позволяет повторный запуск. Статус running означает созданный процесс, а не доказанный вход в мир.
+
+Закрытие окна лаунчера отменяет ещё не начатый запуск, но **не убивает работающую игру**. Main остаётся до закрытия Java, чтобы не прервать сохранение мира и не освободить process lock. Для наблюдения статуса держать окно лаунчера открытым до выхода из игры. Автоматического перезапуска упавшего процесса нет.
+
+## Контракт и проверки
+
+`settings.json` schemaVersion=2 содержит `localNickname: string | null`. V1 читается как v2 с пустым ником без потери профилей, RAM, Java и active ID; запись происходит только при успешном сохранении. Используются прежняя очередь, temp/rename и резервирование повреждённого файла. Невалидный v2 восстанавливается с резервной копией; токенов и паролей в настройках нет.
+
+Три узких команды расширяют bridge с 10 до 13 функций: `saveNickname(string)`, `getLaunch(profileId)`, `startLaunch(profileId)`. В main вход остаётся unknown; ID разрешается через ProfileRepository, ник берётся из сохранённого snapshot. Renderer не передаёт Java-путь, classpath, JVM/game arguments, URL или executable. Sandbox, CSP, sender/mainFrame/URL и platform boundaries сохранены.
+
+`LaunchPort` подключён в application; инфраструктурный `LaunchService` резервирует ID до первого await и держит его до close дочернего процесса. Разные профили могут иметь независимые процессы, второй процесс того же профиля отклоняется. Подготовка файлов и любой активный launch исключают друг друга на main-стороне, включая проверку файлов. Изменения профиля после запуска применяются к следующему процессу.
+
+`prepareLocalLaunch` не доверяет receipt/launchReady как разрешению запуска и не скачивает файлы. Проверяет Java, pinned metadata/index, весь VersionPlan (размер/SHA-1 и SHA-256 для controlled artifacts), установленный Space по compiled bundle pin/tree и проверенную native generation с SHA-256. Проверки существующих путей/junction не ослаблены. Допускается только `mods/space-client.jar`, без дополнительных mods или version-specific папок. Native cache остаётся локальным integrity cache, не подписью издателя и не защитой от одновременной подмены файлов программой того же владельца.
+
+Main собирает фиксированный classpath KnotClient, `java.library.path`, game/assets paths, assetIndex 1.8, `Xms512M` / сохранённый Xmx, offline UUID v3 от `OfflinePlayer:<ник>` и placeholder accessToken `0`. Это отдельная локальная идентичность; реальных токенов нет. `spawn` получает массив аргументов, shell=false и очищенное от JVM injection options окружение. Java.exe выбран main picker и сохранён ранее. `windowsHide=false` необходим для видимости LWJGL-окна на Windows: true скрыл первое игровое окно при реальной проверке.
+
+Состояния: idle → checking → starting → running → exited/error. Код выхода может быть null при завершении сигналом. Журнал в памяти ограничен 60 строками; raw stdout/stderr не передаются и не сохраняются лаунчером. Ограниченные chunks распознаются как несколько фиксированных диагностических сообщений, без аргументов, путей, ников, токенов и stack traces. Собственные Minecraft logs остаются в тестовом каталоге игры и не коммитятся. Это прототип диагностики, не полноценный crash reporter.
+
+Receipt установки сохраняет `launchReady=false`: он не подтверждает авторизацию/владение и будущий официальный онлайн-запуск. В локальном режиме каждый запуск проходит собственную проверку независимо от receipt.
+
+## Фактическая приёмка 24 октября 2026
+
+- 106 launcher tests: миграция/сохранение/ошибка записи ника, неизвестные ID/payload, guards установки/запуска, preflight до spawn, hash/native/mod failures, runtime, duplicate/retry, exit/signal/spawn error, flooding и redaction, shutdown, устаревший polling и сохранение черновика.
+- Изолированный `check:ui`: три экрана × четыре viewport (1180×760, 1000×680, 600×680, 500×380), inline-ошибка ника, save/reload с диска, явный local status, missing-Java error/retry, structured launch payload rejection, старые profile/keyboard guards, reduced motion, отсутствие Node globals/inline styles/CSP errors. [Снимок интерфейса](qa/launcher-local-2026-10-24.png).
+- В настоящем окне `.reports/launcher-desktop` сохранён тестовый ник. Старый установленный game tree корректно остановил preflight до Java; UI-подготовка обновила Space и проверила 768 файлов / 146,3 МиБ / 16 DLL. Bundle SHA-256 `461b69200458575c169bda159432f10f8c6c6127a06a85176f46b98ead2ab945`.
+- Из лаунчера запущены Java 21, Legacy Fabric 0.18.3, Minecraft 1.8.9, Space 0.1.0. В одиночной игре создан и открыт новый мир; настоящий HUD Space виден. [Родной F2 PNG игры](qa/launcher-local-world-2026-10-24.png). Это launcher-инстанс, не Gradle runClient и не личный Minecraft.
+- Пока мир работал, main отклонил повторный launch и установку; по command line тестового каталога найден ровно один игровой Java-процесс. После Save and Quit / Quit Game получен exitCode=0. После перезапуска лаунчера сохранённый ник использован снова, существующий мир повторно открыт. [Безопасный отчёт](qa/launcher-local-2026-10-24.json).
+
+Приёмка не подтверждает Space-регистрацию, Microsoft/OAuth/владение, online-mode серверы, чистую Windows-машину, установщик, длительную сессию, всю UI-матрицу HUD или performance benchmark. SC-03/04/05 не закрываются этим срезом.

@@ -11,6 +11,7 @@ import {
   javaPath,
   memoryLimit,
   MAX_PROFILES,
+  nickname,
 } from './validation.ts';
 
 export class ProfileStore {
@@ -25,7 +26,8 @@ export class ProfileStore {
     this.totalMemoryMb = totalMemoryMb;
     this.maxMemoryMb = memoryLimit(totalMemoryMb);
     this.state = {
-      schemaVersion: 1,
+      schemaVersion: 2,
+      localNickname: null,
       activeProfileId: 'default',
       profiles: [
         {
@@ -111,6 +113,12 @@ export class ProfileStore {
       const target = state.profiles.find((profile) => profile.id === parsed.id);
       if (!target) throw new UserFacingError('Профиль не найден.');
       Object.assign(target, parsed);
+    });
+  }
+  saveNickname(input: unknown) {
+    const parsed = nickname(input);
+    return this.mutate((state) => {
+      state.localNickname = parsed;
     });
   }
   create() {

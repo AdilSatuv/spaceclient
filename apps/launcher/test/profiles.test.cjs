@@ -88,3 +88,44 @@ test('profile count is bounded and symlinked instance directories are refused', 
   );
   await assert.rejects(store.instanceDirectory('default'), /ссылкой/);
 });
+
+test('schema v1 migrates nickname without losing profiles or Java; valid nickname persists after restart', async (t) => {
+  const { root, store } = await fixture(t);
+  const { ProfileStore } = await import('../src/main/store.ts');
+  const old = store.snapshot();
+  delete old.localNickname;
+  old.schemaVersion = 1;
+  old.profiles[0].javaPath = 'C:\\Runtime\\java.exe';
+  await fs.writeFile(path.join(root, 'settings.json'), JSON.stringify(old));
+  const migrated = await ProfileStore.open(root, 8192);
+  assert.equal(migrated.snapshot().schemaVersion, 2);
+  assert.equal(migrated.snapshot().localNickname, null);
+  assert.equal(migrated.profile('default').javaPath, old.profiles[0].javaPath);
+  await migrated.saveNickname('Space_123');
+  const reopened = await ProfileStore.open(root, 8192);
+  assert.equal(reopened.snapshot().localNickname, 'Space_123');
+  assert.deepEqual(reopened.snapshot().profiles, migrated.snapshot().profiles);
+});
+test('invalid nickname and failed writes preserve the last saved nickname and leave no temp files', async (t) => {
+  const { root, store } = await fixture(t);
+  await store.saveNickname('ValidName');
+  for (const name of [null, {}, 'ab', ' abc', 'abc ', 'Юзер', 'a'.repeat(17), 'a-b', 'a\nname'])
+    await assert.rejects(async () => store.saveNickname(name));
+  assert.equal(store.snapshot().localNickname, 'ValidName');
+  await fs.rename(path.join(root, 'settings.json'), path.join(root, 'settings.saved'));
+  await fs.mkdir(path.join(root, 'settings.json'));
+  await assert.rejects(store.saveNickname('OtherName'), /сохранить/);
+  assert.equal(store.snapshot().localNickname, 'ValidName');
+  assert.equal((await fs.readdir(root)).filter((x) => x.endsWith('.tmp')).length, 0);
+});
+test('invalid schema v2 nickname preserves the original settings before recovery', async (t) => {
+  const { root, store } = await fixture(t);
+  const value = { ...store.snapshot(), localNickname: '../bad' };
+  const raw = JSON.stringify(value);
+  await fs.writeFile(path.join(root, 'settings.json'), raw);
+  const { ProfileStore } = await import('../src/main/store.ts');
+  const reopened = await ProfileStore.open(root, 8192);
+  assert.equal(reopened.snapshot().localNickname, null);
+  assert.ok(reopened.snapshot().warning);
+  assert.equal(await fs.readFile(path.join(root, 'settings.json'), 'utf8'), raw);
+});

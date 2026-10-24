@@ -96,8 +96,8 @@ export function App() {
                 <UserRound aria-hidden="true" />
               </span>
               <div className="account-copy">
-                <strong>Твой аккаунт</strong>
-                <span>Microsoft не подключён</span>
+                <strong>{snapshot?.localNickname ?? 'Локальный игрок'}</strong>
+                <span>Без регистрации аккаунта</span>
               </div>
               <LockKeyhole className="account-lock" aria-hidden="true" />
             </div>

@@ -4,6 +4,7 @@ import { Badge } from '../components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { SpaceMark } from '../components/space-mark';
 import { InstallationCard } from '../installation-card';
+import { LaunchCard } from '../launch-card';
 import { gb } from '../lib/format';
 import type { ReadyLauncherModel } from '../model/launcher-session';
 export function HomePage({
@@ -16,6 +17,7 @@ export function HomePage({
   const { profile, dirty, javaLabel } = model;
   return (
     <>
+      <LaunchCard model={model} />
       <div className="home-feature-grid">
         <section className="launch-hero" aria-label="Space Client для Minecraft Java">
           <div className="hero-art" aria-hidden="true" />

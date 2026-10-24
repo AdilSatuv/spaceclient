@@ -1,7 +1,11 @@
 import type { JavaInfo, ProfileEdit, Result, Snapshot } from './models.ts';
 import type { InstallationStatus } from './installation.ts';
+import type { LaunchStatus } from './launch.ts';
 
 export type Commands = {
+  'local:save': { input: string; output: Snapshot };
+  'launch:get': { input: string; output: LaunchStatus };
+  'launch:start': { input: string; output: LaunchStatus };
   'state:get': { input: void; output: Snapshot };
   'profile:save': { input: ProfileEdit; output: Snapshot };
   'profile:create': { input: void; output: Snapshot };
@@ -14,6 +18,9 @@ export type Commands = {
   'installation:cancel': { input: string; output: InstallationStatus };
 };
 export const channels = {
+  saveNickname: 'local:save',
+  getLaunch: 'launch:get',
+  startLaunch: 'launch:start',
   getState: 'state:get',
   saveProfile: 'profile:save',
   createProfile: 'profile:create',

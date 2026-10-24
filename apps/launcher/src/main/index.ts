@@ -5,6 +5,7 @@ import { mkdirSync } from 'node:fs';
 import { ProfileStore } from './store.ts';
 import { inspectJava } from './java.ts';
 import { InstallationService } from './installation.ts';
+import { LaunchService } from './launch.ts';
 import { installSpaceBundle } from './game-bundle.ts';
 import type { SpaceBundleManifest } from './game-bundle.ts';
 import { APP_URL } from './security.ts';
@@ -63,6 +64,10 @@ else {
       application = new LauncherApplication({
         profiles,
         installation,
+        launch: new LaunchService(
+          async (id) => join(await profiles.instanceDirectory(id), 'minecraft'),
+          pin,
+        ),
         inspectJava,
         desktop: createDesktopPort(() => window),
       });

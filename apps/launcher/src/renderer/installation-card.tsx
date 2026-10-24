@@ -49,7 +49,7 @@ export function InstallationCard({ profileId, dirty }: { profileId: string; dirt
           <Chevron />
           <span>
             <LockKeyhole aria-hidden="true" />
-            Microsoft-вход
+            Локальный запуск
           </span>
         </div>
         <div
@@ -125,9 +125,8 @@ export function InstallationCard({ profileId, dirty }: { profileId: string; dirt
         {dirty && <p className="inline-hint">Сначала сохраните или отмените изменения профиля.</p>}
         <p className="launch-disclaimer">
           <LockKeyhole aria-hidden="true" />
-          {current?.spaceVersion
-            ? 'Запуск станет доступен после Microsoft-входа и проверки владения игрой.'
-            : 'Запуск требует Microsoft-входа, проверки владения и готовой сборки Space.'}
+          Локальный запуск повторно проверяет файлы и Java. Для онлайн-входа Microsoft пока не
+          подключён.
         </p>
       </CardContent>
     </Card>

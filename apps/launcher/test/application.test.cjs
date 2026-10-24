@@ -33,6 +33,15 @@ async function fixture(t) {
         calls.push(['shutdown']);
       },
     },
+    launch: {
+      running: false,
+      status: (id) => ({ profileId: id, phase: 'idle' }),
+      start: (profile, name) => {
+        calls.push(['launch', profile.id, name]);
+        return { profileId: profile.id, phase: 'checking' };
+      },
+      shutdown: async () => {},
+    },
     desktop: {
       chooseJava: async () => null,
       openDirectory: async (value) => {
@@ -60,10 +69,10 @@ async function fixture(t) {
   };
 }
 
-test('application owns all ten commands and preserves profile persistence without Electron', async (t) => {
+test('application owns all thirteen commands and preserves profile persistence without Electron', async (t) => {
   const { application, dispatch, event, profiles } = await fixture(t);
   const { channels } = await import('../src/shared/ipc.ts');
-  assert.equal(new Set(Object.values(channels)).size, 10);
+  assert.equal(new Set(Object.values(channels)).size, 13);
   assert.deepEqual(Object.keys(application.commands).sort(), Object.values(channels).sort());
   assert.equal((await dispatch('state:get', event)).value.activeProfileId, 'default');
   const created = await dispatch('profile:create', event);
@@ -83,6 +92,8 @@ test('application owns all ten commands and preserves profile persistence withou
 test('unknown profiles and inputless command payloads fail before privileged ports are called', async (t) => {
   const { dispatch, event, calls } = await fixture(t);
   for (const channel of [
+    'launch:get',
+    'launch:start',
     'installation:get',
     'installation:start',
     'installation:cancel',
@@ -223,4 +234,19 @@ test('asset adapter serves only fixed local assets with unchanged CSP', async (t
   ]) {
     assert.equal((await handle(new Request(url, { method }))).status, 404);
   }
+});
+
+test('local launch accepts only known profile ID and main-saved nickname; installation and launch exclude each other', async (t) => {
+  const { dispatch, event, dependencies, profiles, calls } = await fixture(t);
+  await profiles.saveNickname('SpaceTester');
+  assert.equal((await dispatch('launch:start', event, { id: 'default', args: ['bad'] })).ok, false);
+  dependencies.installation.running = true;
+  assert.equal((await dispatch('launch:start', event, 'default')).ok, false);
+  assert.deepEqual(calls, []);
+  dependencies.installation.running = false;
+  assert.equal((await dispatch('launch:start', event, 'default')).ok, true);
+  assert.deepEqual(calls, [['launch', 'default', 'SpaceTester']]);
+  dependencies.launch.running = true;
+  assert.equal((await dispatch('installation:start', event, 'default')).ok, false);
+  assert.equal((await dispatch('local:save', event, { nickname: 'other', args: [] })).ok, false);
 });

@@ -9,6 +9,19 @@ export function useLauncherSession() {
   useEffect(() => {
     void session.load();
   }, [session]);
+  useEffect(() => {
+    let stopped = false;
+    let timer: ReturnType<typeof setTimeout>;
+    const poll = async () => {
+      await session.refreshLaunch();
+      if (!stopped) timer = setTimeout(poll, 650);
+    };
+    void poll();
+    return () => {
+      stopped = true;
+      clearTimeout(timer);
+    };
+  }, [session, state.profile?.id]);
   // useSyncExternalStore owns unsubscription. Pending main commands can finish after unmount;
   // no React component owns their persistence or cancellation.
   return { ...state, session };

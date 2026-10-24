@@ -210,8 +210,8 @@ export class InstallationService {
         verifiedBytes: totalBytes,
         spaceVersion: installedSpace?.modVersion ?? null,
         message: installedSpace
-          ? 'Сборка Space подготовлена. Для запуска ещё нужен Microsoft-вход и проверка игры.'
-          : 'Базовые файлы проверены. Для запуска ещё нужны сборка Space и вход Microsoft.',
+          ? 'Сборка Space подготовлена. Локальный запуск повторно проверит файлы и Java.'
+          : 'Базовые файлы проверены. Для локального запуска ещё нужна сборка Space.',
       });
     } catch (error) {
       this.update(job.id, {

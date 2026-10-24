@@ -1136,3 +1136,65 @@ progress::-webkit-progress-value {
     scroll-behavior: auto !important;
   }
 }
+.local-launch {
+  margin-bottom: 24px;
+}
+.local-launch [data-slot='card-content'] {
+  min-width: 0;
+}
+.nickname-form {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.nickname-field {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+.nickname-field label {
+  display: block;
+  margin-bottom: 8px;
+}
+.nickname-form > button {
+  margin-top: 28px;
+}
+.nickname-field .inline-hint {
+  margin-block: 8px 0;
+}
+.nickname-field .installation-error {
+  margin-block: 4px 0;
+}
+.launch-journal {
+  margin-top: 16px;
+  color: var(--muted-foreground);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.launch-journal summary {
+  cursor: pointer;
+  padding-block: 12px;
+}
+.launch-journal summary:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+.launch-journal ul {
+  padding-left: 20px;
+}
+@media (max-width: 670px) {
+  .nickname-form {
+    flex-direction: column;
+  }
+  .nickname-field {
+    flex: none;
+    width: 100%;
+  }
+  .nickname-form > button {
+    margin-top: 0;
+    width: 100%;
+  }
+  .local-launch .installation-heading {
+    align-items: flex-start;
+  }
+}
