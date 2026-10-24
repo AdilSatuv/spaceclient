@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "sceneId": "fixed-camera-720p-baseline",
+  "route": "Use the same restored snapshot, position and camera orientation",
+  "preset": "low",
+  "javaVersion": "Temurin 21.0.12.1+1",
+  "minecraftVersion": "1.8.9",
+  "worldSnapshotSha256": "REPLACE_WITH_REAL_SNAPSHOT_SHA256",
+  "optionsSha256": "REPLACE_WITH_REAL_OPTIONS_SHA256",
+  "width": 1280,
+  "height": 720,
+  "ramMiB": 3072,
+  "resourcePacks": [],
+  "vsync": false,
+  "fpsLimit": 260
+}

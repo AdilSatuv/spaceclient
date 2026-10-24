@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "checkedDate": "2026-10-24",
+  "task": "SC-13",
+  "status": "preparation-and-partial-compatibility",
+  "gameSource": {
+    "commit": "7aa48f0e3fda5fd2b6a173d9cb3e722980950864",
+    "tree": "ad06bc5f13ca76788f6c0832e9f72e77843219ac",
+    "jarSha256": "11299c35e8812de73373f75c0a3cef721f40308bb7f510fa7387c4f70c376257"
+  },
+  "tooling": {
+    "scripts/benchmark/setup.ps1": "db9993d6f8a139e1387995e36c5cb9c7b03c96f1e84c15744e7d80c7b95e0afd",
+    "scripts/benchmark/capture.ps1": "a84b751a1a9c73e20892e240c6fe7b5aa5d99ed4e5d1a9a1cd2187a0bd4b60c5",
+    "scripts/benchmark/analyze.cjs": "8a7c515e7304a1acfd1263a4259c8a5408120468b36b3824964a3cca36be36f2"
+  },
+  "tool": {
+    "version": "2.3.1",
+    "sha256": "364e5d98d4d134bd54dd25c22ed2ca2f4883f8bc3ed6502bee0c151e3436d30c"
+  },
+  "hardware": {
+    "cpu": [
+      "12th Gen Intel(R) Core(TM) i5-12400F"
+    ],
+    "gpu": [
+      {
+        "name": "NVIDIA GeForce RTX 3060",
+        "driverVersion": "32.0.16.1088"
+      }
+    ],
+    "ramBytes": 16963067904,
+    "osBuild": "10.0.26200.0"
+  },
+  "captureProbe": {
+    "durationSeconds": 5,
+    "warmupSeconds": 0,
+    "status": "failed",
+    "collectorExitCode": 1,
+    "diagnostic": "failed to start trace session: access denied",
+    "stderrSha256": "3bec4df2ce8a9880475dfff83efb4bb5b616f929ddbd74edd6eb30de984cb34e",
+    "csvCreated": false,
+    "summaryCreated": false,
+    "analyzerExitCode": 1,
+    "automaticElevation": false,
+    "systemGroupsChanged": false
+  },
+  "compatibility": {
+    "launch": "isolated launcher-local instance",
+    "preset": {
+      "renderDistance": 4,
+      "fancyGraphics": false,
+      "particles": 2,
+      "mipmapLevels": 0,
+      "forceUnicodeFont": true,
+      "guiScale": 2,
+      "width": 1280,
+      "height": 720
+    },
+    "resourcePack": {
+      "format": 1,
+      "description": "Space SC-13 compatibility QA",
+      "languageOverride": "menu.singleplayer=QA Singleplayer",
+      "visibleOverrideObserved": true,
+      "customGlyphTextures": false
+    },
+    "hud": {
+      "fpsScale": 3,
+      "initialAnchor": "RIGHT/BOTTOM 0/0",
+      "draggedAnchor": "LEFT/BOTTOM 0/0",
+      "fullBoundsAndFocusOutlineVisible": true,
+      "editorToolbarControlsVisible": true,
+      "worldAndEditorUseSameFontMetrics": true
+    },
+    "f1": "hides and restores HUD",
+    "f3": "hides and restores HUD; confirms 1280x720 and Java 21.0.12.1",
+    "altTab": "launcher receives focus; return shows normal pause; Back to Game restores HUD and CPS 0/0",
+    "exitCode": 0,
+    "restored": {
+      "optionsByteExactSha256": "411b352b2077ca05e7e25c749da7140e0f5261eac9bf1358aa5c29e3cfca1fca",
+      "hudByteExactSha256": "45e8a2f1107d5e8f466c37a6287cdd5ca54ebf2696d7119881069aa402d52629"
+    },
+    "screenshots": [
+      {
+        "nativeScreenshot": "hud-compatibility-unicode-world-2026-10-24.png",
+        "width": 1280,
+        "height": 720,
+        "sha256": "956067dc53d3842f08c18d2cef5ebdc0d53c4031e6796e295dce93926962cf37"
+      },
+      {
+        "nativeScreenshot": "hud-compatibility-unicode-editor-2026-10-24.png",
+        "width": 1280,
+        "height": 720,
+        "sha256": "a8d4a893d610549281f685e97dc8090e5b68415012ec9cd34cdfa5900aa77854"
+      },
+      {
+        "nativeScreenshot": "hud-compatibility-resource-pack-2026-10-24.png",
+        "width": 1280,
+        "height": 720,
+        "sha256": "5c8d762599e6dcccfff5e16d516fe3a68ecf8940790e770edc52106748b8cf2e"
+      }
+    ]
+  },
+  "measuredPerformance": null,
+  "pending": [
+    "ETW access for actual frame capture",
+    "Nine reproducible vanilla / Space HUD OFF / Space HUD ON captures",
+    "Startup latency",
+    "Authorized baseline/runtime after SC-10",
+    "Third-party HD/font packs and full long-session compatibility"
+  ],
+  "note": "FPS values visible in screenshots are live HUD diagnostics, not benchmark measurements. Unit fixtures are synthetic."
+}

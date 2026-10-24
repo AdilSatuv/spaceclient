@@ -17,8 +17,8 @@
     "build": "npm run build --workspace @space/api && npm run build --workspace @space/website && npm run build --workspace @space/launcher",
     "test": "node --test tests/*.test.cjs && npm run test --workspace @space/api && npm run test --workspace @space/launcher",
     "check": "npm run check --workspaces",
-    "format": "prettier --write apps/website/app apps/website/src apps/website/next.config.ts scripts/check-website*.cjs scripts/sync-website-tokens.cjs scripts/setup-website-firefox.cjs scripts/audit-website.cjs scripts/preview-web.cjs tests/website-*.test.cjs apps/launcher/src apps/launcher/scripts apps/launcher/test apps/api/src apps/api/test packages/content-contracts/src",
-    "format:check": "prettier --check apps/website/app apps/website/src apps/website/next.config.ts scripts/check-website*.cjs scripts/sync-website-tokens.cjs scripts/setup-website-firefox.cjs scripts/audit-website.cjs scripts/preview-web.cjs tests/website-*.test.cjs apps/launcher/src apps/launcher/scripts apps/launcher/test apps/api/src apps/api/test packages/content-contracts/src",
+    "format": "prettier --write apps/website/app apps/website/src apps/website/next.config.ts scripts/check-website*.cjs scripts/sync-website-tokens.cjs scripts/setup-website-firefox.cjs scripts/audit-website.cjs scripts/preview-web.cjs tests/website-*.test.cjs apps/launcher/src apps/launcher/scripts apps/launcher/test apps/api/src apps/api/test packages/content-contracts/src scripts/benchmark/*.cjs tests/benchmark.test.cjs",
+    "format:check": "prettier --check apps/website/app apps/website/src apps/website/next.config.ts scripts/check-website*.cjs scripts/sync-website-tokens.cjs scripts/setup-website-firefox.cjs scripts/audit-website.cjs scripts/preview-web.cjs tests/website-*.test.cjs apps/launcher/src apps/launcher/scripts apps/launcher/test apps/api/src apps/api/test packages/content-contracts/src scripts/benchmark/*.cjs tests/benchmark.test.cjs",
     "check:web:states": "node scripts/check-website-states.cjs",
     "audit:web": "node scripts/audit-website.cjs",
     "launcher": "npm run dev --workspace @space/launcher",
@@ -32,7 +32,10 @@
     "setup:web:firefox": "node scripts/setup-website-firefox.cjs",
     "check:web:firefox": "node scripts/check-website-browser.cjs --firefox",
     "tokens:web": "node scripts/sync-website-tokens.cjs",
-    "tokens:web:check": "node scripts/sync-website-tokens.cjs --check"
+    "tokens:web:check": "node scripts/sync-website-tokens.cjs --check",
+    "setup:benchmark": "pwsh -NoProfile -File scripts/benchmark/setup.ps1",
+    "capture:benchmark": "pwsh -NoProfile -File scripts/benchmark/capture.ps1",
+    "analyze:benchmark": "node scripts/benchmark/analyze.cjs"
   },
   "devDependencies": {
     "@puppeteer/browsers": "3.2.6",
