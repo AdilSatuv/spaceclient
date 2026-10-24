@@ -55,7 +55,7 @@ public final class HudModulesScreen extends Screen {
         fill(left, top, left + panelWidth, top + panelHeight, 0xFF10141D);
         fill(left, top, left + panelWidth, top + 2, 0xFFF2B56B);
         textRenderer.drawWithShadow("SPACE CLIENT / HUD", left + 12, top + 13, TEXT);
-        textRenderer.drawWithShadow("Your orbit. Your modules.", left + 12, top + 27, MUTED);
+        textRenderer.drawWithShadow("Right Shift / Esc - close", left + 12, top + 27, MUTED);
 
         box(left + 12, top + 44, panelWidth - 24, 23, focus == 0, false);
         textRenderer.drawWithShadow("Search", left + 20, top + 49, MUTED);
