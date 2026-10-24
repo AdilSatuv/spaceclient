@@ -21,7 +21,19 @@ Codebase Memory: после SC-05 выполнен явный reindex (moderate,
 
 Windows QA: skill `computer-use:computer-use`, `node_repl`, пакет `@oai/sky`. Ограничение native API другого Cua tool не означает недоступность этого плагина. Читать skill и guidance/api/confirmations. После перезапуска выбрать новый returned HWND и явно активировать окно перед снимком. Проверять собственный dev-клиент; при пользовательском прерывании остановить ввод.
 
-## Текущий срез — локальная визуальная проверка SC-23
+## Текущий завершённый срез — локальные startup observations SC-13
+
+Добавлены изолированный Node QA collector `scripts/benchmark/startup.cjs`, observer bridge `.mjs`, read-only `analyze:startup` и шесть тестов. Продуктовый launcher/game/IPC не менялись. Стартует неизменённый `prepareLocalLaunch` с полной проверкой Java/artifacts/JAR/natives; отдельно записываются request/preflight/spawn call/spawn event. Native screenshots сохраняются исходными JPEG/PNG с hashes, их семантика классифицируется только после осмотра. Spawn, окно и строки лога не считаются готовностью.
+
+[Протокол, определения и результаты](STARTUP-TIMING.md), [QA JSON](qa/startup-2026-10-24.json). В новом `.reports/benchmark/startup-SlpVa0/instance` выполнены диагностический запуск и три новых Java-процесса, главное меню → Singleplayer/Select World → Cancel → Quit Game. Все четыре exitCode=0; worlds не создавались/не открывались. Повторы: preflight 1,084 / 1,015 / 1,022 с; меню наблюдено **не позднее** 6,550 / 6,392 / 6,512 с от QA-request, либо 5,465 / 5,377 / 5,491 с от spawn call. Это верхние границы, не точная длительность старта и не медиана latency. Наблюдатель первого снимка добавляет около 3,1 с; timestamp самого игрового кадра неизвестен, после перехода иногда возвращается предшествующий экран. Даже отрицательные снимки не сужают нижнюю границу; итоговый анализатор это запрещает.
+
+Кеши не очищались: clone/preflight читают файлы, затем diagnostic + три перезапуска одного QA-инстанса. Не называть cold start/строго контролируемым warm cache. Только Space, HUD настроен ON, меню без отрисовки HUD; vanilla/OFF и готовый мир здесь не измерены. `startupMs=null`, `worldReadyMeasured=false`; старые девять FPS captures/27 hashes не изменены и автоматически не повторялись. SC-13 **OPEN**: остаются общий готовый кадр/world endpoint, контролируемое сравнение и официальный baseline после отложенной SC-10. Microsoft, Space-регистрацию, hosting/installer автоматически не начинать.
+
+Первый `startup-hicBjX` исключён: PNG-only collector отклонил JPEG; menu/normal exit наблюдались, но принятого evidence/summary нет. Исправленная session сохранила точные capture-source snapshots/hashes. Финальный анализатор перепроверяет raw hashes; границы четырёх принятых записей неизменны. Все тестовые игры и observer завершены, elevated ETW не запускался. Исходные QA options/HUD по-прежнему совпадают с прежними SHA ниже; mouseSensitivity=0.5 в новом инстансе. `.minecraft` и game/run не затрагивались. Локальные Markdown/JSON/raw archive — outputs чата `space-client-startup-timing`; runtime/raw не коммитятся.
+
+`npm test` — 155 tests (38 root / 9 API / 108 launcher), launcher TypeScript/build, format:check и task graph прошли. Точный финальный SHA и полный Verify фиксируются в [issue #13](https://github.com/AdilSatuv/spaceclient/issues/13) после push. Новые тесты входят в общий npm test/CI. Codebase Memory использован для launch-графа: launch.ts/launch-plan.ts имеют no_recorded_issue + metadata_changed, docs/scripts исключены; исходники сверены напрямую, полнота индекса не утверждается. Preview сайта не перезапускался; чат находится в разделе Space Client.
+
+## Предыдущий срез — локальная визуальная проверка SC-23
 
 Исправлен overflow при увеличенных интервалах текста: wrap шапки/navigation, перенос wordmark/ссылок подвала и minmax mobile columns. Осмотрены 26 полных снимков всех 13 текущих маршрутов на 390/1440 px. Обнаруженные устаревшие тексты главной/каталога/помощи обновлены по принятой проверке SC-03/04/05/25. Добавлена `/updates/local-launch-and-hud`; прежние две статьи остаются историей. Релизы по-прежнему пусты, FPS-прирост не обещается.
 

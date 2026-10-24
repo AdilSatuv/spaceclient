@@ -1,0 +1,648 @@
+{
+  "schemaVersion": 1,
+  "task": "SC-13",
+  "date": "2026-10-24",
+  "timezone": "Asia/Dhaka",
+  "result": "Local Space preflight/spawn timing and conservative visual main-menu upper bounds",
+  "completeStartupBenchmark": false,
+  "exactStartupMeasured": false,
+  "worldReadyMeasured": false,
+  "authenticatedBaseline": false,
+  "coldCacheClaim": false,
+  "oldFpsCapturesModified": false,
+  "source": {
+    "schemaVersion": 1,
+    "createdUtc": "2026-10-24T14:48:00.334Z",
+    "sourceCommit": "bf756e95ba785d69f6d4d207ae4b71394b1a648a",
+    "pin": {
+      "schemaVersion": 1,
+      "channel": "development",
+      "modVersion": "0.1.0",
+      "minecraftVersion": "1.8.9",
+      "loaderVersion": "0.18.3",
+      "gameSourceTree": "ad06bc5f13ca76788f6c0832e9f72e77843219ac",
+      "size": 47687,
+      "sha256": "11299c35e8812de73373f75c0a3cef721f40308bb7f510fa7387c4f70c376257"
+    },
+    "sourceHashes": {
+      "scripts/benchmark/startup.cjs": "c5c11164c3ee5b5ea22c3dbbdc65c8be5436de089c01d7facd8ffe93394ec46a",
+      "scripts/benchmark/startup-observer.mjs": "60c954c8341f437f54025de73adeb9ce63fcb96b4ba4144dd5afe4a2261d26b8",
+      "apps/launcher/src/main/launch-plan.ts": "d61418c12dc6ef2a1ef17024aaa7230a405a4104fe9006d5febbcb53b5da9f6f",
+      "apps/launcher/src/main/java.ts": "ae23daa9758e496a2d4cd6961d30966a1922bfce4915cb44ac956f8c13816a64"
+    },
+    "node": "v24.15.0",
+    "platform": "win32",
+    "memoryMb": 3072,
+    "width": 1000,
+    "height": 680,
+    "setupExcludedFromTiming": "Clone verified runtime into a fresh QA directory; generate options/HUD; import launch module",
+    "scope": "Local Space main-menu observation only; no world startup, vanilla comparison, download, Electron/UI/IPC timing or authenticated baseline",
+    "finalAnalyzerSha256": "4e4909a6640682531d37b7f5d80e296d9aa757f1b4a5856fb50561d273275af8"
+  },
+  "hardware": {
+    "cpu": "12th Gen Intel(R) Core(TM) i5-12400F",
+    "gpu": "NVIDIA GeForce RTX 3060",
+    "driver": "32.0.16.1088",
+    "osBuild": "10.0.26200.0",
+    "ramBytes": 16963067904,
+    "java": "Temurin 21.0.12.1+1 x64"
+  },
+  "conditions": {
+    "memoryMiB": 3072,
+    "initialHeapMiB": 512,
+    "width": 1000,
+    "height": 680,
+    "nativeScreenshotWidth": 1002,
+    "nativeScreenshotHeight": 712,
+    "guiScale": 2,
+    "language": "en_US",
+    "renderDistance": 8,
+    "fancyGraphics": false,
+    "particles": 2,
+    "mipmapLevels": 0,
+    "vsync": false,
+    "maxFps": 260,
+    "resourcePacks": [],
+    "unicodeFont": false,
+    "mouseSensitivity": 0.5,
+    "hudMasterAndFourModulesConfiguredOn": true,
+    "hudRenderedInMainMenu": false,
+    "worldsOpened": 0,
+    "cache": "Prepared runtime; diagnostic then sequential restarts; preflight rereads all artifacts; OS/GPU caches uncontrolled",
+    "backgroundLoadAndThermalsMeasured": false
+  },
+  "method": {
+    "clock": "One Node collector performance.now; UTC identity only",
+    "request": "Immediately before unmodified prepareLocalLaunch; source module loaded and cloned instance prepared beforehand",
+    "preflight": "Runtime + pinned files/JAR/native validation, one aggregate duration",
+    "spawn": "Timestamp immediately before Node spawn() call; spawn event recorded separately",
+    "endpoint": "Reviewed source-window screenshot showing main menu",
+    "response": "Later Singleplayer click followed by reviewed Select World; not earliest interactivity timestamp",
+    "bounds": "Lower bound is spawn call only. Upper bound is screenshot observer end; no trusted presentation timestamp and negative images may be stale",
+    "screenshotOperator": "@oai/sky via node_repl; exactly one returned Minecraft window, activated before acquisition",
+    "limitations": [
+      "No Electron startup, launcher UI/IPC or user-click timing",
+      "No first ready world frame, input-latency or first Present timing",
+      "No vanilla/OFF comparison; main menu does not render HUD",
+      "No cold-cache measurement or strict warm-cache control",
+      "Observer first screenshot call approximately 3.1 seconds in each repeat; upper bounds include that overhead",
+      "No inference of performance gains or causal HUD cost"
+    ],
+    "oldFpsStartupMs": null
+  },
+  "excludedProbe": {
+    "reason": "PNG-only collector rejected native JPEG; no accepted screenshot or summary",
+    "normalExitCode": 0,
+    "startupMs": null
+  },
+  "verification": {
+    "acceptedRuns": 4,
+    "diagnosticRuns": 1,
+    "repetitions": 3,
+    "normalExitCodes": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sourceScreenshotHashesRechecked": 16,
+    "rawFilesHashed": 38,
+    "allPrelaunchOptionsAndHudHashesEqual": true,
+    "originalQaPreserved": {
+      "optionsSha256": "411b352b2077ca05e7e25c749da7140e0f5261eac9bf1358aa5c29e3cfca1fca",
+      "hudSha256": "45e8a2f1107d5e8f466c37a6287cdd5ca54ebf2696d7119881069aa402d52629"
+    },
+    "gameAndLauncherSourcesUnchanged": true,
+    "elevatedRecorderStarted": false,
+    "observerDisconnectedAfterJavaExit": true,
+    "sourceSnapshotsMatchSessionHashes": true,
+    "finalAnalyzerIntervalsMatchOriginalSummaries": true
+  },
+  "runs": [
+    {
+      "schemaVersion": 1,
+      "label": "diagnostic",
+      "mode": "Space local development; HUD configured ON; main menu only",
+      "cacheRegime": "prepared files; preflight reads all artifacts; OS/GPU caches uncontrolled; not cold",
+      "optionsSha256": "dcc57479dff14dd6dbc17f1af673d573cb3470dc478bae7718e191987e8c42d7",
+      "hudSha256": "526dd2ead3dd432bd55dd505b48ba1f98bea4beabbb5ec18f773e2fedeec3b8b",
+      "marks": {
+        "requestedMs": 0,
+        "preflightCompleteMs": 1007.7278,
+        "spawnCallMs": 1007.9342,
+        "spawnEventMs": 1011.1339999999999
+      },
+      "requestedUtc": "2026-10-24T14:48:00.370Z",
+      "observations": [
+        {
+          "id": 1,
+          "beginMs": 4765.9078,
+          "endMs": 7879.1329,
+          "file": "observation-1.jpg",
+          "sha256": "1fc97f2a80060f401ec7c3f399df179238913312b5bd652731a29b4cf1f7248d",
+          "review": "main-menu"
+        },
+        {
+          "id": 2,
+          "beginMs": 8281.349199999999,
+          "endMs": 10360.6274,
+          "file": "observation-2.jpg",
+          "sha256": "ad1303c4b792b8bf91264bdc83955f37998e864fe14b4b6f689ff74e3f9da8b3",
+          "review": "main-menu"
+        },
+        {
+          "id": 3,
+          "beginMs": 10761.6277,
+          "endMs": 10826.2599,
+          "file": "observation-3.jpg",
+          "sha256": "0897e1cd9cf2a634db0695d8357c6e59bbf2c5e6b01bcb7947a440841b7a4e15",
+          "review": "main-menu"
+        },
+        {
+          "id": 4,
+          "beginMs": 11228.0188,
+          "endMs": 11284.9088,
+          "file": "observation-4.jpg",
+          "sha256": "60652dd5913394dd3094e4ca12ff392a846fc1c37cdc0245a02743e4deaa22f5",
+          "review": "main-menu"
+        },
+        {
+          "id": 5,
+          "beginMs": 38272.6981,
+          "endMs": 41327.481400000004,
+          "file": "observation-5.jpg",
+          "sha256": "0a8b4d1c5bbf12a47c5573771567b9dca90c9ef421863787152cb3d97ec0d2fb",
+          "review": "singleplayer-menu"
+        },
+        {
+          "id": 6,
+          "beginMs": 45817.7711,
+          "endMs": 45871.1073,
+          "file": "observation-6.jpg",
+          "sha256": "f432eefc3df4835bee1eca7e80a4ae8d01fd885d0529abec29177ffb38d39bab",
+          "review": "singleplayer-menu"
+        },
+        {
+          "id": 7,
+          "beginMs": 50420.5421,
+          "endMs": 50488.1168,
+          "file": "observation-7.jpg",
+          "sha256": "f05ac3237e2662ca959c71437035561f013f8a4668dc5aa396bb42d132b28581",
+          "review": "main-menu"
+        }
+      ],
+      "interaction": {
+        "fromObservationId": 1,
+        "responseObservationId": 5
+      },
+      "exit": {
+        "code": 0,
+        "signal": null,
+        "observedMs": 73466.8716,
+        "utc": "2026-10-24T14:49:13.892Z"
+      },
+      "failure": null,
+      "processId": 7272,
+      "outputSha256": "97ad14bbef6dc36803c4928cbedd532a820acbd51e898ef731f7e649e85e97f1",
+      "analysis": {
+        "endpoint": "visually-reviewed-main-menu",
+        "clock": "collector performance.now; observer calls bracketed over local stdin/stdout; no frame timestamp",
+        "preflightMs": 1007.7278,
+        "requestToSpawnCallMs": 1007.9342,
+        "spawnCallToEventMs": 3.1997999999998683,
+        "requestToMenuMs": {
+          "lowerMs": 1007.9342,
+          "upperMs": 7879.1329
+        },
+        "spawnCallToMenuMs": {
+          "lowerMs": 0,
+          "upperMs": 6871.1987
+        },
+        "observationUncertaintyMs": 6871.1987,
+        "lowerBoundSource": "spawn call only; no trusted frame presentation timestamp",
+        "responseVerifiedLater": true,
+        "startupMs": null,
+        "worldReadyMeasured": false
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "label": "repeat-1",
+      "mode": "Space local development; HUD configured ON; main menu only",
+      "cacheRegime": "prepared files; preflight reads all artifacts; OS/GPU caches uncontrolled; not cold",
+      "optionsSha256": "dcc57479dff14dd6dbc17f1af673d573cb3470dc478bae7718e191987e8c42d7",
+      "hudSha256": "526dd2ead3dd432bd55dd505b48ba1f98bea4beabbb5ec18f773e2fedeec3b8b",
+      "marks": {
+        "requestedMs": 0,
+        "preflightCompleteMs": 1084.3794999999955,
+        "spawnCallMs": 1084.4220999999961,
+        "spawnEventMs": 1086.368599999987
+      },
+      "requestedUtc": "2026-10-24T14:49:41.666Z",
+      "observations": [
+        {
+          "id": 8,
+          "beginMs": 3444.967699999994,
+          "endMs": 6549.877499999988,
+          "file": "observation-8.jpg",
+          "sha256": "5e16ef9bd0e85e53fbf9c86f051899f2370dd8cbc10599c27f61e77eaf1d70fe",
+          "review": "main-menu"
+        },
+        {
+          "id": 9,
+          "beginMs": 10400.728899999987,
+          "endMs": 13016.736399999994,
+          "file": "observation-9.jpg",
+          "sha256": "6e7e534e5e0f29c931fc0bd6165b076a8b94cc134da3f3702af5671e057ad80c",
+          "review": "singleplayer-menu"
+        },
+        {
+          "id": 10,
+          "beginMs": 17046.070099999997,
+          "endMs": 17282.35179999999,
+          "file": "observation-10.jpg",
+          "sha256": "67a4346bfb11935816eb306d0a78ac8fce51dd5e57f0b356d957f082c9f36619",
+          "review": "main-menu"
+        }
+      ],
+      "interaction": {
+        "fromObservationId": 8,
+        "responseObservationId": 9
+      },
+      "exit": {
+        "code": 0,
+        "signal": null,
+        "observedMs": 23541.247999999992,
+        "utc": "2026-10-24T14:50:05.208Z"
+      },
+      "failure": null,
+      "processId": 22392,
+      "outputSha256": "04395b37b7f744245d1c1d8cd568c58dee4b818392832cfc3cad481eb25f4ca9",
+      "analysis": {
+        "endpoint": "visually-reviewed-main-menu",
+        "clock": "collector performance.now; observer calls bracketed over local stdin/stdout; no frame timestamp",
+        "preflightMs": 1084.3794999999955,
+        "requestToSpawnCallMs": 1084.4220999999961,
+        "spawnCallToEventMs": 1.9464999999909196,
+        "requestToMenuMs": {
+          "lowerMs": 1084.4220999999961,
+          "upperMs": 6549.877499999988
+        },
+        "spawnCallToMenuMs": {
+          "lowerMs": 0,
+          "upperMs": 5465.455399999992
+        },
+        "observationUncertaintyMs": 5465.455399999992,
+        "lowerBoundSource": "spawn call only; no trusted frame presentation timestamp",
+        "responseVerifiedLater": true,
+        "startupMs": null,
+        "worldReadyMeasured": false
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "label": "repeat-2",
+      "mode": "Space local development; HUD configured ON; main menu only",
+      "cacheRegime": "prepared files; preflight reads all artifacts; OS/GPU caches uncontrolled; not cold",
+      "optionsSha256": "dcc57479dff14dd6dbc17f1af673d573cb3470dc478bae7718e191987e8c42d7",
+      "hudSha256": "526dd2ead3dd432bd55dd505b48ba1f98bea4beabbb5ec18f773e2fedeec3b8b",
+      "marks": {
+        "requestedMs": 0,
+        "preflightCompleteMs": 1014.6021999999939,
+        "spawnCallMs": 1014.6821999999956,
+        "spawnEventMs": 1016.6616999999969
+      },
+      "requestedUtc": "2026-10-24T14:50:06.031Z",
+      "observations": [
+        {
+          "id": 11,
+          "beginMs": 3282.3386000000028,
+          "endMs": 6391.852299999984,
+          "file": "observation-11.jpg",
+          "sha256": "5f1c67dc9f9ebed822bc39f7decdb462f949ada0a9c1edf7a0f96de68d5701e7",
+          "review": "main-menu"
+        },
+        {
+          "id": 12,
+          "beginMs": 9920.343199999988,
+          "endMs": 12976.231899999999,
+          "file": "observation-12.jpg",
+          "sha256": "6e7e534e5e0f29c931fc0bd6165b076a8b94cc134da3f3702af5671e057ad80c",
+          "review": "singleplayer-menu"
+        },
+        {
+          "id": 13,
+          "beginMs": 17354.463499999998,
+          "endMs": 17405.901399999988,
+          "file": "observation-13.jpg",
+          "sha256": "7eb1ff3407fbd99863391f5c4ce7d3d8b233878e573923ec22a7604ae1ba85e0",
+          "review": "main-menu"
+        }
+      ],
+      "interaction": {
+        "fromObservationId": 11,
+        "responseObservationId": 12
+      },
+      "exit": {
+        "code": 0,
+        "signal": null,
+        "observedMs": 21382.518399999986,
+        "utc": "2026-10-24T14:50:27.413Z"
+      },
+      "failure": null,
+      "processId": 10848,
+      "outputSha256": "6ec5e07db48e1bf43c188d2ef07fa9d679994fadcfc74f49104ab50f1a6067a7",
+      "analysis": {
+        "endpoint": "visually-reviewed-main-menu",
+        "clock": "collector performance.now; observer calls bracketed over local stdin/stdout; no frame timestamp",
+        "preflightMs": 1014.6021999999939,
+        "requestToSpawnCallMs": 1014.6821999999956,
+        "spawnCallToEventMs": 1.9795000000012806,
+        "requestToMenuMs": {
+          "lowerMs": 1014.6821999999956,
+          "upperMs": 6391.852299999984
+        },
+        "spawnCallToMenuMs": {
+          "lowerMs": 0,
+          "upperMs": 5377.170099999988
+        },
+        "observationUncertaintyMs": 5377.170099999988,
+        "lowerBoundSource": "spawn call only; no trusted frame presentation timestamp",
+        "responseVerifiedLater": true,
+        "startupMs": null,
+        "worldReadyMeasured": false
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "label": "repeat-3",
+      "mode": "Space local development; HUD configured ON; main menu only",
+      "cacheRegime": "prepared files; preflight reads all artifacts; OS/GPU caches uncontrolled; not cold",
+      "optionsSha256": "dcc57479dff14dd6dbc17f1af673d573cb3470dc478bae7718e191987e8c42d7",
+      "hudSha256": "526dd2ead3dd432bd55dd505b48ba1f98bea4beabbb5ec18f773e2fedeec3b8b",
+      "marks": {
+        "requestedMs": 0,
+        "preflightCompleteMs": 1021.7746000000043,
+        "spawnCallMs": 1021.8352000000014,
+        "spawnEventMs": 1023.8851000000141
+      },
+      "requestedUtc": "2026-10-24T14:50:28.228Z",
+      "observations": [
+        {
+          "id": 14,
+          "beginMs": 3406.0971000000136,
+          "endMs": 6512.389400000015,
+          "file": "observation-14.jpg",
+          "sha256": "4cd8a23c8af3adbbac84beac0aed9f12bba9791c33be193563a53c1886cb70d1",
+          "review": "main-menu"
+        },
+        {
+          "id": 15,
+          "beginMs": 10655.366600000008,
+          "endMs": 13236.459600000002,
+          "file": "observation-15.jpg",
+          "sha256": "6e7e534e5e0f29c931fc0bd6165b076a8b94cc134da3f3702af5671e057ad80c",
+          "review": "singleplayer-menu"
+        },
+        {
+          "id": 16,
+          "beginMs": 16983.108899999992,
+          "endMs": 17673.290600000008,
+          "file": "observation-16.jpg",
+          "sha256": "d8fdc894b1f63fa96ab33cd14af0ef443cff70ffc532507e4cdf49dc3aaa9b61",
+          "review": "main-menu"
+        }
+      ],
+      "interaction": {
+        "fromObservationId": 14,
+        "responseObservationId": 15
+      },
+      "exit": {
+        "code": 0,
+        "signal": null,
+        "observedMs": 22972.649800000014,
+        "utc": "2026-10-24T14:50:51.201Z"
+      },
+      "failure": null,
+      "processId": 10804,
+      "outputSha256": "0238435e211f36c0010ebbdaf3c0c9195b49bf197a9779faabea0900b95bb0b7",
+      "analysis": {
+        "endpoint": "visually-reviewed-main-menu",
+        "clock": "collector performance.now; observer calls bracketed over local stdin/stdout; no frame timestamp",
+        "preflightMs": 1021.7746000000043,
+        "requestToSpawnCallMs": 1021.8352000000014,
+        "spawnCallToEventMs": 2.0499000000127126,
+        "requestToMenuMs": {
+          "lowerMs": 1021.8352000000014,
+          "upperMs": 6512.389400000015
+        },
+        "spawnCallToMenuMs": {
+          "lowerMs": 0,
+          "upperMs": 5490.554200000013
+        },
+        "observationUncertaintyMs": 5490.554200000013,
+        "lowerBoundSource": "spawn call only; no trusted frame presentation timestamp",
+        "responseVerifiedLater": true,
+        "startupMs": null,
+        "worldReadyMeasured": false
+      }
+    }
+  ],
+  "rawManifest": [
+    {
+      "file": "collector-at-capture.cjs",
+      "size": 14153,
+      "sha256": "c5c11164c3ee5b5ea22c3dbbdc65c8be5436de089c01d7facd8ffe93394ec46a"
+    },
+    {
+      "file": "observer-at-capture.mjs",
+      "size": 1974,
+      "sha256": "60c954c8341f437f54025de73adeb9ce63fcb96b4ba4144dd5afe4a2261d26b8"
+    },
+    {
+      "file": "session.json",
+      "size": 1295,
+      "sha256": "785a0a4108387835c470fe30da9dcd6887a0df3e2e4b33bc6e9803052a289e39"
+    },
+    {
+      "file": "analyzer-final.cjs",
+      "size": 15529,
+      "sha256": "4e4909a6640682531d37b7f5d80e296d9aa757f1b4a5856fb50561d273275af8"
+    },
+    {
+      "file": "diagnostic/startup.json",
+      "size": 2588,
+      "sha256": "ad09a6172702ad9d1d98f530f3671b7a9874bca37615941997d4dafd3c944b96"
+    },
+    {
+      "file": "diagnostic/java-output.log",
+      "size": 2385,
+      "sha256": "97ad14bbef6dc36803c4928cbedd532a820acbd51e898ef731f7e649e85e97f1"
+    },
+    {
+      "file": "diagnostic/summary.json",
+      "size": 533,
+      "sha256": "0d0fa1bd510732a8d439d4e177b8bccc22ef906c31ef8ae37081b4879ca61a96"
+    },
+    {
+      "file": "diagnostic/analysis-final.json",
+      "size": 627,
+      "sha256": "d5efce320564a2babda46007d80fc193d49dcd379046fdc51bf4934df0c98d68"
+    },
+    {
+      "file": "diagnostic/observation-1.jpg",
+      "size": 76601,
+      "sha256": "1fc97f2a80060f401ec7c3f399df179238913312b5bd652731a29b4cf1f7248d"
+    },
+    {
+      "file": "diagnostic/observation-2.jpg",
+      "size": 76763,
+      "sha256": "ad1303c4b792b8bf91264bdc83955f37998e864fe14b4b6f689ff74e3f9da8b3"
+    },
+    {
+      "file": "diagnostic/observation-3.jpg",
+      "size": 76636,
+      "sha256": "0897e1cd9cf2a634db0695d8357c6e59bbf2c5e6b01bcb7947a440841b7a4e15"
+    },
+    {
+      "file": "diagnostic/observation-4.jpg",
+      "size": 76468,
+      "sha256": "60652dd5913394dd3094e4ca12ff392a846fc1c37cdc0245a02743e4deaa22f5"
+    },
+    {
+      "file": "diagnostic/observation-5.jpg",
+      "size": 81136,
+      "sha256": "0a8b4d1c5bbf12a47c5573771567b9dca90c9ef421863787152cb3d97ec0d2fb"
+    },
+    {
+      "file": "diagnostic/observation-6.jpg",
+      "size": 81262,
+      "sha256": "f432eefc3df4835bee1eca7e80a4ae8d01fd885d0529abec29177ffb38d39bab"
+    },
+    {
+      "file": "diagnostic/observation-7.jpg",
+      "size": 73795,
+      "sha256": "f05ac3237e2662ca959c71437035561f013f8a4668dc5aa396bb42d132b28581"
+    },
+    {
+      "file": "repeat-1/startup.json",
+      "size": 1714,
+      "sha256": "b7a25568df4ab5ac89192923f33ab970d8f55c6e3448d1aab6d421e089d98bbb"
+    },
+    {
+      "file": "repeat-1/java-output.log",
+      "size": 2287,
+      "sha256": "04395b37b7f744245d1c1d8cd568c58dee4b818392832cfc3cad481eb25f4ca9"
+    },
+    {
+      "file": "repeat-1/summary.json",
+      "size": 584,
+      "sha256": "c6d440c7c645df5387bd7d8e9c1475d086d03e6c6c088025149c1bd3941093ec"
+    },
+    {
+      "file": "repeat-1/analysis-final.json",
+      "size": 678,
+      "sha256": "17b6ca88c10465c9170fc6f3f057d1a724a82be890e9d057dc509d003ed559df"
+    },
+    {
+      "file": "repeat-1/observation-8.jpg",
+      "size": 76623,
+      "sha256": "5e16ef9bd0e85e53fbf9c86f051899f2370dd8cbc10599c27f61e77eaf1d70fe"
+    },
+    {
+      "file": "repeat-1/observation-9.jpg",
+      "size": 81151,
+      "sha256": "6e7e534e5e0f29c931fc0bd6165b076a8b94cc134da3f3702af5671e057ad80c"
+    },
+    {
+      "file": "repeat-1/observation-10.jpg",
+      "size": 76391,
+      "sha256": "67a4346bfb11935816eb306d0a78ac8fce51dd5e57f0b356d957f082c9f36619"
+    },
+    {
+      "file": "repeat-2/startup.json",
+      "size": 1722,
+      "sha256": "c79355aaa3eebd315380e7bca2a2b3164d4161890a5bec967b47b3de1727cbc9"
+    },
+    {
+      "file": "repeat-2/java-output.log",
+      "size": 2287,
+      "sha256": "6ec5e07db48e1bf43c188d2ef07fa9d679994fadcfc74f49104ab50f1a6067a7"
+    },
+    {
+      "file": "repeat-2/summary.json",
+      "size": 584,
+      "sha256": "6c7a7d2bda3c096519e42fd258f63c4edb7cba5edbb333a98e44067ea3014c8b"
+    },
+    {
+      "file": "repeat-2/analysis-final.json",
+      "size": 678,
+      "sha256": "80500060c752a33eff04e300568d6b3363ba4da36b9796ff7f84c449d1570679"
+    },
+    {
+      "file": "repeat-2/observation-11.jpg",
+      "size": 76453,
+      "sha256": "5f1c67dc9f9ebed822bc39f7decdb462f949ada0a9c1edf7a0f96de68d5701e7"
+    },
+    {
+      "file": "repeat-2/observation-12.jpg",
+      "size": 81151,
+      "sha256": "6e7e534e5e0f29c931fc0bd6165b076a8b94cc134da3f3702af5671e057ad80c"
+    },
+    {
+      "file": "repeat-2/observation-13.jpg",
+      "size": 76417,
+      "sha256": "7eb1ff3407fbd99863391f5c4ce7d3d8b233878e573923ec22a7604ae1ba85e0"
+    },
+    {
+      "file": "repeat-3/startup.json",
+      "size": 1723,
+      "sha256": "136b1abd0ca35b7dfe75c1a284af8f88c3f4ccb206a52e39652b7c1dc0961ab8"
+    },
+    {
+      "file": "repeat-3/java-output.log",
+      "size": 2287,
+      "sha256": "0238435e211f36c0010ebbdaf3c0c9195b49bf197a9779faabea0900b95bb0b7"
+    },
+    {
+      "file": "repeat-3/summary.json",
+      "size": 584,
+      "sha256": "84e78d3fb901423c7126ed146d5e6f0ef1c7842d6038978597f63b2b63f7abdf"
+    },
+    {
+      "file": "repeat-3/analysis-final.json",
+      "size": 678,
+      "sha256": "d9446532a3570c0d2aa4c2f7058df94f1a1514e4faf43cb051f4e1d61073044c"
+    },
+    {
+      "file": "repeat-3/observation-14.jpg",
+      "size": 75951,
+      "sha256": "4cd8a23c8af3adbbac84beac0aed9f12bba9791c33be193563a53c1886cb70d1"
+    },
+    {
+      "file": "repeat-3/observation-15.jpg",
+      "size": 81151,
+      "sha256": "6e7e534e5e0f29c931fc0bd6165b076a8b94cc134da3f3702af5671e057ad80c"
+    },
+    {
+      "file": "repeat-3/observation-16.jpg",
+      "size": 75604,
+      "sha256": "d8fdc894b1f63fa96ab33cd14af0ef443cff70ffc532507e4cdf49dc3aaa9b61"
+    },
+    {
+      "file": "excluded-jpeg-probe/startup.json",
+      "size": 904,
+      "sha256": "c71187bf1472749f8c2d2a13ae9ed0af58c557f9cc0ddf23e0e7a21cfe2151dd"
+    },
+    {
+      "file": "excluded-jpeg-probe/java-output.log",
+      "size": 2385,
+      "sha256": "2155279234b5feaba2c5df73ce0c49b4772d81217728ff744b546a9e646e5e2a"
+    }
+  ],
+  "remaining": [
+    "Common ready-frame/world endpoint across vanilla / Space HUD OFF / Space HUD ON",
+    "Continuous controlled comparison and explicitly separated cache regimes",
+    "Official authorized runtime/baseline after SC-10"
+  ]
+}
