@@ -67,7 +67,7 @@ public final class HudModulesScreen extends Screen {
         box(left + 12, top + 74, panelWidth - 24, 20, focus == 1,
             hovered(mouseX, mouseY, left + 12, top + 74, panelWidth - 24, 20));
         textRenderer.drawWithShadow("HUD visibility", left + 20, top + 80, TEXT);
-        rightLabel(SpaceClient.hud.getConfig().enabled ? "ON" : "OFF", left + panelWidth - 20, top + 80, ACCENT);
+        rightLabel(SpaceClient.hud.getConfig().active().enabled ? "ON" : "OFF", left + panelWidth - 20, top + 80, ACCENT);
 
         for (int i = 0; i < modules.size(); i++) {
             HudModule module = modules.get(i);
@@ -88,9 +88,12 @@ public final class HudModulesScreen extends Screen {
         if (status.isEmpty()) status = "Changes save automatically";
         textRenderer.drawWithShadow(textRenderer.trimToWidth(status, panelWidth - 24), left + 12, top + panelHeight - 42,
             readOnly || !SpaceClient.hud.getError().isEmpty() ? ACCENT : MUTED);
-        textRenderer.drawWithShadow("Tab / Shift+Tab  -  Space", left + 12, top + panelHeight - 19, MUTED);
+        textRenderer.drawWithShadow(textRenderer.trimToWidth("Tab / Shift+Tab  -  Space", panelWidth - 194), left + 12, top + panelHeight - 19, MUTED);
+        int editorX = left + panelWidth - 170, editorY = top + panelHeight - 28;
+        box(editorX, editorY, 82, 20, focus == modules.size() + 2, hovered(mouseX, mouseY, editorX, editorY, 82, 20));
+        drawCenteredString(textRenderer, "Edit layout", editorX + 41, editorY + 6, TEXT);
         int doneX = left + panelWidth - 80, doneY = top + panelHeight - 28;
-        box(doneX, doneY, 68, 20, focus == modules.size() + 2, hovered(mouseX, mouseY, doneX, doneY, 68, 20));
+        box(doneX, doneY, 68, 20, focus == modules.size() + 3, hovered(mouseX, mouseY, doneX, doneY, 68, 20));
         drawCenteredString(textRenderer, "Done / Esc", doneX + 34, doneY + 6, TEXT);
     }
 
@@ -100,7 +103,7 @@ public final class HudModulesScreen extends Screen {
             return;
         }
         if (key == Keyboard.KEY_TAB) {
-            focus = Math.floorMod(focus + (hasShiftDown() ? -1 : 1), modules.size() + 3);
+            focus = Math.floorMod(focus + (hasShiftDown() ? -1 : 1), modules.size() + 4);
             updateFocus();
             return;
         }
@@ -116,7 +119,7 @@ public final class HudModulesScreen extends Screen {
             return;
         }
         if (key == Keyboard.KEY_UP || key == Keyboard.KEY_DOWN) {
-            focus = Math.floorMod(focus + (key == Keyboard.KEY_UP ? -1 : 1), modules.size() + 3);
+            focus = Math.floorMod(focus + (key == Keyboard.KEY_UP ? -1 : 1), modules.size() + 4);
             updateFocus();
         } else if ((key == Keyboard.KEY_RETURN || key == Keyboard.KEY_NUMPADENTER || key == Keyboard.KEY_SPACE)
                 && !Keyboard.isRepeatEvent()) {
@@ -143,13 +146,19 @@ public final class HudModulesScreen extends Screen {
                     return;
                 }
             }
-            if (hovered(x, y, left + panelWidth - 80, top + panelHeight - 28, 68, 20)) client.setScreen(null);
+            if (hovered(x, y, left + panelWidth - 170, top + panelHeight - 28, 82, 20)) {
+                focus = modules.size() + 2;
+                updateFocus();
+                client.setScreen(new HudEditorScreen(this));
+            }
+            else if (hovered(x, y, left + panelWidth - 80, top + panelHeight - 28, 68, 20)) client.setScreen(null);
         }
     }
 
     private void activate(int control) {
         if (control == 1) SpaceClient.toggleHud();
-        else if (control == modules.size() + 2) client.setScreen(null);
+        else if (control == modules.size() + 2) client.setScreen(new HudEditorScreen(this));
+        else if (control == modules.size() + 3) client.setScreen(null);
         else if (control >= 2) SpaceClient.hud.toggle(modules.get(control - 2));
     }
 

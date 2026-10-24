@@ -31,20 +31,20 @@ public enum HudModule {
 
     public boolean isEnabled(HudConfig config) {
         switch (this) {
-            case FPS: return config.fps;
-            case COORDINATES: return config.coordinates;
-            case KEYSTROKES: return config.keystrokes;
-            case CPS: return config.cps;
+            case FPS: return config.active().fps;
+            case COORDINATES: return config.active().coordinates;
+            case KEYSTROKES: return config.active().keystrokes;
+            case CPS: return config.active().cps;
             default: throw new AssertionError(this);
         }
     }
 
     public void setEnabled(HudConfig config, boolean enabled) {
         switch (this) {
-            case FPS: config.fps = enabled; break;
-            case COORDINATES: config.coordinates = enabled; break;
-            case KEYSTROKES: config.keystrokes = enabled; break;
-            case CPS: config.cps = enabled; break;
+            case FPS: config.active().fps = enabled; break;
+            case COORDINATES: config.active().coordinates = enabled; break;
+            case KEYSTROKES: config.active().keystrokes = enabled; break;
+            case CPS: config.active().cps = enabled; break;
             default: throw new AssertionError(this);
         }
     }

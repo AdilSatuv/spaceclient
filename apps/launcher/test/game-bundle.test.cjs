@@ -35,6 +35,11 @@ function entries() {
       'mixin/ClientMixin',
       'mixin/HudMixin',
       'mixin/GameMenuMixin',
+      'hud/HudPlacement',
+      'hud/HudProfile',
+      'hud/HudRenderer',
+      'hud/HudEditorLayout',
+      'hud/HudEditorScreen',
     ].map((name) => ({ name: 'dev/spaceclient/' + name + '.class', data: header })),
   ];
 }
@@ -128,6 +133,21 @@ test('pause-menu integration requires its class and the exact pinned mixin set',
     await assert.rejects(candidate.inspectSpaceJar(candidate.source));
   }
 });
+test('profile and editor classes cannot be omitted from the pinned game bundle', async (t) => {
+  for (const name of [
+    'HudPlacement',
+    'HudProfile',
+    'HudRenderer',
+    'HudEditorLayout',
+    'HudEditorScreen',
+  ]) {
+    const candidate = await fixture(t, (value) =>
+      value.filter((entry) => entry.name !== `dev/spaceclient/hud/${name}.class`),
+    );
+    await assert.rejects(candidate.inspectSpaceJar(candidate.source));
+  }
+});
+
 test('duplicate paths, traversal, bad CRC and oversized entries fail JAR validation', async (t) => {
   for (const change of [
     (value) => [...value, value[0]],

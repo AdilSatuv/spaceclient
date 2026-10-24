@@ -1,0 +1,154 @@
+package dev.spaceclient;
+
+import dev.spaceclient.hud.HudModule;
+import dev.spaceclient.hud.HudPlacement;
+import dev.spaceclient.hud.HudProfile;
+import dev.spaceclient.hud.HudSettings;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Properties;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import static org.junit.Assert.*;
+
+public class HudProfilesTest {
+    @Rule public TemporaryFolder directory = new TemporaryFolder();
+    private Path file() { return directory.getRoot().toPath().resolve("hud.properties"); }
+    private HudPlacement corner() {
+        return new HudPlacement(HudPlacement.Horizontal.RIGHT, HudPlacement.Vertical.BOTTOM, 12, 18, 1.8);
+    }
+
+    @Test public void invalidNamesDoNotReplaceTheSavedName() throws Exception {
+        HudSettings settings = HudSettings.open(file());
+        for (String name : new String[] {"", " ", " padded", "a\nb", "\u00a7red", "\u200b", "123456789012345678901234567890123"}) {
+            assertFalse(settings.renameProfile(name));
+            assertEquals("Profile 1", settings.getConfig().active().name);
+        }
+        assertTrue(settings.renameProfile("Орбита 1"));
+        assertEquals("Орбита 1", HudConfig.load(file()).active().name);
+    }
+
+    @Test public void legacyMigrationKeepsBothPresetsIndependentAndBacksUpBeforeAnyUpgrade() throws Exception {
+        byte[] original = "schemaVersion=1\nenabled=false\ncps=false\nfps=false\n".getBytes(StandardCharsets.ISO_8859_1);
+        Files.write(file(), original);
+        HudSettings settings = HudSettings.open(file());
+        assertArrayEquals(original, Files.readAllBytes(file()));
+        List<Path> backups;
+        try (Stream<Path> files = Files.list(directory.getRoot().toPath())) {
+            backups = files.filter(p -> p.toString().endsWith(".bak")).collect(Collectors.toList());
+        }
+        assertEquals(1, backups.size());
+        assertArrayEquals(original, Files.readAllBytes(backups.get(0)));
+        assertFalse(settings.getConfig().profile(0).cps);
+        assertFalse(settings.getConfig().profile(1).cps);
+        assertTrue(settings.place(HudModule.CPS, corner()));
+        assertTrue(settings.toggle(HudModule.CPS));
+        assertFalse(settings.getConfig().profile(1).cps);
+        assertEquals(1, settings.getConfig().profile(1).placement(HudModule.CPS).scale, 0);
+        Properties properties = new Properties();
+        try (java.io.InputStream input = Files.newInputStream(file())) { properties.load(input); }
+        assertEquals("2", properties.getProperty("schemaVersion"));
+        assertArrayEquals(original, Files.readAllBytes(backups.get(0)));
+    }
+    @Test public void profilesFlagsNamesLayoutsAndSelectionSurviveRestartIndependently() throws Exception {
+        HudSettings settings = HudSettings.open(file());
+        assertTrue(settings.renameProfile("Орбита A"));
+        assertTrue(settings.place(HudModule.COORDINATES, corner()));
+        assertTrue(settings.toggle(HudModule.FPS));
+        assertTrue(settings.selectProfile(1));
+        assertTrue(settings.renameProfile("Орбита B"));
+        assertTrue(settings.toggleHud());
+        HudConfig loaded = HudConfig.load(file());
+        assertEquals(1, loaded.activeIndex());
+        assertFalse(loaded.active().enabled);
+        assertTrue(loaded.active().fps);
+        assertEquals("Орбита B", loaded.active().name);
+        loaded.select(0);
+        assertTrue(loaded.active().enabled);
+        assertFalse(loaded.active().fps);
+        assertEquals("Орбита A", loaded.active().name);
+        assertEquals(1.8, loaded.active().placement(HudModule.COORDINATES).scale, 0);
+    }
+    @Test public void failedSelectionRenameAndPlacementRestoreTheWholeSnapshot() throws Exception {
+        HudSettings settings = HudSettings.open(file());
+        Files.createDirectory(file());
+        Files.write(file().resolve("obstacle"), new byte[] {1});
+        assertFalse(settings.selectProfile(1));
+        assertEquals(0, settings.getConfig().activeIndex());
+        assertFalse(settings.renameProfile("Changed"));
+        assertFalse(settings.place(HudModule.FPS, corner()));
+        assertEquals("Profile 1", settings.getConfig().active().name);
+        assertEquals(1, settings.getConfig().active().placement(HudModule.FPS).scale, 0);
+        assertEquals("Profile 2", settings.getConfig().profile(1).name);
+    }
+    @Test public void selectedProfileImportAndExportDoNotTouchTheOtherPreset() throws Exception {
+        HudSettings settings = HudSettings.open(file());
+        settings.renameProfile("Exported");
+        settings.place(HudModule.FPS, corner());
+        settings.toggle(HudModule.CPS);
+        assertTrue(settings.exportProfile());
+        Path exported = file().resolveSibling("spaceclient-hud-export.properties");
+        Files.copy(exported, file().resolveSibling("spaceclient-hud-import.properties"));
+        settings.selectProfile(1);
+        assertTrue(settings.importProfile());
+        assertEquals("Exported", settings.getConfig().active().name);
+        assertFalse(settings.getConfig().active().cps);
+        settings.renameProfile("Imported copy");
+        settings.resetLayout();
+        HudConfig loaded = HudConfig.load(file());
+        assertEquals(1, loaded.active().placement(HudModule.FPS).scale, 0);
+        assertEquals(1.8, loaded.profile(0).placement(HudModule.FPS).scale, 0);
+        assertEquals("Exported", loaded.profile(0).name);
+    }
+    @Test public void malformedMissingUnknownAndOversizedImportsPreserveBothProfilesAndConfigBytes() throws Exception {
+        HudSettings settings = HudSettings.open(file());
+        settings.renameProfile("Keep me");
+        byte[] original = Files.readAllBytes(file());
+        Path imported = file().resolveSibling("spaceclient-hud-import.properties");
+        assertFalse(settings.importProfile());
+        for (String data : new String[] {
+            "format=spaceclient-hud-profile\nschemaVersion=2\n",
+            "format=spaceclient-hud-profile\nschemaVersion=1\n",
+            "name=\\uZZZZ\n"
+        }) {
+            Files.write(imported, data.getBytes(StandardCharsets.ISO_8859_1));
+            assertFalse(settings.importProfile());
+            assertArrayEquals(original, Files.readAllBytes(file()));
+        }
+        HudConfig.exportProfile(imported, settings.getConfig().active());
+        Files.write(imported, "unknown=value\n".getBytes(StandardCharsets.ISO_8859_1), java.nio.file.StandardOpenOption.APPEND);
+        assertFalse(settings.importProfile());
+        Files.write(imported, new byte[HudConfig.MAX_BYTES + 1]);
+        assertFalse(settings.importProfile());
+        assertEquals("Keep me", settings.getConfig().active().name);
+        assertEquals("Profile 2", settings.getConfig().profile(1).name);
+        assertArrayEquals(original, Files.readAllBytes(file()));
+    }
+    @Test public void invalidPlacementsAndNamesRecoverWhileFutureSchemaRemainsReadOnly() throws Exception {
+        for (String data : new String[] {
+            "schemaVersion=2\nprofile.0.layout.fps.scale=NaN\n",
+            "schemaVersion=2\nprofile.1.layout.cps.x=-1\n",
+            "schemaVersion=2\nprofile.0.name=\\u00a7red\n",
+            "schemaVersion=2\nactiveProfile=8\n"
+        }) {
+            Files.write(file(), data.getBytes(StandardCharsets.ISO_8859_1));
+            HudSettings recovered = HudSettings.open(file());
+            assertFalse(recovered.isReadOnly());
+            assertTrue(recovered.getNotice().contains("backed up"));
+        }
+        byte[] future = "schemaVersion=3\nkeep=true\n".getBytes(StandardCharsets.ISO_8859_1);
+        Files.write(file(), future);
+        HudSettings readOnly = HudSettings.open(file());
+        assertTrue(readOnly.isReadOnly());
+        assertFalse(readOnly.selectProfile(1));
+        assertFalse(readOnly.place(HudModule.FPS, corner()));
+        assertFalse(readOnly.importProfile());
+        assertFalse(readOnly.exportProfile());
+        assertArrayEquals(future, Files.readAllBytes(file()));
+    }
+}

@@ -27,6 +27,11 @@ const required = [
   'dev/spaceclient/mixin/ClientMixin.class',
   'dev/spaceclient/mixin/HudMixin.class',
   'dev/spaceclient/mixin/GameMenuMixin.class',
+  'dev/spaceclient/hud/HudPlacement.class',
+  'dev/spaceclient/hud/HudProfile.class',
+  'dev/spaceclient/hud/HudRenderer.class',
+  'dev/spaceclient/hud/HudEditorLayout.class',
+  'dev/spaceclient/hud/HudEditorScreen.class',
 ];
 function failure(): never {
   throw new UserFacingError(

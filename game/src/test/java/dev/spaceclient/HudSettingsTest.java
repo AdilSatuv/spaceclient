@@ -29,7 +29,7 @@ public class HudSettingsTest {
             for (HudModule module : HudModule.values()) {
                 assertEquals(module != selected, module.isEnabled(restarted.getConfig()));
             }
-            assertTrue(restarted.getConfig().enabled);
+            assertTrue(restarted.getConfig().active().enabled);
         }
     }
 
@@ -38,10 +38,10 @@ public class HudSettingsTest {
         assertTrue(settings.toggle(HudModule.CPS));
         assertTrue(settings.toggleHud());
         HudSettings hidden = HudSettings.open(file());
-        assertFalse(hidden.getConfig().enabled);
-        assertFalse(hidden.getConfig().cps);
+        assertFalse(hidden.getConfig().active().enabled);
+        assertFalse(hidden.getConfig().active().cps);
         assertTrue(hidden.toggleHud());
-        assertFalse(HudSettings.open(file()).getConfig().cps);
+        assertFalse(HudSettings.open(file()).getConfig().active().cps);
     }
 
     @Test public void invalidConfigIsPreservedByteForByteAndCanRecover() throws Exception {
@@ -58,7 +58,7 @@ public class HudSettingsTest {
         assertEquals(1, backups.size());
         assertArrayEquals(original, Files.readAllBytes(backups.get(0)));
         assertTrue(settings.toggle(HudModule.FPS));
-        assertFalse(HudConfig.load(file()).fps);
+        assertFalse(HudConfig.load(file()).active().fps);
         assertArrayEquals(original, Files.readAllBytes(backups.get(0)));
     }
 
@@ -66,7 +66,7 @@ public class HudSettingsTest {
         write("enabled=\\uZZZZ");
         HudSettings settings = HudSettings.open(file());
         assertFalse(settings.isReadOnly());
-        assertTrue(settings.getConfig().enabled);
+        assertTrue(settings.getConfig().active().enabled);
         assertTrue(settings.getNotice().contains("backed up"));
     }
 
@@ -79,7 +79,7 @@ public class HudSettingsTest {
     }
 
     @Test public void futureSchemaIsNeverOverwrittenOrRenamed() throws Exception {
-        write("schemaVersion=2\ncustomFutureField=keep-me\n");
+        write("schemaVersion=3\ncustomFutureField=keep-me\n");
         byte[] original = Files.readAllBytes(file());
         HudSettings settings = HudSettings.open(file());
         assertTrue(settings.isReadOnly());
@@ -104,15 +104,15 @@ public class HudSettingsTest {
         Path obstacle = file().resolve("keep");
         Files.write(obstacle, new byte[] { 1 });
         assertFalse(settings.toggle(HudModule.CPS));
-        assertTrue(settings.getConfig().cps);
+        assertTrue(settings.getConfig().active().cps);
         assertFalse(settings.getError().isEmpty());
         assertFalse(settings.toggleHud());
-        assertTrue(settings.getConfig().enabled);
+        assertTrue(settings.getConfig().active().enabled);
         Files.delete(obstacle);
         Files.delete(file());
         assertTrue(settings.toggle(HudModule.CPS));
         assertEquals("", settings.getError());
-        assertFalse(HudConfig.load(file()).cps);
+        assertFalse(HudConfig.load(file()).active().cps);
         try (Stream<Path> paths = Files.list(directory.getRoot().toPath())) {
             assertFalse(paths.anyMatch(path -> path.toString().endsWith(".tmp")));
         }

@@ -3,6 +3,7 @@ package dev.spaceclient.mixin;
 import dev.spaceclient.SpaceClient;
 import dev.spaceclient.KeyPressGate;
 import dev.spaceclient.hud.HudModulesScreen;
+import dev.spaceclient.hud.HudEditorScreen;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -30,7 +31,7 @@ public abstract class ClientMixin {
             // Closing in Screen.keyPressed would also reopen the menu in that second call.
             if (!spaceclient$menuPress.accept(Keyboard.getEventNanoseconds(),
                     Keyboard.getEventKeyState(), Keyboard.isRepeatEvent()) || client.player == null) return;
-            if (client.currentScreen instanceof HudModulesScreen) client.setScreen(null);
+            if (client.currentScreen instanceof HudModulesScreen || client.currentScreen instanceof HudEditorScreen) client.setScreen(null);
             else if (client.currentScreen == null && client.focused) client.setScreen(new HudModulesScreen());
             return;
         }
