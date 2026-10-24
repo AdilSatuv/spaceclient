@@ -19,7 +19,7 @@ function entries() {
     required: true,
     package: 'dev.spaceclient.mixin',
     compatibilityLevel: 'JAVA_8',
-    client: ['ClientMixin', 'HudMixin'],
+    client: ['ClientMixin', 'HudMixin', 'GameMenuMixin'],
   };
   return [
     { name: 'fabric.mod.json', data: JSON.stringify(mod) },
@@ -28,9 +28,14 @@ function entries() {
       name: 'spaceclient-build.properties',
       data: `schemaVersion=1\ngameSourceTree=${tree}\nmodVersion=0.1.0\nminecraftVersion=1.8.9\nloaderVersion=0.18.3\nchannel=development\n`,
     },
-    ...['SpaceClient', 'ClickCounter', 'HudConfig', 'mixin/ClientMixin', 'mixin/HudMixin'].map(
-      (name) => ({ name: 'dev/spaceclient/' + name + '.class', data: header }),
-    ),
+    ...[
+      'SpaceClient',
+      'ClickCounter',
+      'HudConfig',
+      'mixin/ClientMixin',
+      'mixin/HudMixin',
+      'mixin/GameMenuMixin',
+    ].map((name) => ({ name: 'dev/spaceclient/' + name + '.class', data: header })),
   ];
 }
 async function fixture(t, change = (value) => value) {
@@ -101,6 +106,26 @@ test('named developer bytecode and newer bytecode are rejected before bundling',
       return value;
     });
     await assert.rejects(inspectSpaceJar(source));
+  }
+});
+
+test('pause-menu integration requires its class and the exact pinned mixin set', async (t) => {
+  const { source, inspectSpaceJar } = await fixture(t, (value) =>
+    value.filter((entry) => entry.name !== 'dev/spaceclient/mixin/GameMenuMixin.class'),
+  );
+  await assert.rejects(inspectSpaceJar(source));
+  for (const client of [
+    ['ClientMixin', 'HudMixin'],
+    ['ClientMixin', 'HudMixin', 'HudMixin'],
+    ['ClientMixin', 'HudMixin', 'GameMenuMixin', 'OtherMixin'],
+  ]) {
+    const candidate = await fixture(t, (value) => {
+      const mixin = JSON.parse(value[1].data);
+      mixin.client = client;
+      value[1].data = JSON.stringify(mixin);
+      return value;
+    });
+    await assert.rejects(candidate.inspectSpaceJar(candidate.source));
   }
 });
 test('duplicate paths, traversal, bad CRC and oversized entries fail JAR validation', async (t) => {

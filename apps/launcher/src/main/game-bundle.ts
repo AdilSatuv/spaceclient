@@ -26,6 +26,7 @@ const required = [
   'dev/spaceclient/HudConfig.class',
   'dev/spaceclient/mixin/ClientMixin.class',
   'dev/spaceclient/mixin/HudMixin.class',
+  'dev/spaceclient/mixin/GameMenuMixin.class',
 ];
 function failure(): never {
   throw new UserFacingError(
@@ -157,8 +158,8 @@ export async function inspectSpaceJar(path: string, expectedTree?: string, signa
     mixin.package !== 'dev.spaceclient.mixin' ||
     mixin.compatibilityLevel !== 'JAVA_8' ||
     !Array.isArray(mixin.client) ||
-    mixin.client.length !== 2 ||
-    !['ClientMixin', 'HudMixin'].every((name) => mixin.client.includes(name))
+    mixin.client.length !== 3 ||
+    !['ClientMixin', 'HudMixin', 'GameMenuMixin'].every((name) => mixin.client.includes(name))
   )
     failure();
   signal?.throwIfAborted();
