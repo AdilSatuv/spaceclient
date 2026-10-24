@@ -1,0 +1,653 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-24T14:23:28.880Z",
+  "browser": "firefox/158.0.1",
+  "protocol": "webDriverBiDi",
+  "realAccountUsed": false,
+  "realDownloadsStarted": false,
+  "layouts": [
+    {
+      "route": "/",
+      "width": 320
+    },
+    {
+      "route": "/features",
+      "width": 320
+    },
+    {
+      "route": "/download",
+      "width": 320
+    },
+    {
+      "route": "/updates",
+      "width": 320
+    },
+    {
+      "route": "/help",
+      "width": 320
+    },
+    {
+      "route": "/help/launcher-status",
+      "width": 320
+    },
+    {
+      "route": "/updates/launcher-and-website",
+      "width": 320
+    },
+    {
+      "route": "/",
+      "width": 375
+    },
+    {
+      "route": "/features",
+      "width": 375
+    },
+    {
+      "route": "/download",
+      "width": 375
+    },
+    {
+      "route": "/updates",
+      "width": 375
+    },
+    {
+      "route": "/help",
+      "width": 375
+    },
+    {
+      "route": "/help/launcher-status",
+      "width": 375
+    },
+    {
+      "route": "/updates/launcher-and-website",
+      "width": 375
+    },
+    {
+      "route": "/",
+      "width": 390
+    },
+    {
+      "route": "/features",
+      "width": 390
+    },
+    {
+      "route": "/download",
+      "width": 390
+    },
+    {
+      "route": "/updates",
+      "width": 390
+    },
+    {
+      "route": "/help",
+      "width": 390
+    },
+    {
+      "route": "/help/launcher-status",
+      "width": 390
+    },
+    {
+      "route": "/updates/launcher-and-website",
+      "width": 390
+    },
+    {
+      "route": "/",
+      "width": 768
+    },
+    {
+      "route": "/features",
+      "width": 768
+    },
+    {
+      "route": "/download",
+      "width": 768
+    },
+    {
+      "route": "/updates",
+      "width": 768
+    },
+    {
+      "route": "/help",
+      "width": 768
+    },
+    {
+      "route": "/help/launcher-status",
+      "width": 768
+    },
+    {
+      "route": "/updates/launcher-and-website",
+      "width": 768
+    },
+    {
+      "route": "/",
+      "width": 1024
+    },
+    {
+      "route": "/features",
+      "width": 1024
+    },
+    {
+      "route": "/download",
+      "width": 1024
+    },
+    {
+      "route": "/updates",
+      "width": 1024
+    },
+    {
+      "route": "/help",
+      "width": 1024
+    },
+    {
+      "route": "/help/launcher-status",
+      "width": 1024
+    },
+    {
+      "route": "/updates/launcher-and-website",
+      "width": 1024
+    },
+    {
+      "route": "/",
+      "width": 1440
+    },
+    {
+      "route": "/features",
+      "width": 1440
+    },
+    {
+      "route": "/download",
+      "width": 1440
+    },
+    {
+      "route": "/updates",
+      "width": 1440
+    },
+    {
+      "route": "/help",
+      "width": 1440
+    },
+    {
+      "route": "/help/launcher-status",
+      "width": 1440
+    },
+    {
+      "route": "/updates/launcher-and-website",
+      "width": 1440
+    }
+  ],
+  "checks": [
+    "Seven routes at six widths, including 320 px: no horizontal overflow, one h1 and HTTP 200.",
+    "A separate Firefox profile with ui.prefersReducedMotion=1 exposes the real reduced-motion media query, pauses animation and disables the motion toggle."
+  ],
+  "flows": [
+    {
+      "id": "WEB-CONTROLS",
+      "result": "Real pointer hover/press match shared tokens; primary preserves layout; secondary has distinct surfaces; field is 52 px with visible 2 px focus and 5 px offset."
+    },
+    {
+      "id": "WEB-ECLIPSE",
+      "result": "Desktop/mobile scene pauses offscreen; keyboard pause persists across reload; actual tab visibility pauses all decorative CSS animations and resumes on return."
+    },
+    {
+      "id": "WEB-PENDING",
+      "result": "Delayed client navigation keeps the previous page visible, announces opening, shows feedback on the clicked link without changing its dimensions and clears the indicator after arrival."
+    },
+    {
+      "id": "WEB-03",
+      "width": 390,
+      "result": "Search/category/status, detail Enter, reload, empty/reset and browser Back restore the query and results."
+    },
+    {
+      "id": "WEB-04",
+      "width": 390,
+      "result": "Release channel selection, empty channel and browser Back restore the alpha filter; no download is started."
+    },
+    {
+      "id": "WEB-06",
+      "width": 390,
+      "result": "Fourteen fixture notes paginate 12+2; article and filter Back preserve type/page; changing filter resets page."
+    },
+    {
+      "id": "WEB-07",
+      "width": 390,
+      "result": "Case-insensitive FAQ and article search, result counts, keyboard accordion/link, simultaneous open answers, empty/issue/reset and Back."
+    },
+    {
+      "id": "WEB-03",
+      "width": 1440,
+      "result": "Search/category/status, detail Enter, reload, empty/reset and browser Back restore the query and results."
+    },
+    {
+      "id": "WEB-04",
+      "width": 1440,
+      "result": "Release channel selection, empty channel and browser Back restore the alpha filter; no download is started."
+    },
+    {
+      "id": "WEB-06",
+      "width": 1440,
+      "result": "Fourteen fixture notes paginate 12+2; article and filter Back preserve type/page; changing filter resets page."
+    },
+    {
+      "id": "WEB-07",
+      "width": 1440,
+      "result": "Case-insensitive FAQ and article search, result counts, keyboard accordion/link, simultaneous open answers, empty/issue/reset and Back."
+    },
+    {
+      "id": "WEB-10",
+      "result": "Skip link, forward/reverse menu focus trap, focus visibility, Escape, route and desktop breakpoint cleanup."
+    },
+    {
+      "id": "WEB-09",
+      "route": "/features",
+      "fault": "http",
+      "result": "Failure differs from empty; real refresh shows busy/disabled state then recovers without reloading the browser document."
+    },
+    {
+      "id": "WEB-09",
+      "route": "/features",
+      "fault": "invalid",
+      "result": "Failure differs from empty; real refresh shows busy/disabled state then recovers without reloading the browser document."
+    },
+    {
+      "id": "WEB-09",
+      "route": "/features",
+      "fault": "timeout",
+      "result": "Failure differs from empty; real refresh shows busy/disabled state then recovers without reloading the browser document."
+    },
+    {
+      "id": "WEB-09",
+      "route": "/download",
+      "fault": "http",
+      "result": "Failure differs from empty; real refresh shows busy/disabled state then recovers without reloading the browser document."
+    },
+    {
+      "id": "WEB-09",
+      "route": "/download",
+      "fault": "invalid",
+      "result": "Failure differs from empty; real refresh shows busy/disabled state then recovers without reloading the browser document."
+    },
+    {
+      "id": "WEB-09",
+      "route": "/download",
+      "fault": "timeout",
+      "result": "Failure differs from empty; real refresh shows busy/disabled state then recovers without reloading the browser document."
+    },
+    {
+      "id": "WEB-09",
+      "route": "/updates",
+      "fault": "http",
+      "result": "Failure differs from empty; real refresh shows busy/disabled state then recovers without reloading the browser document."
+    },
+    {
+      "id": "WEB-09",
+      "route": "/updates",
+      "fault": "invalid",
+      "result": "Failure differs from empty; real refresh shows busy/disabled state then recovers without reloading the browser document."
+    },
+    {
+      "id": "WEB-09",
+      "route": "/updates",
+      "fault": "timeout",
+      "result": "Failure differs from empty; real refresh shows busy/disabled state then recovers without reloading the browser document."
+    },
+    {
+      "id": "WEB-01",
+      "result": "Unknown route, help article and update return HTTP 404 with a home link."
+    },
+    {
+      "id": "WEB-10",
+      "result": "Injected localStorage SecurityError on read/write does not prevent pause/resume; this checks the fallback, not an OS storage policy."
+    },
+    {
+      "id": "WEB-TEXT-SPACING",
+      "checks": [
+        {
+          "route": "/",
+          "width": 320,
+          "viewportWidth": 320,
+          "clientWidth": 320,
+          "scrollWidth": 320,
+          "h1": "ТВОЙ МИР.НОВАЯ ОРБИТА.",
+          "clipped": [],
+          "outsideControls": []
+        },
+        {
+          "route": "/",
+          "width": 761,
+          "viewportWidth": 761,
+          "clientWidth": 761,
+          "scrollWidth": 761,
+          "h1": "ТВОЙ МИР.НОВАЯ ОРБИТА.",
+          "clipped": [],
+          "outsideControls": []
+        },
+        {
+          "route": "/",
+          "width": 1440,
+          "viewportWidth": 1440,
+          "clientWidth": 1440,
+          "scrollWidth": 1440,
+          "h1": "ТВОЙ МИР.НОВАЯ ОРБИТА.",
+          "clipped": [],
+          "outsideControls": []
+        },
+        {
+          "route": "/features",
+          "width": 320,
+          "viewportWidth": 320,
+          "clientWidth": 320,
+          "scrollWidth": 320,
+          "h1": "Твой интерфейс. Твои правила.",
+          "clipped": [],
+          "outsideControls": []
+        },
+        {
+          "route": "/features",
+          "width": 761,
+          "viewportWidth": 761,
+          "clientWidth": 761,
+          "scrollWidth": 761,
+          "h1": "Твой интерфейс. Твои правила.",
+          "clipped": [],
+          "outsideControls": []
+        },
+        {
+          "route": "/features",
+          "width": 1440,
+          "viewportWidth": 1440,
+          "clientWidth": 1440,
+          "scrollWidth": 1440,
+          "h1": "Твой интерфейс. Твои правила.",
+          "clipped": [],
+          "outsideControls": []
+        },
+        {
+          "route": "/download",
+          "width": 320,
+          "viewportWidth": 320,
+          "clientWidth": 320,
+          "scrollWidth": 320,
+          "h1": "Готовим новую орбиту.",
+          "clipped": [],
+          "outsideControls": []
+        },
+        {
+          "route": "/download",
+          "width": 761,
+          "viewportWidth": 761,
+          "clientWidth": 761,
+          "scrollWidth": 761,
+          "h1": "Готовим новую орбиту.",
+          "clipped": [],
+          "outsideControls": []
+        },
+        {
+          "route": "/download",
+          "width": 1440,
+          "viewportWidth": 1440,
+          "clientWidth": 1440,
+          "scrollWidth": 1440,
+          "h1": "Готовим новую орбиту.",
+          "clipped": [],
+          "outsideControls": []
+        },
+        {
+          "route": "/updates",
+          "width": 320,
+          "viewportWidth": 320,
+          "clientWidth": 320,
+          "scrollWidth": 320,
+          "h1": "Не релизы. Путь к ним.",
+          "clipped": [],
+          "outsideControls": []
+        },
+        {
+          "route": "/updates",
+          "width": 761,
+          "viewportWidth": 761,
+          "clientWidth": 761,
+          "scrollWidth": 761,
+          "h1": "Не релизы. Путь к ним.",
+          "clipped": [],
+          "outsideControls": []
+        },
+        {
+          "route": "/updates",
+          "width": 1440,
+          "viewportWidth": 1440,
+          "clientWidth": 1440,
+          "scrollWidth": 1440,
+          "h1": "Не релизы. Путь к ним.",
+          "clipped": [],
+          "outsideControls": []
+        },
+        {
+          "route": "/help",
+          "width": 320,
+          "viewportWidth": 320,
+          "clientWidth": 320,
+          "scrollWidth": 320,
+          "h1": "Найдём ответ.",
+          "clipped": [],
+          "outsideControls": []
+        },
+        {
+          "route": "/help",
+          "width": 761,
+          "viewportWidth": 761,
+          "clientWidth": 761,
+          "scrollWidth": 761,
+          "h1": "Найдём ответ.",
+          "clipped": [],
+          "outsideControls": []
+        },
+        {
+          "route": "/help",
+          "width": 1440,
+          "viewportWidth": 1440,
+          "clientWidth": 1440,
+          "scrollWidth": 1440,
+          "h1": "Найдём ответ.",
+          "clipped": [],
+          "outsideControls": []
+        },
+        {
+          "route": "/help/launcher-status",
+          "width": 320,
+          "viewportWidth": 320,
+          "clientWidth": 320,
+          "scrollWidth": 320,
+          "h1": "Что уже работает в лаунчере",
+          "clipped": [],
+          "outsideControls": []
+        },
+        {
+          "route": "/help/launcher-status",
+          "width": 761,
+          "viewportWidth": 761,
+          "clientWidth": 761,
+          "scrollWidth": 761,
+          "h1": "Что уже работает в лаунчере",
+          "clipped": [],
+          "outsideControls": []
+        },
+        {
+          "route": "/help/launcher-status",
+          "width": 1440,
+          "viewportWidth": 1440,
+          "clientWidth": 1440,
+          "scrollWidth": 1440,
+          "h1": "Что уже работает в лаунчере",
+          "clipped": [],
+          "outsideControls": []
+        },
+        {
+          "route": "/updates/local-launch-and-hud",
+          "width": 320,
+          "viewportWidth": 320,
+          "clientWidth": 320,
+          "scrollWidth": 320,
+          "h1": "Локальный запуск и редактор HUD проверены.",
+          "clipped": [],
+          "outsideControls": []
+        },
+        {
+          "route": "/updates/local-launch-and-hud",
+          "width": 761,
+          "viewportWidth": 761,
+          "clientWidth": 761,
+          "scrollWidth": 761,
+          "h1": "Локальный запуск и редактор HUD проверены.",
+          "clipped": [],
+          "outsideControls": []
+        },
+        {
+          "route": "/updates/local-launch-and-hud",
+          "width": 1440,
+          "viewportWidth": 1440,
+          "clientWidth": 1440,
+          "scrollWidth": 1440,
+          "h1": "Локальный запуск и редактор HUD проверены.",
+          "clipped": [],
+          "outsideControls": []
+        },
+        {
+          "route": "/sc23-missing",
+          "width": 320,
+          "viewportWidth": 320,
+          "clientWidth": 320,
+          "scrollWidth": 320,
+          "h1": "Здесь пока пусто.",
+          "clipped": [],
+          "outsideControls": []
+        },
+        {
+          "route": "/sc23-missing",
+          "width": 761,
+          "viewportWidth": 761,
+          "clientWidth": 761,
+          "scrollWidth": 761,
+          "h1": "Здесь пока пусто.",
+          "clipped": [],
+          "outsideControls": []
+        },
+        {
+          "route": "/sc23-missing",
+          "width": 1440,
+          "viewportWidth": 1440,
+          "clientWidth": 1440,
+          "scrollWidth": 1440,
+          "h1": "Здесь пока пусто.",
+          "clipped": [],
+          "outsideControls": []
+        }
+      ],
+      "errors": []
+    },
+    {
+      "id": "WEB-SHORT-MENU",
+      "checks": [
+        {
+          "viewport": {
+            "width": 568,
+            "height": 320
+          },
+          "menuFocus": [
+            {
+              "text": "Закрыть ×",
+              "inside": true,
+              "visible": true,
+              "horizontal": true
+            },
+            {
+              "text": "Возможности",
+              "inside": true,
+              "visible": true,
+              "horizontal": true
+            },
+            {
+              "text": "Загрузки",
+              "inside": true,
+              "visible": true,
+              "horizontal": true
+            },
+            {
+              "text": "Обновления",
+              "inside": true,
+              "visible": true,
+              "horizontal": true
+            },
+            {
+              "text": "Помощь",
+              "inside": true,
+              "visible": true,
+              "horizontal": true
+            },
+            {
+              "text": "GitHub",
+              "inside": true,
+              "visible": true,
+              "horizontal": true
+            }
+          ],
+          "escapeReturnsFocus": true
+        },
+        {
+          "viewport": {
+            "width": 320,
+            "height": 568
+          },
+          "menuFocus": [
+            {
+              "text": "Закрыть ×",
+              "inside": true,
+              "visible": true,
+              "horizontal": true
+            },
+            {
+              "text": "Возможности",
+              "inside": true,
+              "visible": true,
+              "horizontal": true
+            },
+            {
+              "text": "Загрузки",
+              "inside": true,
+              "visible": true,
+              "horizontal": true
+            },
+            {
+              "text": "Обновления",
+              "inside": true,
+              "visible": true,
+              "horizontal": true
+            },
+            {
+              "text": "Помощь",
+              "inside": true,
+              "visible": true,
+              "horizontal": true
+            },
+            {
+              "text": "GitHub",
+              "inside": true,
+              "visible": true,
+              "horizontal": true
+            }
+          ],
+          "escapeReturnsFocus": true
+        }
+      ]
+    },
+    {
+      "id": "WEB-NO-JS",
+      "result": "JavaScript disabled before navigation: visible header navigation at 320/390/1440, no inert menu/motion buttons, unique SVG IDs, native search and disclosure, empty download/update states and HTTP 404."
+    }
+  ],
+  "errors": [],
+  "skipped": [
+    "200% browser zoom, clipboard success/denial and live media emulation remain covered by the Chrome suite; they are not asserted for Firefox.",
+    "Forced-colors emulation is covered in Chrome only; Firefox runs the no-JavaScript scenarios."
+  ],
+  "scope": "Isolated production Next with fixture API and own Firefox profiles over WebDriver BiDi. No personal browser session, real release download or public HTTPS audit."
+}

@@ -86,6 +86,8 @@ React cache используется только для согласованн�
 
 Сопоставление с ТЗ и оставшиеся условия публичного релиза — [WEB-ACCEPTANCE.md](WEB-ACCEPTANCE.md).
 
+Точечный локальный text-spacing/short-menu набор после preview: `node scripts/check-website-accessibility.cjs` (или `--firefox`). Те же сценарии входят в общую browser harness/CI. Полные снимки требуют отдельного визуального осмотра; автоматизация не подтверждает screen-reader speech. [Результаты и открытая ручная AT-проверка](WEB-ACCESSIBILITY.md).
+
 ## Токены и состояния управления
 
 Базовые значения хранятся в `docs/design/space-dark.tokens.json`, состояния — в `docs/design/control-states.tokens.json`, навигация — в `docs/design/navigation.tokens.json`. После изменения JSON выполнить `npm.cmd run tokens:web`, затем `npm.cmd run tokens:web:check`. Генерируемый `src/_app/styles/tokens.css` вручную не редактируется. Проверка ловит дрейф CSS, несогласованные RGB/HEX/alpha и проверяет 20 цветовых пар; включена в `npm run check` и оба browser CI jobs. Статус новых Figma-компонентов навигации — в [NAVIGATION.md](design/NAVIGATION.md).

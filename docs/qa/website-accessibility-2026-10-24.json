@@ -1,0 +1,962 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-24T14:27:32.183Z",
+  "task": "SC-23",
+  "baseCommit": "dfa712a79e7808e95679556a8c9f514c8938da63",
+  "scope": "Local production Next/Nest; final Eclipse/Ringworld; isolated browser profiles. No public deployment or screen-reader acceptance.",
+  "sourceHashes": {
+    "apps/website/src/_app/styles/globals.css": "b70cfdc881744a5f11d617e7449a7163c94c7c1ed78f4862d97ec40e260c9103",
+    "apps/website/src/_app/ui/header.tsx": "78d3cccd444b8cb04d89ec5b89b2333cb3973f7ae676c041083e51c715d67fb5",
+    "apps/website/src/_app/ui/footer.tsx": "b24715168f42c9bc376ec8377abb3d6e47afaabd314c7b0ea39cfc99093b011d",
+    "apps/website/src/_pages/home/ui/page.tsx": "d17143baa9a4a8a52e41161836afcc7b3e906593bb89e36f981cf51212518aae",
+    "apps/website/src/_pages/help/model/faq.ts": "47f6fa37ebade1f2f45c3e15ebe0139f7b05014db3edfa7f38c75f9e022b6db5",
+    "apps/website/src/entities/help-article/model/articles.ts": "69f50b8bea3ee80d546fba6ae72d2f77e8c376b0bbc7fc2dafbf0068b9f6b60f",
+    "apps/api/src/content/infrastructure/curated-catalog.ts": "07aa0a4b3e356a27ac179ea8b024d62de788de0c2728900e7085fdc5028343fc",
+    "apps/api/test/api.test.cjs": "231dfb98ffa7269352abc5029836ac24d693863411445f5f7e41927977ee3860",
+    "scripts/check-website-accessibility.cjs": "4b0c7d8eb7ae2c0a4f27eebb59f5797644af83586543532b9df3adeac350bf31",
+    "scripts/check-website-browser.cjs": "643384a5683b8c4b441c792318a80d63fb2fc5742e219363a4fcc69aab741df5",
+    "scripts/check-website.cjs": "b3166764d476def39cabe0daa92618c7757c6b27432f1216558fcd4e620c7160"
+  },
+  "findings": [
+    {
+      "id": "text-spacing-overflow",
+      "state": "fixed",
+      "before": {
+        "browser": "windowed Chrome",
+        "viewport": [
+          320,
+          390,
+          761,
+          1024,
+          1440
+        ],
+        "clientWidth": [
+          305,
+          375,
+          746,
+          1009,
+          1425
+        ],
+        "scrollWidth": [
+          372,
+          472,
+          915,
+          1220,
+          1742
+        ]
+      },
+      "after": {
+        "sameViewport": true,
+        "scrollWidth": [
+          305,
+          375,
+          746,
+          1009,
+          1425
+        ]
+      },
+      "fix": "Wrapping header/navigation, responsive footer columns and wrapping wordmark/links; body overflow is not hidden."
+    },
+    {
+      "id": "stale-current-status",
+      "state": "fixed",
+      "surfaces": [
+        "home",
+        "features",
+        "help",
+        "help/getting-started",
+        "help/launcher-status"
+      ],
+      "evidence": [
+        "docs/LOCAL-LAUNCH.md",
+        "docs/HUD-EDITOR.md",
+        "docs/SMOKE-TEST.md"
+      ],
+      "newDevelopmentArticle": "/updates/local-launch-and-hud",
+      "historicalArticlesPreserved": true
+    }
+  ],
+  "regression": [
+    {
+      "browser": "Chrome/156.0.8078.47",
+      "layouts": 42,
+      "flows": 27,
+      "errors": [],
+      "report": "website-accessibility-chrome-2026-10-24.json"
+    },
+    {
+      "browser": "firefox/158.0.1",
+      "layouts": 42,
+      "flows": 26,
+      "errors": [],
+      "report": "website-accessibility-firefox-2026-10-24.json"
+    }
+  ],
+  "focused": {
+    "chrome": {
+      "schemaVersion": 1,
+      "checkedAt": "2026-10-24T14:22:19.944Z",
+      "browser": "Chrome/156.0.8078.47",
+      "scope": "Text spacing and short-screen keyboard checks in an isolated profile; screenshots require separate visual inspection. No screen-reader speech assertion.",
+      "results": [
+        {
+          "id": "WEB-TEXT-SPACING",
+          "checks": [
+            {
+              "route": "/",
+              "width": 320,
+              "viewportWidth": 320,
+              "clientWidth": 320,
+              "scrollWidth": 320,
+              "h1": "ТВОЙ МИР.НОВАЯ ОРБИТА.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/",
+              "width": 761,
+              "viewportWidth": 761,
+              "clientWidth": 761,
+              "scrollWidth": 761,
+              "h1": "ТВОЙ МИР.НОВАЯ ОРБИТА.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/",
+              "width": 1440,
+              "viewportWidth": 1440,
+              "clientWidth": 1440,
+              "scrollWidth": 1440,
+              "h1": "ТВОЙ МИР.НОВАЯ ОРБИТА.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/features",
+              "width": 320,
+              "viewportWidth": 320,
+              "clientWidth": 320,
+              "scrollWidth": 320,
+              "h1": "Твой интерфейс. Твои правила.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/features",
+              "width": 761,
+              "viewportWidth": 761,
+              "clientWidth": 761,
+              "scrollWidth": 761,
+              "h1": "Твой интерфейс. Твои правила.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/features",
+              "width": 1440,
+              "viewportWidth": 1440,
+              "clientWidth": 1440,
+              "scrollWidth": 1440,
+              "h1": "Твой интерфейс. Твои правила.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/download",
+              "width": 320,
+              "viewportWidth": 320,
+              "clientWidth": 320,
+              "scrollWidth": 320,
+              "h1": "Готовим новую орбиту.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/download",
+              "width": 761,
+              "viewportWidth": 761,
+              "clientWidth": 761,
+              "scrollWidth": 761,
+              "h1": "Готовим новую орбиту.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/download",
+              "width": 1440,
+              "viewportWidth": 1440,
+              "clientWidth": 1440,
+              "scrollWidth": 1440,
+              "h1": "Готовим новую орбиту.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/updates",
+              "width": 320,
+              "viewportWidth": 320,
+              "clientWidth": 320,
+              "scrollWidth": 320,
+              "h1": "Не релизы. Путь к ним.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/updates",
+              "width": 761,
+              "viewportWidth": 761,
+              "clientWidth": 761,
+              "scrollWidth": 761,
+              "h1": "Не релизы. Путь к ним.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/updates",
+              "width": 1440,
+              "viewportWidth": 1440,
+              "clientWidth": 1440,
+              "scrollWidth": 1440,
+              "h1": "Не релизы. Путь к ним.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/help",
+              "width": 320,
+              "viewportWidth": 320,
+              "clientWidth": 320,
+              "scrollWidth": 320,
+              "h1": "Найдём ответ.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/help",
+              "width": 761,
+              "viewportWidth": 761,
+              "clientWidth": 761,
+              "scrollWidth": 761,
+              "h1": "Найдём ответ.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/help",
+              "width": 1440,
+              "viewportWidth": 1440,
+              "clientWidth": 1440,
+              "scrollWidth": 1440,
+              "h1": "Найдём ответ.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/help/launcher-status",
+              "width": 320,
+              "viewportWidth": 320,
+              "clientWidth": 320,
+              "scrollWidth": 320,
+              "h1": "Что уже работает в лаунчере",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/help/launcher-status",
+              "width": 761,
+              "viewportWidth": 761,
+              "clientWidth": 761,
+              "scrollWidth": 761,
+              "h1": "Что уже работает в лаунчере",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/help/launcher-status",
+              "width": 1440,
+              "viewportWidth": 1440,
+              "clientWidth": 1440,
+              "scrollWidth": 1440,
+              "h1": "Что уже работает в лаунчере",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/updates/local-launch-and-hud",
+              "width": 320,
+              "viewportWidth": 320,
+              "clientWidth": 320,
+              "scrollWidth": 320,
+              "h1": "Локальный запуск и редактор HUD проверены.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/updates/local-launch-and-hud",
+              "width": 761,
+              "viewportWidth": 761,
+              "clientWidth": 761,
+              "scrollWidth": 761,
+              "h1": "Локальный запуск и редактор HUD проверены.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/updates/local-launch-and-hud",
+              "width": 1440,
+              "viewportWidth": 1440,
+              "clientWidth": 1440,
+              "scrollWidth": 1440,
+              "h1": "Локальный запуск и редактор HUD проверены.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/sc23-missing",
+              "width": 320,
+              "viewportWidth": 320,
+              "clientWidth": 320,
+              "scrollWidth": 320,
+              "h1": "Здесь пока пусто.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/sc23-missing",
+              "width": 761,
+              "viewportWidth": 761,
+              "clientWidth": 761,
+              "scrollWidth": 761,
+              "h1": "Здесь пока пусто.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/sc23-missing",
+              "width": 1440,
+              "viewportWidth": 1440,
+              "clientWidth": 1440,
+              "scrollWidth": 1440,
+              "h1": "Здесь пока пусто.",
+              "clipped": [],
+              "outsideControls": []
+            }
+          ],
+          "errors": []
+        },
+        {
+          "id": "WEB-SHORT-MENU",
+          "checks": [
+            {
+              "viewport": {
+                "width": 568,
+                "height": 320
+              },
+              "menuFocus": [
+                {
+                  "text": "Закрыть ×",
+                  "inside": true,
+                  "visible": true,
+                  "horizontal": true
+                },
+                {
+                  "text": "Возможности",
+                  "inside": true,
+                  "visible": true,
+                  "horizontal": true
+                },
+                {
+                  "text": "Загрузки",
+                  "inside": true,
+                  "visible": true,
+                  "horizontal": true
+                },
+                {
+                  "text": "Обновления",
+                  "inside": true,
+                  "visible": true,
+                  "horizontal": true
+                },
+                {
+                  "text": "Помощь",
+                  "inside": true,
+                  "visible": true,
+                  "horizontal": true
+                },
+                {
+                  "text": "GitHub",
+                  "inside": true,
+                  "visible": true,
+                  "horizontal": true
+                }
+              ],
+              "escapeReturnsFocus": true
+            },
+            {
+              "viewport": {
+                "width": 320,
+                "height": 568
+              },
+              "menuFocus": [
+                {
+                  "text": "Закрыть ×",
+                  "inside": true,
+                  "visible": true,
+                  "horizontal": true
+                },
+                {
+                  "text": "Возможности",
+                  "inside": true,
+                  "visible": true,
+                  "horizontal": true
+                },
+                {
+                  "text": "Загрузки",
+                  "inside": true,
+                  "visible": true,
+                  "horizontal": true
+                },
+                {
+                  "text": "Обновления",
+                  "inside": true,
+                  "visible": true,
+                  "horizontal": true
+                },
+                {
+                  "text": "Помощь",
+                  "inside": true,
+                  "visible": true,
+                  "horizontal": true
+                },
+                {
+                  "text": "GitHub",
+                  "inside": true,
+                  "visible": true,
+                  "horizontal": true
+                }
+              ],
+              "escapeReturnsFocus": true
+            }
+          ]
+        }
+      ]
+    },
+    "firefox": {
+      "schemaVersion": 1,
+      "checkedAt": "2026-10-24T14:24:10.515Z",
+      "browser": "firefox/158.0.1",
+      "scope": "Text spacing and short-screen keyboard checks in an isolated profile; screenshots require separate visual inspection. No screen-reader speech assertion.",
+      "results": [
+        {
+          "id": "WEB-TEXT-SPACING",
+          "checks": [
+            {
+              "route": "/",
+              "width": 320,
+              "viewportWidth": 320,
+              "clientWidth": 320,
+              "scrollWidth": 320,
+              "h1": "ТВОЙ МИР.НОВАЯ ОРБИТА.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/",
+              "width": 761,
+              "viewportWidth": 761,
+              "clientWidth": 761,
+              "scrollWidth": 761,
+              "h1": "ТВОЙ МИР.НОВАЯ ОРБИТА.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/",
+              "width": 1440,
+              "viewportWidth": 1440,
+              "clientWidth": 1440,
+              "scrollWidth": 1440,
+              "h1": "ТВОЙ МИР.НОВАЯ ОРБИТА.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/features",
+              "width": 320,
+              "viewportWidth": 320,
+              "clientWidth": 320,
+              "scrollWidth": 320,
+              "h1": "Твой интерфейс. Твои правила.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/features",
+              "width": 761,
+              "viewportWidth": 761,
+              "clientWidth": 761,
+              "scrollWidth": 761,
+              "h1": "Твой интерфейс. Твои правила.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/features",
+              "width": 1440,
+              "viewportWidth": 1440,
+              "clientWidth": 1440,
+              "scrollWidth": 1440,
+              "h1": "Твой интерфейс. Твои правила.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/download",
+              "width": 320,
+              "viewportWidth": 320,
+              "clientWidth": 320,
+              "scrollWidth": 320,
+              "h1": "Готовим новую орбиту.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/download",
+              "width": 761,
+              "viewportWidth": 761,
+              "clientWidth": 761,
+              "scrollWidth": 761,
+              "h1": "Готовим новую орбиту.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/download",
+              "width": 1440,
+              "viewportWidth": 1440,
+              "clientWidth": 1440,
+              "scrollWidth": 1440,
+              "h1": "Готовим новую орбиту.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/updates",
+              "width": 320,
+              "viewportWidth": 320,
+              "clientWidth": 320,
+              "scrollWidth": 320,
+              "h1": "Не релизы. Путь к ним.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/updates",
+              "width": 761,
+              "viewportWidth": 761,
+              "clientWidth": 761,
+              "scrollWidth": 761,
+              "h1": "Не релизы. Путь к ним.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/updates",
+              "width": 1440,
+              "viewportWidth": 1440,
+              "clientWidth": 1440,
+              "scrollWidth": 1440,
+              "h1": "Не релизы. Путь к ним.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/help",
+              "width": 320,
+              "viewportWidth": 320,
+              "clientWidth": 320,
+              "scrollWidth": 320,
+              "h1": "Найдём ответ.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/help",
+              "width": 761,
+              "viewportWidth": 761,
+              "clientWidth": 761,
+              "scrollWidth": 761,
+              "h1": "Найдём ответ.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/help",
+              "width": 1440,
+              "viewportWidth": 1440,
+              "clientWidth": 1440,
+              "scrollWidth": 1440,
+              "h1": "Найдём ответ.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/help/launcher-status",
+              "width": 320,
+              "viewportWidth": 320,
+              "clientWidth": 320,
+              "scrollWidth": 320,
+              "h1": "Что уже работает в лаунчере",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/help/launcher-status",
+              "width": 761,
+              "viewportWidth": 761,
+              "clientWidth": 761,
+              "scrollWidth": 761,
+              "h1": "Что уже работает в лаунчере",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/help/launcher-status",
+              "width": 1440,
+              "viewportWidth": 1440,
+              "clientWidth": 1440,
+              "scrollWidth": 1440,
+              "h1": "Что уже работает в лаунчере",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/updates/local-launch-and-hud",
+              "width": 320,
+              "viewportWidth": 320,
+              "clientWidth": 320,
+              "scrollWidth": 320,
+              "h1": "Локальный запуск и редактор HUD проверены.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/updates/local-launch-and-hud",
+              "width": 761,
+              "viewportWidth": 761,
+              "clientWidth": 761,
+              "scrollWidth": 761,
+              "h1": "Локальный запуск и редактор HUD проверены.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/updates/local-launch-and-hud",
+              "width": 1440,
+              "viewportWidth": 1440,
+              "clientWidth": 1440,
+              "scrollWidth": 1440,
+              "h1": "Локальный запуск и редактор HUD проверены.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/sc23-missing",
+              "width": 320,
+              "viewportWidth": 320,
+              "clientWidth": 320,
+              "scrollWidth": 320,
+              "h1": "Здесь пока пусто.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/sc23-missing",
+              "width": 761,
+              "viewportWidth": 761,
+              "clientWidth": 761,
+              "scrollWidth": 761,
+              "h1": "Здесь пока пусто.",
+              "clipped": [],
+              "outsideControls": []
+            },
+            {
+              "route": "/sc23-missing",
+              "width": 1440,
+              "viewportWidth": 1440,
+              "clientWidth": 1440,
+              "scrollWidth": 1440,
+              "h1": "Здесь пока пусто.",
+              "clipped": [],
+              "outsideControls": []
+            }
+          ],
+          "errors": []
+        },
+        {
+          "id": "WEB-SHORT-MENU",
+          "checks": [
+            {
+              "viewport": {
+                "width": 568,
+                "height": 320
+              },
+              "menuFocus": [
+                {
+                  "text": "Закрыть ×",
+                  "inside": true,
+                  "visible": true,
+                  "horizontal": true
+                },
+                {
+                  "text": "Возможности",
+                  "inside": true,
+                  "visible": true,
+                  "horizontal": true
+                },
+                {
+                  "text": "Загрузки",
+                  "inside": true,
+                  "visible": true,
+                  "horizontal": true
+                },
+                {
+                  "text": "Обновления",
+                  "inside": true,
+                  "visible": true,
+                  "horizontal": true
+                },
+                {
+                  "text": "Помощь",
+                  "inside": true,
+                  "visible": true,
+                  "horizontal": true
+                },
+                {
+                  "text": "GitHub",
+                  "inside": true,
+                  "visible": true,
+                  "horizontal": true
+                }
+              ],
+              "escapeReturnsFocus": true
+            },
+            {
+              "viewport": {
+                "width": 320,
+                "height": 568
+              },
+              "menuFocus": [
+                {
+                  "text": "Закрыть ×",
+                  "inside": true,
+                  "visible": true,
+                  "horizontal": true
+                },
+                {
+                  "text": "Возможности",
+                  "inside": true,
+                  "visible": true,
+                  "horizontal": true
+                },
+                {
+                  "text": "Загрузки",
+                  "inside": true,
+                  "visible": true,
+                  "horizontal": true
+                },
+                {
+                  "text": "Обновления",
+                  "inside": true,
+                  "visible": true,
+                  "horizontal": true
+                },
+                {
+                  "text": "Помощь",
+                  "inside": true,
+                  "visible": true,
+                  "horizontal": true
+                },
+                {
+                  "text": "GitHub",
+                  "inside": true,
+                  "visible": true,
+                  "horizontal": true
+                }
+              ],
+              "escapeReturnsFocus": true
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "visualReview": {
+    "method": "Full-page screenshots inspected through consecutive labeled panels; not merely DOM assertions.",
+    "browser": "Chrome/156.0.8078.47",
+    "widths": [
+      390,
+      1440
+    ],
+    "captures": [
+      {
+        "file": "visual-download-1440.png",
+        "sha256": "686b9d4e2347c67292e1253b325a444ef07e0e1984b71341c2d3298638741cd0"
+      },
+      {
+        "file": "visual-download-390.png",
+        "sha256": "6135c31d8f9c72bfc16287f37332f5094d804cfd6cc38448b3562a8338c7fc21"
+      },
+      {
+        "file": "visual-features-1440.png",
+        "sha256": "73d246c6c8055de53484569e40f53486d14202588df7d0fe320f14a542a655a1"
+      },
+      {
+        "file": "visual-features-390.png",
+        "sha256": "f4b1a1c10ccefc78b312d24743194b28190049ca37e80865824df0181ee8a322"
+      },
+      {
+        "file": "visual-help-1440.png",
+        "sha256": "4cf979d6ffcdcc1830c9d787a42c3ea25e5704f158bb273fa3a367abe14cff07"
+      },
+      {
+        "file": "visual-help-390.png",
+        "sha256": "2c6a5f513a045f98123219d8f6b789a8da120d725e1ebc6c88d9201d3cb231fc"
+      },
+      {
+        "file": "visual-help-compatibility-1440.png",
+        "sha256": "be3938cbc032072f3be7fbc79eca660158a9a6731ebf978979e4f922bc1a25b5"
+      },
+      {
+        "file": "visual-help-compatibility-390.png",
+        "sha256": "0ab211cdf30b74b9f750e1d521a9f7209102255c3df4394a527b455e09eb60a8"
+      },
+      {
+        "file": "visual-help-getting-started-1440.png",
+        "sha256": "d969e863ec3061b3ecc59889568915f68f878ad6a9b2eff4cb119fbc96928db0"
+      },
+      {
+        "file": "visual-help-getting-started-390.png",
+        "sha256": "949c502a953034ea1a53f50d7fe7f216f7edb0251c80df588506c991ead5f809"
+      },
+      {
+        "file": "visual-help-launcher-status-1440.png",
+        "sha256": "90e8c79831067ca24f3c23ce990163437331362073bb8a4b85f755ba88b8d29e"
+      },
+      {
+        "file": "visual-help-launcher-status-390.png",
+        "sha256": "876bade7612cdb954a9351c4fb70fe03a60fe2995a85eaa4037e7e72a18ffd04"
+      },
+      {
+        "file": "visual-help-report-a-bug-1440.png",
+        "sha256": "f988818e0e241ea92f98ee59ef16d88f1711518d937adca16b4f33866c9dc5a5"
+      },
+      {
+        "file": "visual-help-report-a-bug-390.png",
+        "sha256": "61001970a240c14fbfd8ea2c97b5215b91bdaa580b0df77178a07d5b11ad500c"
+      },
+      {
+        "file": "visual-home-1440.png",
+        "sha256": "974954b0f9133ad0efeba88e0172fd31c45abbe3d60e094aeba22c7bb9ba906a"
+      },
+      {
+        "file": "visual-home-390.png",
+        "sha256": "0c0e505c892d53673fc993a64bd665e0fe4d024d317b21bb93d325ce2eaf2259"
+      },
+      {
+        "file": "visual-sc23-missing-1440.png",
+        "sha256": "353f5fd0981701f00d32c511972cb0ae429ff2c8a9892f8144b21c31a68db55a"
+      },
+      {
+        "file": "visual-sc23-missing-390.png",
+        "sha256": "927be0e46f547d029aa7f28306611fe6635ef823e04caab1f5c29e5b8fbbcdb0"
+      },
+      {
+        "file": "visual-updates-1440.png",
+        "sha256": "42b63cfc59fd1036caa0263611da0d5f1095b91d1a83efd8c05dff836966cb97"
+      },
+      {
+        "file": "visual-updates-390.png",
+        "sha256": "2670be56986909cb629fd6ad715ac4df2014c4e95c9c49cb41f3fe705f8d8e6d"
+      },
+      {
+        "file": "visual-updates-first-contact-1440.png",
+        "sha256": "f92906105bb09abf0cc202c94f10bc14289d1c9d6d25dfaaa92f3529892fc0d4"
+      },
+      {
+        "file": "visual-updates-first-contact-390.png",
+        "sha256": "012eeb3b5c32215dcda41335aa2af81ce2cba31925f432db4641ca483d5c26f9"
+      },
+      {
+        "file": "visual-updates-launcher-and-website-1440.png",
+        "sha256": "53e4f614949623e3a8c47be85b8518e48f5bdf159dfdd044269566eaa8dd7219"
+      },
+      {
+        "file": "visual-updates-launcher-and-website-390.png",
+        "sha256": "5f748b6beb79bcf04ed756524081280b2bb1eff3260177fd7b471c9c664dc6c0"
+      },
+      {
+        "file": "visual-updates-local-launch-and-hud-1440.png",
+        "sha256": "5f4772db66bd1560dabbe0886790410ab554f4f7e5fe0eb891dbb67398579910"
+      },
+      {
+        "file": "visual-updates-local-launch-and-hud-390.png",
+        "sha256": "4f13967fdd5c109938a9519940da5e997c27c6ce19aa39365807873a5f01995e"
+      }
+    ],
+    "firefoxSamples": [
+      "spacing-help-320.png",
+      "menu-568x320.png",
+      "visual-help-launcher-status-390.png"
+    ]
+  },
+  "validation": {
+    "productionBuild": true,
+    "tests": {
+      "root": 32,
+      "api": 9,
+      "launcher": 108,
+      "total": 149
+    },
+    "typeScript": true,
+    "format": true,
+    "stateFixtures": 8,
+    "routeSmoke": {
+      "http200": 12,
+      "http404": true,
+      "headMetadata": true,
+      "filters": true
+    },
+    "tokens": 46,
+    "contrastPairs": 20
+  },
+  "assistiveTechnology": {
+    "status": "not_passed",
+    "tool": "Windows Narrator",
+    "actuallyLaunched": true,
+    "verifiedSpeechRecap": false,
+    "verifiedHeadingNavigation": false,
+    "verifiedLiveAnnouncements": false,
+    "blockers": [
+      "Narrator window reports higher Windows integrity than Computer Use helper.",
+      "Native Computer Use stopped when it could not determine Chrome URL; input stopped for that turn.",
+      "Chrome Browser Use provider unavailable on the continued turn."
+    ],
+    "narratorAbsentAtFinalProcessCheck": true
+  },
+  "remaining": [
+    "Manual screen-reader headings/landmarks/names/states/dialog/search/navigation/retry/clipboard acceptance.",
+    "Safari.",
+    "Production HTTPS/SEO/performance, deployment smoke/rollback and final acceptance.",
+    "Full current Figma library acceptance under SC-17."
+  ],
+  "lighthouse": {
+    "repeated": false,
+    "previousReportsAreHistorical": true
+  },
+  "userSystemSettingsChanged": false,
+  "realReleaseDownloadsStarted": false,
+  "publicDeployment": false,
+  "issueClosed": false
+}

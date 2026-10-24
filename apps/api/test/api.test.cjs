@@ -22,7 +22,7 @@ test('HTTP API exposes health, project and an honest empty release list', async 
     );
     const updates = await (await fetch(base + '/v1/updates')).json();
     assert.equal(updates.pageSize, 12);
-    assert.equal(updates.total, 2);
+    assert.equal(updates.total, 3);
     assert.equal((await (await fetch(base + '/v1/updates?type=release')).json()).total, 0);
     assert.equal((await (await fetch(base + '/v1/updates?page=2')).json()).items.length, 0);
     assert.equal(
@@ -91,7 +91,7 @@ test('pagination uses twelve entries and deterministic ordering for equal dates'
       [...first.items, ...second.items].map((x) => x.id),
       catalog.updates.map((x) => x.id).sort(),
     );
-    assert.equal(content.updates.length, 2);
+    assert.equal(content.updates.length, 3);
   } finally {
     await app.close();
   }

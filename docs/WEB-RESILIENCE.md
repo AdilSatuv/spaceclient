@@ -46,3 +46,5 @@ WEB-FORCED-COLORS проверяет в Chrome CDP тёмную и светлу�
 - Команды: npm run check:web:browser и npm run check:web:firefox.
 
 SC-23 остаётся открытой для полной ручной визуальной приёмки, assistive technology и production HTTPS/SEO. Публичное размещение по-прежнему отложено пользователем.
+
+Следующий локальный срез: [WEB-ACCESSIBILITY.md](WEB-ACCESSIBILITY.md). В текущем Eclipse осмотрены 26 снимков, исправлен overflow при увеличенных интервалах и проверено меню на коротком экране в двух движках. Ручное AT осталось открытым с записанной причиной; прежние Lighthouse-замеры выше не выдаются за замеры нового кода.

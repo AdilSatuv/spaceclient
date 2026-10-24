@@ -8,6 +8,7 @@ const base = process.env.SPACE_SITE_URL || 'http://127.0.0.1:3000';
     '/updates',
     '/updates/first-contact',
     '/updates/launcher-and-website',
+    '/updates/local-launch-and-hud',
     '/help',
     '/help/getting-started',
     '/help/compatibility',
@@ -35,7 +36,7 @@ const base = process.env.SPACE_SITE_URL || 'http://127.0.0.1:3000';
   assert.ok(html.includes('CPS Counter'), 'CPS prototype must be present in the filtered catalog');
   assert.ok(
     !html.includes('Редактор HUD'),
-    'Planned editor must stay outside the prototype filter',
+    'Editor belongs to comfort and must stay outside the HUD prototype filter',
   );
   html = await (await fetch(base + '/features?q=zzzzzz')).text();
   assert.match(html, /Ничего не найдено/);

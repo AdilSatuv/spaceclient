@@ -10,6 +10,7 @@ const { runWebsiteFlows } = require('./check-website-flows.cjs');
 const { firefoxExecutable } = require('./setup-website-firefox.cjs');
 const { checkFirefoxMotion } = require('./check-website-firefox.cjs');
 const { checkWebsiteResilience, checkFirefoxNoScript } = require('./check-website-resilience.cjs');
+const { checkWebsiteAccessibility } = require('./check-website-accessibility.cjs');
 const root = path.resolve(__dirname, '..');
 const production = require('../apps/api/dist/content/infrastructure/curated-catalog.js');
 const fakeHash = 'a'.repeat(64);
@@ -444,6 +445,7 @@ async function main() {
     });
     Object.assign(scenario, { release: false, pagination: false, fault: null, delayMs: 0 });
     if (!firefox) await checkWebsiteResilience({ browser, base, output, firefox, results: flows });
+    await checkWebsiteAccessibility({ browser, base, output, firefox, results: flows });
     const browserVersion = await browser.version();
     if (firefox) {
       // Run Firefox profiles sequentially, including on Windows.

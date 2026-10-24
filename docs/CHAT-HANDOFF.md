@@ -21,7 +21,19 @@ Codebase Memory: после SC-05 выполнен явный reindex (moderate,
 
 Windows QA: skill `computer-use:computer-use`, `node_repl`, пакет `@oai/sky`. Ограничение native API другого Cua tool не означает недоступность этого плагина. Читать skill и guidance/api/confirmations. После перезапуска выбрать новый returned HWND и явно активировать окно перед снимком. Проверять собственный dev-клиент; при пользовательском прерывании остановить ввод.
 
-## Текущий срез — девять локальных captures SC-13
+## Текущий срез — локальная визуальная проверка SC-23
+
+Исправлен overflow при увеличенных интервалах текста: wrap шапки/navigation, перенос wordmark/ссылок подвала и minmax mobile columns. Осмотрены 26 полных снимков всех 13 текущих маршрутов на 390/1440 px. Обнаруженные устаревшие тексты главной/каталога/помощи обновлены по принятой проверке SC-03/04/05/25. Добавлена `/updates/local-launch-and-hud`; прежние две статьи остаются историей. Релизы по-прежнему пусты, FPS-прирост не обещается.
+
+Документ: [WEB-ACCESSIBILITY.md](WEB-ACCESSIBILITY.md), [сводный QA/source hashes](qa/website-accessibility-2026-10-24.json). Chrome — 42 layouts / 27 flows, Firefox — 42 / 26. Новые WEB-TEXT-SPACING (8 маршрутов × 320/761/1440) и WEB-SHORT-MENU (568×320, 320×568) включены в CI. Production build, 149 тестов, TypeScript, tokens/contrast, format, states и route smoke прошли. CI точного финального коммита и его ссылка записываются в issue #23 после push; проверить там живой статус.
+
+**Screen reader не принят.** Narrator действительно запускался, но helper не может читать его окно из-за higher Windows integrity; speech recap не получен. Native Computer Use остановил прежний turn из-за неопределённого URL Chrome. Продолжение выполнено через изолированные QA-профили, без обхода защиты и без подмены AT DOM-аудитом. На окончательной проверке процесса Narrator уже нет. Для ручного AT всё ещё нужны наблюдаемые heading/landmark/control/dialog/live-region/clipboard сценарии с версией AT и реальными сообщениями.
+
+Preview этого среза: `http://127.0.0.1:54284/`, API health `http://127.0.0.1:54283/v1/health`; PID/актуальное состояние — в игнорируемом `.reports/local-preview.json`. Не считать URL действующим без новой проверки. Старые 59750/51288/54305 относятся к остановленным preview. Браузерные QA-профили и PNG остаются в `.reports`; пользовательские deliverables — outputs чата `space-client-sc23-accessibility`. Чат уже находится в разделе Space Client.
+
+SC-23 остаётся OPEN: Safari, ручное AT и production HTTPS/SEO/финальная приёмка не завершены. SC-17 требует Figma; hosting, Microsoft и Space-регистрация отложены. Lighthouse в этом срезе не повторялся; прежние цифры не являются новым замером. Игру и девять captures автоматически не повторять.
+
+## Предыдущий срез — девять локальных captures SC-13
 
 По последнему поручению пользователя завершены девять captures: три vanilla / Space HUD OFF / Space HUD ON, каждый с отдельным процессом, свежим snapshot, warmup 30 с и записью 60 с. Анализатор принял девять записей; проверены 27 raw hashes. Девять exitCode=0, сохранённые NBT подтверждают одинаковые XYZ 74.5/90/-20.5 и rotation 180/15. [Результаты и ограничения](BENCHMARK.md), [metadata, метрики, raw hashes и scene verification](qa/benchmark-static-2026-10-24.json). Game/launcher/сборщик не менялись, source commit captures `f1dcc2973e2df2b7ce63c655b242aec59a458120`, game tree прежний `ad06bc5f13ca76788f6c0832e9f72e77843219ac`.
 
