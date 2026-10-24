@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
+import Link from '@/shared/ui/site-link';
 import { getUpdate } from '@/shared/api/index.server';
 import { validSlug } from '@space/content-contracts';
 import ContentError from '@/shared/ui/content-error';

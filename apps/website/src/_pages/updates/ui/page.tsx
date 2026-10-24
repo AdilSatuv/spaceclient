@@ -1,5 +1,5 @@
 import { updatesQuery } from '../model/query';
-import Link from 'next/link';
+import Link from '@/shared/ui/site-link';
 import { PageIntro } from '@/shared/ui/page-intro';
 import { FilterForm } from '@/shared/ui/filter-form';
 import ContentError from '@/shared/ui/content-error';

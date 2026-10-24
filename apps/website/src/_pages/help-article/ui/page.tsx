@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
+import Link from '@/shared/ui/site-link';
 import { helpArticles } from '@/entities/help-article';
 import { pageMetadata } from '@/shared/lib/metadata';
 export function generateStaticParams() {

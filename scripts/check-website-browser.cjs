@@ -9,6 +9,7 @@ const puppeteer = require('puppeteer-core');
 const { runWebsiteFlows } = require('./check-website-flows.cjs');
 const { firefoxExecutable } = require('./setup-website-firefox.cjs');
 const { checkFirefoxMotion } = require('./check-website-firefox.cjs');
+const { checkWebsiteResilience, checkFirefoxNoScript } = require('./check-website-resilience.cjs');
 const root = path.resolve(__dirname, '..');
 const production = require('../apps/api/dist/content/infrastructure/curated-catalog.js');
 const fakeHash = 'a'.repeat(64);
@@ -441,12 +442,15 @@ async function main() {
       setScenario: (value) => Object.assign(scenario, value),
       results: flows,
     });
+    Object.assign(scenario, { release: false, pagination: false, fault: null, delayMs: 0 });
+    if (!firefox) await checkWebsiteResilience({ browser, base, output, firefox, results: flows });
     const browserVersion = await browser.version();
     if (firefox) {
       // Run Firefox profiles sequentially, including on Windows.
       await browser.close();
       browser = undefined;
       await checkFirefoxMotion({ executable, base, output, errors });
+      await checkFirefoxNoScript({ executable, base, output, results: flows });
       checks.push(
         'A separate Firefox profile with ui.prefersReducedMotion=1 exposes the real reduced-motion media query, pauses animation and disables the motion toggle.',
       );
@@ -466,6 +470,7 @@ async function main() {
       skipped: firefox
         ? [
             '200% browser zoom, clipboard success/denial and live media emulation remain covered by the Chrome suite; they are not asserted for Firefox.',
+            'Forced-colors emulation is covered in Chrome only; Firefox runs the no-JavaScript scenarios.',
           ]
         : [],
       scope: `Isolated production Next with fixture API and own ${firefox ? 'Firefox profiles over WebDriver BiDi' : 'Chrome profile and test-only tabs extension'}. No personal browser session, real release download or public HTTPS audit.`,

@@ -1028,13 +1028,6 @@ dialog nav a[aria-current] {
   text-decoration-thickness: 2px;
   text-underline-offset: 5px;
 }
-.skeleton {
-  height: 220px;
-  margin-block: 40px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-}
 .mobile-break {
   display: none;
 }
@@ -1525,9 +1518,6 @@ dialog nav a[aria-current] {
 .faq-layout h2 br:after {
   content: ' ';
 }
-.loading-content {
-  padding-top: 40px;
-}
 @media (max-width: 760px) {
   .footer a {
     min-height: 44px;
@@ -1540,6 +1530,39 @@ dialog nav a[aria-current] {
 }
 
 /* Eclipse: an original orbital identity with compositor-only decorative motion. */
+.ringworld-flat {
+  display: none;
+}
+.route-link {
+  position: relative;
+}
+.navigation-feedback {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: currentColor;
+  transform-origin: left;
+  opacity: 0;
+  pointer-events: none;
+}
+.navigation-feedback[data-pending='true'] {
+  opacity: 1;
+}
+.route-link:has(> .navigation-feedback[data-pending='true']) {
+  cursor: progress;
+}
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 body {
   background: var(--bg);
   isolation: isolate;
@@ -2045,6 +2068,7 @@ body {
 }
 .page-orbit {
   color: #f4bd820d;
+  opacity: 0.08;
   width: 360px;
   height: 360px;
 }
@@ -2074,6 +2098,14 @@ body {
 @keyframes orbital-turn {
   to {
     transform: rotate(360deg);
+  }
+}
+@keyframes navigation-wait {
+  from {
+    transform: scaleX(0.15);
+  }
+  to {
+    transform: scaleX(1);
   }
 }
 @keyframes planet-sway {
@@ -2144,6 +2176,9 @@ body {
   }
 }
 @media (prefers-reduced-motion: no-preference) {
+  .navigation-feedback[data-pending='true'] {
+    animation: navigation-wait 0.8s ease-in-out infinite alternate;
+  }
   .asteroid-drift {
     animation: asteroid-float 48s ease-in-out infinite alternate;
   }
@@ -2299,6 +2334,77 @@ html[data-page-visible='hidden'] *::after {
     width: 28px;
     right: 7%;
     top: 65%;
+  }
+}
+@media (scripting: none) {
+  .site-header .menu-trigger,
+  .site-header .motion-toggle {
+    display: none !important;
+  }
+  .header-inner {
+    height: auto;
+    min-height: 96px;
+    flex-wrap: wrap;
+    padding-block: 16px;
+  }
+  .desktop-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+  }
+  .desktop-nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+@media (scripting: none) and (max-width: 760px) {
+  .desktop-nav {
+    width: 100%;
+    order: 2;
+  }
+}
+@media (forced-colors: active) {
+  .space-backdrop,
+  .cosmic-scene,
+  .hero-shade,
+  .page-orbit,
+  .update-banner::after {
+    display: none;
+  }
+  .hero .orbit-title {
+    background: none;
+    color: CanvasText;
+    -webkit-text-fill-color: CanvasText;
+  }
+  .ringworld-rich {
+    display: none;
+  }
+  .ringworld-flat {
+    display: inline;
+    color: CanvasText;
+  }
+  .button,
+  .motion-toggle,
+  .menu-trigger {
+    background: ButtonFace !important;
+    color: ButtonText !important;
+    border: 1px solid ButtonText;
+    box-shadow: none !important;
+  }
+  button:disabled,
+  .button:disabled {
+    color: GrayText !important;
+    border-color: GrayText;
+  }
+  .desktop-nav a[aria-current],
+  dialog nav a[aria-current] {
+    text-decoration: underline;
+    text-underline-offset: 6px;
+  }
+  :focus-visible {
+    outline: 2px solid Highlight !important;
+    outline-offset: 5px;
   }
 }
 @media (max-width: 360px) {

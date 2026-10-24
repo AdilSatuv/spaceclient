@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from './site-link';
 import { OrbitMark } from './icons';
 export function PageIntro({
   label,

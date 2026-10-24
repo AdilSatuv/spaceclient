@@ -67,11 +67,15 @@ apps/website/
     entities/release/          выбор рекомендуемой сборки
     entities/help-article/     переиспользуемые данные инструкций
     shared/api/                HTTP-клиент и server composition
-    shared/ui/                 иконки, PageIntro, FilterForm, loading, retry, error
+    shared/ui/                 иконки, PageIntro, FilterForm, SiteLink, retry, error
     shared/lib/                preview/noindex/canonical metadata
 ```
 
-Папка Next `app` подключает публичные экспорты страниц, общий layout и boundaries. `dynamic`/`dynamicParams` остаются статическими литералами именно здесь. Разметка и metadata-функции живут в соответствующих слайсах. Подробности статьи журнала сохраняют HTTP 404 без предшествующего loading boundary; статические help-параметры также сохранены.
+Папка Next `app` подключает публичные экспорты страниц, общий layout и error/not-found boundaries. `dynamic`/`dynamicParams` остаются статическими литералами именно здесь. Разметка и metadata-функции живут в соответствующих слайсах. Страницы с данными отдают готовый первый HTML без route loading boundary: иначе без JavaScript React не переносит streamed-сегмент из скрытого контейнера и посетитель остаётся на skeleton. Подробности статей сохраняют HTTP 404; статические help-параметры также сохранены.
+
+`shared/ui/site-link.tsx` — тонкий Client Component поверх Next Link. Его дочерний NavigationFeedback использует штатный [useLinkStatus](https://nextjs.org/docs/app/api-reference/functions/use-link-status): пока динамический переход ожидает ответ, прежняя страница остаётся видимой, а нажатая ссылка получает небольшой индикатор и live status. Абсолютное позиционирование не меняет размеры ссылки; предзагрузка Next сохранена. Без JavaScript это обычный anchor. Форма GET остаётся нативной, поиск и фильтры выполняются сервером. Новый слой данных и обход роутера не добавлены.
+
+Первый ответ динамической страницы теперь ждёт завершения ограниченного таймаутом API-запроса. Это осознанный обмен мгновенного skeleton на пригодный для чтения HTML без скриптов. При отказе API сохраняется ContentError, а при отсутствии данных — отдельный empty state. Во время client navigation индикатор ссылки заменяет route skeleton; при обычной отправке формы работает нативная индикация браузера.
 
 `shared/ui/filter-form.tsx` — небольшой Client Component для общей формы GET-фильтров. Парсинг query, фильтрация и содержимое остаются серверными. При восстановлении страницы через историю форма возвращается к server-rendered default values: браузер не должен подставлять несохранённый следующий запрос поверх результатов предыдущего. Обработчики pageshow/popstate и таймер очищаются при размонтировании. Поведение проверяется настоящими Back-переходами четырёх разделов, а не вызовом reset из теста. Причина отложенного восстановления описана в [порядке событий History API](https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event#when_popstate_is_sent); восстановление использует стандартный [form.reset()](https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement/reset).
 

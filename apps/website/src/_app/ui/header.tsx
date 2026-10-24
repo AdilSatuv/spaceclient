@@ -1,5 +1,5 @@
 'use client';
-import Link from 'next/link';
+import Link from '@/shared/ui/site-link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { Arrow, OrbitMark } from '@/shared/ui/icons';

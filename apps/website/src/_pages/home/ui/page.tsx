@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@/shared/ui/site-link';
 import { Arrow } from '@/shared/ui/icons';
 import HudPreview from './hud-preview';
 import { CosmicScene } from './cosmic-scene';

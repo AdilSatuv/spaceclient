@@ -2,6 +2,7 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const { checkWebsiteControls } = require('./check-website-controls.cjs');
 const { checkWebsiteEclipse } = require('./check-website-eclipse.cjs');
+const { checkNavigationFeedback } = require('./check-website-resilience.cjs');
 
 async function runWebsiteFlows({ browser, page, base, output, setScenario, results = [] }) {
   const goto = async (route) => {
@@ -29,6 +30,7 @@ async function runWebsiteFlows({ browser, page, base, output, setScenario, resul
   setScenario({ release: false, pagination: false, fault: null, delayMs: 0 });
   await checkWebsiteControls({ page, base, results });
   await checkWebsiteEclipse({ browser, page, base, results });
+  await checkNavigationFeedback({ browser, page, base, output, setScenario, results });
 
   for (const width of [390, 1440]) {
     await page.setViewport({ width, height: 900 });

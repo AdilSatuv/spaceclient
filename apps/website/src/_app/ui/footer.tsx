@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@/shared/ui/site-link';
 import { Arrow, OrbitMark } from '@/shared/ui/icons';
 export function Footer() {
   return (
