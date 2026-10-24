@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "checkedDate": "2026-10-24",
+  "sourceCommit": "cff252ca82de51de807e0fd7d267541c2b088545",
+  "gameSourceTree": "ad966c17509002c34056c3931a4b6d1c0bd59b17",
+  "environment": {
+    "platform": "Windows x64",
+    "javaMajor": 21,
+    "minecraft": "1.8.9",
+    "loader": "0.18.3",
+    "launchMode": "launcher-local",
+    "isolatedInstance": true,
+    "additionalUserNavigationInExistingTestInstance": true,
+    "personalMinecraftUsed": false
+  },
+  "cps": {
+    "rightClickObserved": "0 L / 1 R",
+    "leftClickAndDecay": "accepted in preceding dev-world QA",
+    "physicalLeftAndRightHold": "user confirmed: no repeated CPS during 3-second holds",
+    "oneSecondBoundary": "ClickCounterTest, exact 1-second expiry and independent windows",
+    "menuExclusion": "left and right inventory clicks leave 0 L / 0 R; still zero after Escape",
+    "focusLoss": "Alt+Tab pauses singleplayer; zero CPS observed after returning to the game",
+    "worldExit": "Save and Quit -> title -> existing world reentered; native F2 confirms 0 L / 0 R; later Quit Game exits with code 0"
+  },
+  "modules": {
+    "corruptStartup": {
+      "input": "schemaVersion=1\nenabled=invalid\n",
+      "backupSha256": "9a61dd4ba79617774afb3363bc71c035a5a6ac2c846f6bbfc7661fa1a807b889",
+      "backupCreated": true,
+      "startupNotice": "Invalid config backed up. Defaults restored.",
+      "worldEntered": true,
+      "allDefaultModulesVisible": true,
+      "subsequentValidSave": true
+    },
+    "physicalSpaceHold": "user confirmed one toggle during 3-second hold",
+    "enterAndHeldTransitions": "user confirmed: Enter hold and screen close/reopen with Space/Enter held cause no repeated toggles",
+    "fullTabCycle": "Search -> HUD visibility -> FPS -> Coordinates -> Keystrokes -> CPS -> Done -> Search; visible focus verified in game",
+    "reverseTabCycle": "user confirmed full physical left-Shift+Tab cycle through all controls back to Search",
+    "resolutionMatrix": [
+      {
+        "width": 1920,
+        "height": 1080,
+        "mode": "fullscreen",
+        "guiScale": "Auto (4)",
+        "guiUnits": "480x270",
+        "result": "all controls and recovery notice visible without overlap",
+        "nativeScreenshot": "hud-menu-1080-auto-2026-10-24.png"
+      }
+    ]
+  },
+  "tests": {
+    "command": "./scripts/game.ps1 test",
+    "javaTests": 23,
+    "failures": 0,
+    "errors": 0
+  },
+  "cpsAcceptanceComplete": true,
+  "modulesAcceptanceComplete": false
+}
