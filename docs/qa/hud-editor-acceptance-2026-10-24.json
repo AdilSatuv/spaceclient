@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "checkedDate": "2026-10-24",
+  "task": "SC-05",
+  "sources": {
+    "initial": {
+      "commit": "5437259816fbea96d0ffc4e00cbcd1e4c4561455",
+      "gameSourceTree": "f183bef379d164a29624b94ea81d51a6a78f1224",
+      "bundleSha256": "ac032d85b0e142eed939355dd42c6d982df7113e0f1acb18e1de456541ee9c0a",
+      "ciRun": 40057887565
+    },
+    "final": {
+      "commit": "7aa48f0e3fda5fd2b6a173d9cb3e722980950864",
+      "schemaVersion": 1,
+      "channel": "development",
+      "modVersion": "0.1.0",
+      "minecraftVersion": "1.8.9",
+      "loaderVersion": "0.18.3",
+      "gameSourceTree": "ad06bc5f13ca76788f6c0832e9f72e77843219ac",
+      "size": 47687,
+      "sha256": "11299c35e8812de73373f75c0a3cef721f40308bb7f510fa7387c4f70c376257",
+      "ciRun": 40058449069
+    }
+  },
+  "environment": {
+    "platform": "Windows x64",
+    "javaMajor": 21,
+    "minecraft": "1.8.9",
+    "loader": "0.18.3",
+    "launchMode": "launcher-local",
+    "isolatedInstance": true,
+    "personalMinecraftUsed": false
+  },
+  "interactions": {
+    "drag": "FPS dragged from default top-left to bottom-right; x/y distances snap to 0; toolbar moves to top.",
+    "scale": "Button + and wheel over selected FPS both change scale to 1.1; rendered glyphs and saved scale agree.",
+    "anchors": "A changes RIGHT/BOTTOM to LEFT/TOP while preserving visible position.",
+    "reset": "R restores selected FPS default placement/scale; Home resets profile 2 layout while profile 1 remains RIGHT/BOTTOM at scale 1.1.",
+    "keyboard": "Right arrow moves profile 2 FPS from x=8 to x=9; Tab selects Coordinates and toolbar moves below it.",
+    "names": "N selects full existing name; press_key injection on Russian layout replaces it with Cyrillic ф; Enter saves, restart retains it. Unicode type_text injection was ignored by LWJGL and is not counted as successful typing.",
+    "profiles": "Keys 1/2 switch independent placements/scales/flags; profile 2 FPS OFF leaves profile 1 ON.",
+    "importExport": "O exports profile 1; copied fixture imports through I into profile 2 only; all profile 0 keys unchanged and all imported profile 1 keys equal export.",
+    "invalidImport": {
+      "fixture": "schemaVersion=999",
+      "notice": "Need valid config/spaceclient-hud-import.properties",
+      "mainConfigUnchangedSha256": "8679c411d20a5f4d1df416e55123b45035342ca1912253ecc235d400d49acc9c"
+    },
+    "navigation": "Esc returns to modules with Edit layout focused; Tab reaches Done then Search. Empty search results retain both footer buttons without overlap.",
+    "worldHud": "After editor closes, FPS renders at saved bottom-right corner; F1 and F3 each hide it and second press restores it."
+  },
+  "migration": {
+    "from": 1,
+    "to": 2,
+    "backupByteExactSha256": "d02be70393eaca4f587215260f4f6a2fd45218e4baab6c9eef87d93296557b1d",
+    "sourceUnchangedUntilFirstSave": true,
+    "originalFlagsCopiedIntoBothProfiles": true,
+    "backupCountAfterRestart": 1
+  },
+  "persistence": {
+    "configByteExactSha256BeforeAndAfterRestart": "45e8a2f1107d5e8f466c37a6287cdd5ca54ebf2696d7119881069aa402d52629",
+    "activeProfile": 0,
+    "bothProfilesVerifiedFromDisk": true,
+    "worldReentered": true,
+    "processExitCodes": [
+      0,
+      0
+    ]
+  },
+  "resolutionMatrix": [
+    {
+      "width": 1280,
+      "height": 720,
+      "guiScale": "Auto (3)",
+      "guiUnits": "427x240",
+      "source": "initial",
+      "nativeScreenshot": "hud-editor-720-auto-2026-10-24.png",
+      "sha256": "b655b982a0d0c832b7858110c7abfeb7d13cb2d8942489d16e204f163ca8f25c",
+      "result": "Selected FPS, complete focus outline and all toolbar controls visible; saved RIGHT/BOTTOM 0/0, scale 1.1 retained."
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "guiScale": "Auto (4)",
+      "guiUnits": "480x270",
+      "source": "initial",
+      "nativeScreenshot": "hud-editor-1080-auto-2026-10-24.png",
+      "sha256": "dabf2c2f1c0a0cd9bbb69c465bc25c32154326483733d405d025c70b9d3564a9",
+      "result": "Selected FPS, complete focus outline and all toolbar controls visible; saved RIGHT/BOTTOM 0/0, scale 1.1 retained."
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "guiScale": "Normal (2)",
+      "guiUnits": "640x360",
+      "source": "final",
+      "nativeScreenshot": "hud-editor-720-normal-2026-10-24.png",
+      "sha256": "51c7f8a3db98f438073828529381d3e7a6484c317fff88683b82452b184cd5d9",
+      "result": "Selected FPS, complete focus outline and all toolbar controls visible; saved RIGHT/BOTTOM 0/0, scale 1.1 retained."
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "guiScale": "Normal (2)",
+      "guiUnits": "960x540",
+      "source": "final",
+      "nativeScreenshot": "hud-editor-1080-normal-2026-10-24.png",
+      "sha256": "fb3763b3f459d24f004f7fda67bce2d8c4e5b38633cd3b232f9d43e9840b826d",
+      "result": "Selected FPS, complete focus outline and all toolbar controls visible; saved RIGHT/BOTTOM 0/0, scale 1.1 retained."
+    }
+  ],
+  "verification": {
+    "javaTests": 36,
+    "launcherTests": 108,
+    "typescript": "pass",
+    "bundle": "pass",
+    "finalSourceDeltaFromInitial": "Only migration notice wording changed; editor, renderer, geometry, profile model and controls unchanged.",
+    "pending": []
+  }
+}
