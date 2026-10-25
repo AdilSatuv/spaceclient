@@ -1,0 +1,3931 @@
+{
+  "type": "audit",
+  "pages": [
+    {
+      "id": "43:133",
+      "name": "Orbit · Website"
+    },
+    {
+      "id": "43:1579",
+      "name": "Orbit · Launcher"
+    }
+  ],
+  "screens": [
+    {
+      "id": "43:201",
+      "name": "WEB / Home / 1440",
+      "width": 1440,
+      "height": 4639,
+      "texts": 70,
+      "instances": 19,
+      "autoLayouts": 28,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-201"
+    },
+    {
+      "id": "43:361",
+      "name": "WEB / Features / 1440",
+      "width": 1440,
+      "height": 1760,
+      "texts": 44,
+      "instances": 19,
+      "autoLayouts": 16,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-361"
+    },
+    {
+      "id": "43:459",
+      "name": "WEB / Downloads / 1440",
+      "width": 1440,
+      "height": 2052,
+      "texts": 37,
+      "instances": 13,
+      "autoLayouts": 12,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-459"
+    },
+    {
+      "id": "43:540",
+      "name": "WEB / Updates / 1440",
+      "width": 1440,
+      "height": 1638,
+      "texts": 28,
+      "instances": 12,
+      "autoLayouts": 8,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-540"
+    },
+    {
+      "id": "43:609",
+      "name": "WEB / Help / 1440",
+      "width": 1440,
+      "height": 1610,
+      "texts": 34,
+      "instances": 13,
+      "autoLayouts": 13,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-609"
+    },
+    {
+      "id": "43:688",
+      "name": "WEB / Home / 390",
+      "width": 390,
+      "height": 5443,
+      "texts": 67,
+      "instances": 16,
+      "autoLayouts": 28,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-688"
+    },
+    {
+      "id": "43:842",
+      "name": "WEB / Features / 390",
+      "width": 390,
+      "height": 2749,
+      "texts": 41,
+      "instances": 16,
+      "autoLayouts": 19,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-842"
+    },
+    {
+      "id": "43:937",
+      "name": "WEB / Downloads / 390",
+      "width": 390,
+      "height": 2270,
+      "texts": 34,
+      "instances": 10,
+      "autoLayouts": 12,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-937"
+    },
+    {
+      "id": "43:1012",
+      "name": "WEB / Updates / 390",
+      "width": 390,
+      "height": 1740,
+      "texts": 25,
+      "instances": 9,
+      "autoLayouts": 8,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-1012"
+    },
+    {
+      "id": "43:1075",
+      "name": "WEB / Help / 390",
+      "width": 390,
+      "height": 2180,
+      "texts": 31,
+      "instances": 10,
+      "autoLayouts": 15,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-1075"
+    },
+    {
+      "id": "43:1150",
+      "name": "WEB / Update article / 1440",
+      "width": 1440,
+      "height": 1387,
+      "texts": 22,
+      "instances": 9,
+      "autoLayouts": 6,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-1150"
+    },
+    {
+      "id": "43:1207",
+      "name": "WEB / Update article / 390",
+      "width": 390,
+      "height": 1384,
+      "texts": 19,
+      "instances": 6,
+      "autoLayouts": 6,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-1207"
+    },
+    {
+      "id": "43:1258",
+      "name": "WEB / Help article / 1440",
+      "width": 1440,
+      "height": 1657,
+      "texts": 27,
+      "instances": 10,
+      "autoLayouts": 7,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-1258"
+    },
+    {
+      "id": "43:1322",
+      "name": "WEB / Help article / 390",
+      "width": 390,
+      "height": 1729,
+      "texts": 24,
+      "instances": 7,
+      "autoLayouts": 7,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-1322"
+    },
+    {
+      "id": "43:1380",
+      "name": "WEB / Mobile menu / 390",
+      "width": 390,
+      "height": 552,
+      "texts": 9,
+      "instances": 6,
+      "autoLayouts": 3,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-1380"
+    },
+    {
+      "id": "43:1408",
+      "name": "WEB / Empty search / 390",
+      "width": 390,
+      "height": 370,
+      "texts": 6,
+      "instances": 2,
+      "autoLayouts": 3,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-1408"
+    },
+    {
+      "id": "43:1429",
+      "name": "WEB / API error / 390",
+      "width": 390,
+      "height": 408,
+      "texts": 6,
+      "instances": 2,
+      "autoLayouts": 3,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-1429"
+    },
+    {
+      "id": "43:1450",
+      "name": "WEB / 404 / 390",
+      "width": 390,
+      "height": 408,
+      "texts": 6,
+      "instances": 2,
+      "autoLayouts": 3,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-1450"
+    },
+    {
+      "id": "43:1471",
+      "name": "SYSTEM / Controls and foundations",
+      "width": 1440,
+      "height": 1355,
+      "texts": 52,
+      "instances": 22,
+      "autoLayouts": 30,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-1471"
+    },
+    {
+      "id": "43:1580",
+      "name": "APP / Ready / 1180×760",
+      "width": 1180,
+      "height": 760,
+      "texts": 27,
+      "instances": 10,
+      "autoLayouts": 13,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-1580"
+    },
+    {
+      "id": "43:1645",
+      "name": "APP / First run / 1180×760",
+      "width": 1180,
+      "height": 760,
+      "texts": 27,
+      "instances": 10,
+      "autoLayouts": 13,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-1645"
+    },
+    {
+      "id": "43:1710",
+      "name": "APP / Preparing / 1180×760",
+      "width": 1180,
+      "height": 760,
+      "texts": 29,
+      "instances": 10,
+      "autoLayouts": 14,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-1710"
+    },
+    {
+      "id": "43:1780",
+      "name": "APP / Preparation error / 1180×760",
+      "width": 1180,
+      "height": 760,
+      "texts": 29,
+      "instances": 10,
+      "autoLayouts": 13,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-1780"
+    },
+    {
+      "id": "43:1848",
+      "name": "APP / Starting / 1180×760",
+      "width": 1180,
+      "height": 760,
+      "texts": 29,
+      "instances": 10,
+      "autoLayouts": 13,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-1848"
+    },
+    {
+      "id": "43:1916",
+      "name": "APP / Running / 1180×760",
+      "width": 1180,
+      "height": 760,
+      "texts": 29,
+      "instances": 10,
+      "autoLayouts": 13,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-1916"
+    },
+    {
+      "id": "43:1984",
+      "name": "APP / Java error / 1180×760",
+      "width": 1180,
+      "height": 760,
+      "texts": 29,
+      "instances": 10,
+      "autoLayouts": 13,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-1984"
+    },
+    {
+      "id": "43:2052",
+      "name": "APP / Nickname error / 1180×760",
+      "width": 1180,
+      "height": 760,
+      "texts": 27,
+      "instances": 10,
+      "autoLayouts": 13,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-2052"
+    },
+    {
+      "id": "43:2117",
+      "name": "APP / Profiles · Unsaved draft / 1180×760",
+      "width": 1180,
+      "height": 760,
+      "texts": 29,
+      "instances": 13,
+      "autoLayouts": 11,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-2117"
+    },
+    {
+      "id": "43:2186",
+      "name": "APP / Settings / 1180×760",
+      "width": 1180,
+      "height": 760,
+      "texts": 30,
+      "instances": 7,
+      "autoLayouts": 13,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=43-2186"
+    }
+  ],
+  "layoutIssues": [],
+  "textIssues": [],
+  "variables": [
+    {
+      "id": "VariableID:43:80",
+      "name": "primitive/bg",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--eclipse-bg)"
+      },
+      "values": {
+        "43:0": {
+          "r": 0.027450980618596077,
+          "g": 0.03529411926865578,
+          "b": 0.05882352963089943,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:81",
+      "name": "color/bg",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--bg)"
+      },
+      "values": {
+        "43:0": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:43:80"
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:82",
+      "name": "primitive/surface",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--eclipse-surface)"
+      },
+      "values": {
+        "43:0": {
+          "r": 0.062745101749897,
+          "g": 0.0784313753247261,
+          "b": 0.12156862765550613,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:83",
+      "name": "color/surface",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--surface)"
+      },
+      "values": {
+        "43:0": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:43:82"
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:84",
+      "name": "primitive/raised",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--eclipse-raised)"
+      },
+      "values": {
+        "43:0": {
+          "r": 0.09803921729326248,
+          "g": 0.12156862765550613,
+          "b": 0.1764705926179886,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:85",
+      "name": "color/raised",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--raised)"
+      },
+      "values": {
+        "43:0": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:43:84"
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:86",
+      "name": "primitive/line",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--eclipse-line)"
+      },
+      "values": {
+        "43:0": {
+          "r": 0.1921568661928177,
+          "g": 0.23529411852359772,
+          "b": 0.32156863808631897,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:87",
+      "name": "color/line",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "STROKE_COLOR"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--line)"
+      },
+      "values": {
+        "43:0": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:43:86"
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:88",
+      "name": "primitive/text",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--eclipse-text)"
+      },
+      "values": {
+        "43:0": {
+          "r": 0.9686274528503418,
+          "g": 0.9725490212440491,
+          "b": 0.9882352948188782,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:89",
+      "name": "color/text",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--text)"
+      },
+      "values": {
+        "43:0": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:43:88"
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:90",
+      "name": "primitive/muted",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--eclipse-muted)"
+      },
+      "values": {
+        "43:0": {
+          "r": 0.7098039388656616,
+          "g": 0.7450980544090271,
+          "b": 0.8078431487083435,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:91",
+      "name": "color/muted",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--muted)"
+      },
+      "values": {
+        "43:0": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:43:90"
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:92",
+      "name": "primitive/accent",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--eclipse-accent)"
+      },
+      "values": {
+        "43:0": {
+          "r": 1,
+          "g": 0.7411764860153198,
+          "b": 0.4000000059604645,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:93",
+      "name": "color/accent",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--accent)"
+      },
+      "values": {
+        "43:0": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:43:92"
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:94",
+      "name": "primitive/onAccent",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--eclipse-onAccent)"
+      },
+      "values": {
+        "43:0": {
+          "r": 0.125490203499794,
+          "g": 0.07450980693101883,
+          "b": 0.019607843831181526,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:95",
+      "name": "color/onAccent",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--on-accent)"
+      },
+      "values": {
+        "43:0": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:43:94"
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:96",
+      "name": "primitive/copper",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--eclipse-copper)"
+      },
+      "values": {
+        "43:0": {
+          "r": 0.8980392217636108,
+          "g": 0.658823549747467,
+          "b": 0.3921568691730499,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:97",
+      "name": "color/copper",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--violet)"
+      },
+      "values": {
+        "43:0": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:43:96"
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:98",
+      "name": "primitive/border",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--eclipse-border)"
+      },
+      "values": {
+        "43:0": {
+          "r": 0.46666666865348816,
+          "g": 0.5137255191802979,
+          "b": 0.6078431606292725,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:99",
+      "name": "color/border",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "STROKE_COLOR"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--control-border)"
+      },
+      "values": {
+        "43:0": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:43:98"
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:100",
+      "name": "primitive/hover",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--eclipse-hover)"
+      },
+      "values": {
+        "43:0": {
+          "r": 1,
+          "g": 0.8313725590705872,
+          "b": 0.6117647290229797,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:101",
+      "name": "color/hover",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--accent-hover)"
+      },
+      "values": {
+        "43:0": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:43:100"
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:102",
+      "name": "primitive/pressed",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--eclipse-pressed)"
+      },
+      "values": {
+        "43:0": {
+          "r": 0.8627451062202454,
+          "g": 0.5960784554481506,
+          "b": 0.2705882489681244,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:103",
+      "name": "color/pressed",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--pressed)"
+      },
+      "values": {
+        "43:0": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:43:102"
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:104",
+      "name": "primitive/danger",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--eclipse-danger)"
+      },
+      "values": {
+        "43:0": {
+          "r": 1,
+          "g": 0.6431372761726379,
+          "b": 0.7176470756530762,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:105",
+      "name": "color/danger",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--control-danger)"
+      },
+      "values": {
+        "43:0": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:43:104"
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:106",
+      "name": "primitive/success",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--eclipse-success)"
+      },
+      "values": {
+        "43:0": {
+          "r": 0.6509804129600525,
+          "g": 0.8392156958580017,
+          "b": 0.7372549176216125,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:107",
+      "name": "color/success",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--success)"
+      },
+      "values": {
+        "43:0": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:43:106"
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:108",
+      "name": "primitive/disabled",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--eclipse-disabled)"
+      },
+      "values": {
+        "43:0": {
+          "r": 0.1411764770746231,
+          "g": 0.1411764770746231,
+          "b": 0.16862745583057404,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:109",
+      "name": "color/disabled",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--disabled)"
+      },
+      "values": {
+        "43:0": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:43:108"
+        }
+      }
+    },
+    {
+      "id": "VariableID:43:110",
+      "name": "space/s4",
+      "scopes": [
+        "GAP"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--space-s4)"
+      },
+      "values": {
+        "43:0": 4
+      }
+    },
+    {
+      "id": "VariableID:43:111",
+      "name": "space/s8",
+      "scopes": [
+        "GAP"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--space-s8)"
+      },
+      "values": {
+        "43:0": 8
+      }
+    },
+    {
+      "id": "VariableID:43:112",
+      "name": "space/s12",
+      "scopes": [
+        "GAP"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--space-s12)"
+      },
+      "values": {
+        "43:0": 12
+      }
+    },
+    {
+      "id": "VariableID:43:113",
+      "name": "space/s16",
+      "scopes": [
+        "GAP"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--space-s16)"
+      },
+      "values": {
+        "43:0": 16
+      }
+    },
+    {
+      "id": "VariableID:43:114",
+      "name": "space/s24",
+      "scopes": [
+        "GAP"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--space-s24)"
+      },
+      "values": {
+        "43:0": 24
+      }
+    },
+    {
+      "id": "VariableID:43:115",
+      "name": "space/s32",
+      "scopes": [
+        "GAP"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--space-s32)"
+      },
+      "values": {
+        "43:0": 32
+      }
+    },
+    {
+      "id": "VariableID:43:116",
+      "name": "space/s48",
+      "scopes": [
+        "GAP"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--space-s48)"
+      },
+      "values": {
+        "43:0": 48
+      }
+    },
+    {
+      "id": "VariableID:43:117",
+      "name": "space/s64",
+      "scopes": [
+        "GAP"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--space-s64)"
+      },
+      "values": {
+        "43:0": 64
+      }
+    },
+    {
+      "id": "VariableID:43:118",
+      "name": "space/s96",
+      "scopes": [
+        "GAP"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--space-s96)"
+      },
+      "values": {
+        "43:0": 96
+      }
+    },
+    {
+      "id": "VariableID:43:119",
+      "name": "radius/r10",
+      "scopes": [
+        "CORNER_RADIUS"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--radius-button)"
+      },
+      "values": {
+        "43:0": 10
+      }
+    },
+    {
+      "id": "VariableID:43:120",
+      "name": "radius/r16",
+      "scopes": [
+        "CORNER_RADIUS"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--eclipse-radius-panel)"
+      },
+      "values": {
+        "43:0": 16
+      }
+    }
+  ],
+  "counts": {
+    "componentSets": 4,
+    "variants": 30,
+    "textStyles": 12,
+    "prototypeEdges": 176,
+    "createdNodes": 2115,
+    "screens": 29,
+    "texts": 867,
+    "instances": 303,
+    "autoLayouts": 356,
+    "variables": 41,
+    "layoutIssues": 0,
+    "textIssues": 0
+  },
+  "components": [
+    {
+      "id": "43:173",
+      "name": "Space / Orbit / Button",
+      "variants": 18
+    },
+    {
+      "id": "43:182",
+      "name": "Space / Orbit / Field",
+      "variants": 4
+    },
+    {
+      "id": "43:191",
+      "name": "Space / Orbit / Badge",
+      "variants": 4
+    },
+    {
+      "id": "43:200",
+      "name": "Space / Orbit / Navigation",
+      "variants": 4
+    }
+  ],
+  "textStyles": [
+    {
+      "id": "S:ddc1c3b5512ca5e0bd1984771f0fec1c7ded4b03,",
+      "name": "Space / Orbit / display",
+      "font": {
+        "family": "Segoe UI",
+        "style": "Bold"
+      },
+      "size": 84
+    },
+    {
+      "id": "S:2aa057b74621a2c4313783ad8e6a9bc04340a685,",
+      "name": "Space / Orbit / displayMobile",
+      "font": {
+        "family": "Segoe UI",
+        "style": "Bold"
+      },
+      "size": 44
+    },
+    {
+      "id": "S:2abc339f39e22ccbd0d4e4d9d4d9f1f223d3a21d,",
+      "name": "Space / Orbit / h1",
+      "font": {
+        "family": "Segoe UI",
+        "style": "Bold"
+      },
+      "size": 56
+    },
+    {
+      "id": "S:71adde9d147d483183780b461a04296959a30644,",
+      "name": "Space / Orbit / h2",
+      "font": {
+        "family": "Segoe UI",
+        "style": "Bold"
+      },
+      "size": 40
+    },
+    {
+      "id": "S:3740673a918038399bf739b974283e2f8015b8dd,",
+      "name": "Space / Orbit / h2Mobile",
+      "font": {
+        "family": "Segoe UI",
+        "style": "Bold"
+      },
+      "size": 30
+    },
+    {
+      "id": "S:1647d02f5065cd49fb87a6e3ef9a6c23807965c3,",
+      "name": "Space / Orbit / h3",
+      "font": {
+        "family": "Segoe UI",
+        "style": "Semibold"
+      },
+      "size": 24
+    },
+    {
+      "id": "S:74a2d7edf3fbb3d17472d7a439188df7834b68b1,",
+      "name": "Space / Orbit / appTitle",
+      "font": {
+        "family": "Segoe UI",
+        "style": "Semibold"
+      },
+      "size": 32
+    },
+    {
+      "id": "S:6dc20a021d38888cd3ee0d9acacc948e6a1ba587,",
+      "name": "Space / Orbit / body",
+      "font": {
+        "family": "Segoe UI",
+        "style": "Regular"
+      },
+      "size": 16
+    },
+    {
+      "id": "S:0143e08b8f612f5a06beeae4fd1ef423484567b2,",
+      "name": "Space / Orbit / lead",
+      "font": {
+        "family": "Segoe UI",
+        "style": "Regular"
+      },
+      "size": 20
+    },
+    {
+      "id": "S:c3605c4bfca450e80d834ce8cf3ca6cbb872e14a,",
+      "name": "Space / Orbit / label",
+      "font": {
+        "family": "Segoe UI",
+        "style": "Semibold"
+      },
+      "size": 14
+    },
+    {
+      "id": "S:a2ec9bac1b32da9865e46c4a216a809cbdb819aa,",
+      "name": "Space / Orbit / meta",
+      "font": {
+        "family": "Segoe UI",
+        "style": "Regular"
+      },
+      "size": 12
+    },
+    {
+      "id": "S:5a621bcc9c0864b1d281fa177223b2acebd6d652,",
+      "name": "Space / Orbit / mono",
+      "font": {
+        "family": "Consolas",
+        "style": "Regular"
+      },
+      "size": 12
+    }
+  ],
+  "createdNodeIds": [
+    "43:133",
+    "43:173",
+    "43:134",
+    "43:135",
+    "43:136",
+    "43:137",
+    "43:138",
+    "43:139",
+    "43:140",
+    "43:141",
+    "43:142",
+    "43:143",
+    "43:144",
+    "43:145",
+    "43:146",
+    "43:147",
+    "43:148",
+    "43:149",
+    "43:150",
+    "43:151",
+    "43:152",
+    "43:153",
+    "43:154",
+    "43:155",
+    "43:156",
+    "43:157",
+    "43:158",
+    "43:159",
+    "43:160",
+    "43:161",
+    "43:162",
+    "43:163",
+    "43:164",
+    "43:165",
+    "43:166",
+    "43:167",
+    "43:168",
+    "43:169",
+    "43:170",
+    "43:171",
+    "43:172",
+    "43:182",
+    "43:174",
+    "43:175",
+    "43:176",
+    "43:177",
+    "43:178",
+    "43:179",
+    "43:180",
+    "43:181",
+    "43:191",
+    "43:183",
+    "43:184",
+    "43:185",
+    "43:186",
+    "43:187",
+    "43:188",
+    "43:189",
+    "43:190",
+    "43:200",
+    "43:192",
+    "43:193",
+    "43:194",
+    "43:195",
+    "43:196",
+    "43:197",
+    "43:198",
+    "43:199",
+    "43:201",
+    "43:202",
+    "43:203",
+    "43:204",
+    "43:205",
+    "43:206",
+    "43:207",
+    "43:208",
+    "43:209",
+    "43:210",
+    "43:211",
+    "43:212",
+    "43:213",
+    "43:214",
+    "I43:214;43:161",
+    "43:216",
+    "I43:216;43:161",
+    "43:218",
+    "I43:218;43:161",
+    "43:220",
+    "I43:220;43:148",
+    "43:222",
+    "43:223",
+    "43:224",
+    "43:225",
+    "43:226",
+    "43:227",
+    "43:228",
+    "43:229",
+    "43:230",
+    "43:231",
+    "43:232",
+    "43:233",
+    "43:234",
+    "43:235",
+    "43:236",
+    "43:237",
+    "43:238",
+    "43:239",
+    "I43:239;43:135",
+    "43:241",
+    "I43:241;43:148",
+    "43:243",
+    "43:244",
+    "43:245",
+    "43:246",
+    "43:247",
+    "43:248",
+    "43:249",
+    "43:250",
+    "43:251",
+    "43:252",
+    "43:253",
+    "43:254",
+    "43:255",
+    "43:256",
+    "43:257",
+    "43:258",
+    "43:259",
+    "43:260",
+    "43:261",
+    "43:262",
+    "43:263",
+    "43:264",
+    "43:265",
+    "43:266",
+    "43:267",
+    "43:268",
+    "43:269",
+    "43:270",
+    "43:271",
+    "I43:271;43:190",
+    "43:273",
+    "43:274",
+    "43:275",
+    "I43:275;43:175",
+    "43:277",
+    "I43:277;43:135",
+    "43:279",
+    "43:280",
+    "43:281",
+    "43:282",
+    "43:283",
+    "43:284",
+    "43:285",
+    "43:286",
+    "43:287",
+    "43:288",
+    "I43:288;43:186",
+    "43:290",
+    "43:291",
+    "43:292",
+    "43:293",
+    "I43:293;43:186",
+    "43:295",
+    "43:296",
+    "43:297",
+    "43:298",
+    "I43:298;43:186",
+    "43:300",
+    "I43:300;43:148",
+    "43:302",
+    "43:303",
+    "43:304",
+    "43:305",
+    "43:306",
+    "43:307",
+    "43:308",
+    "43:309",
+    "43:310",
+    "43:311",
+    "43:312",
+    "43:313",
+    "43:314",
+    "I43:314;43:161",
+    "43:316",
+    "43:317",
+    "43:318",
+    "43:319",
+    "43:320",
+    "43:321",
+    "43:322",
+    "43:323",
+    "43:324",
+    "I43:324;43:161",
+    "43:326",
+    "43:327",
+    "43:328",
+    "43:329",
+    "43:330",
+    "43:331",
+    "43:332",
+    "43:333",
+    "43:334",
+    "43:335",
+    "43:336",
+    "43:337",
+    "43:338",
+    "43:339",
+    "43:340",
+    "43:341",
+    "43:342",
+    "43:343",
+    "43:344",
+    "43:345",
+    "43:346",
+    "43:347",
+    "43:348",
+    "43:349",
+    "43:350",
+    "43:351",
+    "43:352",
+    "I43:352;43:161",
+    "43:354",
+    "I43:354;43:161",
+    "43:356",
+    "I43:356;43:161",
+    "43:358",
+    "I43:358;43:161",
+    "43:360",
+    "43:361",
+    "43:362",
+    "43:363",
+    "43:364",
+    "43:365",
+    "43:366",
+    "43:367",
+    "43:368",
+    "43:369",
+    "43:370",
+    "43:371",
+    "43:372",
+    "43:373",
+    "43:374",
+    "I43:374;43:165",
+    "43:376",
+    "I43:376;43:161",
+    "43:378",
+    "I43:378;43:161",
+    "43:380",
+    "I43:380;43:148",
+    "43:382",
+    "43:383",
+    "43:384",
+    "43:385",
+    "43:386",
+    "I43:386;43:175",
+    "43:388",
+    "43:389",
+    "I43:389;43:135",
+    "43:391",
+    "I43:391;43:148",
+    "43:393",
+    "I43:393;43:148",
+    "43:395",
+    "I43:395;43:148",
+    "43:397",
+    "43:398",
+    "43:399",
+    "43:400",
+    "43:401",
+    "43:402",
+    "I43:402;43:186",
+    "43:404",
+    "43:405",
+    "43:406",
+    "43:407",
+    "43:408",
+    "I43:408;43:186",
+    "43:410",
+    "43:411",
+    "43:412",
+    "43:413",
+    "43:414",
+    "43:415",
+    "I43:415;43:186",
+    "43:417",
+    "43:418",
+    "43:419",
+    "43:420",
+    "43:421",
+    "I43:421;43:186",
+    "43:423",
+    "43:424",
+    "43:425",
+    "43:426",
+    "43:427",
+    "43:428",
+    "I43:428;43:190",
+    "43:430",
+    "43:431",
+    "43:432",
+    "43:433",
+    "43:434",
+    "I43:434;43:188",
+    "43:436",
+    "43:437",
+    "43:438",
+    "43:439",
+    "43:440",
+    "43:441",
+    "43:442",
+    "43:443",
+    "43:444",
+    "43:445",
+    "43:446",
+    "43:447",
+    "43:448",
+    "43:449",
+    "43:450",
+    "I43:450;43:161",
+    "43:452",
+    "I43:452;43:161",
+    "43:454",
+    "I43:454;43:161",
+    "43:456",
+    "I43:456;43:161",
+    "43:458",
+    "43:459",
+    "43:460",
+    "43:461",
+    "43:462",
+    "43:463",
+    "43:464",
+    "43:465",
+    "43:466",
+    "43:467",
+    "43:468",
+    "43:469",
+    "43:470",
+    "43:471",
+    "43:472",
+    "I43:472;43:161",
+    "43:474",
+    "I43:474;43:161",
+    "43:476",
+    "I43:476;43:161",
+    "43:478",
+    "I43:478;43:148",
+    "43:480",
+    "43:481",
+    "43:482",
+    "43:483",
+    "43:484",
+    "43:485",
+    "43:486",
+    "43:487",
+    "43:488",
+    "43:489",
+    "I43:489;43:184",
+    "43:491",
+    "I43:491;43:144",
+    "43:493",
+    "I43:493;43:148",
+    "43:495",
+    "43:496",
+    "43:497",
+    "43:498",
+    "43:499",
+    "43:500",
+    "43:501",
+    "43:502",
+    "43:503",
+    "43:504",
+    "43:505",
+    "43:506",
+    "43:507",
+    "43:508",
+    "43:509",
+    "43:510",
+    "I43:510;43:161",
+    "43:512",
+    "43:513",
+    "43:514",
+    "43:515",
+    "I43:515;43:161",
+    "43:517",
+    "43:518",
+    "43:519",
+    "43:520",
+    "43:521",
+    "43:522",
+    "43:523",
+    "43:524",
+    "43:525",
+    "43:526",
+    "43:527",
+    "43:528",
+    "43:529",
+    "43:530",
+    "43:531",
+    "I43:531;43:161",
+    "43:533",
+    "I43:533;43:161",
+    "43:535",
+    "I43:535;43:161",
+    "43:537",
+    "I43:537;43:161",
+    "43:539",
+    "43:540",
+    "43:541",
+    "43:542",
+    "43:543",
+    "43:544",
+    "43:545",
+    "43:546",
+    "43:547",
+    "43:548",
+    "43:549",
+    "43:550",
+    "43:551",
+    "43:552",
+    "43:553",
+    "I43:553;43:161",
+    "43:555",
+    "I43:555;43:165",
+    "43:557",
+    "I43:557;43:161",
+    "43:559",
+    "I43:559;43:148",
+    "43:561",
+    "43:562",
+    "43:563",
+    "43:564",
+    "43:565",
+    "43:566",
+    "I43:566;43:135",
+    "43:568",
+    "I43:568;43:148",
+    "43:570",
+    "I43:570;43:148",
+    "43:572",
+    "43:573",
+    "43:574",
+    "43:575",
+    "43:576",
+    "I43:576;43:148",
+    "43:578",
+    "43:579",
+    "43:580",
+    "43:581",
+    "43:582",
+    "43:583",
+    "43:584",
+    "43:585",
+    "43:586",
+    "43:587",
+    "43:588",
+    "43:589",
+    "43:590",
+    "43:591",
+    "43:592",
+    "43:593",
+    "43:594",
+    "43:595",
+    "43:596",
+    "43:597",
+    "43:598",
+    "43:599",
+    "43:600",
+    "I43:600;43:161",
+    "43:602",
+    "I43:602;43:161",
+    "43:604",
+    "I43:604;43:161",
+    "43:606",
+    "I43:606;43:161",
+    "43:608",
+    "43:609",
+    "43:610",
+    "43:611",
+    "43:612",
+    "43:613",
+    "43:614",
+    "43:615",
+    "43:616",
+    "43:617",
+    "43:618",
+    "43:619",
+    "43:620",
+    "43:621",
+    "43:622",
+    "I43:622;43:161",
+    "43:624",
+    "I43:624;43:161",
+    "43:626",
+    "I43:626;43:165",
+    "43:628",
+    "I43:628;43:148",
+    "43:630",
+    "43:631",
+    "43:632",
+    "43:633",
+    "43:634",
+    "I43:634;43:175",
+    "43:636",
+    "43:637",
+    "43:638",
+    "43:639",
+    "43:640",
+    "43:641",
+    "I43:641;43:161",
+    "43:643",
+    "43:644",
+    "43:645",
+    "43:646",
+    "43:647",
+    "I43:647;43:161",
+    "43:649",
+    "43:650",
+    "43:651",
+    "43:652",
+    "43:653",
+    "43:654",
+    "I43:654;43:161",
+    "43:656",
+    "43:657",
+    "43:658",
+    "43:659",
+    "43:660",
+    "I43:660;43:161",
+    "43:662",
+    "43:663",
+    "43:664",
+    "43:665",
+    "43:666",
+    "43:667",
+    "43:668",
+    "43:669",
+    "43:670",
+    "43:671",
+    "43:672",
+    "43:673",
+    "43:674",
+    "43:675",
+    "43:676",
+    "43:677",
+    "43:678",
+    "43:679",
+    "I43:679;43:161",
+    "43:681",
+    "I43:681;43:161",
+    "43:683",
+    "I43:683;43:161",
+    "43:685",
+    "I43:685;43:161",
+    "43:687",
+    "43:688",
+    "43:689",
+    "43:690",
+    "43:691",
+    "43:692",
+    "43:693",
+    "43:694",
+    "43:695",
+    "43:696",
+    "43:697",
+    "43:698",
+    "43:699",
+    "43:700",
+    "43:701",
+    "I43:701;43:161",
+    "43:703",
+    "43:704",
+    "43:705",
+    "43:706",
+    "43:707",
+    "43:708",
+    "43:709",
+    "43:710",
+    "43:711",
+    "43:712",
+    "43:713",
+    "43:714",
+    "43:715",
+    "43:716",
+    "43:717",
+    "43:718",
+    "43:719",
+    "43:720",
+    "I43:720;43:135",
+    "43:722",
+    "I43:722;43:148",
+    "43:724",
+    "43:725",
+    "43:726",
+    "43:727",
+    "43:728",
+    "43:729",
+    "43:730",
+    "43:731",
+    "43:732",
+    "43:733",
+    "43:734",
+    "43:735",
+    "43:736",
+    "43:737",
+    "43:738",
+    "43:739",
+    "43:740",
+    "43:741",
+    "43:742",
+    "43:743",
+    "43:744",
+    "43:745",
+    "43:746",
+    "43:747",
+    "43:748",
+    "43:749",
+    "43:750",
+    "43:751",
+    "43:752",
+    "I43:752;43:190",
+    "43:754",
+    "43:755",
+    "43:756",
+    "I43:756;43:175",
+    "43:758",
+    "I43:758;43:135",
+    "43:760",
+    "43:761",
+    "43:762",
+    "43:763",
+    "43:764",
+    "43:765",
+    "43:766",
+    "43:767",
+    "43:768",
+    "43:769",
+    "I43:769;43:186",
+    "43:771",
+    "43:772",
+    "43:773",
+    "43:774",
+    "I43:774;43:186",
+    "43:776",
+    "43:777",
+    "43:778",
+    "43:779",
+    "I43:779;43:186",
+    "43:781",
+    "I43:781;43:148",
+    "43:783",
+    "43:784",
+    "43:785",
+    "43:786",
+    "43:787",
+    "43:788",
+    "43:789",
+    "43:790",
+    "43:791",
+    "43:792",
+    "43:793",
+    "43:794",
+    "43:795",
+    "I43:795;43:161",
+    "43:797",
+    "43:798",
+    "43:799",
+    "43:800",
+    "43:801",
+    "43:802",
+    "43:803",
+    "43:804",
+    "43:805",
+    "I43:805;43:161",
+    "43:807",
+    "43:808",
+    "43:809",
+    "43:810",
+    "43:811",
+    "43:812",
+    "43:813",
+    "43:814",
+    "43:815",
+    "43:816",
+    "43:817",
+    "43:818",
+    "43:819",
+    "43:820",
+    "43:821",
+    "43:822",
+    "43:823",
+    "43:824",
+    "43:825",
+    "43:826",
+    "43:827",
+    "43:828",
+    "43:829",
+    "43:830",
+    "43:831",
+    "43:832",
+    "43:833",
+    "I43:833;43:161",
+    "43:835",
+    "I43:835;43:161",
+    "43:837",
+    "I43:837;43:161",
+    "43:839",
+    "I43:839;43:161",
+    "43:841",
+    "43:842",
+    "43:843",
+    "43:844",
+    "43:845",
+    "43:846",
+    "43:847",
+    "43:848",
+    "43:849",
+    "43:850",
+    "43:851",
+    "43:852",
+    "43:853",
+    "43:854",
+    "43:855",
+    "I43:855;43:161",
+    "43:857",
+    "43:858",
+    "43:859",
+    "43:860",
+    "43:861",
+    "I43:861;43:175",
+    "43:863",
+    "43:864",
+    "I43:864;43:135",
+    "43:866",
+    "I43:866;43:148",
+    "43:868",
+    "I43:868;43:148",
+    "43:870",
+    "I43:870;43:148",
+    "43:872",
+    "43:873",
+    "43:874",
+    "43:875",
+    "43:876",
+    "43:877",
+    "I43:877;43:186",
+    "43:879",
+    "43:880",
+    "43:881",
+    "43:882",
+    "43:883",
+    "43:884",
+    "I43:884;43:186",
+    "43:886",
+    "43:887",
+    "43:888",
+    "43:889",
+    "43:890",
+    "43:891",
+    "I43:891;43:186",
+    "43:893",
+    "43:894",
+    "43:895",
+    "43:896",
+    "43:897",
+    "43:898",
+    "I43:898;43:186",
+    "43:900",
+    "43:901",
+    "43:902",
+    "43:903",
+    "43:904",
+    "43:905",
+    "I43:905;43:190",
+    "43:907",
+    "43:908",
+    "43:909",
+    "43:910",
+    "43:911",
+    "43:912",
+    "I43:912;43:188",
+    "43:914",
+    "43:915",
+    "43:916",
+    "43:917",
+    "43:918",
+    "43:919",
+    "43:920",
+    "43:921",
+    "43:922",
+    "43:923",
+    "43:924",
+    "43:925",
+    "43:926",
+    "43:927",
+    "43:928",
+    "I43:928;43:161",
+    "43:930",
+    "I43:930;43:161",
+    "43:932",
+    "I43:932;43:161",
+    "43:934",
+    "I43:934;43:161",
+    "43:936",
+    "43:937",
+    "43:938",
+    "43:939",
+    "43:940",
+    "43:941",
+    "43:942",
+    "43:943",
+    "43:944",
+    "43:945",
+    "43:946",
+    "43:947",
+    "43:948",
+    "43:949",
+    "43:950",
+    "I43:950;43:161",
+    "43:952",
+    "43:953",
+    "43:954",
+    "43:955",
+    "43:956",
+    "43:957",
+    "43:958",
+    "43:959",
+    "43:960",
+    "43:961",
+    "I43:961;43:184",
+    "43:963",
+    "I43:963;43:144",
+    "43:965",
+    "I43:965;43:148",
+    "43:967",
+    "43:968",
+    "43:969",
+    "43:970",
+    "43:971",
+    "43:972",
+    "43:973",
+    "43:974",
+    "43:975",
+    "43:976",
+    "43:977",
+    "43:978",
+    "43:979",
+    "43:980",
+    "43:981",
+    "43:982",
+    "I43:982;43:161",
+    "43:984",
+    "43:985",
+    "43:986",
+    "43:987",
+    "I43:987;43:161",
+    "43:989",
+    "43:990",
+    "43:991",
+    "43:992",
+    "43:993",
+    "43:994",
+    "43:995",
+    "43:996",
+    "43:997",
+    "43:998",
+    "43:999",
+    "43:1000",
+    "43:1001",
+    "43:1002",
+    "43:1003",
+    "I43:1003;43:161",
+    "43:1005",
+    "I43:1005;43:161",
+    "43:1007",
+    "I43:1007;43:161",
+    "43:1009",
+    "I43:1009;43:161",
+    "43:1011",
+    "43:1012",
+    "43:1013",
+    "43:1014",
+    "43:1015",
+    "43:1016",
+    "43:1017",
+    "43:1018",
+    "43:1019",
+    "43:1020",
+    "43:1021",
+    "43:1022",
+    "43:1023",
+    "43:1024",
+    "43:1025",
+    "I43:1025;43:161",
+    "43:1027",
+    "43:1028",
+    "43:1029",
+    "43:1030",
+    "43:1031",
+    "43:1032",
+    "I43:1032;43:135",
+    "43:1034",
+    "I43:1034;43:148",
+    "43:1036",
+    "I43:1036;43:148",
+    "43:1038",
+    "43:1039",
+    "43:1040",
+    "43:1041",
+    "43:1042",
+    "I43:1042;43:148",
+    "43:1044",
+    "43:1045",
+    "43:1046",
+    "43:1047",
+    "43:1048",
+    "43:1049",
+    "43:1050",
+    "43:1051",
+    "43:1052",
+    "43:1053",
+    "43:1054",
+    "43:1055",
+    "43:1056",
+    "43:1057",
+    "43:1058",
+    "43:1059",
+    "43:1060",
+    "43:1061",
+    "43:1062",
+    "43:1063",
+    "43:1064",
+    "43:1065",
+    "43:1066",
+    "I43:1066;43:161",
+    "43:1068",
+    "I43:1068;43:161",
+    "43:1070",
+    "I43:1070;43:161",
+    "43:1072",
+    "I43:1072;43:161",
+    "43:1074",
+    "43:1075",
+    "43:1076",
+    "43:1077",
+    "43:1078",
+    "43:1079",
+    "43:1080",
+    "43:1081",
+    "43:1082",
+    "43:1083",
+    "43:1084",
+    "43:1085",
+    "43:1086",
+    "43:1087",
+    "43:1088",
+    "I43:1088;43:161",
+    "43:1090",
+    "43:1091",
+    "43:1092",
+    "43:1093",
+    "43:1094",
+    "I43:1094;43:175",
+    "43:1096",
+    "43:1097",
+    "43:1098",
+    "43:1099",
+    "43:1100",
+    "43:1101",
+    "I43:1101;43:161",
+    "43:1103",
+    "43:1104",
+    "43:1105",
+    "43:1106",
+    "43:1107",
+    "43:1108",
+    "I43:1108;43:161",
+    "43:1110",
+    "43:1111",
+    "43:1112",
+    "43:1113",
+    "43:1114",
+    "43:1115",
+    "I43:1115;43:161",
+    "43:1117",
+    "43:1118",
+    "43:1119",
+    "43:1120",
+    "43:1121",
+    "43:1122",
+    "I43:1122;43:161",
+    "43:1124",
+    "43:1125",
+    "43:1126",
+    "43:1127",
+    "43:1128",
+    "43:1129",
+    "43:1130",
+    "43:1131",
+    "43:1132",
+    "43:1133",
+    "43:1134",
+    "43:1135",
+    "43:1136",
+    "43:1137",
+    "43:1138",
+    "43:1139",
+    "43:1140",
+    "43:1141",
+    "I43:1141;43:161",
+    "43:1143",
+    "I43:1143;43:161",
+    "43:1145",
+    "I43:1145;43:161",
+    "43:1147",
+    "I43:1147;43:161",
+    "43:1149",
+    "43:1150",
+    "43:1151",
+    "43:1152",
+    "43:1153",
+    "43:1154",
+    "43:1155",
+    "43:1156",
+    "43:1157",
+    "43:1158",
+    "43:1159",
+    "43:1160",
+    "43:1161",
+    "43:1162",
+    "43:1163",
+    "I43:1163;43:161",
+    "43:1165",
+    "I43:1165;43:165",
+    "43:1167",
+    "I43:1167;43:161",
+    "43:1169",
+    "I43:1169;43:148",
+    "43:1171",
+    "43:1172",
+    "I43:1172;43:161",
+    "43:1174",
+    "43:1175",
+    "43:1176",
+    "43:1177",
+    "43:1178",
+    "43:1179",
+    "43:1180",
+    "43:1181",
+    "43:1182",
+    "43:1183",
+    "43:1184",
+    "43:1185",
+    "43:1186",
+    "43:1187",
+    "43:1188",
+    "43:1189",
+    "43:1190",
+    "43:1191",
+    "43:1192",
+    "43:1193",
+    "43:1194",
+    "43:1195",
+    "43:1196",
+    "43:1197",
+    "43:1198",
+    "I43:1198;43:161",
+    "43:1200",
+    "I43:1200;43:161",
+    "43:1202",
+    "I43:1202;43:161",
+    "43:1204",
+    "I43:1204;43:161",
+    "43:1206",
+    "43:1207",
+    "43:1208",
+    "43:1209",
+    "43:1210",
+    "43:1211",
+    "43:1212",
+    "43:1213",
+    "43:1214",
+    "43:1215",
+    "43:1216",
+    "43:1217",
+    "43:1218",
+    "43:1219",
+    "43:1220",
+    "I43:1220;43:161",
+    "43:1222",
+    "43:1223",
+    "I43:1223;43:161",
+    "43:1225",
+    "43:1226",
+    "43:1227",
+    "43:1228",
+    "43:1229",
+    "43:1230",
+    "43:1231",
+    "43:1232",
+    "43:1233",
+    "43:1234",
+    "43:1235",
+    "43:1236",
+    "43:1237",
+    "43:1238",
+    "43:1239",
+    "43:1240",
+    "43:1241",
+    "43:1242",
+    "43:1243",
+    "43:1244",
+    "43:1245",
+    "43:1246",
+    "43:1247",
+    "43:1248",
+    "43:1249",
+    "I43:1249;43:161",
+    "43:1251",
+    "I43:1251;43:161",
+    "43:1253",
+    "I43:1253;43:161",
+    "43:1255",
+    "I43:1255;43:161",
+    "43:1257",
+    "43:1258",
+    "43:1259",
+    "43:1260",
+    "43:1261",
+    "43:1262",
+    "43:1263",
+    "43:1264",
+    "43:1265",
+    "43:1266",
+    "43:1267",
+    "43:1268",
+    "43:1269",
+    "43:1270",
+    "43:1271",
+    "I43:1271;43:161",
+    "43:1273",
+    "I43:1273;43:161",
+    "43:1275",
+    "I43:1275;43:165",
+    "43:1277",
+    "I43:1277;43:148",
+    "43:1279",
+    "43:1280",
+    "I43:1280;43:161",
+    "43:1282",
+    "43:1283",
+    "43:1284",
+    "43:1285",
+    "43:1286",
+    "43:1287",
+    "43:1288",
+    "43:1289",
+    "43:1290",
+    "43:1291",
+    "43:1292",
+    "43:1293",
+    "43:1294",
+    "43:1295",
+    "43:1296",
+    "43:1297",
+    "I43:1297;43:148",
+    "43:1299",
+    "43:1300",
+    "43:1301",
+    "43:1302",
+    "43:1303",
+    "43:1304",
+    "43:1305",
+    "43:1306",
+    "43:1307",
+    "43:1308",
+    "43:1309",
+    "43:1310",
+    "43:1311",
+    "43:1312",
+    "43:1313",
+    "I43:1313;43:161",
+    "43:1315",
+    "I43:1315;43:161",
+    "43:1317",
+    "I43:1317;43:161",
+    "43:1319",
+    "I43:1319;43:161",
+    "43:1321",
+    "43:1322",
+    "43:1323",
+    "43:1324",
+    "43:1325",
+    "43:1326",
+    "43:1327",
+    "43:1328",
+    "43:1329",
+    "43:1330",
+    "43:1331",
+    "43:1332",
+    "43:1333",
+    "43:1334",
+    "43:1335",
+    "I43:1335;43:161",
+    "43:1337",
+    "43:1338",
+    "I43:1338;43:161",
+    "43:1340",
+    "43:1341",
+    "43:1342",
+    "43:1343",
+    "43:1344",
+    "43:1345",
+    "43:1346",
+    "43:1347",
+    "43:1348",
+    "43:1349",
+    "43:1350",
+    "43:1351",
+    "43:1352",
+    "43:1353",
+    "43:1354",
+    "43:1355",
+    "I43:1355;43:148",
+    "43:1357",
+    "43:1358",
+    "43:1359",
+    "43:1360",
+    "43:1361",
+    "43:1362",
+    "43:1363",
+    "43:1364",
+    "43:1365",
+    "43:1366",
+    "43:1367",
+    "43:1368",
+    "43:1369",
+    "43:1370",
+    "43:1371",
+    "I43:1371;43:161",
+    "43:1373",
+    "I43:1373;43:161",
+    "43:1375",
+    "I43:1375;43:161",
+    "43:1377",
+    "I43:1377;43:161",
+    "43:1379",
+    "43:1380",
+    "43:1381",
+    "43:1382",
+    "43:1383",
+    "43:1384",
+    "43:1385",
+    "43:1386",
+    "43:1387",
+    "43:1388",
+    "43:1389",
+    "43:1390",
+    "43:1391",
+    "43:1392",
+    "43:1393",
+    "I43:1393;43:161",
+    "43:1395",
+    "43:1396",
+    "43:1397",
+    "I43:1397;43:148",
+    "43:1399",
+    "I43:1399;43:148",
+    "43:1401",
+    "I43:1401;43:148",
+    "43:1403",
+    "I43:1403;43:148",
+    "43:1405",
+    "I43:1405;43:148",
+    "43:1407",
+    "43:1408",
+    "43:1409",
+    "43:1410",
+    "43:1411",
+    "43:1412",
+    "43:1413",
+    "43:1414",
+    "43:1415",
+    "43:1416",
+    "43:1417",
+    "43:1418",
+    "43:1419",
+    "43:1420",
+    "43:1421",
+    "I43:1421;43:161",
+    "43:1423",
+    "43:1424",
+    "43:1425",
+    "43:1426",
+    "43:1427",
+    "I43:1427;43:135",
+    "43:1429",
+    "43:1430",
+    "43:1431",
+    "43:1432",
+    "43:1433",
+    "43:1434",
+    "43:1435",
+    "43:1436",
+    "43:1437",
+    "43:1438",
+    "43:1439",
+    "43:1440",
+    "43:1441",
+    "43:1442",
+    "I43:1442;43:161",
+    "43:1444",
+    "43:1445",
+    "43:1446",
+    "43:1447",
+    "43:1448",
+    "I43:1448;43:135",
+    "43:1450",
+    "43:1451",
+    "43:1452",
+    "43:1453",
+    "43:1454",
+    "43:1455",
+    "43:1456",
+    "43:1457",
+    "43:1458",
+    "43:1459",
+    "43:1460",
+    "43:1461",
+    "43:1462",
+    "43:1463",
+    "I43:1463;43:161",
+    "43:1465",
+    "43:1466",
+    "43:1467",
+    "43:1468",
+    "43:1469",
+    "I43:1469;43:135",
+    "43:1471",
+    "43:1472",
+    "43:1473",
+    "43:1474",
+    "43:1475",
+    "43:1476",
+    "43:1477",
+    "43:1478",
+    "43:1479",
+    "43:1480",
+    "I43:1480;43:135",
+    "43:1482",
+    "43:1483",
+    "43:1484",
+    "I43:1484;43:137",
+    "43:1486",
+    "43:1487",
+    "43:1488",
+    "I43:1488;43:139",
+    "43:1490",
+    "43:1491",
+    "43:1492",
+    "43:1493",
+    "I43:1493;43:141",
+    "I43:1493;43:142",
+    "43:1496",
+    "43:1497",
+    "43:1498",
+    "I43:1498;43:144",
+    "43:1500",
+    "43:1501",
+    "43:1502",
+    "I43:1502;43:146",
+    "43:1504",
+    "43:1505",
+    "43:1506",
+    "43:1507",
+    "43:1508",
+    "I43:1508;43:148",
+    "43:1510",
+    "43:1511",
+    "43:1512",
+    "I43:1512;43:150",
+    "43:1514",
+    "43:1515",
+    "43:1516",
+    "I43:1516;43:152",
+    "43:1518",
+    "43:1519",
+    "43:1520",
+    "43:1521",
+    "I43:1521;43:154",
+    "I43:1521;43:155",
+    "43:1524",
+    "43:1525",
+    "43:1526",
+    "I43:1526;43:157",
+    "43:1528",
+    "43:1529",
+    "43:1530",
+    "I43:1530;43:159",
+    "43:1532",
+    "43:1533",
+    "43:1534",
+    "43:1535",
+    "43:1536",
+    "I43:1536;43:161",
+    "43:1538",
+    "43:1539",
+    "43:1540",
+    "I43:1540;43:163",
+    "43:1542",
+    "43:1543",
+    "43:1544",
+    "I43:1544;43:165",
+    "43:1546",
+    "43:1547",
+    "43:1548",
+    "43:1549",
+    "I43:1549;43:167",
+    "I43:1549;43:168",
+    "43:1552",
+    "43:1553",
+    "43:1554",
+    "I43:1554;43:170",
+    "43:1556",
+    "43:1557",
+    "43:1558",
+    "I43:1558;43:172",
+    "43:1560",
+    "43:1561",
+    "43:1562",
+    "43:1563",
+    "I43:1563;43:175",
+    "43:1565",
+    "43:1566",
+    "43:1567",
+    "I43:1567;43:177",
+    "43:1569",
+    "43:1570",
+    "43:1571",
+    "I43:1571;43:179",
+    "43:1573",
+    "43:1574",
+    "43:1575",
+    "43:1576",
+    "I43:1576;43:181",
+    "43:1578",
+    "43:1579",
+    "43:1580",
+    "43:1581",
+    "43:1582",
+    "43:1583",
+    "43:1584",
+    "43:1585",
+    "43:1586",
+    "43:1587",
+    "43:1588",
+    "43:1589",
+    "43:1590",
+    "43:1591",
+    "43:1592",
+    "43:1593",
+    "43:1594",
+    "43:1595",
+    "43:1596",
+    "43:1597",
+    "43:1598",
+    "I43:1598;43:195",
+    "43:1600",
+    "I43:1600;43:193",
+    "43:1602",
+    "I43:1602;43:193",
+    "43:1604",
+    "43:1605",
+    "43:1606",
+    "I43:1606;43:190",
+    "43:1608",
+    "43:1609",
+    "43:1610",
+    "43:1611",
+    "I43:1611;43:190",
+    "43:1613",
+    "43:1614",
+    "43:1615",
+    "43:1616",
+    "43:1617",
+    "43:1618",
+    "43:1619",
+    "43:1620",
+    "43:1621",
+    "43:1622",
+    "43:1623",
+    "43:1624",
+    "43:1625",
+    "43:1626",
+    "43:1627",
+    "I43:1627;43:175",
+    "43:1629",
+    "I43:1629;43:157",
+    "43:1631",
+    "43:1632",
+    "I43:1632;43:135",
+    "43:1634",
+    "43:1635",
+    "43:1636",
+    "43:1637",
+    "43:1638",
+    "43:1639",
+    "I43:1639;43:186",
+    "43:1641",
+    "43:1642",
+    "I43:1642;43:148",
+    "43:1644",
+    "43:1645",
+    "43:1646",
+    "43:1647",
+    "43:1648",
+    "43:1649",
+    "43:1650",
+    "43:1651",
+    "43:1652",
+    "43:1653",
+    "43:1654",
+    "43:1655",
+    "43:1656",
+    "43:1657",
+    "43:1658",
+    "43:1659",
+    "43:1660",
+    "43:1661",
+    "43:1662",
+    "43:1663",
+    "I43:1663;43:195",
+    "43:1665",
+    "I43:1665;43:193",
+    "43:1667",
+    "I43:1667;43:193",
+    "43:1669",
+    "43:1670",
+    "43:1671",
+    "I43:1671;43:190",
+    "43:1673",
+    "43:1674",
+    "43:1675",
+    "43:1676",
+    "I43:1676;43:190",
+    "43:1678",
+    "43:1679",
+    "43:1680",
+    "43:1681",
+    "43:1682",
+    "43:1683",
+    "43:1684",
+    "43:1685",
+    "43:1686",
+    "43:1687",
+    "43:1688",
+    "43:1689",
+    "43:1690",
+    "43:1691",
+    "43:1692",
+    "I43:1692;43:177",
+    "43:1694",
+    "I43:1694;43:148",
+    "43:1696",
+    "43:1697",
+    "I43:1697;43:144",
+    "43:1699",
+    "43:1700",
+    "43:1701",
+    "43:1702",
+    "43:1703",
+    "43:1704",
+    "I43:1704;43:190",
+    "43:1706",
+    "43:1707",
+    "I43:1707;43:148",
+    "43:1709",
+    "43:1710",
+    "43:1711",
+    "43:1712",
+    "43:1713",
+    "43:1714",
+    "43:1715",
+    "43:1716",
+    "43:1717",
+    "43:1718",
+    "43:1719",
+    "43:1720",
+    "43:1721",
+    "43:1722",
+    "43:1723",
+    "43:1724",
+    "43:1725",
+    "43:1726",
+    "43:1727",
+    "43:1728",
+    "I43:1728;43:195",
+    "43:1730",
+    "I43:1730;43:193",
+    "43:1732",
+    "I43:1732;43:193",
+    "43:1734",
+    "43:1735",
+    "43:1736",
+    "I43:1736;43:190",
+    "43:1738",
+    "43:1739",
+    "43:1740",
+    "43:1741",
+    "I43:1741;43:190",
+    "43:1743",
+    "43:1744",
+    "43:1745",
+    "43:1746",
+    "43:1747",
+    "43:1748",
+    "43:1749",
+    "43:1750",
+    "43:1751",
+    "43:1752",
+    "43:1753",
+    "43:1754",
+    "43:1755",
+    "43:1756",
+    "43:1757",
+    "I43:1757;43:175",
+    "43:1759",
+    "I43:1759;43:157",
+    "43:1761",
+    "43:1762",
+    "I43:1762;43:144",
+    "43:1764",
+    "43:1765",
+    "43:1766",
+    "43:1767",
+    "43:1768",
+    "43:1769",
+    "I43:1769;43:190",
+    "43:1771",
+    "43:1772",
+    "43:1773",
+    "43:1774",
+    "43:1775",
+    "43:1776",
+    "43:1777",
+    "I43:1777;43:148",
+    "43:1779",
+    "43:1780",
+    "43:1781",
+    "43:1782",
+    "43:1783",
+    "43:1784",
+    "43:1785",
+    "43:1786",
+    "43:1787",
+    "43:1788",
+    "43:1789",
+    "43:1790",
+    "43:1791",
+    "43:1792",
+    "43:1793",
+    "43:1794",
+    "43:1795",
+    "43:1796",
+    "43:1797",
+    "43:1798",
+    "I43:1798;43:195",
+    "43:1800",
+    "I43:1800;43:193",
+    "43:1802",
+    "I43:1802;43:193",
+    "43:1804",
+    "43:1805",
+    "43:1806",
+    "I43:1806;43:190",
+    "43:1808",
+    "43:1809",
+    "43:1810",
+    "43:1811",
+    "I43:1811;43:190",
+    "43:1813",
+    "43:1814",
+    "43:1815",
+    "43:1816",
+    "43:1817",
+    "43:1818",
+    "43:1819",
+    "43:1820",
+    "43:1821",
+    "43:1822",
+    "43:1823",
+    "43:1824",
+    "43:1825",
+    "43:1826",
+    "43:1827",
+    "I43:1827;43:175",
+    "43:1829",
+    "I43:1829;43:157",
+    "43:1831",
+    "43:1832",
+    "I43:1832;43:144",
+    "43:1834",
+    "43:1835",
+    "43:1836",
+    "43:1837",
+    "43:1838",
+    "43:1839",
+    "I43:1839;43:188",
+    "43:1841",
+    "43:1842",
+    "I43:1842;43:148",
+    "43:1844",
+    "43:1845",
+    "43:1846",
+    "43:1847",
+    "43:1848",
+    "43:1849",
+    "43:1850",
+    "43:1851",
+    "43:1852",
+    "43:1853",
+    "43:1854",
+    "43:1855",
+    "43:1856",
+    "43:1857",
+    "43:1858",
+    "43:1859",
+    "43:1860",
+    "43:1861",
+    "43:1862",
+    "43:1863",
+    "43:1864",
+    "43:1865",
+    "43:1866",
+    "I43:1866;43:195",
+    "43:1868",
+    "I43:1868;43:193",
+    "43:1870",
+    "I43:1870;43:193",
+    "43:1872",
+    "43:1873",
+    "43:1874",
+    "I43:1874;43:190",
+    "43:1876",
+    "43:1877",
+    "43:1878",
+    "43:1879",
+    "I43:1879;43:190",
+    "43:1881",
+    "43:1882",
+    "43:1883",
+    "43:1884",
+    "43:1885",
+    "43:1886",
+    "43:1887",
+    "43:1888",
+    "43:1889",
+    "43:1890",
+    "43:1891",
+    "43:1892",
+    "43:1893",
+    "43:1894",
+    "43:1895",
+    "I43:1895;43:181",
+    "43:1897",
+    "I43:1897;43:157",
+    "43:1899",
+    "43:1900",
+    "I43:1900;43:146",
+    "43:1902",
+    "43:1903",
+    "43:1904",
+    "43:1905",
+    "43:1906",
+    "43:1907",
+    "I43:1907;43:190",
+    "43:1909",
+    "43:1910",
+    "I43:1910;43:157",
+    "43:1912",
+    "43:1913",
+    "43:1914",
+    "43:1915",
+    "43:1916",
+    "43:1917",
+    "43:1918",
+    "43:1919",
+    "43:1920",
+    "43:1921",
+    "43:1922",
+    "43:1923",
+    "43:1924",
+    "43:1925",
+    "43:1926",
+    "43:1927",
+    "43:1928",
+    "43:1929",
+    "43:1930",
+    "43:1931",
+    "43:1932",
+    "43:1933",
+    "43:1934",
+    "I43:1934;43:195",
+    "43:1936",
+    "I43:1936;43:193",
+    "43:1938",
+    "I43:1938;43:193",
+    "43:1940",
+    "43:1941",
+    "43:1942",
+    "I43:1942;43:190",
+    "43:1944",
+    "43:1945",
+    "43:1946",
+    "43:1947",
+    "I43:1947;43:190",
+    "43:1949",
+    "43:1950",
+    "43:1951",
+    "43:1952",
+    "43:1953",
+    "43:1954",
+    "43:1955",
+    "43:1956",
+    "43:1957",
+    "43:1958",
+    "43:1959",
+    "43:1960",
+    "43:1961",
+    "43:1962",
+    "43:1963",
+    "I43:1963;43:181",
+    "43:1965",
+    "I43:1965;43:157",
+    "43:1967",
+    "43:1968",
+    "I43:1968;43:144",
+    "43:1970",
+    "43:1971",
+    "43:1972",
+    "43:1973",
+    "43:1974",
+    "43:1975",
+    "I43:1975;43:186",
+    "43:1977",
+    "43:1978",
+    "I43:1978;43:157",
+    "43:1980",
+    "43:1981",
+    "43:1982",
+    "43:1983",
+    "43:1984",
+    "43:1985",
+    "43:1986",
+    "43:1987",
+    "43:1988",
+    "43:1989",
+    "43:1990",
+    "43:1991",
+    "43:1992",
+    "43:1993",
+    "43:1994",
+    "43:1995",
+    "43:1996",
+    "43:1997",
+    "43:1998",
+    "43:1999",
+    "43:2000",
+    "43:2001",
+    "43:2002",
+    "I43:2002;43:195",
+    "43:2004",
+    "I43:2004;43:193",
+    "43:2006",
+    "I43:2006;43:193",
+    "43:2008",
+    "43:2009",
+    "43:2010",
+    "I43:2010;43:190",
+    "43:2012",
+    "43:2013",
+    "43:2014",
+    "43:2015",
+    "I43:2015;43:190",
+    "43:2017",
+    "43:2018",
+    "43:2019",
+    "43:2020",
+    "43:2021",
+    "43:2022",
+    "43:2023",
+    "43:2024",
+    "43:2025",
+    "43:2026",
+    "43:2027",
+    "43:2028",
+    "43:2029",
+    "43:2030",
+    "43:2031",
+    "I43:2031;43:175",
+    "43:2033",
+    "I43:2033;43:157",
+    "43:2035",
+    "43:2036",
+    "I43:2036;43:135",
+    "43:2038",
+    "43:2039",
+    "43:2040",
+    "43:2041",
+    "43:2042",
+    "43:2043",
+    "I43:2043;43:190",
+    "43:2045",
+    "43:2046",
+    "I43:2046;43:148",
+    "43:2048",
+    "43:2049",
+    "43:2050",
+    "43:2051",
+    "43:2052",
+    "43:2053",
+    "43:2054",
+    "43:2055",
+    "43:2056",
+    "43:2057",
+    "43:2058",
+    "43:2059",
+    "43:2060",
+    "43:2061",
+    "43:2062",
+    "43:2063",
+    "43:2064",
+    "43:2065",
+    "43:2066",
+    "43:2067",
+    "43:2068",
+    "43:2069",
+    "43:2070",
+    "I43:2070;43:195",
+    "43:2072",
+    "I43:2072;43:193",
+    "43:2074",
+    "I43:2074;43:193",
+    "43:2076",
+    "43:2077",
+    "43:2078",
+    "I43:2078;43:190",
+    "43:2080",
+    "43:2081",
+    "43:2082",
+    "43:2083",
+    "I43:2083;43:190",
+    "43:2085",
+    "43:2086",
+    "43:2087",
+    "43:2088",
+    "43:2089",
+    "43:2090",
+    "43:2091",
+    "43:2092",
+    "43:2093",
+    "43:2094",
+    "43:2095",
+    "43:2096",
+    "43:2097",
+    "43:2098",
+    "43:2099",
+    "I43:2099;43:179",
+    "43:2101",
+    "I43:2101;43:157",
+    "43:2103",
+    "43:2104",
+    "I43:2104;43:144",
+    "43:2106",
+    "43:2107",
+    "43:2108",
+    "43:2109",
+    "43:2110",
+    "43:2111",
+    "I43:2111;43:190",
+    "43:2113",
+    "43:2114",
+    "I43:2114;43:148",
+    "43:2116",
+    "43:2117",
+    "43:2118",
+    "43:2119",
+    "43:2120",
+    "43:2121",
+    "43:2122",
+    "43:2123",
+    "43:2124",
+    "43:2125",
+    "43:2126",
+    "43:2127",
+    "43:2128",
+    "43:2129",
+    "43:2130",
+    "43:2131",
+    "43:2132",
+    "43:2133",
+    "43:2134",
+    "43:2135",
+    "I43:2135;43:193",
+    "43:2137",
+    "I43:2137;43:195",
+    "43:2139",
+    "I43:2139;43:193",
+    "43:2141",
+    "43:2142",
+    "43:2143",
+    "I43:2143;43:190",
+    "43:2145",
+    "43:2146",
+    "43:2147",
+    "43:2148",
+    "43:2149",
+    "43:2150",
+    "43:2151",
+    "43:2152",
+    "I43:2152;43:195",
+    "43:2154",
+    "I43:2154;43:193",
+    "43:2156",
+    "I43:2156;43:157",
+    "43:2158",
+    "43:2159",
+    "43:2160",
+    "43:2161",
+    "I43:2161;43:184",
+    "43:2163",
+    "43:2164",
+    "I43:2164;43:177",
+    "43:2166",
+    "43:2167",
+    "43:2168",
+    "43:2169",
+    "43:2170",
+    "43:2171",
+    "43:2172",
+    "43:2173",
+    "43:2174",
+    "43:2175",
+    "43:2176",
+    "43:2177",
+    "I43:2177;43:157",
+    "43:2179",
+    "I43:2179;43:157",
+    "43:2181",
+    "43:2182",
+    "I43:2182;43:135",
+    "43:2184",
+    "I43:2184;43:148",
+    "43:2186",
+    "43:2187",
+    "43:2188",
+    "43:2189",
+    "43:2190",
+    "43:2191",
+    "43:2192",
+    "43:2193",
+    "43:2194",
+    "43:2195",
+    "43:2196",
+    "43:2197",
+    "43:2198",
+    "43:2199",
+    "43:2200",
+    "43:2201",
+    "43:2202",
+    "43:2203",
+    "43:2204",
+    "I43:2204;43:193",
+    "43:2206",
+    "I43:2206;43:193",
+    "43:2208",
+    "I43:2208;43:195",
+    "43:2210",
+    "43:2211",
+    "43:2212",
+    "I43:2212;43:190",
+    "43:2214",
+    "43:2215",
+    "43:2216",
+    "43:2217",
+    "43:2218",
+    "43:2219",
+    "43:2220",
+    "43:2221",
+    "43:2222",
+    "43:2223",
+    "43:2224",
+    "43:2225",
+    "43:2226",
+    "43:2227",
+    "43:2228",
+    "43:2229",
+    "43:2230",
+    "43:2231",
+    "43:2232",
+    "43:2233",
+    "I43:2233;43:148",
+    "43:2235",
+    "I43:2235;43:186",
+    "43:2237",
+    "43:2238",
+    "43:2239",
+    "43:2240",
+    "43:2241",
+    "43:2242",
+    "I43:2242;43:148",
+    "43:2244",
+    "43:2245",
+    "43:2246",
+    "43:2247"
+  ],
+  "prototypeEdges": [
+    {
+      "source": "43:214",
+      "destination": "43:361"
+    },
+    {
+      "source": "43:216",
+      "destination": "43:540"
+    },
+    {
+      "source": "43:218",
+      "destination": "43:609"
+    },
+    {
+      "source": "43:220",
+      "destination": "43:459"
+    },
+    {
+      "source": "43:239",
+      "destination": "43:459"
+    },
+    {
+      "source": "43:241",
+      "destination": "43:361"
+    },
+    {
+      "source": "43:300",
+      "destination": "43:361"
+    },
+    {
+      "source": "43:314",
+      "destination": "43:1150"
+    },
+    {
+      "source": "43:324",
+      "destination": "43:1150"
+    },
+    {
+      "source": "43:352",
+      "destination": "43:361"
+    },
+    {
+      "source": "43:354",
+      "destination": "43:459"
+    },
+    {
+      "source": "43:356",
+      "destination": "43:540"
+    },
+    {
+      "source": "43:358",
+      "destination": "43:609"
+    },
+    {
+      "source": "43:363",
+      "destination": "43:201"
+    },
+    {
+      "source": "43:376",
+      "destination": "43:540"
+    },
+    {
+      "source": "43:378",
+      "destination": "43:609"
+    },
+    {
+      "source": "43:380",
+      "destination": "43:459"
+    },
+    {
+      "source": "43:437",
+      "destination": "43:201"
+    },
+    {
+      "source": "43:452",
+      "destination": "43:459"
+    },
+    {
+      "source": "43:454",
+      "destination": "43:540"
+    },
+    {
+      "source": "43:456",
+      "destination": "43:609"
+    },
+    {
+      "source": "43:461",
+      "destination": "43:201"
+    },
+    {
+      "source": "43:472",
+      "destination": "43:361"
+    },
+    {
+      "source": "43:474",
+      "destination": "43:540"
+    },
+    {
+      "source": "43:476",
+      "destination": "43:609"
+    },
+    {
+      "source": "43:493",
+      "destination": "43:540"
+    },
+    {
+      "source": "43:518",
+      "destination": "43:201"
+    },
+    {
+      "source": "43:531",
+      "destination": "43:361"
+    },
+    {
+      "source": "43:535",
+      "destination": "43:540"
+    },
+    {
+      "source": "43:537",
+      "destination": "43:609"
+    },
+    {
+      "source": "43:542",
+      "destination": "43:201"
+    },
+    {
+      "source": "43:553",
+      "destination": "43:361"
+    },
+    {
+      "source": "43:557",
+      "destination": "43:609"
+    },
+    {
+      "source": "43:559",
+      "destination": "43:459"
+    },
+    {
+      "source": "43:576",
+      "destination": "43:1150"
+    },
+    {
+      "source": "43:587",
+      "destination": "43:201"
+    },
+    {
+      "source": "43:600",
+      "destination": "43:361"
+    },
+    {
+      "source": "43:602",
+      "destination": "43:459"
+    },
+    {
+      "source": "43:606",
+      "destination": "43:609"
+    },
+    {
+      "source": "43:611",
+      "destination": "43:201"
+    },
+    {
+      "source": "43:622",
+      "destination": "43:361"
+    },
+    {
+      "source": "43:624",
+      "destination": "43:540"
+    },
+    {
+      "source": "43:628",
+      "destination": "43:459"
+    },
+    {
+      "source": "43:641",
+      "destination": "43:1258"
+    },
+    {
+      "source": "43:647",
+      "destination": "43:1258"
+    },
+    {
+      "source": "43:654",
+      "destination": "43:1258"
+    },
+    {
+      "source": "43:660",
+      "destination": "43:1258"
+    },
+    {
+      "source": "43:666",
+      "destination": "43:201"
+    },
+    {
+      "source": "43:679",
+      "destination": "43:361"
+    },
+    {
+      "source": "43:681",
+      "destination": "43:459"
+    },
+    {
+      "source": "43:683",
+      "destination": "43:540"
+    },
+    {
+      "source": "43:701",
+      "destination": "43:1380"
+    },
+    {
+      "source": "43:720",
+      "destination": "43:937"
+    },
+    {
+      "source": "43:722",
+      "destination": "43:842"
+    },
+    {
+      "source": "43:781",
+      "destination": "43:842"
+    },
+    {
+      "source": "43:795",
+      "destination": "43:1207"
+    },
+    {
+      "source": "43:805",
+      "destination": "43:1207"
+    },
+    {
+      "source": "43:833",
+      "destination": "43:842"
+    },
+    {
+      "source": "43:835",
+      "destination": "43:937"
+    },
+    {
+      "source": "43:837",
+      "destination": "43:1012"
+    },
+    {
+      "source": "43:839",
+      "destination": "43:1075"
+    },
+    {
+      "source": "43:844",
+      "destination": "43:688"
+    },
+    {
+      "source": "43:855",
+      "destination": "43:1380"
+    },
+    {
+      "source": "43:915",
+      "destination": "43:688"
+    },
+    {
+      "source": "43:930",
+      "destination": "43:937"
+    },
+    {
+      "source": "43:932",
+      "destination": "43:1012"
+    },
+    {
+      "source": "43:934",
+      "destination": "43:1075"
+    },
+    {
+      "source": "43:939",
+      "destination": "43:688"
+    },
+    {
+      "source": "43:950",
+      "destination": "43:1380"
+    },
+    {
+      "source": "43:965",
+      "destination": "43:1012"
+    },
+    {
+      "source": "43:990",
+      "destination": "43:688"
+    },
+    {
+      "source": "43:1003",
+      "destination": "43:842"
+    },
+    {
+      "source": "43:1007",
+      "destination": "43:1012"
+    },
+    {
+      "source": "43:1009",
+      "destination": "43:1075"
+    },
+    {
+      "source": "43:1014",
+      "destination": "43:688"
+    },
+    {
+      "source": "43:1025",
+      "destination": "43:1380"
+    },
+    {
+      "source": "43:1042",
+      "destination": "43:1207"
+    },
+    {
+      "source": "43:1053",
+      "destination": "43:688"
+    },
+    {
+      "source": "43:1066",
+      "destination": "43:842"
+    },
+    {
+      "source": "43:1068",
+      "destination": "43:937"
+    },
+    {
+      "source": "43:1072",
+      "destination": "43:1075"
+    },
+    {
+      "source": "43:1077",
+      "destination": "43:688"
+    },
+    {
+      "source": "43:1088",
+      "destination": "43:1380"
+    },
+    {
+      "source": "43:1101",
+      "destination": "43:1322"
+    },
+    {
+      "source": "43:1108",
+      "destination": "43:1322"
+    },
+    {
+      "source": "43:1115",
+      "destination": "43:1322"
+    },
+    {
+      "source": "43:1122",
+      "destination": "43:1322"
+    },
+    {
+      "source": "43:1128",
+      "destination": "43:688"
+    },
+    {
+      "source": "43:1141",
+      "destination": "43:842"
+    },
+    {
+      "source": "43:1143",
+      "destination": "43:937"
+    },
+    {
+      "source": "43:1145",
+      "destination": "43:1012"
+    },
+    {
+      "source": "43:1152",
+      "destination": "43:201"
+    },
+    {
+      "source": "43:1163",
+      "destination": "43:361"
+    },
+    {
+      "source": "43:1165",
+      "destination": "43:540"
+    },
+    {
+      "source": "43:1167",
+      "destination": "43:609"
+    },
+    {
+      "source": "43:1169",
+      "destination": "43:459"
+    },
+    {
+      "source": "43:1172",
+      "destination": "43:540"
+    },
+    {
+      "source": "43:1185",
+      "destination": "43:201"
+    },
+    {
+      "source": "43:1198",
+      "destination": "43:361"
+    },
+    {
+      "source": "43:1200",
+      "destination": "43:459"
+    },
+    {
+      "source": "43:1202",
+      "destination": "43:540"
+    },
+    {
+      "source": "43:1204",
+      "destination": "43:609"
+    },
+    {
+      "source": "43:1209",
+      "destination": "43:688"
+    },
+    {
+      "source": "43:1220",
+      "destination": "43:1380"
+    },
+    {
+      "source": "43:1223",
+      "destination": "43:1012"
+    },
+    {
+      "source": "43:1236",
+      "destination": "43:688"
+    },
+    {
+      "source": "43:1249",
+      "destination": "43:842"
+    },
+    {
+      "source": "43:1251",
+      "destination": "43:937"
+    },
+    {
+      "source": "43:1253",
+      "destination": "43:1012"
+    },
+    {
+      "source": "43:1255",
+      "destination": "43:1075"
+    },
+    {
+      "source": "43:1260",
+      "destination": "43:201"
+    },
+    {
+      "source": "43:1271",
+      "destination": "43:361"
+    },
+    {
+      "source": "43:1273",
+      "destination": "43:540"
+    },
+    {
+      "source": "43:1275",
+      "destination": "43:609"
+    },
+    {
+      "source": "43:1277",
+      "destination": "43:459"
+    },
+    {
+      "source": "43:1280",
+      "destination": "43:609"
+    },
+    {
+      "source": "43:1300",
+      "destination": "43:201"
+    },
+    {
+      "source": "43:1313",
+      "destination": "43:361"
+    },
+    {
+      "source": "43:1315",
+      "destination": "43:459"
+    },
+    {
+      "source": "43:1317",
+      "destination": "43:540"
+    },
+    {
+      "source": "43:1319",
+      "destination": "43:609"
+    },
+    {
+      "source": "43:1324",
+      "destination": "43:688"
+    },
+    {
+      "source": "43:1335",
+      "destination": "43:1380"
+    },
+    {
+      "source": "43:1338",
+      "destination": "43:1075"
+    },
+    {
+      "source": "43:1358",
+      "destination": "43:688"
+    },
+    {
+      "source": "43:1371",
+      "destination": "43:842"
+    },
+    {
+      "source": "43:1373",
+      "destination": "43:937"
+    },
+    {
+      "source": "43:1375",
+      "destination": "43:1012"
+    },
+    {
+      "source": "43:1377",
+      "destination": "43:1075"
+    },
+    {
+      "source": "43:1382",
+      "destination": "43:688"
+    },
+    {
+      "source": "43:1393",
+      "destination": "43:688"
+    },
+    {
+      "source": "43:1397",
+      "destination": "43:688"
+    },
+    {
+      "source": "43:1399",
+      "destination": "43:842"
+    },
+    {
+      "source": "43:1401",
+      "destination": "43:937"
+    },
+    {
+      "source": "43:1403",
+      "destination": "43:1012"
+    },
+    {
+      "source": "43:1405",
+      "destination": "43:1075"
+    },
+    {
+      "source": "43:1410",
+      "destination": "43:688"
+    },
+    {
+      "source": "43:1421",
+      "destination": "43:1380"
+    },
+    {
+      "source": "43:1427",
+      "destination": "43:842"
+    },
+    {
+      "source": "43:1431",
+      "destination": "43:688"
+    },
+    {
+      "source": "43:1442",
+      "destination": "43:1380"
+    },
+    {
+      "source": "43:1448",
+      "destination": "43:937"
+    },
+    {
+      "source": "43:1452",
+      "destination": "43:688"
+    },
+    {
+      "source": "43:1463",
+      "destination": "43:1380"
+    },
+    {
+      "source": "43:1469",
+      "destination": "43:688"
+    },
+    {
+      "source": "43:1600",
+      "destination": "43:2117"
+    },
+    {
+      "source": "43:1602",
+      "destination": "43:2186"
+    },
+    {
+      "source": "43:1632",
+      "destination": "43:1848"
+    },
+    {
+      "source": "43:1663",
+      "destination": "43:1580"
+    },
+    {
+      "source": "43:1665",
+      "destination": "43:2117"
+    },
+    {
+      "source": "43:1667",
+      "destination": "43:2186"
+    },
+    {
+      "source": "43:1728",
+      "destination": "43:1580"
+    },
+    {
+      "source": "43:1730",
+      "destination": "43:2117"
+    },
+    {
+      "source": "43:1732",
+      "destination": "43:2186"
+    },
+    {
+      "source": "43:1798",
+      "destination": "43:1580"
+    },
+    {
+      "source": "43:1800",
+      "destination": "43:2117"
+    },
+    {
+      "source": "43:1802",
+      "destination": "43:2186"
+    },
+    {
+      "source": "43:1842",
+      "destination": "43:1710"
+    },
+    {
+      "source": "43:1848",
+      "destination": "43:1916"
+    },
+    {
+      "source": "43:1866",
+      "destination": "43:1580"
+    },
+    {
+      "source": "43:1868",
+      "destination": "43:2117"
+    },
+    {
+      "source": "43:1870",
+      "destination": "43:2186"
+    },
+    {
+      "source": "43:1934",
+      "destination": "43:1580"
+    },
+    {
+      "source": "43:1936",
+      "destination": "43:2117"
+    },
+    {
+      "source": "43:1938",
+      "destination": "43:2186"
+    },
+    {
+      "source": "43:2002",
+      "destination": "43:1580"
+    },
+    {
+      "source": "43:2004",
+      "destination": "43:2117"
+    },
+    {
+      "source": "43:2006",
+      "destination": "43:2186"
+    },
+    {
+      "source": "43:2036",
+      "destination": "43:2117"
+    },
+    {
+      "source": "43:2070",
+      "destination": "43:1580"
+    },
+    {
+      "source": "43:2072",
+      "destination": "43:2117"
+    },
+    {
+      "source": "43:2074",
+      "destination": "43:2186"
+    },
+    {
+      "source": "43:2135",
+      "destination": "43:1580"
+    },
+    {
+      "source": "43:2139",
+      "destination": "43:2186"
+    },
+    {
+      "source": "43:2204",
+      "destination": "43:1580"
+    },
+    {
+      "source": "43:2206",
+      "destination": "43:2117"
+    }
+  ]
+}
