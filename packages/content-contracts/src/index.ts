@@ -72,8 +72,10 @@ export function isFeature(x: unknown): x is Feature {
     text(x.name) &&
     text(x.summary) &&
     text(x.details) &&
-    ['hud', 'comfort', 'launcher', 'performance'].includes(String(x.category)) &&
-    ['planned', 'prototype', 'verified', 'released'].includes(String(x.status)) &&
+    typeof x.category === 'string' &&
+    ['hud', 'comfort', 'launcher', 'performance'].includes(x.category) &&
+    typeof x.status === 'string' &&
+    ['planned', 'prototype', 'verified', 'released'].includes(x.status) &&
     (x.releaseId === undefined || validSlug(x.releaseId)) &&
     (x.status !== 'released' || validSlug(x.releaseId))
   );
@@ -86,7 +88,8 @@ export function isUpdate(x: unknown): x is Update {
     text(x.title) &&
     text(x.summary) &&
     date(x.publishedAt) &&
-    ['development', 'release'].includes(String(x.type)) &&
+    typeof x.type === 'string' &&
+    ['development', 'release'].includes(x.type) &&
     Array.isArray(x.blocks) &&
     x.blocks.length > 0 &&
     x.blocks.every((b) => record(b) && text(b.heading) && text(b.text)) &&
@@ -129,7 +132,8 @@ function isArtifact(x: unknown): x is Artifact {
     positive(x.sizeBytes) &&
     typeof x.sha256 === 'string' &&
     /^[a-fA-F0-9]{64}$/.test(x.sha256) &&
-    ['signed', 'unsigned', 'unknown'].includes(String(x.signatureStatus)) &&
+    typeof x.signatureStatus === 'string' &&
+    ['signed', 'unsigned', 'unknown'].includes(x.signatureStatus) &&
     allowedDownload(x.downloadUrl, x.fileName)
   );
 }
@@ -139,7 +143,8 @@ export function isRelease(x: unknown): x is Release {
     validSlug(x.id) &&
     typeof x.version === 'string' &&
     /^\d+\.\d+\.\d+(?:-[a-z0-9.-]+)?$/.test(x.version) &&
-    ['alpha', 'beta', 'stable'].includes(String(x.channel)) &&
+    typeof x.channel === 'string' &&
+    ['alpha', 'beta', 'stable'].includes(x.channel) &&
     date(x.publishedAt) &&
     validSlug(x.changelogSlug) &&
     Array.isArray(x.minecraftVersions) &&
