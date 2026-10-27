@@ -1,5 +1,15 @@
 # Передача работы между чатами Space Client
 
+## SC-24: Cloudflare Free и совместимость · 27 октября
+
+Пользователь выбрал Cloudflare и уточнил: **пока только бесплатный деплой**. Аккаунт найден в чате «Два лендинга для портфолио», там размещены статические Pages-сайты; CLI Wrangler здесь не авторизован. Не включать Containers/Workers Paid, не покупать домен, не добавлять карту. [Исследование, лабораторная конфигурация и границы](WEB-CLOUDFLARE.md), [runbook](WEB-DEPLOY.md).
+
+В изолированной копии проверены Next 16.4.2 + OpenNext 1.20.13 / Wrangler 4.148.0 и отдельный Nest на loopback. Исправлена реальная несовместимость Workers: redirect:error отклоняется runtime до запроса. Теперь manual + отклонение 3xx через HTTP status; настоящий HTTP regression проверяет пять redirect-кодов без достижения Location. API, таймаут и лимит тела сохранены. Production-зависимости/lockfile не менялись.
+
+Прошли npm test, Next/OpenNext build, check:web:states, check, format:check и локальный Wrangler dry-run (gzip 1121,01 KiB). В workerd проверены 200 основных страниц/статей, 404 при здоровом API, noindex/robots/sitemap/nosniff, error/retry при остановке своего Nest и восстановление. Compatibility date опыта 2026-10-13: более новую закреплённый бинарник отклонил. Docker Linux engine недоступен, Docker UI не запускался. Учитывать Windows warning OpenNext; Linux и remote CPU-квота Free ещё не приняты.
+
+Бесплатный кандидат: Next Worker Free + Render Free Nest. Render ещё не подключён; Free засыпает, не принимает private ingress и не гарантирует прежнюю доступность/приватность. До публикации решить защиту HTTPS origin, холодный старт, отсутствие платных overages и выполнить полный HTTPS/доступность/SEO smoke. UI/headless browser матрица Worker и публичное размещение не выполнены. #24 остаётся OPEN, #23 тоже. Не запускать игру/реальные загрузки/Computer Use; не перехватывать фокус. CI смотреть на точном SHA этого среза.
+
 Обновлено 27 октября 2026. Точные версии исходников — в Git, живой статус — в GitHub Issues. Этот файл обновляется после законченного среза.
 
 ## SC-06: подготовка собственной Microsoft-регистрации · 27 октября

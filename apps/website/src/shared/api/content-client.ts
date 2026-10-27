@@ -78,7 +78,8 @@ export function createContentClient({ origin, fetcher = fetch, timeoutMs = 2500 
       response = await fetcher(new URL(`/v1/${path}`, base).href, {
         cache: 'no-store',
         signal: AbortSignal.timeout(timeoutMs),
-        redirect: 'error',
+        // Workers supports manual/follow only. Reject 3xx via !response.ok below.
+        redirect: 'manual',
         headers: { Accept: 'application/json' },
       });
       if (response.status === 404) return { ok: false, reason: 'missing' };

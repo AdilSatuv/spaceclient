@@ -24,7 +24,7 @@ test('content client uses fixed v1 routes and bounded uncached requests without 
   assert.deepEqual(await api.getReleases(), { ok: true, data: { items: [], total: 0 } });
   assert.equal(calls[0].url, 'http://127.0.0.1:3001/v1/releases');
   assert.equal(calls[0].options.cache, 'no-store');
-  assert.equal(calls[0].options.redirect, 'error');
+  assert.equal(calls[0].options.redirect, 'manual');
   assert.equal(calls[0].options.signal instanceof AbortSignal, true);
   assert.equal(calls[0].options.headers.Accept, 'application/json');
   assert.equal(calls.length, 1);
@@ -151,6 +151,34 @@ test('real HTTP timeout includes reading a stalled response body and releases it
     timeoutMs: 100,
   });
   assert.deepEqual(await api.getReleases(), { ok: false, reason: 'unavailable' });
+});
+
+test('real HTTP redirects never reach their destination or become catalog data', async (t) => {
+  let destinationHits = 0;
+  const server = http.createServer((req, response) => {
+    if (req.url === '/destination') {
+      destinationHits++;
+      response.writeHead(200, { 'content-type': 'application/json' });
+      response.end(JSON.stringify({ items: [], total: 0 }));
+      return;
+    }
+    response.writeHead(Number(req.headers['x-redirect-status']), { Location: '/destination' });
+    response.end();
+  });
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  t.after(async () => {
+    server.closeAllConnections();
+    await new Promise((resolve) => server.close(resolve));
+  });
+  for (const status of [301, 302, 303, 307, 308]) {
+    const api = createContentClient({
+      origin: `http://127.0.0.1:${server.address().port}`,
+      fetcher: (url, options) =>
+        fetch(url, { ...options, headers: { ...options.headers, 'x-redirect-status': status } }),
+    });
+    assert.deepEqual(await api.getReleases(), { ok: false, reason: 'unavailable' });
+  }
+  assert.equal(destinationHits, 0);
 });
 
 test('website URL normalization is shared by metadata and the updates page', () => {
