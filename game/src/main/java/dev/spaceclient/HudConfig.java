@@ -18,7 +18,7 @@ public final class HudConfig {
     public static final int MAX_BYTES = 65536;
     private final HudProfile[] profiles = { new HudProfile("Profile 1"), new HudProfile("Profile 2") };
     private int activeProfile;
-    private boolean migratedFromV1;
+    private int migrationSourceVersion;
 
     public HudProfile active() { return profiles[activeProfile]; }
     public HudProfile profile(int index) {
@@ -28,12 +28,12 @@ public final class HudConfig {
     public int activeIndex() { return activeProfile; }
     public void select(int index) { profile(index); activeProfile = index; }
     public void replaceActive(HudProfile profile) { profiles[activeProfile] = profile.copy(); }
-    public boolean needsMigrationBackup() { return migratedFromV1; }
+    public int migrationSourceVersion() { return migrationSourceVersion; }
     public HudConfig copy() { HudConfig copy = new HudConfig(); copy.restore(this); return copy; }
     public void restore(HudConfig source) {
         for (int i = 0; i < profiles.length; i++) profiles[i] = source.profiles[i].copy();
         activeProfile = source.activeProfile;
-        migratedFromV1 = source.migratedFromV1;
+        migrationSourceVersion = source.migrationSourceVersion;
     }
 
     public static HudConfig load(Path file) throws IOException {
@@ -42,12 +42,12 @@ public final class HudConfig {
         Properties properties = readProperties(file);
         String schema = properties.getProperty("schemaVersion", "1");
         if (!schema.matches("[1-9][0-9]*")) throw new InvalidConfigException("Invalid HUD schema version");
-        if (!schema.equals("1") && !schema.equals("2")) throw new UnsupportedSchemaException();
+        if (!schema.equals("1") && !schema.equals("2") && !schema.equals("3")) throw new UnsupportedSchemaException();
+        if (!schema.equals("3")) config.migrationSourceVersion = Integer.parseInt(schema);
         if (schema.equals("1")) {
             config.profiles[0] = readProfile(properties, "", "Profile 1");
             config.profiles[1] = config.profiles[0].copy();
             config.profiles[1].name = "Profile 2";
-            config.migratedFromV1 = true;
         } else {
             try { config.select(Integer.parseInt(properties.getProperty("activeProfile", "0"))); }
             catch (IllegalArgumentException exception) { throw new InvalidConfigException("Invalid active HUD profile", exception); }
@@ -81,6 +81,7 @@ public final class HudConfig {
             profile.coordinates = readBoolean(properties, prefix + "coordinates");
             profile.keystrokes = readBoolean(properties, prefix + "keystrokes");
             profile.cps = readBoolean(properties, prefix + "cps");
+            profile.compass = readBoolean(properties, prefix + "compass", false);
             for (HudModule module : HudModule.values()) {
                 HudPlacement defaults = HudPlacement.defaults(module);
                 String key = prefix + "layout." + module.getId() + ".";
@@ -96,7 +97,10 @@ public final class HudConfig {
     }
 
     private static boolean readBoolean(Properties properties, String key) throws IOException {
-        String value = properties.getProperty(key, "true");
+        return readBoolean(properties, key, true);
+    }
+    private static boolean readBoolean(Properties properties, String key, boolean defaultValue) throws IOException {
+        String value = properties.getProperty(key, Boolean.toString(defaultValue));
         if (!value.equals("true") && !value.equals("false")) throw new InvalidConfigException("Invalid HUD setting: " + key);
         return Boolean.parseBoolean(value);
     }
@@ -110,6 +114,7 @@ public final class HudConfig {
         properties.setProperty(prefix + "coordinates", Boolean.toString(profile.coordinates));
         properties.setProperty(prefix + "keystrokes", Boolean.toString(profile.keystrokes));
         properties.setProperty(prefix + "cps", Boolean.toString(profile.cps));
+        properties.setProperty(prefix + "compass", Boolean.toString(profile.compass));
         for (HudModule module : HudModule.values()) {
             HudPlacement placement = profile.placement(module);
             String key = prefix + "layout." + module.getId() + ".";
@@ -123,7 +128,7 @@ public final class HudConfig {
 
     public void save(Path file) throws IOException {
         Properties properties = new Properties();
-        properties.setProperty("schemaVersion", "2");
+        properties.setProperty("schemaVersion", "3");
         properties.setProperty("activeProfile", Integer.toString(activeProfile));
         for (int i = 0; i < profiles.length; i++) writeProfile(properties, "profile." + i + ".", profiles[i]);
         writeAtomic(file, properties);
@@ -147,7 +152,15 @@ public final class HudConfig {
         expected.setProperty("format", "spaceclient-hud-profile");
         expected.setProperty("schemaVersion", "1");
         writeProfile(expected, "", profile);
-        if (!properties.stringPropertyNames().equals(expected.stringPropertyNames()))
+        // Version 1 exports created before Compass have none of its six keys.
+        // Accept that exact legacy shape while rejecting partial or unknown additions.
+        Properties legacy = new Properties();
+        legacy.putAll(expected);
+        legacy.remove("compass");
+        for (String field : new String[] { "horizontal", "vertical", "x", "y", "scale" })
+            legacy.remove("layout.compass." + field);
+        if (!properties.stringPropertyNames().equals(expected.stringPropertyNames())
+                && !properties.stringPropertyNames().equals(legacy.stringPropertyNames()))
             throw new InvalidConfigException("Incomplete or unknown HUD profile fields");
         return profile;
     }

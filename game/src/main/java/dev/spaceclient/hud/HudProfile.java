@@ -6,6 +6,7 @@ import java.util.EnumMap;
 public final class HudProfile {
     public String name;
     public boolean enabled = true, fps = true, coordinates = true, keystrokes = true, cps = true;
+    public boolean compass = false;
     private final EnumMap<HudModule, HudPlacement> placements = new EnumMap<>(HudModule.class);
     public HudProfile(String name) { this.name = validName(name); resetLayout(); }
     public static String validName(String value) {
@@ -28,7 +29,7 @@ public final class HudProfile {
     public HudProfile copy() {
         HudProfile copy = new HudProfile(name);
         copy.enabled = enabled; copy.fps = fps; copy.coordinates = coordinates;
-        copy.keystrokes = keystrokes; copy.cps = cps;
+        copy.keystrokes = keystrokes; copy.cps = cps; copy.compass = compass;
         copy.placements.putAll(placements); // Placements are immutable.
         return copy;
     }

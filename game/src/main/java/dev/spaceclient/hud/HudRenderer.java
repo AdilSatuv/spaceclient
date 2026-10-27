@@ -19,6 +19,7 @@ public final class HudRenderer {
                 + (client.options.backKey.isPressed() ? "[S] " : " S  ")
                 + (client.options.rightKey.isPressed() ? "[D]" : " D ");
             case CPS: return "CPS " + SpaceClient.clicks.getLeftCps() + " L / " + SpaceClient.clicks.getRightCps() + " R";
+            case COMPASS: return "Compass " + Compass.direction(client.player.yaw);
             default: throw new AssertionError(module);
         }
     }

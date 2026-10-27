@@ -46,14 +46,60 @@ public class HudProfilesTest {
         assertArrayEquals(original, Files.readAllBytes(backups.get(0)));
         assertFalse(settings.getConfig().profile(0).cps);
         assertFalse(settings.getConfig().profile(1).cps);
+        assertFalse(settings.getConfig().profile(0).compass);
+        assertFalse(settings.getConfig().profile(1).compass);
         assertTrue(settings.place(HudModule.CPS, corner()));
         assertTrue(settings.toggle(HudModule.CPS));
         assertFalse(settings.getConfig().profile(1).cps);
         assertEquals(1, settings.getConfig().profile(1).placement(HudModule.CPS).scale, 0);
         Properties properties = new Properties();
         try (java.io.InputStream input = Files.newInputStream(file())) { properties.load(input); }
-        assertEquals("2", properties.getProperty("schemaVersion"));
+        assertEquals("3", properties.getProperty("schemaVersion"));
         assertArrayEquals(original, Files.readAllBytes(backups.get(0)));
+    }
+    @Test public void compassDefaultsOffInExistingProfilesAndPersistsIndependently() throws Exception {
+        Files.write(file(), "schemaVersion=2\nprofile.0.fps=false\nprofile.1.cps=false\n".getBytes(StandardCharsets.ISO_8859_1));
+        HudSettings settings = HudSettings.open(file());
+        assertFalse(settings.getConfig().profile(0).compass);
+        assertFalse(settings.getConfig().profile(1).compass);
+        assertTrue(settings.toggle(HudModule.COMPASS));
+        assertTrue(settings.place(HudModule.COMPASS, corner()));
+        HudConfig reloaded = HudConfig.load(file());
+        assertTrue(reloaded.profile(0).compass);
+        assertFalse(reloaded.profile(1).compass);
+        assertFalse(reloaded.profile(0).fps);
+        assertFalse(reloaded.profile(1).cps);
+        assertEquals(1.8, reloaded.profile(0).placement(HudModule.COMPASS).scale, 0);
+        assertEquals(1.0, reloaded.profile(1).placement(HudModule.COMPASS).scale, 0);
+        assertTrue(reloaded.copy().profile(0).compass);
+    }
+    @Test public void compassExportAndLegacyImportRemainStrict() throws Exception {
+        HudConfig config = new HudConfig();
+        config.active().compass = true;
+        config.active().place(HudModule.COMPASS, corner());
+        Path exported = directory.getRoot().toPath().resolve("export.properties");
+        HudConfig.exportProfile(exported, config.active());
+        HudProfile reloaded = HudConfig.importProfile(exported);
+        assertTrue(reloaded.compass);
+        assertEquals(1.8, reloaded.placement(HudModule.COMPASS).scale, 0);
+
+        Properties legacy = new Properties();
+        try (java.io.InputStream in = Files.newInputStream(exported)) { legacy.load(in); }
+        legacy.remove("compass");
+        for (String field : new String[] {"horizontal", "vertical", "x", "y", "scale"})
+            legacy.remove("layout.compass." + field);
+        try (java.io.OutputStream out = Files.newOutputStream(exported)) { legacy.store(out, "Legacy export"); }
+        assertFalse(HudConfig.importProfile(exported).compass);
+
+        legacy.setProperty("compass", "true"); // A partial new extension is not a valid legacy or new export.
+        try (java.io.OutputStream out = Files.newOutputStream(exported)) { legacy.store(out, "Partial export"); }
+        try { HudConfig.importProfile(exported); fail("Partial compass fields must be rejected"); }
+        catch (HudConfig.InvalidConfigException expected) { }
+        legacy.remove("compass");
+        legacy.setProperty("unknown", "value");
+        try (java.io.OutputStream out = Files.newOutputStream(exported)) { legacy.store(out, "Unknown field"); }
+        try { HudConfig.importProfile(exported); fail("Unknown fields must be rejected"); }
+        catch (HudConfig.InvalidConfigException expected) { }
     }
     @Test public void profilesFlagsNamesLayoutsAndSelectionSurviveRestartIndependently() throws Exception {
         HudSettings settings = HudSettings.open(file());
@@ -133,6 +179,7 @@ public class HudProfilesTest {
         for (String data : new String[] {
             "schemaVersion=2\nprofile.0.layout.fps.scale=NaN\n",
             "schemaVersion=2\nprofile.1.layout.cps.x=-1\n",
+            "schemaVersion=2\nprofile.0.compass=perhaps\n",
             "schemaVersion=2\nprofile.0.name=\\u00a7red\n",
             "schemaVersion=2\nactiveProfile=8\n"
         }) {
@@ -141,7 +188,7 @@ public class HudProfilesTest {
             assertFalse(recovered.isReadOnly());
             assertTrue(recovered.getNotice().contains("backed up"));
         }
-        byte[] future = "schemaVersion=3\nkeep=true\n".getBytes(StandardCharsets.ISO_8859_1);
+        byte[] future = "schemaVersion=4\nkeep=true\n".getBytes(StandardCharsets.ISO_8859_1);
         Files.write(file(), future);
         HudSettings readOnly = HudSettings.open(file());
         assertTrue(readOnly.isReadOnly());

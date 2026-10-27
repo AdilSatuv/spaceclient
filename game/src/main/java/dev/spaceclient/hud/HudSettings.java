@@ -4,6 +4,7 @@ import dev.spaceclient.HudConfig;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.UUID;
 
 /** Client-thread commands; every failed mutation restores the complete two-profile snapshot. */
@@ -18,16 +19,24 @@ public final class HudSettings {
     private HudSettings(Path file, HudConfig config, boolean readOnly, String notice) {
         this.file = file; this.config = config; this.readOnly = readOnly; this.notice = notice;
     }
-    public static HudSettings open(Path file) {
+    interface BackupWriter { void copy(Path source, Path target) throws IOException; }
+    public static HudSettings open(Path file) { return open(file, (source, target) -> Files.copy(source, target)); }
+    static HudSettings open(Path file, BackupWriter backupWriter) {
         try {
             HudConfig config = HudConfig.load(file);
-            if (config.needsMigrationBackup()) {
-                Path backup = file.resolveSibling(file.getFileName() + ".v1-" + UUID.randomUUID() + ".bak");
-                try { Files.copy(file, backup); }
+            int sourceVersion = config.migrationSourceVersion();
+            if (sourceVersion != 0) {
+                Path backup = file.resolveSibling(file.getFileName() + ".v" + sourceVersion + "-" + UUID.randomUUID() + ".bak");
+                try {
+                    backupWriter.copy(file, backup);
+                    if (Files.size(file) > HudConfig.MAX_BYTES || Files.size(backup) > HudConfig.MAX_BYTES
+                            || !Arrays.equals(Files.readAllBytes(file), Files.readAllBytes(backup)))
+                        throw new IOException("Migration backup does not match source");
+                }
                 catch (IOException exception) {
                     return new HudSettings(file, config, true, "Migration backup failed. File kept; read-only.");
                 }
-                return new HudSettings(file, config, false, "Version 1 backup kept. Changes use schema 2.");
+                return new HudSettings(file, config, false, "Version " + sourceVersion + " backup kept. Changes use schema 3.");
             }
             return new HudSettings(file, config, false, "");
         } catch (HudConfig.InvalidConfigException exception) {

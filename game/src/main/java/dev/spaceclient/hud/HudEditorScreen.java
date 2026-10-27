@@ -205,7 +205,7 @@ public final class HudEditorScreen extends Screen {
             return;
         }
         if (key == Keyboard.KEY_TAB && !Keyboard.isRepeatEvent()) {
-            if (commitDraft()) selected = HudModule.values()[Math.floorMod(selected.ordinal() + (hasShiftDown() ? -1 : 1), 4)];
+            if (commitDraft()) selected = HudModule.values()[Math.floorMod(selected.ordinal() + (hasShiftDown() ? -1 : 1), HudModule.values().length)];
             return;
         }
         if (settings().isReadOnly() || dragging) return;
@@ -255,7 +255,7 @@ public final class HudEditorScreen extends Screen {
     private void activate(int id) {
         if (!commitDraft() || !finishName()) return;
         if (id == 13) { client.setScreen(parent); return; }
-        if (id == 12) { selected = HudModule.values()[(selected.ordinal() + 1) % 4]; return; }
+        if (id == 12) { selected = HudModule.values()[(selected.ordinal() + 1) % HudModule.values().length]; return; }
         if (settings().isReadOnly()) return;
         boolean saved = true;
         if (id == 10 || id == 11) { saved = settings().selectProfile(id - 10); name.setText(profile().name); }

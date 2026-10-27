@@ -27,7 +27,8 @@ public class HudSettingsTest {
             assertTrue(settings.toggle(selected));
             HudSettings restarted = HudSettings.open(file());
             for (HudModule module : HudModule.values()) {
-                assertEquals(module != selected, module.isEnabled(restarted.getConfig()));
+                boolean initiallyEnabled = module.isEnabled(new HudConfig());
+                assertEquals(initiallyEnabled ^ (module == selected), module.isEnabled(restarted.getConfig()));
             }
             assertTrue(restarted.getConfig().active().enabled);
         }
@@ -79,7 +80,7 @@ public class HudSettingsTest {
     }
 
     @Test public void futureSchemaIsNeverOverwrittenOrRenamed() throws Exception {
-        write("schemaVersion=3\ncustomFutureField=keep-me\n");
+        write("schemaVersion=4\ncustomFutureField=keep-me\n");
         byte[] original = Files.readAllBytes(file());
         HudSettings settings = HudSettings.open(file());
         assertTrue(settings.isReadOnly());
@@ -119,10 +120,11 @@ public class HudSettingsTest {
     }
 
     @Test public void moduleSearchSupportsAliasesWhitespaceAndEmptyResults() {
-        assertEquals(4, HudModule.search("  ").size());
+        assertEquals(5, HudModule.search("  ").size());
         assertEquals(HudModule.CPS, HudModule.search(" МЫШЬ ").get(0));
         assertEquals(HudModule.COORDINATES, HudModule.search("xyz").get(0));
         assertEquals(HudModule.KEYSTROKES, HudModule.search("WASD").get(0));
+        assertEquals(HudModule.COMPASS, HudModule.search("КОМПАС").get(0));
         assertTrue(HudModule.search("not-a-module").isEmpty());
     }
 

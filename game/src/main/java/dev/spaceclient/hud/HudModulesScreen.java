@@ -16,6 +16,7 @@ public final class HudModulesScreen extends Screen {
     private String query = "";
     private List<HudModule> modules = HudModule.search("");
     private int focus;
+    private int page;
     private int left, top, panelWidth, panelHeight, cardWidth, cardHeight;
     private boolean previousRepeatEvents;
     private boolean capturedRepeatEvents;
@@ -56,6 +57,14 @@ public final class HudModulesScreen extends Screen {
         fill(left, top, left + panelWidth, top + 2, 0xFFF2B56B);
         textRenderer.drawWithShadow("SPACE CLIENT / HUD", left + 12, top + 13, TEXT);
         textRenderer.drawWithShadow("Right Shift / Esc - close", left + 12, top + 27, MUTED);
+        if (hasPages()) {
+            int previousX = left + panelWidth - 116, nextX = left + panelWidth - 36;
+            box(previousX, top + 10, 24, 20, focus == previousControl(), hovered(mouseX, mouseY, previousX, top + 10, 24, 20));
+            drawCenteredString(textRenderer, "<", previousX + 12, top + 16, TEXT);
+            drawCenteredString(textRenderer, (page + 1) + "/" + HudModulePages.count(modules.size()), left + panelWidth - 64, top + 16, MUTED);
+            box(nextX, top + 10, 24, 20, focus == nextControl(), hovered(mouseX, mouseY, nextX, top + 10, 24, 20));
+            drawCenteredString(textRenderer, ">", nextX + 12, top + 16, TEXT);
+        }
 
         box(left + 12, top + 44, panelWidth - 24, 23, focus == 0, false);
         textRenderer.drawWithShadow("Search", left + 20, top + 49, MUTED);
@@ -69,7 +78,7 @@ public final class HudModulesScreen extends Screen {
         textRenderer.drawWithShadow("HUD visibility", left + 20, top + 80, TEXT);
         rightLabel(SpaceClient.hud.getConfig().active().enabled ? "ON" : "OFF", left + panelWidth - 20, top + 80, ACCENT);
 
-        for (int i = 0; i < modules.size(); i++) {
+        for (int i = HudModulePages.first(page, modules.size()); i < HudModulePages.end(page, modules.size()); i++) {
             HudModule module = modules.get(i);
             int x = cardX(i), y = cardY(i);
             box(x, y, cardWidth, cardHeight, focus == i + 2, hovered(mouseX, mouseY, x, y, cardWidth, cardHeight));
@@ -80,7 +89,7 @@ public final class HudModulesScreen extends Screen {
         }
         if (modules.isEmpty()) {
             drawCenteredString(textRenderer, "No modules found", width / 2, top + 116, TEXT);
-            drawCenteredString(textRenderer, "Clear the search to show all four.", width / 2, top + 131, MUTED);
+            drawCenteredString(textRenderer, "Clear the search to show modules.", width / 2, top + 131, MUTED);
         }
 
         String status = SpaceClient.hud.getError();
@@ -103,7 +112,7 @@ public final class HudModulesScreen extends Screen {
             return;
         }
         if (key == Keyboard.KEY_TAB) {
-            focus = Math.floorMod(focus + (hasShiftDown() ? -1 : 1), modules.size() + 4);
+            focus = Math.floorMod(focus + (hasShiftDown() ? -1 : 1), controlCount());
             updateFocus();
             return;
         }
@@ -115,11 +124,12 @@ public final class HudModulesScreen extends Screen {
                 search.keyPressed(character, key);
                 query = search.getText();
                 modules = HudModule.search(query);
+                page = HudModulePages.clamp(page, modules.size());
             }
             return;
         }
         if (key == Keyboard.KEY_UP || key == Keyboard.KEY_DOWN) {
-            focus = Math.floorMod(focus + (key == Keyboard.KEY_UP ? -1 : 1), modules.size() + 4);
+            focus = Math.floorMod(focus + (key == Keyboard.KEY_UP ? -1 : 1), controlCount());
             updateFocus();
         } else if ((key == Keyboard.KEY_RETURN || key == Keyboard.KEY_NUMPADENTER || key == Keyboard.KEY_SPACE)
                 && !Keyboard.isRepeatEvent()) {
@@ -138,7 +148,19 @@ public final class HudModulesScreen extends Screen {
             updateFocus();
             activate(focus);
         } else {
-            for (int i = 0; i < modules.size(); i++) {
+            if (hasPages() && hovered(x, y, left + panelWidth - 116, top + 10, 24, 20)) {
+                focus = previousControl();
+                changePage(-1);
+                updateFocus();
+                return;
+            }
+            if (hasPages() && hovered(x, y, left + panelWidth - 36, top + 10, 24, 20)) {
+                focus = nextControl();
+                changePage(1);
+                updateFocus();
+                return;
+            }
+            for (int i = HudModulePages.first(page, modules.size()); i < HudModulePages.end(page, modules.size()); i++) {
                 if (hovered(x, y, cardX(i), cardY(i), cardWidth, cardHeight)) {
                     focus = i + 2;
                     updateFocus();
@@ -159,12 +181,22 @@ public final class HudModulesScreen extends Screen {
         if (control == 1) SpaceClient.toggleHud();
         else if (control == modules.size() + 2) client.setScreen(new HudEditorScreen(this));
         else if (control == modules.size() + 3) client.setScreen(null);
-        else if (control >= 2) SpaceClient.hud.toggle(modules.get(control - 2));
+        else if (hasPages() && control == previousControl()) changePage(-1);
+        else if (hasPages() && control == nextControl()) changePage(1);
+        else if (control >= 2 && control < modules.size() + 2) SpaceClient.hud.toggle(modules.get(control - 2));
     }
 
-    private void updateFocus() { search.setFocused(focus == 0); }
-    private int cardX(int index) { return left + 12 + (index % 2) * (cardWidth + 8); }
-    private int cardY(int index) { return top + 102 + (index / 2) * (cardHeight + 6); }
+    private boolean hasPages() { return HudModulePages.count(modules.size()) > 1; }
+    private int previousControl() { return modules.size() + 4; }
+    private int nextControl() { return modules.size() + 5; }
+    private int controlCount() { return modules.size() + 4 + (hasPages() ? 2 : 0); }
+    private void changePage(int delta) { page = HudModulePages.move(page, delta, modules.size()); }
+    private void updateFocus() {
+        search.setFocused(focus == 0);
+        if (focus >= 2 && focus < modules.size() + 2) page = HudModulePages.forIndex(focus - 2, modules.size());
+    }
+    private int cardX(int index) { return left + 12 + ((index % HudModulePages.PAGE_SIZE) % 2) * (cardWidth + 8); }
+    private int cardY(int index) { return top + 102 + ((index % HudModulePages.PAGE_SIZE) / 2) * (cardHeight + 6); }
 
     private void rightLabel(String text, int right, int y, int color) {
         textRenderer.drawWithShadow(text, right - textRenderer.getStringWidth(text), y, color);
