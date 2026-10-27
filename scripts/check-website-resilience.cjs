@@ -8,7 +8,7 @@ async function checkWebsiteResilience({ browser, base, output, firefox, results 
     await page.setCacheEnabled(false);
     let logoResponse;
     page.on('response', (response) => {
-      if (new URL(response.url()).pathname === '/images/space-logo-warm.png') {
+      if (new URL(response.url()).pathname === '/images/space-logo-warm-web.webp') {
         logoResponse = response;
       }
     });
@@ -38,11 +38,11 @@ async function checkWebsiteResilience({ browser, base, output, firefox, results 
       await goto('/');
       assert.ok(logoResponse, 'The browser must request the logo');
       assert.equal(logoResponse.status(), 200);
-      assert.match(logoResponse.headers()['content-type'], /^image\/png(?:;|$)/);
+      assert.match(logoResponse.headers()['content-type'], /^image\/webp(?:;|$)/);
       const state = await page.evaluate(() => {
         const visible = (element) => element.getClientRects().length > 0;
         const marks = [...document.querySelectorAll('.ringworld-mark')];
-        const logo = '/images/space-logo-warm.png';
+        const logo = '/images/space-logo-warm-web.webp';
         return {
           none: matchMedia('(scripting: none)').matches,
           nav: [...document.querySelectorAll('.desktop-nav a')].filter(visible).length,
@@ -58,7 +58,9 @@ async function checkWebsiteResilience({ browser, base, output, firefox, results 
                 mark.getAttribute('aria-hidden') === 'true' &&
                 mark.querySelector('.ringworld-rich')?.getAttribute('href') === logo,
             ),
-          iconUsesLogo: document.querySelector('link[rel="icon"]')?.getAttribute('href') === logo,
+          iconUsesLogo:
+            document.querySelector('link[rel="icon"]')?.getAttribute('href') ===
+            '/images/space-logo-warm-icon.png',
         };
       });
       assert.deepEqual(state, {
@@ -108,7 +110,7 @@ async function checkWebsiteResilience({ browser, base, output, firefox, results 
     results.push({
       id: 'WEB-NO-JS',
       result:
-        'JavaScript disabled before navigation: visible header navigation at 320/390/1440, no inert menu/motion buttons, loaded logo and matching favicon, native search and disclosure, empty download/update states and HTTP 404.',
+        'JavaScript disabled before navigation: visible header navigation at 320/390/1440, no inert menu/motion buttons, loaded logo and derived favicon, native search and disclosure, empty download/update states and HTTP 404.',
     });
   } catch (error) {
     throw new Error('No-JavaScript scenario at ' + page.url() + ': ' + error.message, {
