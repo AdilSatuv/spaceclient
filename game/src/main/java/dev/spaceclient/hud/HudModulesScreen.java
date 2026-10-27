@@ -12,6 +12,9 @@ public final class HudModulesScreen extends Screen {
     private static final int MUTED = 0xB6B7C4;
     private static final int ACCENT = 0xF2B56B;
     private static final int BORDER = 0xFF414652;
+    private static final int CARD = 0xFF191E28;
+    private static final int CARD_ENABLED = 0xFF29231F;
+    private static final int CARD_FOCUS = 0xFF343039;
     private TextFieldWidget search;
     private String query = "";
     private List<HudModule> modules = HudModule.search("");
@@ -75,15 +78,17 @@ public final class HudModulesScreen extends Screen {
         boolean readOnly = SpaceClient.hud.isReadOnly();
         box(left + 12, top + 74, panelWidth - 24, 20, focus == 1,
             hovered(mouseX, mouseY, left + 12, top + 74, panelWidth - 24, 20));
-        textRenderer.drawWithShadow("HUD visibility", left + 20, top + 80, TEXT);
+        String profile = "HUD visibility / " + SpaceClient.hud.getConfig().active().name;
+        textRenderer.drawWithShadow(textRenderer.trimToWidth(profile, panelWidth - 72), left + 20, top + 80, TEXT);
         rightLabel(SpaceClient.hud.getConfig().active().enabled ? "ON" : "OFF", left + panelWidth - 20, top + 80, ACCENT);
 
         for (int i = HudModulePages.first(page, modules.size()); i < HudModulePages.end(page, modules.size()); i++) {
             HudModule module = modules.get(i);
             int x = cardX(i), y = cardY(i);
-            box(x, y, cardWidth, cardHeight, focus == i + 2, hovered(mouseX, mouseY, x, y, cardWidth, cardHeight));
-            textRenderer.drawWithShadow(module.getTitle(), x + 8, y + 8, TEXT);
             boolean enabled = module.isEnabled(SpaceClient.hud.getConfig());
+            card(x, y, cardWidth, cardHeight, focus == i + 2,
+                hovered(mouseX, mouseY, x, y, cardWidth, cardHeight), enabled);
+            textRenderer.drawWithShadow(textRenderer.trimToWidth(module.getTitle(), cardWidth - 52), x + 8, y + 8, TEXT);
             rightLabel(enabled ? "ON" : "OFF", x + cardWidth - 8, y + 8, enabled ? ACCENT : MUTED);
             textRenderer.drawWithShadow(textRenderer.trimToWidth(module.getDescription(), cardWidth - 16), x + 8, y + 23, MUTED);
         }
@@ -94,7 +99,8 @@ public final class HudModulesScreen extends Screen {
 
         String status = SpaceClient.hud.getError();
         if (status.isEmpty()) status = SpaceClient.hud.getNotice();
-        if (status.isEmpty()) status = "Changes save automatically";
+        if (status.isEmpty() && !SpaceClient.hud.getConfig().active().enabled) status = "HUD hidden; turn it on above";
+        if (status.isEmpty()) status = hasPages() ? "PgUp / PgDn: pages  |  Changes saved automatically" : "Changes save automatically";
         textRenderer.drawWithShadow(textRenderer.trimToWidth(status, panelWidth - 24), left + 12, top + panelHeight - 42,
             readOnly || !SpaceClient.hud.getError().isEmpty() ? ACCENT : MUTED);
         textRenderer.drawWithShadow(textRenderer.trimToWidth("Tab / Shift+Tab  -  Space", panelWidth - 194), left + 12, top + panelHeight - 19, MUTED);
@@ -114,6 +120,14 @@ public final class HudModulesScreen extends Screen {
         if (key == Keyboard.KEY_TAB) {
             focus = Math.floorMod(focus + (hasShiftDown() ? -1 : 1), controlCount());
             updateFocus();
+            return;
+        }
+        if (hasPages() && (key == Keyboard.KEY_PRIOR || key == Keyboard.KEY_NEXT)) {
+            if (!Keyboard.isRepeatEvent()) {
+                changePage(key == Keyboard.KEY_PRIOR ? -1 : 1);
+                focus = HudModulePages.first(page, modules.size()) + 2;
+                updateFocus();
+            }
             return;
         }
         if (focus == 0) {
@@ -204,7 +218,14 @@ public final class HudModulesScreen extends Screen {
 
     private void box(int x, int y, int w, int h, boolean focused, boolean hovered) {
         fill(x, y, x + w, y + h, focused ? 0xFFF2B56B : BORDER);
-        fill(x + 1, y + 1, x + w - 1, y + h - 1, focused || hovered ? 0xFF272B35 : 0xFF191E28);
+        fill(x + 1, y + 1, x + w - 1, y + h - 1, focused || hovered ? 0xFF272B35 : CARD);
+    }
+
+    private void card(int x, int y, int w, int h, boolean focused, boolean hovered, boolean enabled) {
+        fill(x, y, x + w, y + h, focused ? 0xFFF2B56B : BORDER);
+        fill(x + 1, y + 1, x + w - 1, y + h - 1,
+            focused || hovered ? CARD_FOCUS : enabled ? CARD_ENABLED : CARD);
+        if (enabled) fill(x + 1, y + 1, x + 3, y + h - 1, 0xFFF2B56B);
     }
 
     private boolean hovered(int x, int y, int left, int top, int width, int height) {

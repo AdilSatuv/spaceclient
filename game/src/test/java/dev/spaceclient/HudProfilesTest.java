@@ -54,7 +54,7 @@ public class HudProfilesTest {
         assertEquals(1, settings.getConfig().profile(1).placement(HudModule.CPS).scale, 0);
         Properties properties = new Properties();
         try (java.io.InputStream input = Files.newInputStream(file())) { properties.load(input); }
-        assertEquals("3", properties.getProperty("schemaVersion"));
+        assertEquals("4", properties.getProperty("schemaVersion"));
         assertArrayEquals(original, Files.readAllBytes(backups.get(0)));
     }
     @Test public void compassDefaultsOffInExistingProfilesAndPersistsIndependently() throws Exception {
@@ -85,6 +85,15 @@ public class HudProfilesTest {
 
         Properties legacy = new Properties();
         try (java.io.InputStream in = Files.newInputStream(exported)) { legacy.load(in); }
+        for (String module : new String[] {"clock", "speed"}) {
+            legacy.remove(module);
+            for (String field : new String[] {"horizontal", "vertical", "x", "y", "scale"})
+                legacy.remove("layout." + module + "." + field);
+        }
+        try (java.io.OutputStream out = Files.newOutputStream(exported)) { legacy.store(out, "Compass-era export"); }
+        assertTrue(HudConfig.importProfile(exported).compass);
+        assertFalse(HudConfig.importProfile(exported).clock);
+        assertFalse(HudConfig.importProfile(exported).speed);
         legacy.remove("compass");
         for (String field : new String[] {"horizontal", "vertical", "x", "y", "scale"})
             legacy.remove("layout.compass." + field);
@@ -99,6 +108,30 @@ public class HudProfilesTest {
         legacy.setProperty("unknown", "value");
         try (java.io.OutputStream out = Files.newOutputStream(exported)) { legacy.store(out, "Unknown field"); }
         try { HudConfig.importProfile(exported); fail("Unknown fields must be rejected"); }
+        catch (HudConfig.InvalidConfigException expected) { }
+    }
+    @Test public void clockAndSpeedPersistPerProfileAndRejectPartialExports() throws Exception {
+        HudSettings settings = HudSettings.open(file());
+        assertFalse(settings.getConfig().profile(0).clock);
+        assertFalse(settings.getConfig().profile(0).speed);
+        assertTrue(settings.toggle(HudModule.CLOCK));
+        assertTrue(settings.place(HudModule.CLOCK, corner()));
+        assertTrue(settings.selectProfile(1));
+        assertTrue(settings.toggle(HudModule.SPEED));
+        HudConfig loaded = HudConfig.load(file());
+        assertTrue(loaded.profile(0).clock);
+        assertFalse(loaded.profile(0).speed);
+        assertFalse(loaded.profile(1).clock);
+        assertTrue(loaded.profile(1).speed);
+        assertEquals(1.8, loaded.profile(0).placement(HudModule.CLOCK).scale, 0);
+        Path exported = directory.getRoot().toPath().resolve("new-export.properties");
+        HudConfig.exportProfile(exported, loaded.profile(1));
+        assertTrue(HudConfig.importProfile(exported).speed);
+        Properties partial = new Properties();
+        try (java.io.InputStream in = Files.newInputStream(exported)) { partial.load(in); }
+        partial.remove("layout.speed.x");
+        try (java.io.OutputStream out = Files.newOutputStream(exported)) { partial.store(out, "Partial"); }
+        try { HudConfig.importProfile(exported); fail("Partial speed fields must be rejected"); }
         catch (HudConfig.InvalidConfigException expected) { }
     }
     @Test public void profilesFlagsNamesLayoutsAndSelectionSurviveRestartIndependently() throws Exception {
@@ -188,7 +221,7 @@ public class HudProfilesTest {
             assertFalse(recovered.isReadOnly());
             assertTrue(recovered.getNotice().contains("backed up"));
         }
-        byte[] future = "schemaVersion=4\nkeep=true\n".getBytes(StandardCharsets.ISO_8859_1);
+        byte[] future = "schemaVersion=5\nkeep=true\n".getBytes(StandardCharsets.ISO_8859_1);
         Files.write(file(), future);
         HudSettings readOnly = HudSettings.open(file());
         assertTrue(readOnly.isReadOnly());

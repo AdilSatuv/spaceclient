@@ -34,7 +34,7 @@ public class HudConfigTest {
     }
     @Test(expected = java.io.IOException.class) public void futureSchemaIsRejected() throws Exception {
         Path file = Files.createTempFile("space-future", ".properties");
-        Files.write(file, "schemaVersion=4".getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        Files.write(file, "schemaVersion=5".getBytes(java.nio.charset.StandardCharsets.UTF_8));
         HudConfig.load(file);
     }
 }

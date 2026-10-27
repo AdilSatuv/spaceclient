@@ -12,7 +12,9 @@ public enum HudModule {
     COORDINATES("coordinates", "Coordinates", "Position in your world", "xyz position координаты позиция"),
     KEYSTROKES("keystrokes", "Keystrokes", "Movement key activity", "wasd movement keyboard клавиши движение"),
     CPS("cps", "CPS", "Left and right clicks / second", "clicks mouse клики мышь кпс"),
-    COMPASS("compass", "Compass", "Direction you are facing", "direction facing heading компас направление стороны света");
+    COMPASS("compass", "Compass", "Direction you are facing", "direction facing heading компас направление стороны света"),
+    CLOCK("clock", "Clock", "Local time on this computer", "time local часы время"),
+    SPEED("speed", "Speed", "Horizontal movement per tick", "movement velocity blocks скорость движение блоки");
 
     private final String id;
     private final String title;
@@ -37,6 +39,8 @@ public enum HudModule {
             case KEYSTROKES: return config.active().keystrokes;
             case CPS: return config.active().cps;
             case COMPASS: return config.active().compass;
+            case CLOCK: return config.active().clock;
+            case SPEED: return config.active().speed;
             default: throw new AssertionError(this);
         }
     }
@@ -48,6 +52,8 @@ public enum HudModule {
             case KEYSTROKES: config.active().keystrokes = enabled; break;
             case CPS: config.active().cps = enabled; break;
             case COMPASS: config.active().compass = enabled; break;
+            case CLOCK: config.active().clock = enabled; break;
+            case SPEED: config.active().speed = enabled; break;
             default: throw new AssertionError(this);
         }
     }

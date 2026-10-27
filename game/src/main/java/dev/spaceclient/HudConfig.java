@@ -42,8 +42,8 @@ public final class HudConfig {
         Properties properties = readProperties(file);
         String schema = properties.getProperty("schemaVersion", "1");
         if (!schema.matches("[1-9][0-9]*")) throw new InvalidConfigException("Invalid HUD schema version");
-        if (!schema.equals("1") && !schema.equals("2") && !schema.equals("3")) throw new UnsupportedSchemaException();
-        if (!schema.equals("3")) config.migrationSourceVersion = Integer.parseInt(schema);
+        if (!schema.equals("1") && !schema.equals("2") && !schema.equals("3") && !schema.equals("4")) throw new UnsupportedSchemaException();
+        if (!schema.equals("4")) config.migrationSourceVersion = Integer.parseInt(schema);
         if (schema.equals("1")) {
             config.profiles[0] = readProfile(properties, "", "Profile 1");
             config.profiles[1] = config.profiles[0].copy();
@@ -82,6 +82,8 @@ public final class HudConfig {
             profile.keystrokes = readBoolean(properties, prefix + "keystrokes");
             profile.cps = readBoolean(properties, prefix + "cps");
             profile.compass = readBoolean(properties, prefix + "compass", false);
+            profile.clock = readBoolean(properties, prefix + "clock", false);
+            profile.speed = readBoolean(properties, prefix + "speed", false);
             for (HudModule module : HudModule.values()) {
                 HudPlacement defaults = HudPlacement.defaults(module);
                 String key = prefix + "layout." + module.getId() + ".";
@@ -115,6 +117,8 @@ public final class HudConfig {
         properties.setProperty(prefix + "keystrokes", Boolean.toString(profile.keystrokes));
         properties.setProperty(prefix + "cps", Boolean.toString(profile.cps));
         properties.setProperty(prefix + "compass", Boolean.toString(profile.compass));
+        properties.setProperty(prefix + "clock", Boolean.toString(profile.clock));
+        properties.setProperty(prefix + "speed", Boolean.toString(profile.speed));
         for (HudModule module : HudModule.values()) {
             HudPlacement placement = profile.placement(module);
             String key = prefix + "layout." + module.getId() + ".";
@@ -128,7 +132,7 @@ public final class HudConfig {
 
     public void save(Path file) throws IOException {
         Properties properties = new Properties();
-        properties.setProperty("schemaVersion", "3");
+        properties.setProperty("schemaVersion", "4");
         properties.setProperty("activeProfile", Integer.toString(activeProfile));
         for (int i = 0; i < profiles.length; i++) writeProfile(properties, "profile." + i + ".", profiles[i]);
         writeAtomic(file, properties);
@@ -152,17 +156,25 @@ public final class HudConfig {
         expected.setProperty("format", "spaceclient-hud-profile");
         expected.setProperty("schemaVersion", "1");
         writeProfile(expected, "", profile);
-        // Version 1 exports created before Compass have none of its six keys.
-        // Accept that exact legacy shape while rejecting partial or unknown additions.
+        // Accept exactly the old four-module or Compass-era shape, never a partial extension.
+        Properties compassEra = new Properties();
+        compassEra.putAll(expected);
+        removeModuleFields(compassEra, "clock");
+        removeModuleFields(compassEra, "speed");
         Properties legacy = new Properties();
-        legacy.putAll(expected);
-        legacy.remove("compass");
-        for (String field : new String[] { "horizontal", "vertical", "x", "y", "scale" })
-            legacy.remove("layout.compass." + field);
+        legacy.putAll(compassEra);
+        removeModuleFields(legacy, "compass");
         if (!properties.stringPropertyNames().equals(expected.stringPropertyNames())
+                && !properties.stringPropertyNames().equals(compassEra.stringPropertyNames())
                 && !properties.stringPropertyNames().equals(legacy.stringPropertyNames()))
             throw new InvalidConfigException("Incomplete or unknown HUD profile fields");
         return profile;
+    }
+
+    private static void removeModuleFields(Properties properties, String module) {
+        properties.remove(module);
+        for (String field : new String[] { "horizontal", "vertical", "x", "y", "scale" })
+            properties.remove("layout." + module + "." + field);
     }
 
     private static void writeAtomic(Path file, Properties properties) throws IOException {
