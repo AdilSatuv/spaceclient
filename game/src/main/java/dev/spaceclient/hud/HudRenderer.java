@@ -26,6 +26,10 @@ public final class HudRenderer {
             case CLOCK: return "Time " + HudMetrics.clock(LocalTime.now());
             case SPEED: return client.player == null ? "Speed --" : HudMetrics.speed(
                 client.player.x, client.player.z, client.player.prevX, client.player.prevZ, client.isPaused());
+            case HEALTH: return client.player == null ? HudVitals.health(Float.NaN, Float.NaN)
+                : HudVitals.health(client.player.getHealth(), client.player.getMaxHealth());
+            case HUNGER: return client.player == null || client.player.getHungerManager() == null
+                ? HudVitals.hunger(null) : HudVitals.hunger(client.player.getHungerManager().getFoodLevel());
             default: throw new AssertionError(module);
         }
     }

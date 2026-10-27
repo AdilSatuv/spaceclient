@@ -8,6 +8,28 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class HudPlacementTest {
+    @Test public void selectorAndProfileControlsFitWithoutOverlapAtSupportedWidths() {
+        for (int width : new int[] {320, 321, 360, 427, 640, 960}) {
+            int profile = HudEditorLayout.profileWidth(width);
+            int secondProfileEnd = 18 + 2 * profile;
+            int previous = HudEditorLayout.previousModuleX(width);
+            int title = HudEditorLayout.moduleTitleX(width);
+            int next = HudEditorLayout.nextModuleX(width);
+            int done = HudEditorLayout.doneX(width);
+            assertTrue(secondProfileEnd <= previous);
+            assertTrue(previous + HudEditorLayout.NAV_WIDTH <= title);
+            assertTrue(title + HudEditorLayout.TITLE_WIDTH <= next);
+            assertTrue(next + HudEditorLayout.NAV_WIDTH <= done);
+            assertTrue(done + 54 <= width - 8);
+        }
+    }
+    @Test public void moduleSelectionWrapsBothWaysAtTheActualModuleCount() {
+        assertEquals(8, HudEditorLayout.nextModuleIndex(0, -1, 9));
+        assertEquals(0, HudEditorLayout.nextModuleIndex(8, 1, 9));
+        assertEquals(5, HudEditorLayout.nextModuleIndex(6, -1, 9));
+        assertThrows(IllegalArgumentException.class, () -> HudEditorLayout.nextModuleIndex(0, 1, 0));
+        assertThrows(IllegalArgumentException.class, () -> HudEditorLayout.nextModuleIndex(9, 1, 9));
+    }
     @Test public void toolbarNeverObscuresTheSelectedWidgetIncludingItsFocusBorder() {
         for (int height : new int[] {240, 360, 540}) for (double scale : new double[] {0.5, 1, 3}) {
             for (int y = 0; y <= height; y++) {

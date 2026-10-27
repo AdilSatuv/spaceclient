@@ -42,8 +42,8 @@ public final class HudConfig {
         Properties properties = readProperties(file);
         String schema = properties.getProperty("schemaVersion", "1");
         if (!schema.matches("[1-9][0-9]*")) throw new InvalidConfigException("Invalid HUD schema version");
-        if (!schema.equals("1") && !schema.equals("2") && !schema.equals("3") && !schema.equals("4")) throw new UnsupportedSchemaException();
-        if (!schema.equals("4")) config.migrationSourceVersion = Integer.parseInt(schema);
+        if (!schema.equals("1") && !schema.equals("2") && !schema.equals("3") && !schema.equals("4") && !schema.equals("5")) throw new UnsupportedSchemaException();
+        if (!schema.equals("5")) config.migrationSourceVersion = Integer.parseInt(schema);
         if (schema.equals("1")) {
             config.profiles[0] = readProfile(properties, "", "Profile 1");
             config.profiles[1] = config.profiles[0].copy();
@@ -84,6 +84,8 @@ public final class HudConfig {
             profile.compass = readBoolean(properties, prefix + "compass", false);
             profile.clock = readBoolean(properties, prefix + "clock", false);
             profile.speed = readBoolean(properties, prefix + "speed", false);
+            profile.health = readBoolean(properties, prefix + "health", false);
+            profile.hunger = readBoolean(properties, prefix + "hunger", false);
             for (HudModule module : HudModule.values()) {
                 HudPlacement defaults = HudPlacement.defaults(module);
                 String key = prefix + "layout." + module.getId() + ".";
@@ -119,6 +121,8 @@ public final class HudConfig {
         properties.setProperty(prefix + "compass", Boolean.toString(profile.compass));
         properties.setProperty(prefix + "clock", Boolean.toString(profile.clock));
         properties.setProperty(prefix + "speed", Boolean.toString(profile.speed));
+        properties.setProperty(prefix + "health", Boolean.toString(profile.health));
+        properties.setProperty(prefix + "hunger", Boolean.toString(profile.hunger));
         for (HudModule module : HudModule.values()) {
             HudPlacement placement = profile.placement(module);
             String key = prefix + "layout." + module.getId() + ".";
@@ -132,7 +136,7 @@ public final class HudConfig {
 
     public void save(Path file) throws IOException {
         Properties properties = new Properties();
-        properties.setProperty("schemaVersion", "4");
+        properties.setProperty("schemaVersion", "5");
         properties.setProperty("activeProfile", Integer.toString(activeProfile));
         for (int i = 0; i < profiles.length; i++) writeProfile(properties, "profile." + i + ".", profiles[i]);
         writeAtomic(file, properties);
@@ -156,15 +160,20 @@ public final class HudConfig {
         expected.setProperty("format", "spaceclient-hud-profile");
         expected.setProperty("schemaVersion", "1");
         writeProfile(expected, "", profile);
-        // Accept exactly the old four-module or Compass-era shape, never a partial extension.
+        // Accept exact historical four-, five- and seven-module shapes, never a partial extension.
+        Properties metricsEra = new Properties();
+        metricsEra.putAll(expected);
+        removeModuleFields(metricsEra, "health");
+        removeModuleFields(metricsEra, "hunger");
         Properties compassEra = new Properties();
-        compassEra.putAll(expected);
+        compassEra.putAll(metricsEra);
         removeModuleFields(compassEra, "clock");
         removeModuleFields(compassEra, "speed");
         Properties legacy = new Properties();
         legacy.putAll(compassEra);
         removeModuleFields(legacy, "compass");
         if (!properties.stringPropertyNames().equals(expected.stringPropertyNames())
+                && !properties.stringPropertyNames().equals(metricsEra.stringPropertyNames())
                 && !properties.stringPropertyNames().equals(compassEra.stringPropertyNames())
                 && !properties.stringPropertyNames().equals(legacy.stringPropertyNames()))
             throw new InvalidConfigException("Incomplete or unknown HUD profile fields");

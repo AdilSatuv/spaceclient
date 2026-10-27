@@ -14,7 +14,9 @@ public enum HudModule {
     CPS("cps", "CPS", "Left and right clicks / second", "clicks mouse клики мышь кпс"),
     COMPASS("compass", "Compass", "Direction you are facing", "direction facing heading компас направление стороны света"),
     CLOCK("clock", "Clock", "Local time on this computer", "time local часы время"),
-    SPEED("speed", "Speed", "Horizontal movement per tick", "movement velocity blocks скорость движение блоки");
+    SPEED("speed", "Speed", "Horizontal movement per tick", "movement velocity blocks скорость движение блоки"),
+    HEALTH("health", "Health", "Current and maximum health", "hp hearts здоровье жизни сердца"),
+    HUNGER("hunger", "Hunger", "Current food level", "food hunger сытость голод еда");
 
     private final String id;
     private final String title;
@@ -41,6 +43,8 @@ public enum HudModule {
             case COMPASS: return config.active().compass;
             case CLOCK: return config.active().clock;
             case SPEED: return config.active().speed;
+            case HEALTH: return config.active().health;
+            case HUNGER: return config.active().hunger;
             default: throw new AssertionError(this);
         }
     }
@@ -54,6 +58,8 @@ public enum HudModule {
             case COMPASS: config.active().compass = enabled; break;
             case CLOCK: config.active().clock = enabled; break;
             case SPEED: config.active().speed = enabled; break;
+            case HEALTH: config.active().health = enabled; break;
+            case HUNGER: config.active().hunger = enabled; break;
             default: throw new AssertionError(this);
         }
     }

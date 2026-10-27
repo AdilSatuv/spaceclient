@@ -90,7 +90,7 @@ public final class HudEditorScreen extends Screen {
         String message = settings().getError();
         if (message.isEmpty() && settings().isReadOnly()) message = settings().getNotice();
         if (message.isEmpty()) message = hoverHint.isEmpty() ? status : hoverHint;
-        if (message.isEmpty()) message = "Tab module | Arrows move | +/- scale | N name | Esc back";
+        if (message.isEmpty()) message = "Tab / PgUp / PgDn: module | Arrows: move";
         if (!profile().enabled && !settings().isReadOnly() && settings().getError().isEmpty() && hoverHint.isEmpty()) message = "HUD hidden; this is a layout preview. Esc - modules";
         textRenderer.drawWithShadow(textRenderer.trimToWidth(message, w - 12), 14, y + 79,
             settings().getError().isEmpty() ? MUTED : ACCENT);
@@ -108,12 +108,14 @@ public final class HudEditorScreen extends Screen {
     private List<Action> controls() {
         List<Action> actions = new ArrayList<>();
         int y = barY(), x = 8, w = width - 16;
-        int profileWidth = Math.min(96, 60 + Math.max(0, w - 304) / 2);
+        int profileWidth = HudEditorLayout.profileWidth(width);
         boolean editable = !settings().isReadOnly();
         actions.add(new Action(10, "1: " + settings().getConfig().profile(0).name, x + 6, y + 6, profileWidth, editable, "Select HUD profile 1 (key 1)"));
         actions.add(new Action(11, "2: " + settings().getConfig().profile(1).name, x + 10 + profileWidth, y + 6, profileWidth, editable, "Select HUD profile 2 (key 2)"));
-        actions.add(new Action(12, selected.getTitle(), x + 14 + profileWidth * 2, y + 6, 86, true, "Select next module (Tab / Shift+Tab)"));
-        actions.add(new Action(13, "Done", x + w - 60, y + 6, 54, true, "Return to modules (Esc); changes save automatically"));
+        actions.add(new Action(14, "<", HudEditorLayout.previousModuleX(width), y + 6, HudEditorLayout.NAV_WIDTH, true, "Previous module (Shift+Tab / PgUp)"));
+        actions.add(new Action(12, selected.getTitle(), HudEditorLayout.moduleTitleX(width), y + 6, HudEditorLayout.TITLE_WIDTH, true, "Next module (Tab / PgDn)"));
+        actions.add(new Action(15, ">", HudEditorLayout.nextModuleX(width), y + 6, HudEditorLayout.NAV_WIDTH, true, "Next module (Tab / PgDn)"));
+        actions.add(new Action(13, "Done", HudEditorLayout.doneX(width), y + 6, 54, true, "Return to modules (Esc); changes save automatically"));
         actions.add(new Action(30, "Save", x + 124, y + 30, 44, editable, "Save profile name (N, then Enter)"));
         actions.add(new Action(20, "-", x + 172, y + 30, 22, editable, "Smaller widget (- or mouse wheel over widget)"));
         actions.add(new Action(21, "+", x + 232, y + 30, 22, editable, "Larger widget (+ or mouse wheel over widget)"));
@@ -136,7 +138,7 @@ public final class HudEditorScreen extends Screen {
         fill(x + 1, y + 1, x + w - 1, y + h - 1, enabled && (focused || hovered) ? 0xFF272B35 : 0xFF191E28);
     }
     @Override protected void mouseClicked(int x, int y, int button) {
-        if (button != 0 || !roomy() || client.player == null) return;
+        if (button != 0 || !roomy() || client.player == null || dragging) return;
         int yBar = barY();
         if (x >= 40 && x < 130 && y >= yBar + 30 && y < yBar + 50) {
             if (name.isFocused()) name.mouseClicked(x, y, button);
@@ -204,8 +206,8 @@ public final class HudEditorScreen extends Screen {
             else name.keyPressed(character, key);
             return;
         }
-        if (key == Keyboard.KEY_TAB && !Keyboard.isRepeatEvent()) {
-            if (commitDraft()) selected = HudModule.values()[Math.floorMod(selected.ordinal() + (hasShiftDown() ? -1 : 1), HudModule.values().length)];
+        if ((key == Keyboard.KEY_TAB || key == Keyboard.KEY_PRIOR || key == Keyboard.KEY_NEXT) && !Keyboard.isRepeatEvent()) {
+            if (!dragging && commitDraft()) selectModule(key == Keyboard.KEY_PRIOR || (key == Keyboard.KEY_TAB && hasShiftDown()) ? -1 : 1);
             return;
         }
         if (settings().isReadOnly() || dragging) return;
@@ -253,9 +255,10 @@ public final class HudEditorScreen extends Screen {
         name.setFocused(false); status = "Profile name saved"; return true;
     }
     private void activate(int id) {
+        if (dragging) return;
         if (!commitDraft() || !finishName()) return;
         if (id == 13) { client.setScreen(parent); return; }
-        if (id == 12) { selected = HudModule.values()[(selected.ordinal() + 1) % HudModule.values().length]; return; }
+        if (id == 12 || id == 14 || id == 15) { selectModule(id == 14 ? -1 : 1); return; }
         if (settings().isReadOnly()) return;
         boolean saved = true;
         if (id == 10 || id == 11) { saved = settings().selectProfile(id - 10); name.setText(profile().name); }
@@ -275,6 +278,11 @@ public final class HudEditorScreen extends Screen {
         else if (id == 47) { saved = settings().importProfile(); name.setText(profile().name); }
         else if (id == 48) saved = settings().exportProfile();
         status = saved ? (id == 47 || id == 48 ? settings().getNotice() : "HUD profile saved") : settings().getError();
+    }
+    private void selectModule(int delta) {
+        HudModule[] modules = HudModule.values();
+        selected = modules[HudEditorLayout.nextModuleIndex(selected.ordinal(), delta, modules.length)];
+        status = "Module " + (selected.ordinal() + 1) + "/" + modules.length + ": " + selected.getTitle();
     }
     private static final class Action {
         final int id, x, y, width;
