@@ -1,5 +1,7 @@
 # Локальная визуальная проверка и интервалы текста
 
+Продолжение 27 октября: пользователь выбрал встроенный Windows Narrator. [Пошаговый ручной протокол и оставшиеся условия HTTPS/SEO](WEB-MANUAL-ACCEPTANCE.md). Сценарии подготовлены, результаты озвучивания ещё не получены; Safari недоступен из-за отсутствия Apple-устройств.
+
 Срез SC-23 от 24 октября 2026, окончательный Eclipse / Ringworld. [Сводный отчёт и hashes](qa/website-accessibility-2026-10-24.json), полная регрессия [Chrome](qa/website-accessibility-chrome-2026-10-24.json) / [Firefox](qa/website-accessibility-firefox-2026-10-24.json). Это локальный production build, не публичная приёмка.
 
 ## Найдено и исправлено
