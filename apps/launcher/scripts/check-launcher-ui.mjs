@@ -194,6 +194,75 @@ try {
       name,
     );
   };
+  // Chromium's accessibility tree is not a substitute for testing a real screen reader.
+  const accessibility = await page.createCDPSession();
+  const axNode = async (selector) => {
+    const { root: document } = await accessibility.send('DOM.getDocument');
+    const { nodeId } = await accessibility.send('DOM.querySelector', {
+      nodeId: document.nodeId,
+      selector,
+    });
+    assert.notEqual(nodeId, 0, 'Missing accessibility target: ' + selector);
+    const { nodes } = await accessibility.send('Accessibility.getPartialAXTree', {
+      nodeId,
+      fetchRelatives: false,
+    });
+    return nodes[0];
+  };
+  const availability = async () => {
+    const view = await page.$eval('#launch-availability', (element) => {
+      const rect = element.getBoundingClientRect();
+      return {
+        text: element.textContent.trim(),
+        visible:
+          rect.width > 0 && rect.height > 0 && getComputedStyle(element).visibility === 'visible',
+        role: element.getAttribute('role'),
+        live: element.getAttribute('aria-live'),
+      };
+    });
+    assert.equal(view.visible, true, 'The launch explanation must be visible.');
+    assert.equal(view.role, 'status');
+    assert.equal(view.live, 'polite');
+    const node = await axNode('#launch-availability');
+    assert.equal(node.ignored, false, 'The launch explanation must be in the accessibility tree.');
+    assert.equal(node.role.value, 'status');
+    assert.ok(
+      node.properties.some(
+        (property) => property.name === 'live' && property.value.value === 'polite',
+      ),
+    );
+    return view.text;
+  };
+  await page.waitForFunction(() => {
+    const explanation = document.querySelector('#launch-availability');
+    return (
+      explanation &&
+      explanation.textContent.trim() &&
+      document.querySelector('.launch-button').disabled
+    );
+  });
+  const noNickname = await availability();
+  assert.match(noNickname, /ник/i, 'An absent nickname must be explained.');
+  await page.setViewport({ width: 1000, height: 680 });
+  assert.equal(
+    await page.$eval('#launch-availability', (element) => {
+      const rect = element.getBoundingClientRect();
+      return rect.top >= 38 && rect.bottom <= innerHeight;
+    }),
+    true,
+    'The explanation for a missing nickname must fit the desktop viewport.',
+  );
+  await page.screenshot({ path: join(root, 'no-nickname-1000x680.png') });
+  report.screenshots.push('no-nickname-1000x680.png');
+  const descriptionIds = await page.$eval('.launch-button', (button) =>
+    button.getAttribute('aria-describedby').split(/\s+/),
+  );
+  assert.ok(descriptionIds.includes('launch-availability'));
+  assert.ok(descriptionIds.includes('launch-status'));
+  const disabledLaunch = await axNode('.launch-button');
+  assert.equal(disabledLaunch.ignored, false);
+  assert.equal(disabledLaunch.role.value, 'button');
+  assert.ok(disabledLaunch.description?.value.includes(noNickname));
   await page.focus('#local-nickname');
   await page.keyboard.type('ab');
   await page.keyboard.press('Tab');
@@ -206,7 +275,16 @@ try {
   await page.keyboard.press('KeyA');
   await page.keyboard.up('Control');
   await page.keyboard.type('SpaceTester');
-  await page.click('.nickname-form button[type="submit"]');
+  const unsavedNickname = await availability();
+  assert.match(unsavedNickname, /сохран/i, 'An unsaved nickname must be explained.');
+  assert.equal(await page.$eval('.launch-button', (button) => button.disabled), true);
+  await page.keyboard.press('Tab');
+  assert.equal(
+    await page.evaluate(() => document.activeElement.textContent.trim()),
+    'Сохранить ник',
+    'Keyboard focus must reach the action that resolves the nickname block.',
+  );
+  await page.keyboard.press('Enter');
   await page.waitForFunction(() =>
     document.querySelector('.feedback-slot').textContent.includes('Локальный ник сохранён'),
   );
@@ -217,9 +295,29 @@ try {
   await page.reload();
   await page.waitForSelector('#local-nickname');
   assert.equal(await page.$eval('#local-nickname', (input) => input.value), 'SpaceTester');
-  await page.click('.launch-button');
+  await page.waitForFunction(() => !document.querySelector('.launch-button').disabled);
+  await page.focus('#local-nickname');
+  await page.keyboard.press('Tab');
+  assert.equal(
+    await page.evaluate(() => document.activeElement.classList.contains('launch-button')),
+    true,
+    'The enabled launch action must be reachable by keyboard.',
+  );
+  await page.keyboard.press('Enter');
   await page.waitForFunction(() =>
     document.querySelector('.local-launch').textContent.includes('Выберите Java'),
+  );
+  const launchStatus = await axNode('#launch-status');
+  assert.equal(launchStatus.ignored, false);
+  assert.equal(launchStatus.role.value, 'status');
+  assert.ok(
+    launchStatus.properties.some(
+      (property) => property.name === 'live' && property.value.value === 'polite',
+    ),
+  );
+  await accessibility.detach();
+  report.checks.push(
+    'Visible launch explanations and polite status are exposed in Chromium accessibility tree; keyboard resolves nickname and reaches launch.',
   );
   await page.waitForFunction(() => !document.querySelector('.launch-button').disabled);
   const malicious = await page.evaluate(() =>
@@ -292,17 +390,22 @@ try {
       );
       if (slug === 'home' && viewport.width >= 1000) {
         const controls = await page.evaluate(() =>
-          ['.launch-button', '.installation-actions button'].map((selector) => {
-            const rect = document.querySelector(selector).getBoundingClientRect();
-            return {
-              selector,
-              visible: rect.top >= 38 && rect.bottom <= innerHeight && rect.height >= 44,
-            };
-          }),
+          ['.launch-button', '.installation-actions button', '#launch-availability'].map(
+            (selector) => {
+              const rect = document.querySelector(selector).getBoundingClientRect();
+              return {
+                selector,
+                visible:
+                  rect.top >= 38 &&
+                  rect.bottom <= innerHeight &&
+                  rect.height >= (selector === '#launch-availability' ? 1 : 44),
+              };
+            },
+          ),
         );
         assert.ok(
           controls.every((control) => control.visible),
-          'Main launch and prepare controls must fit the desktop viewport: ' +
+          'Launch explanation and main controls must fit the desktop viewport: ' +
             JSON.stringify(controls),
         );
       }
@@ -420,7 +523,7 @@ try {
   await page.screenshot({ path: join(root, 'forced-colors.png') });
   report.screenshots.push('forced-colors.png');
   report.checks.push(
-    'Launch and preparation controls visible at both desktop sizes; forced colors retain text and the flat planet mark.',
+    'Launch explanation and preparation controls visible at both desktop sizes; forced colors retain text and the flat planet mark.',
   );
   await emulation.detach();
   assert.deepEqual(errors, [], 'Renderer logged an error or CSP violation.');

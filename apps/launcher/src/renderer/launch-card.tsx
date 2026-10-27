@@ -6,6 +6,7 @@ import { Badge } from './components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from './components/ui/card';
 import { gb } from './lib/format';
 import type { ReadyLauncherModel } from './model/launcher-session';
+import { launchAvailability } from './model/launch-availability';
 
 export function LaunchCard({
   model,
@@ -16,20 +17,12 @@ export function LaunchCard({
   onProfiles: () => void;
   preparing: boolean;
 }) {
-  const {
-    session,
-    profile,
-    snapshot,
-    busy,
-    dirty,
-    nicknameDraft,
-    nicknameDirty,
-    nicknameError,
-    javaLabel,
-  } = model;
+  const { session, profile, busy, dirty, nicknameDraft, nicknameDirty, nicknameError, javaLabel } =
+    model;
   const input = useRef<HTMLInputElement>(null);
   const current = model.launch?.profileId === profile.id ? model.launch : null;
   const running = !!current && ['checking', 'starting', 'running'].includes(current.phase);
+  const availability = launchAvailability(model, preparing);
   return (
     <Card className="local-launch current-profile" aria-label="Локальный вход и запуск">
       <CardHeader>
@@ -103,18 +96,14 @@ export function LaunchCard({
               {nicknameError}
             </p>
           </div>
+          <p id="launch-availability" className="inline-hint" role="status" aria-live="polite">
+            {availability.reason}
+          </p>
           <Button
             className="launch-button"
             type="button"
-            disabled={
-              busy ||
-              dirty ||
-              nicknameDirty ||
-              !snapshot.localNickname ||
-              !current ||
-              running ||
-              preparing
-            }
+            disabled={availability.disabled}
+            aria-describedby="launch-availability launch-status"
             onClick={session.startLaunch}
           >
             {running && current?.phase !== 'running' ? (
@@ -133,6 +122,7 @@ export function LaunchCard({
           </Button>
         </form>
         <p
+          id="launch-status"
           className="launch-status"
           data-phase={current?.phase ?? 'idle'}
           role="status"
@@ -143,9 +133,6 @@ export function LaunchCard({
             ? ` Код выхода: ${current.exitCode}.`
             : ''}
         </p>
-        {(dirty || nicknameDirty) && (
-          <p className="inline-hint">Сохрани изменения перед запуском.</p>
-        )}
         <p className="local-mode-note">
           Ник хранится на этом компьютере. Без регистрации Space и входа Microsoft; серверы с
           проверкой аккаунта недоступны.
