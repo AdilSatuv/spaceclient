@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     'Space Client — новая орбита твоей игры',
     'Minecraft Java PvP-клиент. Следите за разработкой версии для Minecraft 1.8.9.',
   ),
-  icons: { icon: [{ url: '/images/space-logo-warm.png', type: 'image/png' }] },
+  icons: { icon: [{ url: '/images/space-logo-warm-icon.png', type: 'image/png' }] },
 };
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (

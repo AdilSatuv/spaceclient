@@ -22,7 +22,12 @@ export function OrbitMark({ className = '' }: { className?: string }) {
       fill="none"
       aria-hidden="true"
     >
-      <image className="ringworld-rich" href="/images/space-logo-warm.png" width="48" height="48" />
+      <image
+        className="ringworld-rich"
+        href="/images/space-logo-warm-web.webp"
+        width="48"
+        height="48"
+      />
       <g className="ringworld-flat">
         <circle cx="24" cy="24" r="12" fill="currentColor" />
         <ellipse
