@@ -225,6 +225,13 @@ test('asset adapter serves only fixed local assets with unchanged CSP', async (t
   assert.equal(await response.text(), 'own renderer');
   assert.equal(response.headers.get('content-security-policy'), CSP);
   assert.equal(response.headers.get('x-content-type-options'), 'nosniff');
+  const logoBytes = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
+  await fs.writeFile(path.join(root, 'logo.png'), logoBytes);
+  const logo = await handle(new Request('space://app/logo.png'));
+  assert.equal(logo.status, 200);
+  assert.equal(logo.headers.get('content-type'), 'image/png');
+  assert.equal(logo.headers.get('content-security-policy'), CSP);
+  assert.deepEqual(Buffer.from(await logo.arrayBuffer()), logoBytes);
   for (const [url, method] of [
     ['space://app/main.cjs', 'GET'],
     ['space://app/index.html?extra=1', 'GET'],

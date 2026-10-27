@@ -6,6 +6,12 @@ async function checkWebsiteResilience({ browser, base, output, firefox, results 
   const page = await browser.newPage();
   try {
     await page.setCacheEnabled(false);
+    let logoResponse;
+    page.on('response', (response) => {
+      if (new URL(response.url()).pathname === '/images/space-logo-warm.png') {
+        logoResponse = response;
+      }
+    });
     // Firefox uses a separate profile with javascript.enabled=false: BiDi does not
     // implement the scripting-emulation command in the pinned browser.
     if (!firefox) await page.setJavaScriptEnabled(false);
@@ -28,12 +34,15 @@ async function checkWebsiteResilience({ browser, base, output, firefox, results 
     };
     for (const width of [320, 390, 1440]) {
       await page.setViewport({ width, height: 900 });
+      logoResponse = undefined;
       await goto('/');
+      assert.ok(logoResponse, 'The browser must request the logo');
+      assert.equal(logoResponse.status(), 200);
+      assert.match(logoResponse.headers()['content-type'], /^image\/png(?:;|$)/);
       const state = await page.evaluate(() => {
         const visible = (element) => element.getClientRects().length > 0;
-        const ids = [...document.querySelectorAll('.ringworld-mark [id]')].map(
-          (element) => element.id,
-        );
+        const marks = [...document.querySelectorAll('.ringworld-mark')];
+        const logo = '/images/space-logo-warm.png';
         return {
           none: matchMedia('(scripting: none)').matches,
           nav: [...document.querySelectorAll('.desktop-nav a')].filter(visible).length,
@@ -42,7 +51,14 @@ async function checkWebsiteResilience({ browser, base, output, firefox, results 
           ).length,
           overflow: document.documentElement.scrollWidth > innerWidth + 1,
           motion: document.documentElement.dataset.motion,
-          idsUnique: new Set(ids).size === ids.length && ids.length >= 4,
+          marksUseLogo:
+            marks.length >= 3 &&
+            marks.every(
+              (mark) =>
+                mark.getAttribute('aria-hidden') === 'true' &&
+                mark.querySelector('.ringworld-rich')?.getAttribute('href') === logo,
+            ),
+          iconUsesLogo: document.querySelector('link[rel="icon"]')?.getAttribute('href') === logo,
         };
       });
       assert.deepEqual(state, {
@@ -51,7 +67,8 @@ async function checkWebsiteResilience({ browser, base, output, firefox, results 
         inertControls: 0,
         overflow: false,
         motion: 'paused',
-        idsUnique: true,
+        marksUseLogo: true,
+        iconUsesLogo: true,
       });
       if (width === 390)
         await page.screenshot({ path: path.join(output, 'no-js-390.png'), fullPage: false });
@@ -91,7 +108,7 @@ async function checkWebsiteResilience({ browser, base, output, firefox, results 
     results.push({
       id: 'WEB-NO-JS',
       result:
-        'JavaScript disabled before navigation: visible header navigation at 320/390/1440, no inert menu/motion buttons, unique SVG IDs, native search and disclosure, empty download/update states and HTTP 404.',
+        'JavaScript disabled before navigation: visible header navigation at 320/390/1440, no inert menu/motion buttons, loaded logo and matching favicon, native search and disclosure, empty download/update states and HTTP 404.',
     });
   } catch (error) {
     throw new Error('No-JavaScript scenario at ' + page.url() + ': ' + error.message, {

@@ -46,6 +46,7 @@ await build({
 });
 await copyFile('src/renderer/index.html', 'dist/renderer/index.html');
 await copyFile('../website/public/images/space-hero-v2.png', 'dist/renderer/hero.png');
+await copyFile('../website/public/images/space-logo-warm.png', 'dist/renderer/logo.png');
 await mkdir('dist/licenses', { recursive: true });
 await copyFile('../../docs/licenses/shadcn-ui.md', 'dist/licenses/shadcn-ui.md');
 await copyFile('../../docs/licenses/lucide.txt', 'dist/licenses/lucide.txt');

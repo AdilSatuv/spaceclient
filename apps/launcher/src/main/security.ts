@@ -28,7 +28,9 @@ export function assetName(url: string): string | null {
       parsed.hash
     )
       return null;
-    return ['/index.html', '/app.js', '/app.css', '/hero.png'].includes(parsed.pathname)
+    return ['/index.html', '/app.js', '/app.css', '/hero.png', '/logo.png'].includes(
+      parsed.pathname,
+    )
       ? parsed.pathname.slice(1)
       : null;
   } catch {

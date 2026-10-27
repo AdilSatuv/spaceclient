@@ -1,8 +1,10 @@
 import { BrowserWindow } from 'electron';
+import { dirname, join } from 'node:path';
 
-export function createLauncherWindow(preload: string): BrowserWindow {
+export function createLauncherWindow(preload: string, showWhenReady = true): BrowserWindow {
   const window = new BrowserWindow({
     title: 'Space Client',
+    icon: join(dirname(preload), 'renderer', 'logo.png'),
     width: 1180,
     height: 760,
     minWidth: 1000,
@@ -13,6 +15,8 @@ export function createLauncherWindow(preload: string): BrowserWindow {
     titleBarOverlay: { color: '#050507', symbolColor: '#f4efe7', height: 38 },
     webPreferences: {
       preload,
+      offscreen: !showWhenReady,
+      backgroundThrottling: showWhenReady,
       sandbox: true,
       contextIsolation: true,
       nodeIntegration: false,
@@ -29,7 +33,7 @@ export function createLauncherWindow(preload: string): BrowserWindow {
   window.webContents.on('will-redirect', (event) => event.preventDefault());
   window.webContents.on('will-attach-webview', (event) => event.preventDefault());
   window.once('ready-to-show', () => {
-    if (!window.isDestroyed()) window.show();
+    if (showWhenReady && !window.isDestroyed()) window.show();
   });
   return window;
 }

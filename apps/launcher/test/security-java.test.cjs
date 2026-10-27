@@ -19,11 +19,14 @@ test('asset protocol exposes only named local resources', async () => {
   const { assetName } = await import('../src/main/security.ts');
   assert.equal(assetName('space://app/index.html'), 'index.html');
   assert.equal(assetName('space://app/app.js'), 'app.js');
+  assert.equal(assetName('space://app/logo.png'), 'logo.png');
   for (const url of [
     'space://app/settings.json',
     'space://app/../../settings.json',
     'space://app/%2e%2e/settings.json',
     'space://app/app.js?file=secret',
+    'space://app/logo.png?file=secret',
+    'space://app/logo.png#fragment',
     'space://other/app.js',
     'https://app/app.js',
     'space://user:pass@app/app.js',

@@ -73,7 +73,10 @@ else {
       });
       protocol.handle('space', createAssetHandler(join(__dirname, 'renderer')));
       Menu.setApplicationMenu(null);
-      window = createLauncherWindow(join(__dirname, 'preload.cjs'));
+      window = createLauncherWindow(
+        join(__dirname, 'preload.cjs'),
+        app.isPackaged || process.env.SPACE_LAUNCHER_TEST_HIDDEN !== '1',
+      );
       disposeIpc = registerLauncherIpc(application.commands, () => window);
       window.on('closed', () => {
         window = null;

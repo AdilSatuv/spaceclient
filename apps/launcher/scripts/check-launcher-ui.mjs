@@ -12,7 +12,7 @@ const repo = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
 const root = join(repo, '.reports/launcher-ui', 'run-' + randomUUID());
 const data = join(root, 'data');
 await mkdir(data, { recursive: true });
-const env = { ...process.env, SPACE_LAUNCHER_DATA: data };
+const env = { ...process.env, SPACE_LAUNCHER_DATA: data, SPACE_LAUNCHER_TEST_HIDDEN: '1' };
 delete env.ELECTRON_RUN_AS_NODE;
 delete env.NODE_OPTIONS;
 const child = spawn(
@@ -61,7 +61,11 @@ try {
       reject(new Error('Development launcher exited before inspection: ' + code));
     });
   });
-  browser = await puppeteer.connect({ browserWSEndpoint: endpoint, defaultViewport: null });
+  browser = await puppeteer.connect({
+    browserWSEndpoint: endpoint,
+    defaultViewport: null,
+    protocolTimeout: 15000,
+  });
   const target = await browser.waitForTarget((item) => item.url() === 'space://app/index.html', {
     timeout: 15000,
   });
@@ -71,6 +75,28 @@ try {
     if (message.type() === 'error') errors.push(message.text());
   });
   await page.waitForSelector('.current-profile');
+  await page.waitForFunction(() =>
+    [...document.querySelectorAll('.space-mark img.ringworld-rich')].every(
+      (image) => image.complete && image.naturalWidth > 0 && image.naturalHeight > 0,
+    ),
+  );
+  assert.deepEqual(
+    await page.$$eval('.titlebar .space-mark img, .brand .space-mark img', (images) =>
+      images.map((image) => ({
+        src: image.currentSrc,
+        alt: image.alt,
+        naturalWidth: image.naturalWidth,
+      })),
+    ),
+    [
+      { src: 'space://app/logo.png', alt: '', naturalWidth: 1254 },
+      { src: 'space://app/logo.png', alt: '', naturalWidth: 1254 },
+    ],
+    'Titlebar and sidebar must show the selected local logo.',
+  );
+  report.checks.push(
+    'Selected logo loads in the titlebar and sidebar from the local asset protocol.',
+  );
   assert.deepEqual(
     await page.evaluate(() => ({
       require: typeof window.require,
@@ -129,10 +155,10 @@ try {
       return ids.length === new Set(ids).size;
     }),
     true,
-    'Ringworld gradient IDs must be unique.',
+    'DOM IDs must be unique.',
   );
   report.checks.push(
-    'Eleven Eclipse color roles match website tokens; vector scene replaces old bitmap; Ringworld IDs are unique.',
+    'Eleven Eclipse color roles match website tokens; vector scene remains local; DOM IDs are unique.',
   );
   await page.focus('.skip-link');
   await page.keyboard.press('Enter');
@@ -394,7 +420,7 @@ try {
   await page.screenshot({ path: join(root, 'forced-colors.png') });
   report.screenshots.push('forced-colors.png');
   report.checks.push(
-    'Launch and preparation controls visible at both desktop sizes; forced colors retain text and flat Ringworld.',
+    'Launch and preparation controls visible at both desktop sizes; forced colors retain text and the flat planet mark.',
   );
   await emulation.detach();
   assert.deepEqual(errors, [], 'Renderer logged an error or CSP violation.');

@@ -1,0 +1,3917 @@
+{
+  "type": "audit",
+  "pages": [
+    {
+      "id": "44:2492",
+      "name": "Hybrid · Website"
+    },
+    {
+      "id": "44:3996",
+      "name": "Hybrid · Launcher"
+    }
+  ],
+  "screens": [
+    {
+      "id": "44:2560",
+      "name": "WEB / Home / 1440",
+      "width": 1440,
+      "height": 4396,
+      "texts": 67,
+      "instances": 16,
+      "autoLayouts": 29,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-2560"
+    },
+    {
+      "id": "44:2754",
+      "name": "WEB / Features / 1440",
+      "width": 1440,
+      "height": 1760,
+      "texts": 44,
+      "instances": 19,
+      "autoLayouts": 16,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-2754"
+    },
+    {
+      "id": "44:2842",
+      "name": "WEB / Downloads / 1440",
+      "width": 1440,
+      "height": 2052,
+      "texts": 37,
+      "instances": 13,
+      "autoLayouts": 12,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-2842"
+    },
+    {
+      "id": "44:2913",
+      "name": "WEB / Updates / 1440",
+      "width": 1440,
+      "height": 1638,
+      "texts": 28,
+      "instances": 12,
+      "autoLayouts": 8,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-2913"
+    },
+    {
+      "id": "44:2972",
+      "name": "WEB / Help / 1440",
+      "width": 1440,
+      "height": 1610,
+      "texts": 34,
+      "instances": 13,
+      "autoLayouts": 13,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-2972"
+    },
+    {
+      "id": "44:3041",
+      "name": "WEB / Home / 390",
+      "width": 390,
+      "height": 5007,
+      "texts": 64,
+      "instances": 13,
+      "autoLayouts": 29,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-3041"
+    },
+    {
+      "id": "44:3229",
+      "name": "WEB / Features / 390",
+      "width": 390,
+      "height": 2749,
+      "texts": 41,
+      "instances": 16,
+      "autoLayouts": 19,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-3229"
+    },
+    {
+      "id": "44:3314",
+      "name": "WEB / Downloads / 390",
+      "width": 390,
+      "height": 2270,
+      "texts": 34,
+      "instances": 10,
+      "autoLayouts": 12,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-3314"
+    },
+    {
+      "id": "44:3379",
+      "name": "WEB / Updates / 390",
+      "width": 390,
+      "height": 1740,
+      "texts": 25,
+      "instances": 9,
+      "autoLayouts": 8,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-3379"
+    },
+    {
+      "id": "44:3432",
+      "name": "WEB / Help / 390",
+      "width": 390,
+      "height": 2180,
+      "texts": 31,
+      "instances": 10,
+      "autoLayouts": 15,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-3432"
+    },
+    {
+      "id": "44:3497",
+      "name": "WEB / Update article / 1440",
+      "width": 1440,
+      "height": 1387,
+      "texts": 22,
+      "instances": 9,
+      "autoLayouts": 6,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-3497"
+    },
+    {
+      "id": "44:3544",
+      "name": "WEB / Update article / 390",
+      "width": 390,
+      "height": 1384,
+      "texts": 19,
+      "instances": 6,
+      "autoLayouts": 6,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-3544"
+    },
+    {
+      "id": "44:3585",
+      "name": "WEB / Help article / 1440",
+      "width": 1440,
+      "height": 1657,
+      "texts": 27,
+      "instances": 10,
+      "autoLayouts": 7,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-3585"
+    },
+    {
+      "id": "44:3639",
+      "name": "WEB / Help article / 390",
+      "width": 390,
+      "height": 1729,
+      "texts": 24,
+      "instances": 7,
+      "autoLayouts": 7,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-3639"
+    },
+    {
+      "id": "44:3687",
+      "name": "BRAND / Four logo directions / 1440",
+      "width": 1440,
+      "height": 1280,
+      "texts": 20,
+      "instances": 0,
+      "autoLayouts": 15,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-3687"
+    },
+    {
+      "id": "44:3817",
+      "name": "WEB / Mobile menu / 390",
+      "width": 390,
+      "height": 552,
+      "texts": 9,
+      "instances": 6,
+      "autoLayouts": 3,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-3817"
+    },
+    {
+      "id": "44:3840",
+      "name": "WEB / Empty search / 390",
+      "width": 390,
+      "height": 370,
+      "texts": 6,
+      "instances": 2,
+      "autoLayouts": 3,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-3840"
+    },
+    {
+      "id": "44:3856",
+      "name": "WEB / API error / 390",
+      "width": 390,
+      "height": 408,
+      "texts": 6,
+      "instances": 2,
+      "autoLayouts": 3,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-3856"
+    },
+    {
+      "id": "44:3872",
+      "name": "WEB / 404 / 390",
+      "width": 390,
+      "height": 408,
+      "texts": 6,
+      "instances": 2,
+      "autoLayouts": 3,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-3872"
+    },
+    {
+      "id": "44:3888",
+      "name": "SYSTEM / Controls and foundations",
+      "width": 1440,
+      "height": 1355,
+      "texts": 52,
+      "instances": 22,
+      "autoLayouts": 30,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-3888"
+    },
+    {
+      "id": "44:3997",
+      "name": "APP / Ready / 1180×760",
+      "width": 1180,
+      "height": 760,
+      "texts": 27,
+      "instances": 10,
+      "autoLayouts": 13,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-3997"
+    },
+    {
+      "id": "44:4057",
+      "name": "APP / First run / 1180×760",
+      "width": 1180,
+      "height": 760,
+      "texts": 27,
+      "instances": 10,
+      "autoLayouts": 13,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-4057"
+    },
+    {
+      "id": "44:4117",
+      "name": "APP / Preparing / 1180×760",
+      "width": 1180,
+      "height": 760,
+      "texts": 29,
+      "instances": 10,
+      "autoLayouts": 14,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-4117"
+    },
+    {
+      "id": "44:4182",
+      "name": "APP / Preparation error / 1180×760",
+      "width": 1180,
+      "height": 760,
+      "texts": 29,
+      "instances": 10,
+      "autoLayouts": 13,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-4182"
+    },
+    {
+      "id": "44:4245",
+      "name": "APP / Starting / 1180×760",
+      "width": 1180,
+      "height": 760,
+      "texts": 29,
+      "instances": 10,
+      "autoLayouts": 13,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-4245"
+    },
+    {
+      "id": "44:4308",
+      "name": "APP / Running / 1180×760",
+      "width": 1180,
+      "height": 760,
+      "texts": 29,
+      "instances": 10,
+      "autoLayouts": 13,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-4308"
+    },
+    {
+      "id": "44:4371",
+      "name": "APP / Java error / 1180×760",
+      "width": 1180,
+      "height": 760,
+      "texts": 29,
+      "instances": 10,
+      "autoLayouts": 13,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-4371"
+    },
+    {
+      "id": "44:4434",
+      "name": "APP / Nickname error / 1180×760",
+      "width": 1180,
+      "height": 760,
+      "texts": 27,
+      "instances": 10,
+      "autoLayouts": 13,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-4434"
+    },
+    {
+      "id": "44:4494",
+      "name": "APP / Profiles · Unsaved draft / 1180×760",
+      "width": 1180,
+      "height": 760,
+      "texts": 29,
+      "instances": 13,
+      "autoLayouts": 11,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-4494"
+    },
+    {
+      "id": "44:4558",
+      "name": "APP / Settings / 1180×760",
+      "width": 1180,
+      "height": 760,
+      "texts": 30,
+      "instances": 7,
+      "autoLayouts": 13,
+      "url": "https://www.figma.com/design/rlT7ixlB1AVZVvp9BfRLZJ/Space-Client-Website-Design?node-id=44-4558"
+    }
+  ],
+  "layoutIssues": [],
+  "textIssues": [],
+  "variables": [
+    {
+      "id": "VariableID:44:2439",
+      "name": "primitive/bg",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--space-bg)"
+      },
+      "values": {
+        "44:1": {
+          "r": 0.0117647061124444,
+          "g": 0.01568627543747425,
+          "b": 0.027450980618596077,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2440",
+      "name": "color/bg",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--bg)"
+      },
+      "values": {
+        "44:1": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:44:2439"
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2441",
+      "name": "primitive/surface",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--space-surface)"
+      },
+      "values": {
+        "44:1": {
+          "r": 0.05098039284348488,
+          "g": 0.054901961237192154,
+          "b": 0.07450980693101883,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2442",
+      "name": "color/surface",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--surface)"
+      },
+      "values": {
+        "44:1": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:44:2441"
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2443",
+      "name": "primitive/raised",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--space-raised)"
+      },
+      "values": {
+        "44:1": {
+          "r": 0.0941176488995552,
+          "g": 0.09803921729326248,
+          "b": 0.125490203499794,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2444",
+      "name": "color/raised",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--raised)"
+      },
+      "values": {
+        "44:1": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:44:2443"
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2445",
+      "name": "primitive/line",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--space-line)"
+      },
+      "values": {
+        "44:1": {
+          "r": 0.20392157137393951,
+          "g": 0.20392157137393951,
+          "b": 0.23529411852359772,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2446",
+      "name": "color/line",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "STROKE_COLOR"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--line)"
+      },
+      "values": {
+        "44:1": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:44:2445"
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2447",
+      "name": "primitive/text",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--space-text)"
+      },
+      "values": {
+        "44:1": {
+          "r": 0.95686274766922,
+          "g": 0.9372549057006836,
+          "b": 0.9058823585510254,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2448",
+      "name": "color/text",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--text)"
+      },
+      "values": {
+        "44:1": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:44:2447"
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2449",
+      "name": "primitive/muted",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--space-muted)"
+      },
+      "values": {
+        "44:1": {
+          "r": 0.7176470756530762,
+          "g": 0.7058823704719543,
+          "b": 0.686274528503418,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2450",
+      "name": "color/muted",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--muted)"
+      },
+      "values": {
+        "44:1": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:44:2449"
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2451",
+      "name": "primitive/accent",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--space-accent)"
+      },
+      "values": {
+        "44:1": {
+          "r": 0.95686274766922,
+          "g": 0.7411764860153198,
+          "b": 0.5098039507865906,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2452",
+      "name": "color/accent",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--accent)"
+      },
+      "values": {
+        "44:1": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:44:2451"
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2453",
+      "name": "primitive/onAccent",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--space-onAccent)"
+      },
+      "values": {
+        "44:1": {
+          "r": 0.1568627506494522,
+          "g": 0.09019608050584793,
+          "b": 0.0470588244497776,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2454",
+      "name": "color/onAccent",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--on-accent)"
+      },
+      "values": {
+        "44:1": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:44:2453"
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2455",
+      "name": "primitive/copper",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--space-copper)"
+      },
+      "values": {
+        "44:1": {
+          "r": 0.8156862854957581,
+          "g": 0.615686297416687,
+          "b": 0.501960813999176,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2456",
+      "name": "color/copper",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--violet)"
+      },
+      "values": {
+        "44:1": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:44:2455"
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2457",
+      "name": "primitive/border",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--space-border)"
+      },
+      "values": {
+        "44:1": {
+          "r": 0.545098066329956,
+          "g": 0.501960813999176,
+          "b": 0.4745098054409027,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2458",
+      "name": "color/border",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "STROKE_COLOR"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--control-border)"
+      },
+      "values": {
+        "44:1": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:44:2457"
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2459",
+      "name": "primitive/hover",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--space-hover)"
+      },
+      "values": {
+        "44:1": {
+          "r": 1,
+          "g": 0.8941176533699036,
+          "b": 0.7333333492279053,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2460",
+      "name": "color/hover",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--accent-hover)"
+      },
+      "values": {
+        "44:1": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:44:2459"
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2461",
+      "name": "primitive/pressed",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--space-pressed)"
+      },
+      "values": {
+        "44:1": {
+          "r": 0.8509804010391235,
+          "g": 0.615686297416687,
+          "b": 0.3960784375667572,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2462",
+      "name": "color/pressed",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--pressed)"
+      },
+      "values": {
+        "44:1": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:44:2461"
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2463",
+      "name": "primitive/danger",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--space-danger)"
+      },
+      "values": {
+        "44:1": {
+          "r": 1,
+          "g": 0.6431372761726379,
+          "b": 0.7176470756530762,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2464",
+      "name": "color/danger",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--control-danger)"
+      },
+      "values": {
+        "44:1": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:44:2463"
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2465",
+      "name": "primitive/success",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--space-success)"
+      },
+      "values": {
+        "44:1": {
+          "r": 0.6509804129600525,
+          "g": 0.8392156958580017,
+          "b": 0.7372549176216125,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2466",
+      "name": "color/success",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--success)"
+      },
+      "values": {
+        "44:1": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:44:2465"
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2467",
+      "name": "primitive/disabled",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--space-disabled)"
+      },
+      "values": {
+        "44:1": {
+          "r": 0.1411764770746231,
+          "g": 0.1411764770746231,
+          "b": 0.16862745583057404,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2468",
+      "name": "color/disabled",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL",
+        "TEXT_FILL"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--disabled)"
+      },
+      "values": {
+        "44:1": {
+          "type": "VARIABLE_ALIAS",
+          "id": "VariableID:44:2467"
+        }
+      }
+    },
+    {
+      "id": "VariableID:44:2469",
+      "name": "space/s4",
+      "scopes": [
+        "GAP"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--space-s4)"
+      },
+      "values": {
+        "44:1": 4
+      }
+    },
+    {
+      "id": "VariableID:44:2470",
+      "name": "space/s8",
+      "scopes": [
+        "GAP"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--space-s8)"
+      },
+      "values": {
+        "44:1": 8
+      }
+    },
+    {
+      "id": "VariableID:44:2471",
+      "name": "space/s12",
+      "scopes": [
+        "GAP"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--space-s12)"
+      },
+      "values": {
+        "44:1": 12
+      }
+    },
+    {
+      "id": "VariableID:44:2472",
+      "name": "space/s16",
+      "scopes": [
+        "GAP"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--space-s16)"
+      },
+      "values": {
+        "44:1": 16
+      }
+    },
+    {
+      "id": "VariableID:44:2473",
+      "name": "space/s24",
+      "scopes": [
+        "GAP"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--space-s24)"
+      },
+      "values": {
+        "44:1": 24
+      }
+    },
+    {
+      "id": "VariableID:44:2474",
+      "name": "space/s32",
+      "scopes": [
+        "GAP"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--space-s32)"
+      },
+      "values": {
+        "44:1": 32
+      }
+    },
+    {
+      "id": "VariableID:44:2475",
+      "name": "space/s48",
+      "scopes": [
+        "GAP"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--space-s48)"
+      },
+      "values": {
+        "44:1": 48
+      }
+    },
+    {
+      "id": "VariableID:44:2476",
+      "name": "space/s64",
+      "scopes": [
+        "GAP"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--space-s64)"
+      },
+      "values": {
+        "44:1": 64
+      }
+    },
+    {
+      "id": "VariableID:44:2477",
+      "name": "space/s96",
+      "scopes": [
+        "GAP"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--space-s96)"
+      },
+      "values": {
+        "44:1": 96
+      }
+    },
+    {
+      "id": "VariableID:44:2478",
+      "name": "radius/r10",
+      "scopes": [
+        "CORNER_RADIUS"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--radius-button)"
+      },
+      "values": {
+        "44:1": 10
+      }
+    },
+    {
+      "id": "VariableID:44:2479",
+      "name": "radius/r16",
+      "scopes": [
+        "CORNER_RADIUS"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--space-radius-panel)"
+      },
+      "values": {
+        "44:1": 16
+      }
+    }
+  ],
+  "counts": {
+    "componentSets": 4,
+    "variants": 30,
+    "textStyles": 12,
+    "prototypeEdges": 168,
+    "createdNodes": 2123,
+    "screens": 30,
+    "texts": 881,
+    "instances": 297,
+    "autoLayouts": 373,
+    "variables": 41,
+    "layoutIssues": 0,
+    "textIssues": 0
+  },
+  "components": [
+    {
+      "id": "44:2532",
+      "name": "Space / Hybrid / Button",
+      "variants": 18
+    },
+    {
+      "id": "44:2541",
+      "name": "Space / Hybrid / Field",
+      "variants": 4
+    },
+    {
+      "id": "44:2550",
+      "name": "Space / Hybrid / Badge",
+      "variants": 4
+    },
+    {
+      "id": "44:2559",
+      "name": "Space / Hybrid / Navigation",
+      "variants": 4
+    }
+  ],
+  "textStyles": [
+    {
+      "id": "S:4516c813dde918c2800cc438b85855f6ff1d23e4,",
+      "name": "Space / Hybrid / display",
+      "font": {
+        "family": "Segoe UI",
+        "style": "Bold"
+      },
+      "size": 72
+    },
+    {
+      "id": "S:cf274be56997b7ca49b0a09bae78d23cee5e93e9,",
+      "name": "Space / Hybrid / displayMobile",
+      "font": {
+        "family": "Segoe UI",
+        "style": "Bold"
+      },
+      "size": 44
+    },
+    {
+      "id": "S:ed69a0708087ca243493c899b650adb4f93e685d,",
+      "name": "Space / Hybrid / h1",
+      "font": {
+        "family": "Segoe UI",
+        "style": "Bold"
+      },
+      "size": 56
+    },
+    {
+      "id": "S:0b5d6d83a540975425606b97314ecee87b0af06b,",
+      "name": "Space / Hybrid / h2",
+      "font": {
+        "family": "Segoe UI",
+        "style": "Bold"
+      },
+      "size": 40
+    },
+    {
+      "id": "S:0d3ab3134ed9f4166fd639c6bd9a269cabe59a31,",
+      "name": "Space / Hybrid / h2Mobile",
+      "font": {
+        "family": "Segoe UI",
+        "style": "Bold"
+      },
+      "size": 30
+    },
+    {
+      "id": "S:0f5bef3045345e41fb62119a939a28a1654d309b,",
+      "name": "Space / Hybrid / h3",
+      "font": {
+        "family": "Segoe UI",
+        "style": "Semibold"
+      },
+      "size": 24
+    },
+    {
+      "id": "S:fbddbc6924442539e271abf321f6aca401e779c6,",
+      "name": "Space / Hybrid / appTitle",
+      "font": {
+        "family": "Segoe UI",
+        "style": "Semibold"
+      },
+      "size": 32
+    },
+    {
+      "id": "S:d60cc5d96187f2b7b1fd045f918d147a02ae6c31,",
+      "name": "Space / Hybrid / body",
+      "font": {
+        "family": "Segoe UI",
+        "style": "Regular"
+      },
+      "size": 16
+    },
+    {
+      "id": "S:fb9b65fa6d58c3f66ef3f26adcf8c33cac36bbba,",
+      "name": "Space / Hybrid / lead",
+      "font": {
+        "family": "Segoe UI",
+        "style": "Regular"
+      },
+      "size": 20
+    },
+    {
+      "id": "S:33a64d3124e48e53d7dce62994a7a72efe858647,",
+      "name": "Space / Hybrid / label",
+      "font": {
+        "family": "Segoe UI",
+        "style": "Semibold"
+      },
+      "size": 14
+    },
+    {
+      "id": "S:3c9540c8bdd0921a51197defce7507e1160fe3ef,",
+      "name": "Space / Hybrid / meta",
+      "font": {
+        "family": "Segoe UI",
+        "style": "Regular"
+      },
+      "size": 12
+    },
+    {
+      "id": "S:a4865fcaae43a494bb7d0860493e01a3f9b3e0d9,",
+      "name": "Space / Hybrid / mono",
+      "font": {
+        "family": "Consolas",
+        "style": "Regular"
+      },
+      "size": 12
+    }
+  ],
+  "createdNodeIds": [
+    "44:2492",
+    "44:2532",
+    "44:2493",
+    "44:2494",
+    "44:2495",
+    "44:2496",
+    "44:2497",
+    "44:2498",
+    "44:2499",
+    "44:2500",
+    "44:2501",
+    "44:2502",
+    "44:2503",
+    "44:2504",
+    "44:2505",
+    "44:2506",
+    "44:2507",
+    "44:2508",
+    "44:2509",
+    "44:2510",
+    "44:2511",
+    "44:2512",
+    "44:2513",
+    "44:2514",
+    "44:2515",
+    "44:2516",
+    "44:2517",
+    "44:2518",
+    "44:2519",
+    "44:2520",
+    "44:2521",
+    "44:2522",
+    "44:2523",
+    "44:2524",
+    "44:2525",
+    "44:2526",
+    "44:2527",
+    "44:2528",
+    "44:2529",
+    "44:2530",
+    "44:2531",
+    "44:2541",
+    "44:2533",
+    "44:2534",
+    "44:2535",
+    "44:2536",
+    "44:2537",
+    "44:2538",
+    "44:2539",
+    "44:2540",
+    "44:2550",
+    "44:2542",
+    "44:2543",
+    "44:2544",
+    "44:2545",
+    "44:2546",
+    "44:2547",
+    "44:2548",
+    "44:2549",
+    "44:2559",
+    "44:2551",
+    "44:2552",
+    "44:2553",
+    "44:2554",
+    "44:2555",
+    "44:2556",
+    "44:2557",
+    "44:2558",
+    "44:2560",
+    "44:2561",
+    "44:2562",
+    "44:2563",
+    "44:2564",
+    "44:2565",
+    "44:2566",
+    "44:2567",
+    "44:2568",
+    "I44:2568;44:2520",
+    "44:2570",
+    "I44:2570;44:2520",
+    "44:2572",
+    "I44:2572;44:2520",
+    "44:2574",
+    "I44:2574;44:2507",
+    "44:2576",
+    "44:2577",
+    "44:2578",
+    "44:2579",
+    "I44:2579;44:2543",
+    "44:2581",
+    "44:2582",
+    "44:2583",
+    "44:2584",
+    "I44:2584;44:2494",
+    "44:2586",
+    "I44:2586;44:2507",
+    "44:2588",
+    "44:2589",
+    "44:2590",
+    "44:2591",
+    "44:2592",
+    "44:2593",
+    "44:2594",
+    "44:2595",
+    "44:2596",
+    "44:2597",
+    "44:2598",
+    "44:2599",
+    "44:2600",
+    "44:2601",
+    "44:2602",
+    "44:2603",
+    "44:2604",
+    "44:2605",
+    "44:2606",
+    "44:2607",
+    "44:2608",
+    "44:2609",
+    "44:2610",
+    "44:2611",
+    "44:2612",
+    "44:2613",
+    "44:2614",
+    "44:2615",
+    "44:2616",
+    "44:2617",
+    "44:2618",
+    "44:2619",
+    "44:2620",
+    "44:2621",
+    "44:2622",
+    "44:2623",
+    "44:2624",
+    "44:2625",
+    "44:2626",
+    "44:2627",
+    "44:2628",
+    "44:2629",
+    "44:2630",
+    "44:2631",
+    "44:2632",
+    "44:2633",
+    "44:2634",
+    "44:2635",
+    "44:2636",
+    "44:2637",
+    "44:2638",
+    "44:2639",
+    "44:2640",
+    "44:2641",
+    "44:2642",
+    "44:2643",
+    "44:2644",
+    "44:2645",
+    "44:2646",
+    "44:2647",
+    "44:2648",
+    "44:2649",
+    "44:2650",
+    "44:2651",
+    "44:2652",
+    "44:2653",
+    "44:2654",
+    "44:2655",
+    "44:2656",
+    "44:2657",
+    "44:2658",
+    "44:2659",
+    "44:2660",
+    "44:2661",
+    "44:2662",
+    "44:2663",
+    "44:2664",
+    "44:2665",
+    "44:2666",
+    "44:2667",
+    "44:2668",
+    "44:2669",
+    "44:2670",
+    "44:2671",
+    "44:2672",
+    "44:2673",
+    "44:2674",
+    "44:2675",
+    "44:2676",
+    "44:2677",
+    "44:2678",
+    "I44:2678;44:2545",
+    "44:2680",
+    "44:2681",
+    "44:2682",
+    "44:2683",
+    "I44:2683;44:2545",
+    "44:2685",
+    "44:2686",
+    "44:2687",
+    "44:2688",
+    "I44:2688;44:2545",
+    "44:2690",
+    "I44:2690;44:2507",
+    "44:2692",
+    "44:2693",
+    "44:2694",
+    "44:2695",
+    "44:2696",
+    "44:2697",
+    "44:2698",
+    "44:2699",
+    "44:2700",
+    "44:2701",
+    "44:2702",
+    "44:2703",
+    "44:2704",
+    "44:2705",
+    "44:2706",
+    "44:2707",
+    "44:2708",
+    "44:2709",
+    "44:2710",
+    "44:2711",
+    "44:2712",
+    "44:2713",
+    "44:2714",
+    "44:2715",
+    "44:2716",
+    "44:2717",
+    "44:2718",
+    "44:2719",
+    "44:2720",
+    "44:2721",
+    "44:2722",
+    "I44:2722;44:2520",
+    "44:2724",
+    "44:2725",
+    "44:2726",
+    "44:2727",
+    "44:2728",
+    "44:2729",
+    "44:2730",
+    "44:2731",
+    "44:2732",
+    "44:2733",
+    "44:2734",
+    "44:2735",
+    "44:2736",
+    "44:2737",
+    "44:2738",
+    "44:2739",
+    "44:2740",
+    "44:2741",
+    "44:2742",
+    "44:2743",
+    "44:2744",
+    "44:2745",
+    "I44:2745;44:2520",
+    "44:2747",
+    "I44:2747;44:2520",
+    "44:2749",
+    "I44:2749;44:2520",
+    "44:2751",
+    "I44:2751;44:2520",
+    "44:2753",
+    "44:2754",
+    "44:2755",
+    "44:2756",
+    "44:2757",
+    "44:2758",
+    "44:2759",
+    "44:2760",
+    "44:2761",
+    "44:2762",
+    "I44:2762;44:2524",
+    "44:2764",
+    "I44:2764;44:2520",
+    "44:2766",
+    "I44:2766;44:2520",
+    "44:2768",
+    "I44:2768;44:2507",
+    "44:2770",
+    "44:2771",
+    "44:2772",
+    "44:2773",
+    "44:2774",
+    "I44:2774;44:2534",
+    "44:2776",
+    "44:2777",
+    "I44:2777;44:2494",
+    "44:2779",
+    "I44:2779;44:2507",
+    "44:2781",
+    "I44:2781;44:2507",
+    "44:2783",
+    "I44:2783;44:2507",
+    "44:2785",
+    "44:2786",
+    "44:2787",
+    "44:2788",
+    "44:2789",
+    "44:2790",
+    "I44:2790;44:2545",
+    "44:2792",
+    "44:2793",
+    "44:2794",
+    "44:2795",
+    "44:2796",
+    "I44:2796;44:2545",
+    "44:2798",
+    "44:2799",
+    "44:2800",
+    "44:2801",
+    "44:2802",
+    "44:2803",
+    "I44:2803;44:2545",
+    "44:2805",
+    "44:2806",
+    "44:2807",
+    "44:2808",
+    "44:2809",
+    "I44:2809;44:2545",
+    "44:2811",
+    "44:2812",
+    "44:2813",
+    "44:2814",
+    "44:2815",
+    "44:2816",
+    "I44:2816;44:2549",
+    "44:2818",
+    "44:2819",
+    "44:2820",
+    "44:2821",
+    "44:2822",
+    "I44:2822;44:2547",
+    "44:2824",
+    "44:2825",
+    "44:2826",
+    "44:2827",
+    "44:2828",
+    "44:2829",
+    "44:2830",
+    "44:2831",
+    "44:2832",
+    "44:2833",
+    "I44:2833;44:2520",
+    "44:2835",
+    "I44:2835;44:2520",
+    "44:2837",
+    "I44:2837;44:2520",
+    "44:2839",
+    "I44:2839;44:2520",
+    "44:2841",
+    "44:2842",
+    "44:2843",
+    "44:2844",
+    "44:2845",
+    "44:2846",
+    "44:2847",
+    "44:2848",
+    "44:2849",
+    "44:2850",
+    "I44:2850;44:2520",
+    "44:2852",
+    "I44:2852;44:2520",
+    "44:2854",
+    "I44:2854;44:2520",
+    "44:2856",
+    "I44:2856;44:2507",
+    "44:2858",
+    "44:2859",
+    "44:2860",
+    "44:2861",
+    "44:2862",
+    "44:2863",
+    "44:2864",
+    "44:2865",
+    "44:2866",
+    "44:2867",
+    "I44:2867;44:2543",
+    "44:2869",
+    "I44:2869;44:2503",
+    "44:2871",
+    "I44:2871;44:2507",
+    "44:2873",
+    "44:2874",
+    "44:2875",
+    "44:2876",
+    "44:2877",
+    "44:2878",
+    "44:2879",
+    "44:2880",
+    "44:2881",
+    "44:2882",
+    "44:2883",
+    "44:2884",
+    "44:2885",
+    "44:2886",
+    "44:2887",
+    "44:2888",
+    "I44:2888;44:2520",
+    "44:2890",
+    "44:2891",
+    "44:2892",
+    "44:2893",
+    "I44:2893;44:2520",
+    "44:2895",
+    "44:2896",
+    "44:2897",
+    "44:2898",
+    "44:2899",
+    "44:2900",
+    "44:2901",
+    "44:2902",
+    "44:2903",
+    "44:2904",
+    "I44:2904;44:2520",
+    "44:2906",
+    "I44:2906;44:2520",
+    "44:2908",
+    "I44:2908;44:2520",
+    "44:2910",
+    "I44:2910;44:2520",
+    "44:2912",
+    "44:2913",
+    "44:2914",
+    "44:2915",
+    "44:2916",
+    "44:2917",
+    "44:2918",
+    "44:2919",
+    "44:2920",
+    "44:2921",
+    "I44:2921;44:2520",
+    "44:2923",
+    "I44:2923;44:2524",
+    "44:2925",
+    "I44:2925;44:2520",
+    "44:2927",
+    "I44:2927;44:2507",
+    "44:2929",
+    "44:2930",
+    "44:2931",
+    "44:2932",
+    "44:2933",
+    "44:2934",
+    "I44:2934;44:2494",
+    "44:2936",
+    "I44:2936;44:2507",
+    "44:2938",
+    "I44:2938;44:2507",
+    "44:2940",
+    "44:2941",
+    "44:2942",
+    "44:2943",
+    "44:2944",
+    "I44:2944;44:2507",
+    "44:2946",
+    "44:2947",
+    "44:2948",
+    "44:2949",
+    "44:2950",
+    "44:2951",
+    "44:2952",
+    "44:2953",
+    "44:2954",
+    "44:2955",
+    "44:2956",
+    "44:2957",
+    "44:2958",
+    "44:2959",
+    "44:2960",
+    "44:2961",
+    "44:2962",
+    "44:2963",
+    "I44:2963;44:2520",
+    "44:2965",
+    "I44:2965;44:2520",
+    "44:2967",
+    "I44:2967;44:2520",
+    "44:2969",
+    "I44:2969;44:2520",
+    "44:2971",
+    "44:2972",
+    "44:2973",
+    "44:2974",
+    "44:2975",
+    "44:2976",
+    "44:2977",
+    "44:2978",
+    "44:2979",
+    "44:2980",
+    "I44:2980;44:2520",
+    "44:2982",
+    "I44:2982;44:2520",
+    "44:2984",
+    "I44:2984;44:2524",
+    "44:2986",
+    "I44:2986;44:2507",
+    "44:2988",
+    "44:2989",
+    "44:2990",
+    "44:2991",
+    "44:2992",
+    "I44:2992;44:2534",
+    "44:2994",
+    "44:2995",
+    "44:2996",
+    "44:2997",
+    "44:2998",
+    "44:2999",
+    "I44:2999;44:2520",
+    "44:3001",
+    "44:3002",
+    "44:3003",
+    "44:3004",
+    "44:3005",
+    "I44:3005;44:2520",
+    "44:3007",
+    "44:3008",
+    "44:3009",
+    "44:3010",
+    "44:3011",
+    "44:3012",
+    "I44:3012;44:2520",
+    "44:3014",
+    "44:3015",
+    "44:3016",
+    "44:3017",
+    "44:3018",
+    "I44:3018;44:2520",
+    "44:3020",
+    "44:3021",
+    "44:3022",
+    "44:3023",
+    "44:3024",
+    "44:3025",
+    "44:3026",
+    "44:3027",
+    "44:3028",
+    "44:3029",
+    "44:3030",
+    "44:3031",
+    "44:3032",
+    "I44:3032;44:2520",
+    "44:3034",
+    "I44:3034;44:2520",
+    "44:3036",
+    "I44:3036;44:2520",
+    "44:3038",
+    "I44:3038;44:2520",
+    "44:3040",
+    "44:3041",
+    "44:3042",
+    "44:3043",
+    "44:3044",
+    "44:3045",
+    "44:3046",
+    "44:3047",
+    "44:3048",
+    "44:3049",
+    "I44:3049;44:2520",
+    "44:3051",
+    "44:3052",
+    "44:3053",
+    "44:3054",
+    "I44:3054;44:2543",
+    "44:3056",
+    "44:3057",
+    "44:3058",
+    "44:3059",
+    "I44:3059;44:2494",
+    "44:3061",
+    "I44:3061;44:2507",
+    "44:3063",
+    "44:3064",
+    "44:3065",
+    "44:3066",
+    "44:3067",
+    "44:3068",
+    "44:3069",
+    "44:3070",
+    "44:3071",
+    "44:3072",
+    "44:3073",
+    "44:3074",
+    "44:3075",
+    "44:3076",
+    "44:3077",
+    "44:3078",
+    "44:3079",
+    "44:3080",
+    "44:3081",
+    "44:3082",
+    "44:3083",
+    "44:3084",
+    "44:3085",
+    "44:3086",
+    "44:3087",
+    "44:3088",
+    "44:3089",
+    "44:3090",
+    "44:3091",
+    "44:3092",
+    "44:3093",
+    "44:3094",
+    "44:3095",
+    "44:3096",
+    "44:3097",
+    "44:3098",
+    "44:3099",
+    "44:3100",
+    "44:3101",
+    "44:3102",
+    "44:3103",
+    "44:3104",
+    "44:3105",
+    "44:3106",
+    "44:3107",
+    "44:3108",
+    "44:3109",
+    "44:3110",
+    "44:3111",
+    "44:3112",
+    "44:3113",
+    "44:3114",
+    "44:3115",
+    "44:3116",
+    "44:3117",
+    "44:3118",
+    "44:3119",
+    "44:3120",
+    "44:3121",
+    "44:3122",
+    "44:3123",
+    "44:3124",
+    "44:3125",
+    "44:3126",
+    "44:3127",
+    "44:3128",
+    "44:3129",
+    "44:3130",
+    "44:3131",
+    "44:3132",
+    "44:3133",
+    "44:3134",
+    "44:3135",
+    "44:3136",
+    "44:3137",
+    "44:3138",
+    "44:3139",
+    "44:3140",
+    "44:3141",
+    "44:3142",
+    "44:3143",
+    "44:3144",
+    "44:3145",
+    "44:3146",
+    "44:3147",
+    "44:3148",
+    "44:3149",
+    "44:3150",
+    "44:3151",
+    "44:3152",
+    "44:3153",
+    "I44:3153;44:2545",
+    "44:3155",
+    "44:3156",
+    "44:3157",
+    "44:3158",
+    "I44:3158;44:2545",
+    "44:3160",
+    "44:3161",
+    "44:3162",
+    "44:3163",
+    "I44:3163;44:2545",
+    "44:3165",
+    "I44:3165;44:2507",
+    "44:3167",
+    "44:3168",
+    "44:3169",
+    "44:3170",
+    "44:3171",
+    "44:3172",
+    "44:3173",
+    "44:3174",
+    "44:3175",
+    "44:3176",
+    "44:3177",
+    "44:3178",
+    "44:3179",
+    "44:3180",
+    "44:3181",
+    "44:3182",
+    "44:3183",
+    "44:3184",
+    "44:3185",
+    "44:3186",
+    "44:3187",
+    "44:3188",
+    "44:3189",
+    "44:3190",
+    "44:3191",
+    "44:3192",
+    "44:3193",
+    "44:3194",
+    "44:3195",
+    "44:3196",
+    "44:3197",
+    "I44:3197;44:2520",
+    "44:3199",
+    "44:3200",
+    "44:3201",
+    "44:3202",
+    "44:3203",
+    "44:3204",
+    "44:3205",
+    "44:3206",
+    "44:3207",
+    "44:3208",
+    "44:3209",
+    "44:3210",
+    "44:3211",
+    "44:3212",
+    "44:3213",
+    "44:3214",
+    "44:3215",
+    "44:3216",
+    "44:3217",
+    "44:3218",
+    "44:3219",
+    "44:3220",
+    "I44:3220;44:2520",
+    "44:3222",
+    "I44:3222;44:2520",
+    "44:3224",
+    "I44:3224;44:2520",
+    "44:3226",
+    "I44:3226;44:2520",
+    "44:3228",
+    "44:3229",
+    "44:3230",
+    "44:3231",
+    "44:3232",
+    "44:3233",
+    "44:3234",
+    "44:3235",
+    "44:3236",
+    "44:3237",
+    "I44:3237;44:2520",
+    "44:3239",
+    "44:3240",
+    "44:3241",
+    "44:3242",
+    "44:3243",
+    "I44:3243;44:2534",
+    "44:3245",
+    "44:3246",
+    "I44:3246;44:2494",
+    "44:3248",
+    "I44:3248;44:2507",
+    "44:3250",
+    "I44:3250;44:2507",
+    "44:3252",
+    "I44:3252;44:2507",
+    "44:3254",
+    "44:3255",
+    "44:3256",
+    "44:3257",
+    "44:3258",
+    "44:3259",
+    "I44:3259;44:2545",
+    "44:3261",
+    "44:3262",
+    "44:3263",
+    "44:3264",
+    "44:3265",
+    "44:3266",
+    "I44:3266;44:2545",
+    "44:3268",
+    "44:3269",
+    "44:3270",
+    "44:3271",
+    "44:3272",
+    "44:3273",
+    "I44:3273;44:2545",
+    "44:3275",
+    "44:3276",
+    "44:3277",
+    "44:3278",
+    "44:3279",
+    "44:3280",
+    "I44:3280;44:2545",
+    "44:3282",
+    "44:3283",
+    "44:3284",
+    "44:3285",
+    "44:3286",
+    "44:3287",
+    "I44:3287;44:2549",
+    "44:3289",
+    "44:3290",
+    "44:3291",
+    "44:3292",
+    "44:3293",
+    "44:3294",
+    "I44:3294;44:2547",
+    "44:3296",
+    "44:3297",
+    "44:3298",
+    "44:3299",
+    "44:3300",
+    "44:3301",
+    "44:3302",
+    "44:3303",
+    "44:3304",
+    "44:3305",
+    "I44:3305;44:2520",
+    "44:3307",
+    "I44:3307;44:2520",
+    "44:3309",
+    "I44:3309;44:2520",
+    "44:3311",
+    "I44:3311;44:2520",
+    "44:3313",
+    "44:3314",
+    "44:3315",
+    "44:3316",
+    "44:3317",
+    "44:3318",
+    "44:3319",
+    "44:3320",
+    "44:3321",
+    "44:3322",
+    "I44:3322;44:2520",
+    "44:3324",
+    "44:3325",
+    "44:3326",
+    "44:3327",
+    "44:3328",
+    "44:3329",
+    "44:3330",
+    "44:3331",
+    "44:3332",
+    "44:3333",
+    "I44:3333;44:2543",
+    "44:3335",
+    "I44:3335;44:2503",
+    "44:3337",
+    "I44:3337;44:2507",
+    "44:3339",
+    "44:3340",
+    "44:3341",
+    "44:3342",
+    "44:3343",
+    "44:3344",
+    "44:3345",
+    "44:3346",
+    "44:3347",
+    "44:3348",
+    "44:3349",
+    "44:3350",
+    "44:3351",
+    "44:3352",
+    "44:3353",
+    "44:3354",
+    "I44:3354;44:2520",
+    "44:3356",
+    "44:3357",
+    "44:3358",
+    "44:3359",
+    "I44:3359;44:2520",
+    "44:3361",
+    "44:3362",
+    "44:3363",
+    "44:3364",
+    "44:3365",
+    "44:3366",
+    "44:3367",
+    "44:3368",
+    "44:3369",
+    "44:3370",
+    "I44:3370;44:2520",
+    "44:3372",
+    "I44:3372;44:2520",
+    "44:3374",
+    "I44:3374;44:2520",
+    "44:3376",
+    "I44:3376;44:2520",
+    "44:3378",
+    "44:3379",
+    "44:3380",
+    "44:3381",
+    "44:3382",
+    "44:3383",
+    "44:3384",
+    "44:3385",
+    "44:3386",
+    "44:3387",
+    "I44:3387;44:2520",
+    "44:3389",
+    "44:3390",
+    "44:3391",
+    "44:3392",
+    "44:3393",
+    "44:3394",
+    "I44:3394;44:2494",
+    "44:3396",
+    "I44:3396;44:2507",
+    "44:3398",
+    "I44:3398;44:2507",
+    "44:3400",
+    "44:3401",
+    "44:3402",
+    "44:3403",
+    "44:3404",
+    "I44:3404;44:2507",
+    "44:3406",
+    "44:3407",
+    "44:3408",
+    "44:3409",
+    "44:3410",
+    "44:3411",
+    "44:3412",
+    "44:3413",
+    "44:3414",
+    "44:3415",
+    "44:3416",
+    "44:3417",
+    "44:3418",
+    "44:3419",
+    "44:3420",
+    "44:3421",
+    "44:3422",
+    "44:3423",
+    "I44:3423;44:2520",
+    "44:3425",
+    "I44:3425;44:2520",
+    "44:3427",
+    "I44:3427;44:2520",
+    "44:3429",
+    "I44:3429;44:2520",
+    "44:3431",
+    "44:3432",
+    "44:3433",
+    "44:3434",
+    "44:3435",
+    "44:3436",
+    "44:3437",
+    "44:3438",
+    "44:3439",
+    "44:3440",
+    "I44:3440;44:2520",
+    "44:3442",
+    "44:3443",
+    "44:3444",
+    "44:3445",
+    "44:3446",
+    "I44:3446;44:2534",
+    "44:3448",
+    "44:3449",
+    "44:3450",
+    "44:3451",
+    "44:3452",
+    "44:3453",
+    "I44:3453;44:2520",
+    "44:3455",
+    "44:3456",
+    "44:3457",
+    "44:3458",
+    "44:3459",
+    "44:3460",
+    "I44:3460;44:2520",
+    "44:3462",
+    "44:3463",
+    "44:3464",
+    "44:3465",
+    "44:3466",
+    "44:3467",
+    "I44:3467;44:2520",
+    "44:3469",
+    "44:3470",
+    "44:3471",
+    "44:3472",
+    "44:3473",
+    "44:3474",
+    "I44:3474;44:2520",
+    "44:3476",
+    "44:3477",
+    "44:3478",
+    "44:3479",
+    "44:3480",
+    "44:3481",
+    "44:3482",
+    "44:3483",
+    "44:3484",
+    "44:3485",
+    "44:3486",
+    "44:3487",
+    "44:3488",
+    "I44:3488;44:2520",
+    "44:3490",
+    "I44:3490;44:2520",
+    "44:3492",
+    "I44:3492;44:2520",
+    "44:3494",
+    "I44:3494;44:2520",
+    "44:3496",
+    "44:3497",
+    "44:3498",
+    "44:3499",
+    "44:3500",
+    "44:3501",
+    "44:3502",
+    "44:3503",
+    "44:3504",
+    "44:3505",
+    "I44:3505;44:2520",
+    "44:3507",
+    "I44:3507;44:2524",
+    "44:3509",
+    "I44:3509;44:2520",
+    "44:3511",
+    "I44:3511;44:2507",
+    "44:3513",
+    "44:3514",
+    "I44:3514;44:2520",
+    "44:3516",
+    "44:3517",
+    "44:3518",
+    "44:3519",
+    "44:3520",
+    "44:3521",
+    "44:3522",
+    "44:3523",
+    "44:3524",
+    "44:3525",
+    "44:3526",
+    "44:3527",
+    "44:3528",
+    "44:3529",
+    "44:3530",
+    "44:3531",
+    "44:3532",
+    "44:3533",
+    "44:3534",
+    "44:3535",
+    "I44:3535;44:2520",
+    "44:3537",
+    "I44:3537;44:2520",
+    "44:3539",
+    "I44:3539;44:2520",
+    "44:3541",
+    "I44:3541;44:2520",
+    "44:3543",
+    "44:3544",
+    "44:3545",
+    "44:3546",
+    "44:3547",
+    "44:3548",
+    "44:3549",
+    "44:3550",
+    "44:3551",
+    "44:3552",
+    "I44:3552;44:2520",
+    "44:3554",
+    "44:3555",
+    "I44:3555;44:2520",
+    "44:3557",
+    "44:3558",
+    "44:3559",
+    "44:3560",
+    "44:3561",
+    "44:3562",
+    "44:3563",
+    "44:3564",
+    "44:3565",
+    "44:3566",
+    "44:3567",
+    "44:3568",
+    "44:3569",
+    "44:3570",
+    "44:3571",
+    "44:3572",
+    "44:3573",
+    "44:3574",
+    "44:3575",
+    "44:3576",
+    "I44:3576;44:2520",
+    "44:3578",
+    "I44:3578;44:2520",
+    "44:3580",
+    "I44:3580;44:2520",
+    "44:3582",
+    "I44:3582;44:2520",
+    "44:3584",
+    "44:3585",
+    "44:3586",
+    "44:3587",
+    "44:3588",
+    "44:3589",
+    "44:3590",
+    "44:3591",
+    "44:3592",
+    "44:3593",
+    "I44:3593;44:2520",
+    "44:3595",
+    "I44:3595;44:2520",
+    "44:3597",
+    "I44:3597;44:2524",
+    "44:3599",
+    "I44:3599;44:2507",
+    "44:3601",
+    "44:3602",
+    "I44:3602;44:2520",
+    "44:3604",
+    "44:3605",
+    "44:3606",
+    "44:3607",
+    "44:3608",
+    "44:3609",
+    "44:3610",
+    "44:3611",
+    "44:3612",
+    "44:3613",
+    "44:3614",
+    "44:3615",
+    "44:3616",
+    "44:3617",
+    "44:3618",
+    "44:3619",
+    "I44:3619;44:2507",
+    "44:3621",
+    "44:3622",
+    "44:3623",
+    "44:3624",
+    "44:3625",
+    "44:3626",
+    "44:3627",
+    "44:3628",
+    "44:3629",
+    "44:3630",
+    "I44:3630;44:2520",
+    "44:3632",
+    "I44:3632;44:2520",
+    "44:3634",
+    "I44:3634;44:2520",
+    "44:3636",
+    "I44:3636;44:2520",
+    "44:3638",
+    "44:3639",
+    "44:3640",
+    "44:3641",
+    "44:3642",
+    "44:3643",
+    "44:3644",
+    "44:3645",
+    "44:3646",
+    "44:3647",
+    "I44:3647;44:2520",
+    "44:3649",
+    "44:3650",
+    "I44:3650;44:2520",
+    "44:3652",
+    "44:3653",
+    "44:3654",
+    "44:3655",
+    "44:3656",
+    "44:3657",
+    "44:3658",
+    "44:3659",
+    "44:3660",
+    "44:3661",
+    "44:3662",
+    "44:3663",
+    "44:3664",
+    "44:3665",
+    "44:3666",
+    "44:3667",
+    "I44:3667;44:2507",
+    "44:3669",
+    "44:3670",
+    "44:3671",
+    "44:3672",
+    "44:3673",
+    "44:3674",
+    "44:3675",
+    "44:3676",
+    "44:3677",
+    "44:3678",
+    "I44:3678;44:2520",
+    "44:3680",
+    "I44:3680;44:2520",
+    "44:3682",
+    "I44:3682;44:2520",
+    "44:3684",
+    "I44:3684;44:2520",
+    "44:3686",
+    "44:3687",
+    "44:3688",
+    "44:3689",
+    "44:3690",
+    "44:3691",
+    "44:3692",
+    "44:3693",
+    "44:3694",
+    "44:3695",
+    "44:3696",
+    "44:3697",
+    "44:3698",
+    "44:3699",
+    "44:3700",
+    "44:3701",
+    "44:3702",
+    "44:3703",
+    "44:3704",
+    "44:3705",
+    "44:3706",
+    "44:3707",
+    "44:3708",
+    "44:3709",
+    "44:3710",
+    "44:3711",
+    "44:3712",
+    "44:3713",
+    "44:3714",
+    "44:3715",
+    "44:3716",
+    "44:3717",
+    "44:3718",
+    "44:3719",
+    "44:3720",
+    "44:3721",
+    "44:3722",
+    "44:3723",
+    "44:3724",
+    "44:3725",
+    "44:3726",
+    "44:3727",
+    "44:3728",
+    "44:3729",
+    "44:3730",
+    "44:3731",
+    "44:3732",
+    "44:3733",
+    "44:3734",
+    "44:3735",
+    "44:3736",
+    "44:3737",
+    "44:3738",
+    "44:3739",
+    "44:3740",
+    "44:3741",
+    "44:3742",
+    "44:3743",
+    "44:3744",
+    "44:3745",
+    "44:3746",
+    "44:3747",
+    "44:3748",
+    "44:3749",
+    "44:3750",
+    "44:3751",
+    "44:3752",
+    "44:3753",
+    "44:3754",
+    "44:3755",
+    "44:3756",
+    "44:3757",
+    "44:3758",
+    "44:3759",
+    "44:3760",
+    "44:3761",
+    "44:3762",
+    "44:3763",
+    "44:3764",
+    "44:3765",
+    "44:3766",
+    "44:3767",
+    "44:3768",
+    "44:3769",
+    "44:3770",
+    "44:3771",
+    "44:3772",
+    "44:3773",
+    "44:3774",
+    "44:3775",
+    "44:3776",
+    "44:3777",
+    "44:3778",
+    "44:3779",
+    "44:3780",
+    "44:3781",
+    "44:3782",
+    "44:3783",
+    "44:3784",
+    "44:3785",
+    "44:3786",
+    "44:3787",
+    "44:3788",
+    "44:3789",
+    "44:3790",
+    "44:3791",
+    "44:3792",
+    "44:3793",
+    "44:3794",
+    "44:3795",
+    "44:3796",
+    "44:3797",
+    "44:3798",
+    "44:3799",
+    "44:3800",
+    "44:3801",
+    "44:3802",
+    "44:3803",
+    "44:3804",
+    "44:3805",
+    "44:3806",
+    "44:3807",
+    "44:3808",
+    "44:3809",
+    "44:3810",
+    "44:3811",
+    "44:3812",
+    "44:3813",
+    "44:3814",
+    "44:3815",
+    "44:3816",
+    "44:3817",
+    "44:3818",
+    "44:3819",
+    "44:3820",
+    "44:3821",
+    "44:3822",
+    "44:3823",
+    "44:3824",
+    "44:3825",
+    "I44:3825;44:2520",
+    "44:3827",
+    "44:3828",
+    "44:3829",
+    "I44:3829;44:2507",
+    "44:3831",
+    "I44:3831;44:2507",
+    "44:3833",
+    "I44:3833;44:2507",
+    "44:3835",
+    "I44:3835;44:2507",
+    "44:3837",
+    "I44:3837;44:2507",
+    "44:3839",
+    "44:3840",
+    "44:3841",
+    "44:3842",
+    "44:3843",
+    "44:3844",
+    "44:3845",
+    "44:3846",
+    "44:3847",
+    "44:3848",
+    "I44:3848;44:2520",
+    "44:3850",
+    "44:3851",
+    "44:3852",
+    "44:3853",
+    "44:3854",
+    "I44:3854;44:2494",
+    "44:3856",
+    "44:3857",
+    "44:3858",
+    "44:3859",
+    "44:3860",
+    "44:3861",
+    "44:3862",
+    "44:3863",
+    "44:3864",
+    "I44:3864;44:2520",
+    "44:3866",
+    "44:3867",
+    "44:3868",
+    "44:3869",
+    "44:3870",
+    "I44:3870;44:2494",
+    "44:3872",
+    "44:3873",
+    "44:3874",
+    "44:3875",
+    "44:3876",
+    "44:3877",
+    "44:3878",
+    "44:3879",
+    "44:3880",
+    "I44:3880;44:2520",
+    "44:3882",
+    "44:3883",
+    "44:3884",
+    "44:3885",
+    "44:3886",
+    "I44:3886;44:2494",
+    "44:3888",
+    "44:3889",
+    "44:3890",
+    "44:3891",
+    "44:3892",
+    "44:3893",
+    "44:3894",
+    "44:3895",
+    "44:3896",
+    "44:3897",
+    "I44:3897;44:2494",
+    "44:3899",
+    "44:3900",
+    "44:3901",
+    "I44:3901;44:2496",
+    "44:3903",
+    "44:3904",
+    "44:3905",
+    "I44:3905;44:2498",
+    "44:3907",
+    "44:3908",
+    "44:3909",
+    "44:3910",
+    "I44:3910;44:2500",
+    "I44:3910;44:2501",
+    "44:3913",
+    "44:3914",
+    "44:3915",
+    "I44:3915;44:2503",
+    "44:3917",
+    "44:3918",
+    "44:3919",
+    "I44:3919;44:2505",
+    "44:3921",
+    "44:3922",
+    "44:3923",
+    "44:3924",
+    "44:3925",
+    "I44:3925;44:2507",
+    "44:3927",
+    "44:3928",
+    "44:3929",
+    "I44:3929;44:2509",
+    "44:3931",
+    "44:3932",
+    "44:3933",
+    "I44:3933;44:2511",
+    "44:3935",
+    "44:3936",
+    "44:3937",
+    "44:3938",
+    "I44:3938;44:2513",
+    "I44:3938;44:2514",
+    "44:3941",
+    "44:3942",
+    "44:3943",
+    "I44:3943;44:2516",
+    "44:3945",
+    "44:3946",
+    "44:3947",
+    "I44:3947;44:2518",
+    "44:3949",
+    "44:3950",
+    "44:3951",
+    "44:3952",
+    "44:3953",
+    "I44:3953;44:2520",
+    "44:3955",
+    "44:3956",
+    "44:3957",
+    "I44:3957;44:2522",
+    "44:3959",
+    "44:3960",
+    "44:3961",
+    "I44:3961;44:2524",
+    "44:3963",
+    "44:3964",
+    "44:3965",
+    "44:3966",
+    "I44:3966;44:2526",
+    "I44:3966;44:2527",
+    "44:3969",
+    "44:3970",
+    "44:3971",
+    "I44:3971;44:2529",
+    "44:3973",
+    "44:3974",
+    "44:3975",
+    "I44:3975;44:2531",
+    "44:3977",
+    "44:3978",
+    "44:3979",
+    "44:3980",
+    "I44:3980;44:2534",
+    "44:3982",
+    "44:3983",
+    "44:3984",
+    "I44:3984;44:2536",
+    "44:3986",
+    "44:3987",
+    "44:3988",
+    "I44:3988;44:2538",
+    "44:3990",
+    "44:3991",
+    "44:3992",
+    "44:3993",
+    "I44:3993;44:2540",
+    "44:3995",
+    "44:3996",
+    "44:3997",
+    "44:3998",
+    "44:3999",
+    "44:4000",
+    "44:4001",
+    "44:4002",
+    "44:4003",
+    "44:4004",
+    "44:4005",
+    "44:4006",
+    "44:4007",
+    "44:4008",
+    "44:4009",
+    "44:4010",
+    "I44:4010;44:2554",
+    "44:4012",
+    "I44:4012;44:2552",
+    "44:4014",
+    "I44:4014;44:2552",
+    "44:4016",
+    "44:4017",
+    "44:4018",
+    "I44:4018;44:2549",
+    "44:4020",
+    "44:4021",
+    "44:4022",
+    "44:4023",
+    "I44:4023;44:2549",
+    "44:4025",
+    "44:4026",
+    "44:4027",
+    "44:4028",
+    "44:4029",
+    "44:4030",
+    "44:4031",
+    "44:4032",
+    "44:4033",
+    "44:4034",
+    "44:4035",
+    "44:4036",
+    "44:4037",
+    "44:4038",
+    "44:4039",
+    "I44:4039;44:2534",
+    "44:4041",
+    "I44:4041;44:2516",
+    "44:4043",
+    "44:4044",
+    "I44:4044;44:2494",
+    "44:4046",
+    "44:4047",
+    "44:4048",
+    "44:4049",
+    "44:4050",
+    "44:4051",
+    "I44:4051;44:2545",
+    "44:4053",
+    "44:4054",
+    "I44:4054;44:2507",
+    "44:4056",
+    "44:4057",
+    "44:4058",
+    "44:4059",
+    "44:4060",
+    "44:4061",
+    "44:4062",
+    "44:4063",
+    "44:4064",
+    "44:4065",
+    "44:4066",
+    "44:4067",
+    "44:4068",
+    "44:4069",
+    "44:4070",
+    "I44:4070;44:2554",
+    "44:4072",
+    "I44:4072;44:2552",
+    "44:4074",
+    "I44:4074;44:2552",
+    "44:4076",
+    "44:4077",
+    "44:4078",
+    "I44:4078;44:2549",
+    "44:4080",
+    "44:4081",
+    "44:4082",
+    "44:4083",
+    "I44:4083;44:2549",
+    "44:4085",
+    "44:4086",
+    "44:4087",
+    "44:4088",
+    "44:4089",
+    "44:4090",
+    "44:4091",
+    "44:4092",
+    "44:4093",
+    "44:4094",
+    "44:4095",
+    "44:4096",
+    "44:4097",
+    "44:4098",
+    "44:4099",
+    "I44:4099;44:2536",
+    "44:4101",
+    "I44:4101;44:2507",
+    "44:4103",
+    "44:4104",
+    "I44:4104;44:2503",
+    "44:4106",
+    "44:4107",
+    "44:4108",
+    "44:4109",
+    "44:4110",
+    "44:4111",
+    "I44:4111;44:2549",
+    "44:4113",
+    "44:4114",
+    "I44:4114;44:2507",
+    "44:4116",
+    "44:4117",
+    "44:4118",
+    "44:4119",
+    "44:4120",
+    "44:4121",
+    "44:4122",
+    "44:4123",
+    "44:4124",
+    "44:4125",
+    "44:4126",
+    "44:4127",
+    "44:4128",
+    "44:4129",
+    "44:4130",
+    "I44:4130;44:2554",
+    "44:4132",
+    "I44:4132;44:2552",
+    "44:4134",
+    "I44:4134;44:2552",
+    "44:4136",
+    "44:4137",
+    "44:4138",
+    "I44:4138;44:2549",
+    "44:4140",
+    "44:4141",
+    "44:4142",
+    "44:4143",
+    "I44:4143;44:2549",
+    "44:4145",
+    "44:4146",
+    "44:4147",
+    "44:4148",
+    "44:4149",
+    "44:4150",
+    "44:4151",
+    "44:4152",
+    "44:4153",
+    "44:4154",
+    "44:4155",
+    "44:4156",
+    "44:4157",
+    "44:4158",
+    "44:4159",
+    "I44:4159;44:2534",
+    "44:4161",
+    "I44:4161;44:2516",
+    "44:4163",
+    "44:4164",
+    "I44:4164;44:2503",
+    "44:4166",
+    "44:4167",
+    "44:4168",
+    "44:4169",
+    "44:4170",
+    "44:4171",
+    "I44:4171;44:2549",
+    "44:4173",
+    "44:4174",
+    "44:4175",
+    "44:4176",
+    "44:4177",
+    "44:4178",
+    "44:4179",
+    "I44:4179;44:2507",
+    "44:4181",
+    "44:4182",
+    "44:4183",
+    "44:4184",
+    "44:4185",
+    "44:4186",
+    "44:4187",
+    "44:4188",
+    "44:4189",
+    "44:4190",
+    "44:4191",
+    "44:4192",
+    "44:4193",
+    "44:4194",
+    "44:4195",
+    "I44:4195;44:2554",
+    "44:4197",
+    "I44:4197;44:2552",
+    "44:4199",
+    "I44:4199;44:2552",
+    "44:4201",
+    "44:4202",
+    "44:4203",
+    "I44:4203;44:2549",
+    "44:4205",
+    "44:4206",
+    "44:4207",
+    "44:4208",
+    "I44:4208;44:2549",
+    "44:4210",
+    "44:4211",
+    "44:4212",
+    "44:4213",
+    "44:4214",
+    "44:4215",
+    "44:4216",
+    "44:4217",
+    "44:4218",
+    "44:4219",
+    "44:4220",
+    "44:4221",
+    "44:4222",
+    "44:4223",
+    "44:4224",
+    "I44:4224;44:2534",
+    "44:4226",
+    "I44:4226;44:2516",
+    "44:4228",
+    "44:4229",
+    "I44:4229;44:2503",
+    "44:4231",
+    "44:4232",
+    "44:4233",
+    "44:4234",
+    "44:4235",
+    "44:4236",
+    "I44:4236;44:2547",
+    "44:4238",
+    "44:4239",
+    "I44:4239;44:2507",
+    "44:4241",
+    "44:4242",
+    "44:4243",
+    "44:4244",
+    "44:4245",
+    "44:4246",
+    "44:4247",
+    "44:4248",
+    "44:4249",
+    "44:4250",
+    "44:4251",
+    "44:4252",
+    "44:4253",
+    "44:4254",
+    "44:4255",
+    "44:4256",
+    "44:4257",
+    "44:4258",
+    "I44:4258;44:2554",
+    "44:4260",
+    "I44:4260;44:2552",
+    "44:4262",
+    "I44:4262;44:2552",
+    "44:4264",
+    "44:4265",
+    "44:4266",
+    "I44:4266;44:2549",
+    "44:4268",
+    "44:4269",
+    "44:4270",
+    "44:4271",
+    "I44:4271;44:2549",
+    "44:4273",
+    "44:4274",
+    "44:4275",
+    "44:4276",
+    "44:4277",
+    "44:4278",
+    "44:4279",
+    "44:4280",
+    "44:4281",
+    "44:4282",
+    "44:4283",
+    "44:4284",
+    "44:4285",
+    "44:4286",
+    "44:4287",
+    "I44:4287;44:2540",
+    "44:4289",
+    "I44:4289;44:2516",
+    "44:4291",
+    "44:4292",
+    "I44:4292;44:2505",
+    "44:4294",
+    "44:4295",
+    "44:4296",
+    "44:4297",
+    "44:4298",
+    "44:4299",
+    "I44:4299;44:2549",
+    "44:4301",
+    "44:4302",
+    "I44:4302;44:2516",
+    "44:4304",
+    "44:4305",
+    "44:4306",
+    "44:4307",
+    "44:4308",
+    "44:4309",
+    "44:4310",
+    "44:4311",
+    "44:4312",
+    "44:4313",
+    "44:4314",
+    "44:4315",
+    "44:4316",
+    "44:4317",
+    "44:4318",
+    "44:4319",
+    "44:4320",
+    "44:4321",
+    "I44:4321;44:2554",
+    "44:4323",
+    "I44:4323;44:2552",
+    "44:4325",
+    "I44:4325;44:2552",
+    "44:4327",
+    "44:4328",
+    "44:4329",
+    "I44:4329;44:2549",
+    "44:4331",
+    "44:4332",
+    "44:4333",
+    "44:4334",
+    "I44:4334;44:2549",
+    "44:4336",
+    "44:4337",
+    "44:4338",
+    "44:4339",
+    "44:4340",
+    "44:4341",
+    "44:4342",
+    "44:4343",
+    "44:4344",
+    "44:4345",
+    "44:4346",
+    "44:4347",
+    "44:4348",
+    "44:4349",
+    "44:4350",
+    "I44:4350;44:2540",
+    "44:4352",
+    "I44:4352;44:2516",
+    "44:4354",
+    "44:4355",
+    "I44:4355;44:2503",
+    "44:4357",
+    "44:4358",
+    "44:4359",
+    "44:4360",
+    "44:4361",
+    "44:4362",
+    "I44:4362;44:2545",
+    "44:4364",
+    "44:4365",
+    "I44:4365;44:2516",
+    "44:4367",
+    "44:4368",
+    "44:4369",
+    "44:4370",
+    "44:4371",
+    "44:4372",
+    "44:4373",
+    "44:4374",
+    "44:4375",
+    "44:4376",
+    "44:4377",
+    "44:4378",
+    "44:4379",
+    "44:4380",
+    "44:4381",
+    "44:4382",
+    "44:4383",
+    "44:4384",
+    "I44:4384;44:2554",
+    "44:4386",
+    "I44:4386;44:2552",
+    "44:4388",
+    "I44:4388;44:2552",
+    "44:4390",
+    "44:4391",
+    "44:4392",
+    "I44:4392;44:2549",
+    "44:4394",
+    "44:4395",
+    "44:4396",
+    "44:4397",
+    "I44:4397;44:2549",
+    "44:4399",
+    "44:4400",
+    "44:4401",
+    "44:4402",
+    "44:4403",
+    "44:4404",
+    "44:4405",
+    "44:4406",
+    "44:4407",
+    "44:4408",
+    "44:4409",
+    "44:4410",
+    "44:4411",
+    "44:4412",
+    "44:4413",
+    "I44:4413;44:2534",
+    "44:4415",
+    "I44:4415;44:2516",
+    "44:4417",
+    "44:4418",
+    "I44:4418;44:2494",
+    "44:4420",
+    "44:4421",
+    "44:4422",
+    "44:4423",
+    "44:4424",
+    "44:4425",
+    "I44:4425;44:2549",
+    "44:4427",
+    "44:4428",
+    "I44:4428;44:2507",
+    "44:4430",
+    "44:4431",
+    "44:4432",
+    "44:4433",
+    "44:4434",
+    "44:4435",
+    "44:4436",
+    "44:4437",
+    "44:4438",
+    "44:4439",
+    "44:4440",
+    "44:4441",
+    "44:4442",
+    "44:4443",
+    "44:4444",
+    "44:4445",
+    "44:4446",
+    "44:4447",
+    "I44:4447;44:2554",
+    "44:4449",
+    "I44:4449;44:2552",
+    "44:4451",
+    "I44:4451;44:2552",
+    "44:4453",
+    "44:4454",
+    "44:4455",
+    "I44:4455;44:2549",
+    "44:4457",
+    "44:4458",
+    "44:4459",
+    "44:4460",
+    "I44:4460;44:2549",
+    "44:4462",
+    "44:4463",
+    "44:4464",
+    "44:4465",
+    "44:4466",
+    "44:4467",
+    "44:4468",
+    "44:4469",
+    "44:4470",
+    "44:4471",
+    "44:4472",
+    "44:4473",
+    "44:4474",
+    "44:4475",
+    "44:4476",
+    "I44:4476;44:2538",
+    "44:4478",
+    "I44:4478;44:2516",
+    "44:4480",
+    "44:4481",
+    "I44:4481;44:2503",
+    "44:4483",
+    "44:4484",
+    "44:4485",
+    "44:4486",
+    "44:4487",
+    "44:4488",
+    "I44:4488;44:2549",
+    "44:4490",
+    "44:4491",
+    "I44:4491;44:2507",
+    "44:4493",
+    "44:4494",
+    "44:4495",
+    "44:4496",
+    "44:4497",
+    "44:4498",
+    "44:4499",
+    "44:4500",
+    "44:4501",
+    "44:4502",
+    "44:4503",
+    "44:4504",
+    "44:4505",
+    "44:4506",
+    "44:4507",
+    "I44:4507;44:2552",
+    "44:4509",
+    "I44:4509;44:2554",
+    "44:4511",
+    "I44:4511;44:2552",
+    "44:4513",
+    "44:4514",
+    "44:4515",
+    "I44:4515;44:2549",
+    "44:4517",
+    "44:4518",
+    "44:4519",
+    "44:4520",
+    "44:4521",
+    "44:4522",
+    "44:4523",
+    "44:4524",
+    "I44:4524;44:2554",
+    "44:4526",
+    "I44:4526;44:2552",
+    "44:4528",
+    "I44:4528;44:2516",
+    "44:4530",
+    "44:4531",
+    "44:4532",
+    "44:4533",
+    "I44:4533;44:2543",
+    "44:4535",
+    "44:4536",
+    "I44:4536;44:2536",
+    "44:4538",
+    "44:4539",
+    "44:4540",
+    "44:4541",
+    "44:4542",
+    "44:4543",
+    "44:4544",
+    "44:4545",
+    "44:4546",
+    "44:4547",
+    "44:4548",
+    "44:4549",
+    "I44:4549;44:2516",
+    "44:4551",
+    "I44:4551;44:2516",
+    "44:4553",
+    "44:4554",
+    "I44:4554;44:2494",
+    "44:4556",
+    "I44:4556;44:2507",
+    "44:4558",
+    "44:4559",
+    "44:4560",
+    "44:4561",
+    "44:4562",
+    "44:4563",
+    "44:4564",
+    "44:4565",
+    "44:4566",
+    "44:4567",
+    "44:4568",
+    "44:4569",
+    "44:4570",
+    "44:4571",
+    "I44:4571;44:2552",
+    "44:4573",
+    "I44:4573;44:2552",
+    "44:4575",
+    "I44:4575;44:2554",
+    "44:4577",
+    "44:4578",
+    "44:4579",
+    "I44:4579;44:2549",
+    "44:4581",
+    "44:4582",
+    "44:4583",
+    "44:4584",
+    "44:4585",
+    "44:4586",
+    "44:4587",
+    "44:4588",
+    "44:4589",
+    "44:4590",
+    "44:4591",
+    "44:4592",
+    "44:4593",
+    "44:4594",
+    "44:4595",
+    "44:4596",
+    "44:4597",
+    "44:4598",
+    "44:4599",
+    "44:4600",
+    "I44:4600;44:2507",
+    "44:4602",
+    "I44:4602;44:2545",
+    "44:4604",
+    "44:4605",
+    "44:4606",
+    "44:4607",
+    "44:4608",
+    "44:4609",
+    "I44:4609;44:2507",
+    "44:4611",
+    "44:4612",
+    "44:4613",
+    "44:4614"
+  ],
+  "prototypeEdges": [
+    {
+      "source": "44:2568",
+      "destination": "44:2754"
+    },
+    {
+      "source": "44:2570",
+      "destination": "44:2913"
+    },
+    {
+      "source": "44:2572",
+      "destination": "44:2972"
+    },
+    {
+      "source": "44:2574",
+      "destination": "44:2842"
+    },
+    {
+      "source": "44:2584",
+      "destination": "44:2842"
+    },
+    {
+      "source": "44:2586",
+      "destination": "44:2754"
+    },
+    {
+      "source": "44:2690",
+      "destination": "44:2754"
+    },
+    {
+      "source": "44:2722",
+      "destination": "44:3497"
+    },
+    {
+      "source": "44:2745",
+      "destination": "44:2754"
+    },
+    {
+      "source": "44:2747",
+      "destination": "44:2842"
+    },
+    {
+      "source": "44:2749",
+      "destination": "44:2913"
+    },
+    {
+      "source": "44:2751",
+      "destination": "44:2972"
+    },
+    {
+      "source": "44:2756",
+      "destination": "44:2560"
+    },
+    {
+      "source": "44:2764",
+      "destination": "44:2913"
+    },
+    {
+      "source": "44:2766",
+      "destination": "44:2972"
+    },
+    {
+      "source": "44:2768",
+      "destination": "44:2842"
+    },
+    {
+      "source": "44:2835",
+      "destination": "44:2842"
+    },
+    {
+      "source": "44:2837",
+      "destination": "44:2913"
+    },
+    {
+      "source": "44:2839",
+      "destination": "44:2972"
+    },
+    {
+      "source": "44:2844",
+      "destination": "44:2560"
+    },
+    {
+      "source": "44:2850",
+      "destination": "44:2754"
+    },
+    {
+      "source": "44:2852",
+      "destination": "44:2913"
+    },
+    {
+      "source": "44:2854",
+      "destination": "44:2972"
+    },
+    {
+      "source": "44:2871",
+      "destination": "44:2913"
+    },
+    {
+      "source": "44:2888",
+      "destination": "44:2754"
+    },
+    {
+      "source": "44:2893",
+      "destination": "44:2972"
+    },
+    {
+      "source": "44:2904",
+      "destination": "44:2754"
+    },
+    {
+      "source": "44:2908",
+      "destination": "44:2913"
+    },
+    {
+      "source": "44:2910",
+      "destination": "44:2972"
+    },
+    {
+      "source": "44:2915",
+      "destination": "44:2560"
+    },
+    {
+      "source": "44:2921",
+      "destination": "44:2754"
+    },
+    {
+      "source": "44:2925",
+      "destination": "44:2972"
+    },
+    {
+      "source": "44:2927",
+      "destination": "44:2842"
+    },
+    {
+      "source": "44:2944",
+      "destination": "44:3497"
+    },
+    {
+      "source": "44:2963",
+      "destination": "44:2754"
+    },
+    {
+      "source": "44:2965",
+      "destination": "44:2842"
+    },
+    {
+      "source": "44:2969",
+      "destination": "44:2972"
+    },
+    {
+      "source": "44:2974",
+      "destination": "44:2560"
+    },
+    {
+      "source": "44:2980",
+      "destination": "44:2754"
+    },
+    {
+      "source": "44:2982",
+      "destination": "44:2913"
+    },
+    {
+      "source": "44:2986",
+      "destination": "44:2842"
+    },
+    {
+      "source": "44:2999",
+      "destination": "44:3585"
+    },
+    {
+      "source": "44:3005",
+      "destination": "44:3585"
+    },
+    {
+      "source": "44:3012",
+      "destination": "44:3585"
+    },
+    {
+      "source": "44:3018",
+      "destination": "44:3585"
+    },
+    {
+      "source": "44:3032",
+      "destination": "44:2754"
+    },
+    {
+      "source": "44:3034",
+      "destination": "44:2842"
+    },
+    {
+      "source": "44:3036",
+      "destination": "44:2913"
+    },
+    {
+      "source": "44:3049",
+      "destination": "44:3817"
+    },
+    {
+      "source": "44:3059",
+      "destination": "44:3314"
+    },
+    {
+      "source": "44:3061",
+      "destination": "44:3229"
+    },
+    {
+      "source": "44:3165",
+      "destination": "44:3229"
+    },
+    {
+      "source": "44:3197",
+      "destination": "44:3544"
+    },
+    {
+      "source": "44:3220",
+      "destination": "44:3229"
+    },
+    {
+      "source": "44:3222",
+      "destination": "44:3314"
+    },
+    {
+      "source": "44:3224",
+      "destination": "44:3379"
+    },
+    {
+      "source": "44:3226",
+      "destination": "44:3432"
+    },
+    {
+      "source": "44:3231",
+      "destination": "44:3041"
+    },
+    {
+      "source": "44:3237",
+      "destination": "44:3817"
+    },
+    {
+      "source": "44:3307",
+      "destination": "44:3314"
+    },
+    {
+      "source": "44:3309",
+      "destination": "44:3379"
+    },
+    {
+      "source": "44:3311",
+      "destination": "44:3432"
+    },
+    {
+      "source": "44:3316",
+      "destination": "44:3041"
+    },
+    {
+      "source": "44:3322",
+      "destination": "44:3817"
+    },
+    {
+      "source": "44:3337",
+      "destination": "44:3379"
+    },
+    {
+      "source": "44:3354",
+      "destination": "44:3229"
+    },
+    {
+      "source": "44:3359",
+      "destination": "44:3432"
+    },
+    {
+      "source": "44:3370",
+      "destination": "44:3229"
+    },
+    {
+      "source": "44:3374",
+      "destination": "44:3379"
+    },
+    {
+      "source": "44:3376",
+      "destination": "44:3432"
+    },
+    {
+      "source": "44:3381",
+      "destination": "44:3041"
+    },
+    {
+      "source": "44:3387",
+      "destination": "44:3817"
+    },
+    {
+      "source": "44:3404",
+      "destination": "44:3544"
+    },
+    {
+      "source": "44:3423",
+      "destination": "44:3229"
+    },
+    {
+      "source": "44:3425",
+      "destination": "44:3314"
+    },
+    {
+      "source": "44:3429",
+      "destination": "44:3432"
+    },
+    {
+      "source": "44:3434",
+      "destination": "44:3041"
+    },
+    {
+      "source": "44:3440",
+      "destination": "44:3817"
+    },
+    {
+      "source": "44:3453",
+      "destination": "44:3639"
+    },
+    {
+      "source": "44:3460",
+      "destination": "44:3639"
+    },
+    {
+      "source": "44:3467",
+      "destination": "44:3639"
+    },
+    {
+      "source": "44:3474",
+      "destination": "44:3639"
+    },
+    {
+      "source": "44:3488",
+      "destination": "44:3229"
+    },
+    {
+      "source": "44:3490",
+      "destination": "44:3314"
+    },
+    {
+      "source": "44:3492",
+      "destination": "44:3379"
+    },
+    {
+      "source": "44:3499",
+      "destination": "44:2560"
+    },
+    {
+      "source": "44:3505",
+      "destination": "44:2754"
+    },
+    {
+      "source": "44:3507",
+      "destination": "44:2913"
+    },
+    {
+      "source": "44:3509",
+      "destination": "44:2972"
+    },
+    {
+      "source": "44:3511",
+      "destination": "44:2842"
+    },
+    {
+      "source": "44:3514",
+      "destination": "44:2913"
+    },
+    {
+      "source": "44:3535",
+      "destination": "44:2754"
+    },
+    {
+      "source": "44:3537",
+      "destination": "44:2842"
+    },
+    {
+      "source": "44:3539",
+      "destination": "44:2913"
+    },
+    {
+      "source": "44:3541",
+      "destination": "44:2972"
+    },
+    {
+      "source": "44:3546",
+      "destination": "44:3041"
+    },
+    {
+      "source": "44:3552",
+      "destination": "44:3817"
+    },
+    {
+      "source": "44:3555",
+      "destination": "44:3379"
+    },
+    {
+      "source": "44:3576",
+      "destination": "44:3229"
+    },
+    {
+      "source": "44:3578",
+      "destination": "44:3314"
+    },
+    {
+      "source": "44:3580",
+      "destination": "44:3379"
+    },
+    {
+      "source": "44:3582",
+      "destination": "44:3432"
+    },
+    {
+      "source": "44:3587",
+      "destination": "44:2560"
+    },
+    {
+      "source": "44:3593",
+      "destination": "44:2754"
+    },
+    {
+      "source": "44:3595",
+      "destination": "44:2913"
+    },
+    {
+      "source": "44:3597",
+      "destination": "44:2972"
+    },
+    {
+      "source": "44:3599",
+      "destination": "44:2842"
+    },
+    {
+      "source": "44:3602",
+      "destination": "44:2972"
+    },
+    {
+      "source": "44:3619",
+      "destination": "44:2972"
+    },
+    {
+      "source": "44:3630",
+      "destination": "44:2754"
+    },
+    {
+      "source": "44:3632",
+      "destination": "44:2842"
+    },
+    {
+      "source": "44:3634",
+      "destination": "44:2913"
+    },
+    {
+      "source": "44:3636",
+      "destination": "44:2972"
+    },
+    {
+      "source": "44:3641",
+      "destination": "44:3041"
+    },
+    {
+      "source": "44:3647",
+      "destination": "44:3817"
+    },
+    {
+      "source": "44:3650",
+      "destination": "44:3432"
+    },
+    {
+      "source": "44:3667",
+      "destination": "44:3432"
+    },
+    {
+      "source": "44:3678",
+      "destination": "44:3229"
+    },
+    {
+      "source": "44:3680",
+      "destination": "44:3314"
+    },
+    {
+      "source": "44:3682",
+      "destination": "44:3379"
+    },
+    {
+      "source": "44:3684",
+      "destination": "44:3432"
+    },
+    {
+      "source": "44:3819",
+      "destination": "44:3041"
+    },
+    {
+      "source": "44:3825",
+      "destination": "44:3041"
+    },
+    {
+      "source": "44:3829",
+      "destination": "44:3041"
+    },
+    {
+      "source": "44:3831",
+      "destination": "44:3229"
+    },
+    {
+      "source": "44:3833",
+      "destination": "44:3314"
+    },
+    {
+      "source": "44:3835",
+      "destination": "44:3379"
+    },
+    {
+      "source": "44:3837",
+      "destination": "44:3432"
+    },
+    {
+      "source": "44:3842",
+      "destination": "44:3041"
+    },
+    {
+      "source": "44:3848",
+      "destination": "44:3817"
+    },
+    {
+      "source": "44:3854",
+      "destination": "44:3229"
+    },
+    {
+      "source": "44:3858",
+      "destination": "44:3041"
+    },
+    {
+      "source": "44:3864",
+      "destination": "44:3817"
+    },
+    {
+      "source": "44:3870",
+      "destination": "44:3314"
+    },
+    {
+      "source": "44:3874",
+      "destination": "44:3041"
+    },
+    {
+      "source": "44:3880",
+      "destination": "44:3817"
+    },
+    {
+      "source": "44:3886",
+      "destination": "44:3041"
+    },
+    {
+      "source": "44:4012",
+      "destination": "44:4494"
+    },
+    {
+      "source": "44:4014",
+      "destination": "44:4558"
+    },
+    {
+      "source": "44:4044",
+      "destination": "44:4245"
+    },
+    {
+      "source": "44:4070",
+      "destination": "44:3997"
+    },
+    {
+      "source": "44:4072",
+      "destination": "44:4494"
+    },
+    {
+      "source": "44:4074",
+      "destination": "44:4558"
+    },
+    {
+      "source": "44:4130",
+      "destination": "44:3997"
+    },
+    {
+      "source": "44:4132",
+      "destination": "44:4494"
+    },
+    {
+      "source": "44:4134",
+      "destination": "44:4558"
+    },
+    {
+      "source": "44:4195",
+      "destination": "44:3997"
+    },
+    {
+      "source": "44:4197",
+      "destination": "44:4494"
+    },
+    {
+      "source": "44:4199",
+      "destination": "44:4558"
+    },
+    {
+      "source": "44:4239",
+      "destination": "44:4117"
+    },
+    {
+      "source": "44:4245",
+      "destination": "44:4308"
+    },
+    {
+      "source": "44:4258",
+      "destination": "44:3997"
+    },
+    {
+      "source": "44:4260",
+      "destination": "44:4494"
+    },
+    {
+      "source": "44:4262",
+      "destination": "44:4558"
+    },
+    {
+      "source": "44:4321",
+      "destination": "44:3997"
+    },
+    {
+      "source": "44:4323",
+      "destination": "44:4494"
+    },
+    {
+      "source": "44:4325",
+      "destination": "44:4558"
+    },
+    {
+      "source": "44:4384",
+      "destination": "44:3997"
+    },
+    {
+      "source": "44:4386",
+      "destination": "44:4494"
+    },
+    {
+      "source": "44:4388",
+      "destination": "44:4558"
+    },
+    {
+      "source": "44:4418",
+      "destination": "44:4494"
+    },
+    {
+      "source": "44:4447",
+      "destination": "44:3997"
+    },
+    {
+      "source": "44:4449",
+      "destination": "44:4494"
+    },
+    {
+      "source": "44:4451",
+      "destination": "44:4558"
+    },
+    {
+      "source": "44:4507",
+      "destination": "44:3997"
+    },
+    {
+      "source": "44:4511",
+      "destination": "44:4558"
+    },
+    {
+      "source": "44:4571",
+      "destination": "44:3997"
+    },
+    {
+      "source": "44:4573",
+      "destination": "44:4494"
+    }
+  ]
+}

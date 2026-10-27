@@ -178,10 +178,16 @@
   transform: none;
 }
 .space-mark {
+  display: inline-block;
   width: 34px;
   height: 34px;
   color: var(--primary);
   overflow: visible;
+}
+.space-mark > img,
+.space-mark > svg {
+  width: 100%;
+  height: 100%;
 }
 .ringworld-flat {
   display: none;
