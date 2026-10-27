@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const puppeteer = require('puppeteer-core');
 
-async function checkWebsiteResilience({ browser, base, output, firefox, results }) {
+async function checkWebsiteResilience({ browser, base, output, firefox, results, setScenario }) {
   const page = await browser.newPage();
   try {
     await page.setCacheEnabled(false);
@@ -90,17 +90,58 @@ async function checkWebsiteResilience({ browser, base, output, firefox, results 
     assert.equal(await page.$eval('.catalog details', (element) => element.open), true);
     await goto('/help');
     await page.type('input[name=q]', 'вход');
-    await submit();
+    await Promise.all([
+      page.waitForNavigation({ waitUntil: 'networkidle0' }),
+      page.keyboard.press('Enter'),
+    ]);
     assert.equal(await page.evaluate(() => document.querySelectorAll('main details').length), 1);
     await page.focus('main summary');
     await page.keyboard.press('Enter');
     assert.equal(await page.$eval('main details', (element) => element.open), true);
+    await page.goBack({ waitUntil: 'networkidle0' });
+    assert.equal(new URL(page.url()).pathname, '/help');
+    assert.equal(new URL(page.url()).search, '');
+    assert.match(
+      await page.$eval('.result-count', (element) => element.textContent),
+      /Инструкции: 4/,
+    );
+    const historyState = await page.evaluate(() => {
+      const hint = document.querySelector('.filter-form noscript .filter-status');
+      const box = hint?.getBoundingClientRect();
+      return {
+        draft: document.querySelector('input[name=q]').value,
+        hint: hint?.textContent.trim(),
+        hintVisible:
+          !!box &&
+          box.width > 0 &&
+          box.height > 0 &&
+          getComputedStyle(hint).visibility === 'visible',
+      };
+    });
+    assert.equal(historyState.hintVisible, true);
+    assert.match(historyState.hint, /При возврате браузер может восстановить ввод/);
+    assert.match(historyState.hint, /чтобы применить значения полей, нажмите кнопку/i);
     await goto('/download');
     assert.match(
       await page.$eval('main', (element) => element.textContent),
       /Первый релиз ещё впереди/,
     );
-    await goto('/updates?type=release');
+    if (setScenario) {
+      setScenario({ release: true });
+      await goto('/download');
+      await page.select('select[name=channel]', 'beta');
+      await submit();
+      assert.equal(new URL(page.url()).searchParams.get('channel'), 'beta');
+      assert.match(
+        await page.$eval('.empty-state', (element) => element.textContent),
+        /В этом канале сборок нет/,
+      );
+      setScenario({ release: false });
+    }
+    await goto('/updates');
+    await page.select('select[name=type]', 'release');
+    await submit();
+    assert.equal(new URL(page.url()).searchParams.get('type'), 'release');
     assert.match(
       await page.$eval('.empty-state', (element) => element.textContent),
       /Релизов ещё не было/,
@@ -109,14 +150,16 @@ async function checkWebsiteResilience({ browser, base, output, firefox, results 
     assert.equal(missing.status(), 404);
     results.push({
       id: 'WEB-NO-JS',
-      result:
-        'JavaScript disabled before navigation: visible header navigation at 320/390/1440, no inert menu/motion buttons, loaded logo and derived favicon, native search and disclosure, empty download/update states and HTTP 404.',
+      result: `JavaScript disabled before navigation: visible header navigation at 320/390/1440, no inert menu/motion buttons, loaded logo and derived favicon, native search and disclosure, keyboard submit and Back with visible browser-draft guidance, updates filter${setScenario ? ', fixture download filter' : ''}, empty states and HTTP 404.`,
+      backDraft: historyState.draft,
+      backUrlQuery: '',
     });
   } catch (error) {
     throw new Error('No-JavaScript scenario at ' + page.url() + ': ' + error.message, {
       cause: error,
     });
   } finally {
+    setScenario?.({ release: false });
     await page.close();
   }
   if (firefox) return;
@@ -174,7 +217,7 @@ async function checkWebsiteResilience({ browser, base, output, firefox, results 
     await contrast.close();
   }
 }
-async function checkFirefoxNoScript({ executable, base, output, results }) {
+async function checkFirefoxNoScript({ executable, base, output, results, setScenario }) {
   const browser = await puppeteer.launch({
     browser: 'firefox',
     protocolTimeout: 30000,
@@ -184,7 +227,7 @@ async function checkFirefoxNoScript({ executable, base, output, results }) {
     extraPrefsFirefox: { 'javascript.enabled': false, 'browser.shell.checkDefaultBrowser': false },
   });
   try {
-    await checkWebsiteResilience({ browser, base, output, firefox: true, results });
+    await checkWebsiteResilience({ browser, base, output, firefox: true, results, setScenario });
   } finally {
     await browser.close();
   }

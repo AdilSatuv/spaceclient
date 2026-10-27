@@ -856,6 +856,17 @@ details p {
   flex: 1;
   min-width: 150px;
 }
+.filter-status {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--text);
+}
+.filter-status:empty {
+  position: absolute;
+}
+.filter-form noscript {
+  flex-basis: 100%;
+}
 input,
 select {
   border: 1px solid var(--control-border);

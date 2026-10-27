@@ -440,11 +440,20 @@ async function main() {
       page,
       base,
       output,
+      firefox,
       setScenario: (value) => Object.assign(scenario, value),
       results: flows,
     });
     Object.assign(scenario, { release: false, pagination: false, fault: null, delayMs: 0 });
-    if (!firefox) await checkWebsiteResilience({ browser, base, output, firefox, results: flows });
+    if (!firefox)
+      await checkWebsiteResilience({
+        browser,
+        base,
+        output,
+        firefox,
+        results: flows,
+        setScenario: (value) => Object.assign(scenario, value),
+      });
     await checkWebsiteAccessibility({ browser, base, output, firefox, results: flows });
     const browserVersion = await browser.version();
     if (firefox) {
@@ -452,7 +461,13 @@ async function main() {
       await browser.close();
       browser = undefined;
       await checkFirefoxMotion({ executable, base, output, errors });
-      await checkFirefoxNoScript({ executable, base, output, results: flows });
+      await checkFirefoxNoScript({
+        executable,
+        base,
+        output,
+        results: flows,
+        setScenario: (value) => Object.assign(scenario, value),
+      });
       checks.push(
         'A separate Firefox profile with ui.prefersReducedMotion=1 exposes the real reduced-motion media query, pauses animation and disables the motion toggle.',
       );
