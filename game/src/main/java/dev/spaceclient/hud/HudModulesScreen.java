@@ -61,7 +61,7 @@ public final class HudModulesScreen extends Screen {
     @Override public boolean shouldPauseGame() { return true; }
 
     @Override public void render(int mouseX, int mouseY, float tickDelta) {
-        fillGradient(0, 0, width, height, 0xC9070709, 0xE30A0B0E);
+        fillGradient(0, 0, width, height, 0x85070709, 0xA70A0B0E);
         if (!roomy()) {
             centerText("Resize the window to open HUD", width / 2, height / 2 - 12, TEXT);
             centerText("Esc - close", width / 2, height / 2 + 4, MUTED);
@@ -75,13 +75,13 @@ public final class HudModulesScreen extends Screen {
 
         GlStateManager.pushMatrix();
         try {
-            GlStateManager.scale(1.3f, 1.3f, 1);
-            SpaceUiFont.draw(client, "HUD", contentLeft / 1.3f, (top + 9) / 1.3f, TEXT);
+            GlStateManager.scale(1.5f, 1.5f, 1);
+            SpaceUiFont.draw(client, "HUD", contentLeft / 1.5f, (top + 9) / 1.5f, TEXT);
         } finally { GlStateManager.popMatrix(); }
         int editorX = contentLeft + contentWidth - 82, editorY = top + 10;
         primaryButton(editorX, editorY, 82, 20, focus == modules.size() + 2,
             hovered(mouseX, mouseY, editorX, editorY, 82, 20));
-        centerText("Edit HUD", editorX + 41, editorY + 6, 0x17130D);
+        centerText("Edit layout", editorX + 41, editorY + 6, 0x17130D);
 
         box(contentLeft, top + 44, layout.searchWidth, 23, focus == 0,
             hovered(mouseX, mouseY, contentLeft, top + 44, layout.searchWidth, 23));
@@ -91,11 +91,13 @@ public final class HudModulesScreen extends Screen {
             SpaceUiFont.draw(client, "Search modules...", contentLeft + 30, top + 50, MUTED);
 
         boolean readOnly = SpaceClient.hud.isReadOnly();
-        box(layout.profileLeft, top + 44, layout.profileWidth, 23, focus == 1,
-            hovered(mouseX, mouseY, layout.profileLeft, top + 44, layout.profileWidth, 23));
+        box(layout.profileLeft, layout.profileTop, layout.profileWidth, 23, focus == 1,
+            hovered(mouseX, mouseY, layout.profileLeft, layout.profileTop, layout.profileWidth, 23));
         String profile = SpaceClient.hud.getConfig().active().name;
-        SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(profile, layout.profileWidth - 48), layout.profileLeft + 7, top + 50, TEXT);
-        stateBadge(layout.profileLeft + layout.profileWidth - 34, top + 48, SpaceClient.hud.getConfig().active().enabled);
+        if (!sidebar) SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(profile, layout.profileWidth - 48),
+            layout.profileLeft + 7, layout.profileTop + 6, TEXT);
+        int masterSwitchX = sidebar ? layout.profileLeft + (layout.profileWidth - 28) / 2 : layout.profileLeft + layout.profileWidth - 34;
+        stateBadge(masterSwitchX, layout.profileTop + 4, SpaceClient.hud.getConfig().active().enabled);
 
         for (int i = HudModulePages.first(page, modules.size(), layout.pageSize); i < HudModulePages.end(page, modules.size(), layout.pageSize); i++) {
             HudModule module = modules.get(i);
@@ -104,12 +106,13 @@ public final class HudModulesScreen extends Screen {
             card(x, y, cardWidth, cardHeight, focus == i + 2,
                 hovered(mouseX, mouseY, x, y, cardWidth, cardHeight), enabled);
             int insetY = (cardHeight - 36) / 2;
-            moduleIcon(module, x + 9, y + 10 + insetY, enabled);
-            int titleWidth = Math.max(1, cardWidth - 65);
-            SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(module.getTitle(), titleWidth), x + 28, y + 8 + insetY, TEXT);
+            int iconSize = cardWidth >= 145 ? 22 : 16;
+            int textInset = iconSize + 17;
+            HudModuleIcons.draw(module, x + 8, y + (cardHeight - iconSize) / 2, iconSize);
+            int titleWidth = Math.max(1, cardWidth - textInset - 38);
+            SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(module.getTitle(), titleWidth), x + textInset, y + 8 + insetY, TEXT);
             stateBadge(x + cardWidth - 36, y + 6 + insetY, enabled);
-            SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(module.getDescription(), Math.max(1, cardWidth - 36)),
-                x + 28, y + 23 + insetY, MUTED);
+            drawDescription(module, x + textInset, y + 23 + insetY, Math.max(1, cardWidth - textInset - 8), cardHeight);
             if (cardHeight >= 44 && cardWidth >= 145)
                 SpaceUiFont.draw(client, ">", x + cardWidth - 13, y + cardHeight - 16, MUTED);
         }
@@ -120,7 +123,7 @@ public final class HudModulesScreen extends Screen {
 
         String status = SpaceClient.hud.getError();
         if (status.isEmpty()) status = SpaceClient.hud.getNotice();
-        if (status.isEmpty() && !SpaceClient.hud.getConfig().active().enabled) status = "HUD hidden; turn it on above";
+        if (status.isEmpty() && !SpaceClient.hud.getConfig().active().enabled) status = "HUD hidden; enable MASTER";
         if (status.isEmpty() && readOnly) status = "Settings are read-only";
         if (status.isEmpty()) {
             for (int i = HudModulePages.first(page, modules.size(), layout.pageSize); i < HudModulePages.end(page, modules.size(), layout.pageSize); i++) {
@@ -156,6 +159,7 @@ public final class HudModulesScreen extends Screen {
         fill(left + 7, top + 49, left + 9, top + 68, 0xFFD7AF6A);
         SpaceUiFont.draw(client, "HUD", left + 16, top + 54, TEXT);
         SpaceUiFont.draw(client, "MODULES", left + 12, top + 82, MUTED);
+        SpaceUiFont.draw(client, "MASTER", left + 9, layout.profileTop - 13, MUTED);
         fill(left + 10, top + panelHeight - 54, left + 58, top + panelHeight - 53, BORDER);
         SpaceUiFont.draw(client, "PROFILE", left + 12, top + panelHeight - 45, MUTED);
         SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(SpaceClient.hud.getConfig().active().name, 46),
@@ -211,7 +215,7 @@ public final class HudModulesScreen extends Screen {
             updateFocus();
             search.mouseClicked(x, y, button);
             search.setFocused(true);
-        } else if (hovered(x, y, layout.profileLeft, top + 44, layout.profileWidth, 23)) {
+        } else if (hovered(x, y, layout.profileLeft, layout.profileTop, layout.profileWidth, 23)) {
             focus = 1;
             updateFocus();
             activate(focus, true);
@@ -266,14 +270,42 @@ public final class HudModulesScreen extends Screen {
     private int cardY(int index) { return layout.cardY(index); }
 
     private void stateBadge(int x, int y, boolean enabled) {
-        rounded(x + 2, y + 1, 24, 12, enabled ? 0xFFD2AC70 : 0xFF3A3C41);
+        capsule(x + 2, y + 1, 24, 12, enabled ? 0xFFD2AC70 : 0xFF3A3C41);
         int knob = enabled ? x + 15 : x + 4;
-        rounded(knob, y + 2, 10, 10, enabled ? 0xFFF5F2EB : 0xFF96989E);
+        capsule(knob, y + 2, 10, 10, enabled ? 0xFFF5F2EB : 0xFF96989E);
+    }
+
+    private void capsule(int x, int y, int w, int h, int color) {
+        for (int row = 0; row < h; row++) {
+            double dy = row + .5 - h / 2.0;
+            int inset = Math.max(0, (int) Math.ceil(h / 2.0 - Math.sqrt(h * h / 4.0 - dy * dy)));
+            fill(x + inset, y + row, x + w - inset, y + row + 1, color);
+        }
     }
 
     private void primaryButton(int x, int y, int w, int h, boolean focused, boolean hovered) {
         rounded(x, y, w, h, focused ? 0xFFF8E5C3 : 0xFFD7AF6A);
         rounded(x + 1, y + 1, w - 2, h - 2, hovered || focused ? 0xFFEACB92 : 0xFFD7AF6A);
+    }
+    private void drawDescription(HudModule module, int x, int y, int width, int height) {
+        if (height < 48) {
+            SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(module.getDescription(), width), x, y, MUTED);
+            return;
+        }
+        String full = module.getDisplayDescription();
+        int limit = (int) (width / .8f);
+        String first = SpaceUiFont.trimToWidth(full, limit);
+        if (first.length() < full.length()) {
+            int lastSpace = first.lastIndexOf(' ');
+            if (lastSpace > 0) first = first.substring(0, lastSpace);
+        }
+        String rest = full.substring(first.length()).trim();
+        GlStateManager.pushMatrix();
+        try {
+            GlStateManager.scale(.8f, .8f, 1);
+            SpaceUiFont.draw(client, first, x / .8f, y / .8f, MUTED);
+            if (!rest.isEmpty()) SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(rest, limit), x / .8f, (y + 9) / .8f, MUTED);
+        } finally { GlStateManager.popMatrix(); }
     }
     private void box(int x, int y, int w, int h, boolean focused, boolean hovered) {
         rounded(x, y, w, h, focused ? 0xFFD7AF6A : BORDER);
@@ -289,23 +321,6 @@ public final class HudModulesScreen extends Screen {
         fill(x + 1, y, x + 6, y + 1, c); fill(x, y + 1, x + 1, y + 6, c);
         fill(x + 6, y + 1, x + 7, y + 6, c); fill(x + 1, y + 6, x + 6, y + 7, c);
         fill(x + 6, y + 6, x + 9, y + 9, c);
-    }
-    private void moduleIcon(HudModule module, int x, int y, boolean enabled) {
-        int c = enabled ? 0xFFF2EEE7 : 0xFFB3B0AA;
-        // Small distinct line symbols, drawn without external branded assets.
-        if (module == HudModule.FPS || module == HudModule.SPEED) {
-            fill(x, y + 8, x + 3, y + 13, c); fill(x + 5, y + 4, x + 8, y + 13, c); fill(x + 10, y, x + 13, y + 13, c);
-        } else if (module == HudModule.KEYSTROKES) {
-            fill(x + 5, y, x + 9, y + 4, c); fill(x, y + 6, x + 4, y + 10, c);
-            fill(x + 5, y + 6, x + 9, y + 10, c); fill(x + 10, y + 6, x + 14, y + 10, c);
-        } else if (module == HudModule.COORDINATES || module == HudModule.COMPASS) {
-            fill(x + 6, y, x + 7, y + 13, c); fill(x, y + 6, x + 13, y + 7, c);
-            fill(x + 2, y + 2, x + 4, y + 4, c); fill(x + 9, y + 9, x + 11, y + 11, c);
-        } else {
-            fill(x + 2, y + 1, x + 11, y + 2, c); fill(x + 1, y + 2, x + 2, y + 11, c);
-            fill(x + 11, y + 2, x + 12, y + 11, c); fill(x + 2, y + 11, x + 11, y + 12, c);
-            fill(x + 5, y + 4, x + 8, y + 9, c);
-        }
     }
     private void centerText(String text, int centerX, int y, int color) {
         SpaceUiFont.draw(client, text, centerX - SpaceUiFont.width(text) / 2f, y, color);

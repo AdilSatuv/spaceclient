@@ -15,8 +15,14 @@ public class HudModulesLayoutTest {
             assertTrue(l.cardX(1) + l.cardWidth <= l.contentLeft + l.contentWidth);
             assertTrue(l.cardY(0) + l.cardHeight + 6 <= l.cardY(2));
             assertTrue(l.cardY(l.pageSize - 2) + l.cardHeight <= l.footerY() - 4);
-            assertTrue(l.contentLeft + l.searchWidth + 8 <= l.profileLeft);
-            assertTrue(l.profileLeft + l.profileWidth <= l.contentLeft + l.contentWidth);
+            if (l.sidebar) {
+                assertEquals(l.contentWidth, l.searchWidth);
+                assertTrue(l.profileLeft >= l.left && l.profileLeft + l.profileWidth <= l.contentLeft - 12);
+                assertTrue(l.profileTop > l.top + 100 && l.profileTop + 23 <= l.top + l.panelHeight - 54);
+            } else {
+                assertTrue(l.contentLeft + l.searchWidth + 8 <= l.profileLeft);
+                assertTrue(l.profileLeft + l.profileWidth <= l.contentLeft + l.contentWidth);
+            }
             assertTrue(l.footerY() + 20 <= l.top + l.panelHeight);
             assertTrue(l.contentLeft + 84 <= l.contentLeft + l.contentWidth - 68);
         }
@@ -32,5 +38,12 @@ public class HudModulesLayoutTest {
         assertEquals(8, HudModulePages.end(1, 8, roomy.pageSize));
         assertEquals(1, HudModulePages.forIndex(6, 8, roomy.pageSize));
         assertEquals(0, HudModulePages.clamp(1, 3, roomy.pageSize));
+    }
+    @Test public void screenshotModulesLeadTheBrowserWithoutLosingOthers() {
+        java.util.List<HudModule> all = HudModule.search("");
+        assertEquals(java.util.Arrays.asList(HudModule.FPS, HudModule.COORDINATES, HudModule.KEYSTROKES,
+            HudModule.CPS, HudModule.COMPASS, HudModule.ARMOR), all.subList(0, 6));
+        assertEquals(HudModule.values().length, all.size());
+        assertEquals(all.size(), new java.util.HashSet<HudModule>(all).size());
     }
 }

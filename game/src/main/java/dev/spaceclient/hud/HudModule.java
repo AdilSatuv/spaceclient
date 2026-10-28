@@ -17,13 +17,17 @@ public enum HudModule {
     SPEED("speed", "Speed", "Horizontal movement per tick", "movement velocity blocks скорость движение блоки"),
     HEALTH("health", "Health", "Current and maximum health", "hp hearts здоровье жизни сердца"),
     HUNGER("hunger", "Hunger", "Current food level", "food hunger сытость голод еда"),
-    ARMOR("armor", "Armor Status", "Armor and held item durability", "armor durability equipment броня прочность экипировка"),
+    ARMOR("armor", "Armor", "Armor and held item durability", "armor status durability equipment броня прочность экипировка"),
     POTION_EFFECTS("effects", "Potion Effects", "Active potion effects", "potion status effects effects зелья эффекты");
 
     private final String id;
     private final String title;
     private final String description;
     private final String searchText;
+    private static final HudModule[] BROWSER_ORDER = {
+        FPS, COORDINATES, KEYSTROKES, CPS, COMPASS, ARMOR,
+        CLOCK, SPEED, HEALTH, HUNGER, POTION_EFFECTS
+    };
 
     HudModule(String id, String title, String description, String aliases) {
         this.id = id;
@@ -35,6 +39,17 @@ public enum HudModule {
     public String getId() { return id; }
     public String getTitle() { return title; }
     public String getDescription() { return description; }
+    public String getDisplayDescription() {
+        switch (this) {
+            case FPS: return "Shows your current frames per second in-game.";
+            case COORDINATES: return "Displays your current X, Y, Z position in the world.";
+            case KEYSTROKES: return "Visualizes your keyboard inputs in real time.";
+            case CPS: return "Shows your current clicks per second.";
+            case COMPASS: return "Displays your current direction and rotation.";
+            case ARMOR: return "Shows your current armor durability.";
+            default: return description;
+        }
+    }
 
     public boolean isEnabled(HudConfig config) {
         switch (this) {
@@ -73,7 +88,7 @@ public enum HudModule {
     public static List<HudModule> search(String query) {
         String normalized = query.trim().toLowerCase(Locale.ROOT);
         List<HudModule> result = new ArrayList<>();
-        for (HudModule module : values()) {
+        for (HudModule module : BROWSER_ORDER) {
             if (module.searchText.contains(normalized)) result.add(module);
         }
         return Collections.unmodifiableList(result);
