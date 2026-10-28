@@ -9,6 +9,7 @@ public final class HudProfile {
     public boolean compass = false;
     public boolean clock = false, speed = false;
     public boolean health = false, hunger = false;
+    public boolean armor = false, effects = false;
     private final EnumMap<HudModule, HudPlacement> placements = new EnumMap<>(HudModule.class);
     public HudProfile(String name) { this.name = validName(name); resetLayout(); }
     public static String validName(String value) {
@@ -34,6 +35,7 @@ public final class HudProfile {
         copy.keystrokes = keystrokes; copy.cps = cps; copy.compass = compass;
         copy.clock = clock; copy.speed = speed;
         copy.health = health; copy.hunger = hunger;
+        copy.armor = armor; copy.effects = effects;
         copy.placements.putAll(placements); // Placements are immutable.
         return copy;
     }

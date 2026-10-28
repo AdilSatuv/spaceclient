@@ -16,7 +16,9 @@ public enum HudModule {
     CLOCK("clock", "Clock", "Local time on this computer", "time local часы время"),
     SPEED("speed", "Speed", "Horizontal movement per tick", "movement velocity blocks скорость движение блоки"),
     HEALTH("health", "Health", "Current and maximum health", "hp hearts здоровье жизни сердца"),
-    HUNGER("hunger", "Hunger", "Current food level", "food hunger сытость голод еда");
+    HUNGER("hunger", "Hunger", "Current food level", "food hunger сытость голод еда"),
+    ARMOR("armor", "Armor Status", "Armor and held item durability", "armor durability equipment броня прочность экипировка"),
+    POTION_EFFECTS("effects", "Potion Effects", "Active potion effects", "potion status effects effects зелья эффекты");
 
     private final String id;
     private final String title;
@@ -45,6 +47,8 @@ public enum HudModule {
             case SPEED: return config.active().speed;
             case HEALTH: return config.active().health;
             case HUNGER: return config.active().hunger;
+            case ARMOR: return config.active().armor;
+            case POTION_EFFECTS: return config.active().effects;
             default: throw new AssertionError(this);
         }
     }
@@ -60,6 +64,8 @@ public enum HudModule {
             case SPEED: config.active().speed = enabled; break;
             case HEALTH: config.active().health = enabled; break;
             case HUNGER: config.active().hunger = enabled; break;
+            case ARMOR: config.active().armor = enabled; break;
+            case POTION_EFFECTS: config.active().effects = enabled; break;
             default: throw new AssertionError(this);
         }
     }

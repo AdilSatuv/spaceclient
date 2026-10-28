@@ -42,8 +42,8 @@ public final class HudConfig {
         Properties properties = readProperties(file);
         String schema = properties.getProperty("schemaVersion", "1");
         if (!schema.matches("[1-9][0-9]*")) throw new InvalidConfigException("Invalid HUD schema version");
-        if (!schema.equals("1") && !schema.equals("2") && !schema.equals("3") && !schema.equals("4") && !schema.equals("5")) throw new UnsupportedSchemaException();
-        if (!schema.equals("5")) config.migrationSourceVersion = Integer.parseInt(schema);
+        if (!schema.equals("1") && !schema.equals("2") && !schema.equals("3") && !schema.equals("4") && !schema.equals("5") && !schema.equals("6")) throw new UnsupportedSchemaException();
+        if (!schema.equals("6")) config.migrationSourceVersion = Integer.parseInt(schema);
         if (schema.equals("1")) {
             config.profiles[0] = readProfile(properties, "", "Profile 1");
             config.profiles[1] = config.profiles[0].copy();
@@ -86,6 +86,8 @@ public final class HudConfig {
             profile.speed = readBoolean(properties, prefix + "speed", false);
             profile.health = readBoolean(properties, prefix + "health", false);
             profile.hunger = readBoolean(properties, prefix + "hunger", false);
+            profile.armor = readBoolean(properties, prefix + "armor", false);
+            profile.effects = readBoolean(properties, prefix + "effects", false);
             for (HudModule module : HudModule.values()) {
                 HudPlacement defaults = HudPlacement.defaults(module);
                 String key = prefix + "layout." + module.getId() + ".";
@@ -123,6 +125,8 @@ public final class HudConfig {
         properties.setProperty(prefix + "speed", Boolean.toString(profile.speed));
         properties.setProperty(prefix + "health", Boolean.toString(profile.health));
         properties.setProperty(prefix + "hunger", Boolean.toString(profile.hunger));
+        properties.setProperty(prefix + "armor", Boolean.toString(profile.armor));
+        properties.setProperty(prefix + "effects", Boolean.toString(profile.effects));
         for (HudModule module : HudModule.values()) {
             HudPlacement placement = profile.placement(module);
             String key = prefix + "layout." + module.getId() + ".";
@@ -136,7 +140,7 @@ public final class HudConfig {
 
     public void save(Path file) throws IOException {
         Properties properties = new Properties();
-        properties.setProperty("schemaVersion", "5");
+        properties.setProperty("schemaVersion", "6");
         properties.setProperty("activeProfile", Integer.toString(activeProfile));
         for (int i = 0; i < profiles.length; i++) writeProfile(properties, "profile." + i + ".", profiles[i]);
         writeAtomic(file, properties);
@@ -160,9 +164,13 @@ public final class HudConfig {
         expected.setProperty("format", "spaceclient-hud-profile");
         expected.setProperty("schemaVersion", "1");
         writeProfile(expected, "", profile);
-        // Accept exact historical four-, five- and seven-module shapes, never a partial extension.
+        // Accept exact historical shapes, never a partial extension.
+        Properties vitalsEra = new Properties();
+        vitalsEra.putAll(expected);
+        removeModuleFields(vitalsEra, "armor");
+        removeModuleFields(vitalsEra, "effects");
         Properties metricsEra = new Properties();
-        metricsEra.putAll(expected);
+        metricsEra.putAll(vitalsEra);
         removeModuleFields(metricsEra, "health");
         removeModuleFields(metricsEra, "hunger");
         Properties compassEra = new Properties();
@@ -173,6 +181,7 @@ public final class HudConfig {
         legacy.putAll(compassEra);
         removeModuleFields(legacy, "compass");
         if (!properties.stringPropertyNames().equals(expected.stringPropertyNames())
+                && !properties.stringPropertyNames().equals(vitalsEra.stringPropertyNames())
                 && !properties.stringPropertyNames().equals(metricsEra.stringPropertyNames())
                 && !properties.stringPropertyNames().equals(compassEra.stringPropertyNames())
                 && !properties.stringPropertyNames().equals(legacy.stringPropertyNames()))

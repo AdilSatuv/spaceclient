@@ -30,6 +30,8 @@ public final class HudRenderer {
                 : HudVitals.health(client.player.getHealth(), client.player.getMaxHealth());
             case HUNGER: return client.player == null || client.player.getHungerManager() == null
                 ? HudVitals.hunger(null) : HudVitals.hunger(client.player.getHungerManager().getFoodLevel());
+            case ARMOR: return ArmorHud.text(client);
+            case POTION_EFFECTS: return PotionHud.text(client);
             default: throw new AssertionError(module);
         }
     }

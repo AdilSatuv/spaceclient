@@ -36,7 +36,7 @@ public final class HudSettings {
                 catch (IOException exception) {
                     return new HudSettings(file, config, true, "Migration backup failed. File kept; read-only.");
                 }
-                return new HudSettings(file, config, false, "Version " + sourceVersion + " backup kept. Changes use schema 5.");
+                return new HudSettings(file, config, false, "Version " + sourceVersion + " backup kept. Changes use schema 6.");
             }
             return new HudSettings(file, config, false, "");
         } catch (HudConfig.InvalidConfigException exception) {

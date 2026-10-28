@@ -54,7 +54,7 @@ public class HudProfilesTest {
         assertEquals(1, settings.getConfig().profile(1).placement(HudModule.CPS).scale, 0);
         Properties properties = new Properties();
         try (java.io.InputStream input = Files.newInputStream(file())) { properties.load(input); }
-        assertEquals("5", properties.getProperty("schemaVersion"));
+        assertEquals("6", properties.getProperty("schemaVersion"));
         assertArrayEquals(original, Files.readAllBytes(backups.get(0)));
     }
     @Test public void compassDefaultsOffInExistingProfilesAndPersistsIndependently() throws Exception {
@@ -85,6 +85,16 @@ public class HudProfilesTest {
 
         Properties legacy = new Properties();
         try (java.io.InputStream in = Files.newInputStream(exported)) { legacy.load(in); }
+        for (String module : new String[] {"armor", "effects"}) {
+            legacy.remove(module);
+            for (String field : new String[] {"horizontal", "vertical", "x", "y", "scale"})
+                legacy.remove("layout." + module + "." + field);
+        }
+        try (java.io.OutputStream out = Files.newOutputStream(exported)) { legacy.store(out, "Vitals-era export"); }
+        HudProfile vitals = HudConfig.importProfile(exported);
+        assertTrue(vitals.compass);
+        assertFalse(vitals.armor);
+        assertFalse(vitals.effects);
         for (String module : new String[] {"health", "hunger"}) {
             legacy.remove(module);
             for (String field : new String[] {"horizontal", "vertical", "x", "y", "scale"})
@@ -167,6 +177,30 @@ public class HudProfilesTest {
         partial.remove("layout.hunger.scale");
         try (java.io.OutputStream out = Files.newOutputStream(exported)) { partial.store(out, "Partial"); }
         try { HudConfig.importProfile(exported); fail("Partial hunger fields must be rejected"); }
+        catch (HudConfig.InvalidConfigException expected) { }
+    }
+    @Test public void armorAndEffectsAreIndependentAndPartialExportsAreRejected() throws Exception {
+        HudSettings settings = HudSettings.open(file());
+        assertFalse(settings.getConfig().active().armor);
+        assertFalse(settings.getConfig().active().effects);
+        assertTrue(settings.toggle(HudModule.ARMOR));
+        assertTrue(settings.place(HudModule.ARMOR, corner()));
+        assertTrue(settings.selectProfile(1));
+        assertTrue(settings.toggle(HudModule.POTION_EFFECTS));
+        HudConfig loaded = HudConfig.load(file());
+        assertTrue(loaded.profile(0).armor);
+        assertFalse(loaded.profile(0).effects);
+        assertFalse(loaded.profile(1).armor);
+        assertTrue(loaded.profile(1).effects);
+        assertEquals(1.8, loaded.profile(0).placement(HudModule.ARMOR).scale, 0);
+        Path exported = directory.getRoot().toPath().resolve("effects-export.properties");
+        HudConfig.exportProfile(exported, loaded.profile(1));
+        assertTrue(HudConfig.importProfile(exported).effects);
+        Properties partial = new Properties();
+        try (java.io.InputStream in = Files.newInputStream(exported)) { partial.load(in); }
+        partial.remove("layout.effects.x");
+        try (java.io.OutputStream out = Files.newOutputStream(exported)) { partial.store(out, "Partial"); }
+        try { HudConfig.importProfile(exported); fail("Partial effects fields must be rejected"); }
         catch (HudConfig.InvalidConfigException expected) { }
     }
     @Test public void profilesFlagsNamesLayoutsAndSelectionSurviveRestartIndependently() throws Exception {
@@ -256,7 +290,7 @@ public class HudProfilesTest {
             assertFalse(recovered.isReadOnly());
             assertTrue(recovered.getNotice().contains("backed up"));
         }
-        byte[] future = "schemaVersion=6\nkeep=true\n".getBytes(StandardCharsets.ISO_8859_1);
+        byte[] future = "schemaVersion=7\nkeep=true\n".getBytes(StandardCharsets.ISO_8859_1);
         Files.write(file(), future);
         HudSettings readOnly = HudSettings.open(file());
         assertTrue(readOnly.isReadOnly());

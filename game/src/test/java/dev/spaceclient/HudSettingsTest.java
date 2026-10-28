@@ -80,7 +80,7 @@ public class HudSettingsTest {
     }
 
     @Test public void futureSchemaIsNeverOverwrittenOrRenamed() throws Exception {
-        write("schemaVersion=6\ncustomFutureField=keep-me\n");
+        write("schemaVersion=7\ncustomFutureField=keep-me\n");
         byte[] original = Files.readAllBytes(file());
         HudSettings settings = HudSettings.open(file());
         assertTrue(settings.isReadOnly());
@@ -120,7 +120,7 @@ public class HudSettingsTest {
     }
 
     @Test public void moduleSearchSupportsAliasesWhitespaceAndEmptyResults() {
-        assertEquals(9, HudModule.search("  ").size());
+        assertEquals(11, HudModule.search("  ").size());
         assertEquals(HudModule.CPS, HudModule.search(" МЫШЬ ").get(0));
         assertEquals(HudModule.COORDINATES, HudModule.search("xyz").get(0));
         assertEquals(HudModule.KEYSTROKES, HudModule.search("WASD").get(0));
@@ -129,6 +129,8 @@ public class HudSettingsTest {
         assertEquals(HudModule.SPEED, HudModule.search("скорость").get(0));
         assertEquals(HudModule.HEALTH, HudModule.search("ЗДОРОВЬЕ").get(0));
         assertEquals(HudModule.HUNGER, HudModule.search("сытость").get(0));
+        assertEquals(HudModule.ARMOR, HudModule.search("броня").get(0));
+        assertEquals(HudModule.POTION_EFFECTS, HudModule.search("эффекты").get(0));
         assertTrue(HudModule.search("not-a-module").isEmpty());
     }
 
