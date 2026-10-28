@@ -3,7 +3,6 @@ package dev.spaceclient.hud;
 import com.mojang.blaze3d.platform.GlStateManager;
 import dev.spaceclient.HudConfig;
 import dev.spaceclient.SpaceClient;
-import java.util.Locale;
 import java.time.LocalTime;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
@@ -21,18 +20,23 @@ public final class HudRenderer {
     static final int HUD_AQUA = 0x80E4ED;
     private HudRenderer() { }
     public static String text(MinecraftClient client, HudModule module) {
+        return text(client, module, SpaceClient.hud.getConfig().active().content());
+    }
+    /** Resolve the same profile-specific text for the live HUD and editor. */
+    public static String text(MinecraftClient client, HudModule module, HudContentSettings content) {
+        if (content == null) throw new IllegalArgumentException("Missing HUD content settings");
         switch (module) {
-            case FPS: return MinecraftClient.getCurrentFps() + " FPS";
-            case COORDINATES: return String.format(Locale.ROOT, "XYZ %.1f / %.1f / %.1f",
-                client.player.x, client.player.y, client.player.z);
+            case FPS: return HudMetrics.fps(MinecraftClient.getCurrentFps(), content.fpsLabel);
+            case COORDINATES: return client.player == null ? "XYZ --" : HudMetrics.coordinates(
+                client.player.x, client.player.y, client.player.z, content.coordinatesPrecision);
             case KEYSTROKES: return KeystrokesHud.text(
                 bindingName(client.options.forwardKey), client.options.forwardKey.isPressed(),
                 bindingName(client.options.leftKey), client.options.leftKey.isPressed(),
                 bindingName(client.options.backKey), client.options.backKey.isPressed(),
                 bindingName(client.options.rightKey), client.options.rightKey.isPressed());
-            case CPS: return "CPS " + SpaceClient.clicks.getLeftCps() + " L / " + SpaceClient.clicks.getRightCps() + " R";
+            case CPS: return HudMetrics.cps(SpaceClient.clicks.getLeftCps(), SpaceClient.clicks.getRightCps(), content.cpsMode);
             case COMPASS: return "Compass " + Compass.direction(client.player.yaw);
-            case CLOCK: return "Time " + HudMetrics.clock(LocalTime.now());
+            case CLOCK: return "Time " + HudMetrics.clock(LocalTime.now(), content.clockFormat, content.clockSeconds);
             case SPEED: return client.player == null ? "Speed --" : HudMetrics.speed(
                 client.player.x, client.player.z, client.player.prevX, client.player.prevZ, client.isPaused());
             case HEALTH: return client.player == null ? HudVitals.health(Float.NaN, Float.NaN)
@@ -90,7 +94,7 @@ public final class HudRenderer {
         backdrop(8, 8, 8 + textWidth(client, "SPACE CLIENT"), 18, BACKDROP_ALPHA);
         client.textRenderer.drawWithShadow("SPACE CLIENT", 9, 8, HUD_ACCENT);
         for (HudModule module : HudModule.values()) if (module.isEnabled(config)) {
-            String text = text(client, module);
+            String text = text(client, module, config.active().content());
             HudAppearance appearance = config.active().appearance(module);
             draw(client, text, bounds(client, text, config.active().placement(module), width, height),
                 appearance, color(module, appearance));

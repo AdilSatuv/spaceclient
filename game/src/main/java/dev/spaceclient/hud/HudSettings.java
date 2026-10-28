@@ -36,7 +36,7 @@ public final class HudSettings {
                 catch (IOException exception) {
                     return new HudSettings(file, config, true, "Migration backup failed. File kept; read-only.");
                 }
-                return new HudSettings(file, config, false, "Version " + sourceVersion + " backup kept. Changes use schema 7.");
+                return new HudSettings(file, config, false, "Version " + sourceVersion + " backup kept. Changes use schema 8.");
             }
             return new HudSettings(file, config, false, "");
         } catch (HudConfig.InvalidConfigException exception) {
@@ -73,6 +73,9 @@ public final class HudSettings {
     }
     public boolean appearance(HudModule module, HudAppearance appearance) {
         return change(() -> config.active().setAppearance(module, appearance));
+    }
+    public boolean content(HudContentSettings value) {
+        return change(() -> config.active().setContent(value));
     }
     public boolean reset(HudModule module) { return place(module, HudPlacement.defaults(module)); }
     public boolean resetLayout() { return change(() -> config.active().resetLayout()); }

@@ -1,6 +1,7 @@
 package dev.spaceclient;
 
 import dev.spaceclient.hud.HudAppearance;
+import dev.spaceclient.hud.HudContentSettings;
 import dev.spaceclient.hud.HudModule;
 import dev.spaceclient.hud.HudPlacement;
 import dev.spaceclient.hud.HudProfile;
@@ -43,28 +44,30 @@ public final class HudConfig {
         Properties properties = readProperties(file);
         String schema = properties.getProperty("schemaVersion", "1");
         if (!schema.matches("[1-9][0-9]*")) throw new InvalidConfigException("Invalid HUD schema version");
-        if (!schema.equals("1") && !schema.equals("2") && !schema.equals("3") && !schema.equals("4") && !schema.equals("5") && !schema.equals("6") && !schema.equals("7")) throw new UnsupportedSchemaException();
-        if (!schema.equals("7")) config.migrationSourceVersion = Integer.parseInt(schema);
+        if (!schema.equals("1") && !schema.equals("2") && !schema.equals("3") && !schema.equals("4") && !schema.equals("5") && !schema.equals("6") && !schema.equals("7") && !schema.equals("8")) throw new UnsupportedSchemaException();
+        if (!schema.equals("8")) config.migrationSourceVersion = Integer.parseInt(schema);
         if (schema.equals("1")) {
-            config.profiles[0] = readProfile(properties, "", "Profile 1", false);
+            config.profiles[0] = readProfile(properties, "", "Profile 1", false, false);
             config.profiles[1] = config.profiles[0].copy();
             config.profiles[1].name = "Profile 2";
         } else {
             try { config.select(Integer.parseInt(properties.getProperty("activeProfile", "0"))); }
             catch (IllegalArgumentException exception) { throw new InvalidConfigException("Invalid active HUD profile", exception); }
             for (int i = 0; i < config.profiles.length; i++)
-                config.profiles[i] = readProfile(properties, "profile." + i + ".", "Profile " + (i + 1), schema.equals("7"));
+                config.profiles[i] = readProfile(properties, "profile." + i + ".", "Profile " + (i + 1), schema.equals("7") || schema.equals("8"), schema.equals("8"));
         }
-        if (schema.equals("7")) {
-            // Schema 7 is always written as a complete snapshot; missing keys must not
+        if (schema.equals("7") || schema.equals("8")) {
+            // Modern schemas are written as complete snapshots; missing keys must not
             // silently reset layout or flags on a subsequent save.
             Properties required = new Properties();
-            required.setProperty("schemaVersion", "7");
+            required.setProperty("schemaVersion", schema);
             required.setProperty("activeProfile", Integer.toString(config.activeProfile));
             for (int i = 0; i < config.profiles.length; i++)
                 writeProfile(required, "profile." + i + ".", config.profiles[i]);
+            if (schema.equals("7")) for (int i = 0; i < config.profiles.length; i++)
+                removeContentFields(required, "profile." + i + ".");
             if (!properties.stringPropertyNames().containsAll(required.stringPropertyNames()))
-                throw new InvalidConfigException("Incomplete HUD schema 7 configuration");
+                throw new InvalidConfigException("Incomplete HUD schema " + schema + " configuration");
         }
         return config;
     }
@@ -85,7 +88,7 @@ public final class HudConfig {
         return properties;
     }
 
-    private static HudProfile readProfile(Properties properties, String prefix, String defaultName, boolean appearanceFields) throws IOException {
+    private static HudProfile readProfile(Properties properties, String prefix, String defaultName, boolean appearanceFields, boolean contentFields) throws IOException {
         try {
             HudProfile profile = new HudProfile(properties.getProperty(prefix + "name", defaultName));
             profile.enabled = readBoolean(properties, prefix + "enabled");
@@ -120,6 +123,18 @@ public final class HudConfig {
                         HudAppearance.Backdrop.valueOf(backdrop), readBoolean(properties, appearanceKey + "shadow")));
                 }
             }
+            if (contentFields) {
+                String precision = properties.getProperty(prefix + "content.coordinates.precision");
+                String format = properties.getProperty(prefix + "content.clock.format");
+                String seconds = properties.getProperty(prefix + "content.clock.seconds");
+                String fpsLabel = properties.getProperty(prefix + "content.fps.label");
+                String cpsMode = properties.getProperty(prefix + "content.cps.mode");
+                if (precision == null || format == null || seconds == null || fpsLabel == null || cpsMode == null)
+                    throw new InvalidConfigException("Missing HUD content settings");
+                profile.setContent(new HudContentSettings(Integer.parseInt(precision),
+                    HudContentSettings.ClockFormat.valueOf(format), readBoolean(properties, prefix + "content.clock.seconds"),
+                    readBoolean(properties, prefix + "content.fps.label"), HudContentSettings.CpsMode.valueOf(cpsMode)));
+            }
             return profile;
         } catch (IllegalArgumentException exception) { throw new InvalidConfigException("Invalid HUD profile", exception); }
     }
@@ -149,6 +164,12 @@ public final class HudConfig {
         properties.setProperty(prefix + "hunger", Boolean.toString(profile.hunger));
         properties.setProperty(prefix + "armor", Boolean.toString(profile.armor));
         properties.setProperty(prefix + "effects", Boolean.toString(profile.effects));
+        HudContentSettings content = profile.content();
+        properties.setProperty(prefix + "content.coordinates.precision", Integer.toString(content.coordinatesPrecision));
+        properties.setProperty(prefix + "content.clock.format", content.clockFormat.name());
+        properties.setProperty(prefix + "content.clock.seconds", Boolean.toString(content.clockSeconds));
+        properties.setProperty(prefix + "content.fps.label", Boolean.toString(content.fpsLabel));
+        properties.setProperty(prefix + "content.cps.mode", content.cpsMode.name());
         for (HudModule module : HudModule.values()) {
             HudPlacement placement = profile.placement(module);
             String key = prefix + "layout." + module.getId() + ".";
@@ -167,7 +188,7 @@ public final class HudConfig {
 
     public void save(Path file) throws IOException {
         Properties properties = new Properties();
-        properties.setProperty("schemaVersion", "7");
+        properties.setProperty("schemaVersion", "8");
         properties.setProperty("activeProfile", Integer.toString(activeProfile));
         for (int i = 0; i < profiles.length; i++) writeProfile(properties, "profile." + i + ".", profiles[i]);
         writeAtomic(file, properties);
@@ -176,7 +197,7 @@ public final class HudConfig {
     public static void exportProfile(Path file, HudProfile profile) throws IOException {
         Properties properties = new Properties();
         properties.setProperty("format", "spaceclient-hud-profile");
-        properties.setProperty("schemaVersion", "2");
+        properties.setProperty("schemaVersion", "3");
         writeProfile(properties, "", profile);
         writeAtomic(file, properties);
     }
@@ -185,14 +206,15 @@ public final class HudConfig {
         Properties properties = readProperties(file);
         String version = properties.getProperty("schemaVersion");
         if (!"spaceclient-hud-profile".equals(properties.getProperty("format"))
-                || (!"1".equals(version) && !"2".equals(version)))
+                || (!"1".equals(version) && !"2".equals(version) && !"3".equals(version)))
             throw new InvalidConfigException("Unsupported HUD profile export");
-        HudProfile profile = readProfile(properties, "", "Imported", "2".equals(version));
+        HudProfile profile = readProfile(properties, "", "Imported", !"1".equals(version), "3".equals(version));
         Properties expected = new Properties();
         expected.setProperty("format", "spaceclient-hud-profile");
         expected.setProperty("schemaVersion", version);
         writeProfile(expected, "", profile);
-        if ("2".equals(version)) {
+        if (!"3".equals(version)) removeContentFields(expected, "");
+        if (!"1".equals(version)) {
             if (!properties.stringPropertyNames().equals(expected.stringPropertyNames()))
                 throw new InvalidConfigException("Incomplete or unknown HUD profile fields");
             return profile;
@@ -221,6 +243,14 @@ public final class HudConfig {
                 && !properties.stringPropertyNames().equals(legacy.stringPropertyNames()))
             throw new InvalidConfigException("Incomplete or unknown HUD profile fields");
         return profile;
+    }
+
+    private static void removeContentFields(Properties properties, String prefix) {
+        properties.remove(prefix + "content.coordinates.precision");
+        properties.remove(prefix + "content.clock.format");
+        properties.remove(prefix + "content.clock.seconds");
+        properties.remove(prefix + "content.fps.label");
+        properties.remove(prefix + "content.cps.mode");
     }
 
     private static void removeAppearanceFields(Properties properties, String module) {

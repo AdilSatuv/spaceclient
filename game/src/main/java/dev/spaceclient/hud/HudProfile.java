@@ -10,6 +10,7 @@ public final class HudProfile {
     public boolean clock = false, speed = false;
     public boolean health = false, hunger = false;
     public boolean armor = false, effects = false;
+    private HudContentSettings content = HudContentSettings.defaults();
     private final EnumMap<HudModule, HudPlacement> placements = new EnumMap<>(HudModule.class);
     private final EnumMap<HudModule, HudAppearance> appearances = new EnumMap<>(HudModule.class);
     public HudProfile(String name) {
@@ -25,6 +26,11 @@ public final class HudProfile {
                     || cp == 0x2028 || cp == 0x2029))
             throw new IllegalArgumentException("HUD profile name must contain 1-32 plain characters");
         return value;
+    }
+    public HudContentSettings content() { return content; }
+    public void setContent(HudContentSettings value) {
+        if (value == null) throw new IllegalArgumentException("Missing HUD content settings");
+        content = value;
     }
     public HudPlacement placement(HudModule module) { return placements.get(module); }
     public HudAppearance appearance(HudModule module) { return appearances.get(module); }
@@ -48,6 +54,7 @@ public final class HudProfile {
         copy.armor = armor; copy.effects = effects;
         copy.placements.putAll(placements); // Placements and appearances are immutable.
         copy.appearances.putAll(appearances);
+        copy.content = content; // Immutable.
         return copy;
     }
 }

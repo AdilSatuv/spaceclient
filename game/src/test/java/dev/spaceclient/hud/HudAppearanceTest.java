@@ -83,7 +83,7 @@ public class HudAppearanceTest {
         assertConfigured(HudConfig.load(file()).profile(0).appearance(HudModule.FPS));
         Properties properties = new Properties();
         try (java.io.InputStream in = Files.newInputStream(file())) { properties.load(in); }
-        assertEquals("7", properties.getProperty("schemaVersion"));
+        assertEquals("8", properties.getProperty("schemaVersion"));
     }
     @Test public void failedAppearanceWriteRestoresSnapshot() throws Exception {
         HudSettings settings = HudSettings.open(file());
@@ -101,6 +101,12 @@ public class HudAppearanceTest {
         HudConfig.exportProfile(imported, settings.getConfig().active());
         Properties properties = new Properties();
         try (java.io.InputStream in = Files.newInputStream(imported)) { properties.load(in); }
+        properties.setProperty("schemaVersion", "2");
+        properties.remove("content.coordinates.precision");
+        properties.remove("content.clock.format");
+        properties.remove("content.clock.seconds");
+        properties.remove("content.fps.label");
+        properties.remove("content.cps.mode");
         for (String invalid : new String[] {"missing", "invalid-color", "invalid-shadow"}) {
             Properties broken = new Properties(); broken.putAll(properties);
             if (invalid.equals("missing")) broken.remove("appearance.fps.backdrop");
@@ -117,6 +123,7 @@ public class HudAppearanceTest {
         HudConfig config = new HudConfig(); config.save(file());
         Properties properties = new Properties();
         try (java.io.InputStream in = Files.newInputStream(file())) { properties.load(in); }
+        toSchemaSeven(properties);
         for (String invalid : new String[] {"missing", "invalid-backdrop", "invalid-shadow"}) {
             Properties broken = new Properties(); broken.putAll(properties);
             if (invalid.equals("missing")) broken.remove("profile.0.appearance.fps.color");
@@ -131,6 +138,7 @@ public class HudAppearanceTest {
         HudConfig config = new HudConfig(); config.save(file());
         Properties properties = new Properties();
         try (java.io.InputStream in = Files.newInputStream(file())) { properties.load(in); }
+        toSchemaSeven(properties);
         for (String key : new String[] {"activeProfile", "profile.0.fps", "profile.1.name", "profile.0.layout.fps.x"}) {
             Properties broken = new Properties(); broken.putAll(properties); broken.remove(key);
             try (java.io.OutputStream out = Files.newOutputStream(file())) { broken.store(out, "missing"); }
@@ -141,4 +149,14 @@ public class HudAppearanceTest {
         }
     }
 
+    private static void toSchemaSeven(Properties properties) {
+        properties.setProperty("schemaVersion", "7");
+        for (int i = 0; i < 2; i++) {
+            properties.remove("profile." + i + ".content.coordinates.precision");
+            properties.remove("profile." + i + ".content.clock.format");
+            properties.remove("profile." + i + ".content.clock.seconds");
+            properties.remove("profile." + i + ".content.fps.label");
+            properties.remove("profile." + i + ".content.cps.mode");
+        }
+    }
 }
