@@ -2,6 +2,6 @@
   "required": true,
   "package": "dev.spaceclient.mixin",
   "compatibilityLevel": "JAVA_8",
-  "client": ["HudMixin", "ClientMixin", "GameMenuMixin"],
+  "client": ["HudMixin", "ClientMixin", "GameMenuMixin", "AutoSprintMixin", "FreeLookRendererMixin", "FreeLookInputMixin"],
   "injectors": { "defaultRequire": 1 }
 }

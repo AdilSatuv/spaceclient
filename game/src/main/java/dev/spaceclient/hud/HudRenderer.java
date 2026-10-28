@@ -6,6 +6,8 @@ import dev.spaceclient.SpaceClient;
 import java.util.Locale;
 import java.time.LocalTime;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.GameOptions;
+import net.minecraft.client.option.KeyBinding;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
@@ -17,10 +19,11 @@ public final class HudRenderer {
             case FPS: return MinecraftClient.getCurrentFps() + " FPS";
             case COORDINATES: return String.format(Locale.ROOT, "XYZ %.1f / %.1f / %.1f",
                 client.player.x, client.player.y, client.player.z);
-            case KEYSTROKES: return (client.options.forwardKey.isPressed() ? "[W] " : " W  ")
-                + (client.options.leftKey.isPressed() ? "[A] " : " A  ")
-                + (client.options.backKey.isPressed() ? "[S] " : " S  ")
-                + (client.options.rightKey.isPressed() ? "[D]" : " D ");
+            case KEYSTROKES: return KeystrokesHud.text(
+                bindingName(client.options.forwardKey), client.options.forwardKey.isPressed(),
+                bindingName(client.options.leftKey), client.options.leftKey.isPressed(),
+                bindingName(client.options.backKey), client.options.backKey.isPressed(),
+                bindingName(client.options.rightKey), client.options.rightKey.isPressed());
             case CPS: return "CPS " + SpaceClient.clicks.getLeftCps() + " L / " + SpaceClient.clicks.getRightCps() + " R";
             case COMPASS: return "Compass " + Compass.direction(client.player.yaw);
             case CLOCK: return "Time " + HudMetrics.clock(LocalTime.now());
@@ -35,6 +38,11 @@ public final class HudRenderer {
             default: throw new AssertionError(module);
         }
     }
+    private static String bindingName(KeyBinding binding) {
+        int code = binding.getCode();
+        return code == 0 ? "Unbound" : GameOptions.getFormattedNameForKeyCode(code);
+    }
+
     public static int textWidth(MinecraftClient client, String text) {
         return Math.max(1, client.textRenderer.getStringWidth(text) + 2);
     }
