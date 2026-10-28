@@ -78,19 +78,19 @@ public final class MenuTheme extends DrawableHelper {
             icon(14, width - 34, 32, GOLD);
         }
         if (layout.panelBottom + 25 < height - 13) {
-            String hint = I18n.translate("space.menu.keyboard");
+            String hint = MenuStrings.get(client, "keyboard");
             SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(hint, layout.width),
                 layout.left, layout.panelBottom + 8, MUTED);
         }
     }
-    private static String description(int id) {
+    private static String description(MinecraftClient client, int id) {
         switch (id) {
-            case 1: case 11: return I18n.translate("space.menu.worlds");
-            case 2: return I18n.translate("space.menu.servers");
-            case 14: return I18n.translate("space.menu.realms");
-            case 0: return I18n.translate("space.menu.settings");
-            case 5: return I18n.translate("space.menu.language");
-            case 4: return I18n.translate("space.menu.quit");
+            case 1: case 11: return MenuStrings.get(client, "worlds");
+            case 2: return MenuStrings.get(client, "servers");
+            case 14: return MenuStrings.get(client, "realms");
+            case 0: return MenuStrings.get(client, "settings");
+            case 5: return MenuStrings.get(client, "language");
+            case 4: return MenuStrings.get(client, "quit");
             default: return "";
         }
     }
@@ -141,7 +141,7 @@ public final class MenuTheme extends DrawableHelper {
             icon(button.id, x + 14, y + (height - 12) / 2, color);
             String title = SpaceUiFont.trimToWidth(button.message, width - 68);
             SpaceUiFont.draw(client, title, x + 40, y + (height >= 28 ? 3 : (height - SpaceUiFont.height()) / 2f), color);
-            if (height >= 28) smallText(client, description(button.id), x + 40, y + 17, width - 68,
+            if (height >= 28) smallText(client, description(client, button.id), x + 40, y + 17, width - 68,
                 primary ? 0xFF453A28 : MUTED);
             fill(x + width - 14, y + height / 2 - 2, x + width - 13, y + height / 2 + 3, color);
             fill(x + width - 13, y + height / 2 - 1, x + width - 12, y + height / 2 + 2, color);

@@ -4,14 +4,27 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.util.Identifier;
+import net.minecraft.client.texture.NativeImageBackedTexture;
+import java.awt.image.BufferedImage;
+import java.io.InputStream;
+import javax.imageio.ImageIO;
 
 /** One bundled, static landscape. Cover fitting keeps its proportions on resize. */
 public final class MenuBackdrop extends DrawableHelper {
-    private static final Identifier IMAGE = new Identifier("spaceclient", "menu/cosmic-night.jpg");
+    private static Identifier image;
+    private static boolean attempted;
     private static final MenuBackdrop DRAW = new MenuBackdrop();
     private MenuBackdrop() { }
     public static void render(MinecraftClient client, int width, int height) {
-        client.getTextureManager().bindTexture(IMAGE);
+        if (!attempted) {
+            attempted = true;
+            try (InputStream in = MenuBackdrop.class.getResourceAsStream("/assets/spaceclient/menu/cosmic-night.jpg")) {
+                BufferedImage pixels = in == null ? null : ImageIO.read(in);
+                if (pixels != null) image = client.getTextureManager().registerDynamicTexture("space-menu", new NativeImageBackedTexture(pixels));
+            } catch (Exception | LinkageError failure) { image = null; }
+        }
+        if (image == null) { MenuTheme.background(width, height, false); return; }
+        client.getTextureManager().bindTexture(image);
         GlStateManager.color(1, 1, 1, 1);
         float scale = Math.max(width / 1672f, height / 941f);
         int w = (int) Math.ceil(1672 * scale), h = (int) Math.ceil(941 * scale);

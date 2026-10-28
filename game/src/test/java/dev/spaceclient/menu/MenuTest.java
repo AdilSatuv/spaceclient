@@ -9,6 +9,15 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class MenuTest {
+    @Test public void bundledBackdropDecodesWithoutMinecraftResourcePacks() throws Exception {
+        try (java.io.InputStream stream = getClass().getResourceAsStream("/assets/spaceclient/menu/cosmic-night.jpg")) {
+            assertNotNull(stream);
+            java.awt.image.BufferedImage image = javax.imageio.ImageIO.read(stream);
+            assertNotNull(image);
+            assertEquals(1672, image.getWidth());
+            assertEquals(941, image.getHeight());
+        }
+    }
     @Test public void cardDescriptionsHaveEnglishAndRussianResources() throws Exception {
         for (String locale : new String[] {"en_US", "ru_RU"}) {
             java.util.Properties strings = new java.util.Properties();
