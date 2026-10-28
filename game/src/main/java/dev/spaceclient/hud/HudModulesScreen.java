@@ -8,13 +8,13 @@ import org.lwjgl.input.Keyboard;
 
 /** Minecraft adapter: drawing and input only; persistence lives in HudSettings. */
 public final class HudModulesScreen extends Screen {
-    private static final int TEXT = 0xF4EDE3;
-    private static final int MUTED = 0xB6B7C4;
-    private static final int ACCENT = 0xF2B56B;
-    private static final int BORDER = 0xFF414652;
-    private static final int CARD = 0xFF191E28;
-    private static final int CARD_ENABLED = 0xFF29231F;
-    private static final int CARD_FOCUS = 0xFF343039;
+    private static final int TEXT = 0xEDF2FF;
+    private static final int MUTED = 0xA6B4CD;
+    private static final int ACCENT = 0x6DDFF6;
+    private static final int BORDER = 0xFF34435F;
+    private static final int CARD = 0xFF151D30;
+    private static final int CARD_ENABLED = 0xFF1A2C40;
+    private static final int CARD_FOCUS = 0xFF263650;
     private TextFieldWidget search;
     private String query = "";
     private List<HudModule> modules = HudModule.search("");
@@ -55,11 +55,12 @@ public final class HudModulesScreen extends Screen {
     @Override public boolean shouldPauseGame() { return true; }
 
     @Override public void render(int mouseX, int mouseY, float tickDelta) {
-        fillGradient(0, 0, width, height, 0xEC03060D, 0xF5090D16);
-        fill(left, top, left + panelWidth, top + panelHeight, 0xFF10141D);
-        fill(left, top, left + panelWidth, top + 2, 0xFFF2B56B);
-        textRenderer.drawWithShadow("SPACE CLIENT / HUD", left + 12, top + 13, TEXT);
-        textRenderer.drawWithShadow("Right Shift / Esc - close", left + 12, top + 27, MUTED);
+        fillGradient(0, 0, width, height, 0xED030711, 0xF5060B19);
+        fill(left, top, left + panelWidth, top + panelHeight, 0xFF0B1020);
+        fill(left, top, left + panelWidth, top + 2, 0xFF927CFF);
+        fill(left + 12, top + 12, left + 15, top + 36, 0xFF6DDFF6);
+        textRenderer.drawWithShadow("HUD MODULES", left + 21, top + 12, TEXT);
+        textRenderer.drawWithShadow("PERSONALIZE YOUR HUD", left + 21, top + 27, MUTED);
         if (hasPages()) {
             int previousX = left + panelWidth - 116, nextX = left + panelWidth - 36;
             box(previousX, top + 10, 24, 20, focus == previousControl(), hovered(mouseX, mouseY, previousX, top + 10, 24, 20));
@@ -70,17 +71,17 @@ public final class HudModulesScreen extends Screen {
         }
 
         box(left + 12, top + 44, panelWidth - 24, 23, focus == 0, false);
-        textRenderer.drawWithShadow("Search", left + 20, top + 49, MUTED);
+        textRenderer.drawWithShadow("FIND", left + 20, top + 49, ACCENT);
         search.render();
         if (query.isEmpty() && !search.isFocused()) {
-            textRenderer.drawWithShadow("Modules...", left + 60, top + 49, MUTED);
+            textRenderer.drawWithShadow("Search modules...", left + 60, top + 49, MUTED);
         }
         boolean readOnly = SpaceClient.hud.isReadOnly();
         box(left + 12, top + 74, panelWidth - 24, 20, focus == 1,
             hovered(mouseX, mouseY, left + 12, top + 74, panelWidth - 24, 20));
         String profile = "HUD visibility / " + SpaceClient.hud.getConfig().active().name;
         textRenderer.drawWithShadow(textRenderer.trimToWidth(profile, panelWidth - 72), left + 20, top + 80, TEXT);
-        rightLabel(SpaceClient.hud.getConfig().active().enabled ? "ON" : "OFF", left + panelWidth - 20, top + 80, ACCENT);
+        stateBadge(left + panelWidth - 47, top + 77, SpaceClient.hud.getConfig().active().enabled);
 
         for (int i = HudModulePages.first(page, modules.size()); i < HudModulePages.end(page, modules.size()); i++) {
             HudModule module = modules.get(i);
@@ -89,7 +90,7 @@ public final class HudModulesScreen extends Screen {
             card(x, y, cardWidth, cardHeight, focus == i + 2,
                 hovered(mouseX, mouseY, x, y, cardWidth, cardHeight), enabled);
             textRenderer.drawWithShadow(textRenderer.trimToWidth(module.getTitle(), cardWidth - 52), x + 8, y + 8, TEXT);
-            rightLabel(enabled ? "ON" : "OFF", x + cardWidth - 8, y + 8, enabled ? ACCENT : MUTED);
+            stateBadge(x + cardWidth - 39, y + 6, enabled);
             textRenderer.drawWithShadow(textRenderer.trimToWidth(module.getDescription(), cardWidth - 16), x + 8, y + 23, MUTED);
         }
         if (modules.isEmpty()) {
@@ -105,8 +106,8 @@ public final class HudModulesScreen extends Screen {
             readOnly || !SpaceClient.hud.getError().isEmpty() ? ACCENT : MUTED);
         textRenderer.drawWithShadow(textRenderer.trimToWidth("Tab / Shift+Tab  -  Space", panelWidth - 194), left + 12, top + panelHeight - 19, MUTED);
         int editorX = left + panelWidth - 170, editorY = top + panelHeight - 28;
-        box(editorX, editorY, 82, 20, focus == modules.size() + 2, hovered(mouseX, mouseY, editorX, editorY, 82, 20));
-        drawCenteredString(textRenderer, "Edit layout", editorX + 41, editorY + 6, TEXT);
+        primaryButton(editorX, editorY, 82, 20, focus == modules.size() + 2, hovered(mouseX, mouseY, editorX, editorY, 82, 20));
+        drawCenteredString(textRenderer, "EDIT HUD", editorX + 41, editorY + 6, 0x0B1020);
         int doneX = left + panelWidth - 80, doneY = top + panelHeight - 28;
         box(doneX, doneY, 68, 20, focus == modules.size() + 3, hovered(mouseX, mouseY, doneX, doneY, 68, 20));
         drawCenteredString(textRenderer, "Done / Esc", doneX + 34, doneY + 6, TEXT);
@@ -157,6 +158,7 @@ public final class HudModulesScreen extends Screen {
             focus = 0;
             updateFocus();
             search.mouseClicked(x, y, button);
+            search.setFocused(true);
         } else if (hovered(x, y, left + 12, top + 74, panelWidth - 24, 20)) {
             focus = 1;
             updateFocus();
@@ -212,20 +214,31 @@ public final class HudModulesScreen extends Screen {
     private int cardX(int index) { return left + 12 + ((index % HudModulePages.PAGE_SIZE) % 2) * (cardWidth + 8); }
     private int cardY(int index) { return top + 102 + ((index % HudModulePages.PAGE_SIZE) / 2) * (cardHeight + 6); }
 
-    private void rightLabel(String text, int right, int y, int color) {
-        textRenderer.drawWithShadow(text, right - textRenderer.getStringWidth(text), y, color);
+    private void stateBadge(int x, int y, boolean enabled) {
+        rounded(x, y, 27, 14, enabled ? 0xFF244C5B : 0xFF28344A);
+        drawCenteredString(textRenderer, enabled ? "ON" : "OFF", x + 13, y + 3, enabled ? ACCENT : MUTED);
     }
 
+    private void primaryButton(int x, int y, int w, int h, boolean focused, boolean hovered) {
+        rounded(x, y, w, h, focused ? 0xFFEDF2FF : 0xFF6DDFF6);
+        rounded(x + 1, y + 1, w - 2, h - 2, hovered || focused ? 0xFFB6F2FF : 0xFF6DDFF6);
+    }
     private void box(int x, int y, int w, int h, boolean focused, boolean hovered) {
-        fill(x, y, x + w, y + h, focused ? 0xFFF2B56B : BORDER);
-        fill(x + 1, y + 1, x + w - 1, y + h - 1, focused || hovered ? 0xFF272B35 : CARD);
+        rounded(x, y, w, h, focused ? 0xFF6DDFF6 : BORDER);
+        rounded(x + 1, y + 1, w - 2, h - 2, focused || hovered ? 0xFF263650 : CARD);
     }
 
     private void card(int x, int y, int w, int h, boolean focused, boolean hovered, boolean enabled) {
-        fill(x, y, x + w, y + h, focused ? 0xFFF2B56B : BORDER);
-        fill(x + 1, y + 1, x + w - 1, y + h - 1,
+        rounded(x, y, w, h, focused ? 0xFF6DDFF6 : BORDER);
+        rounded(x + 1, y + 1, w - 2, h - 2,
             focused || hovered ? CARD_FOCUS : enabled ? CARD_ENABLED : CARD);
-        if (enabled) fill(x + 1, y + 1, x + 3, y + h - 1, 0xFFF2B56B);
+        if (enabled) fill(x + 1, y + 3, x + 3, y + h - 3, 0xFF6DDFF6);
+    }
+
+    private void rounded(int x, int y, int w, int h, int color) {
+        fill(x + 2, y, x + w - 2, y + h, color);
+        fill(x, y + 2, x + w, y + h - 2, color);
+        fill(x + 1, y + 1, x + w - 1, y + h - 1, color);
     }
 
     private boolean hovered(int x, int y, int left, int top, int width, int height) {

@@ -13,6 +13,11 @@ import org.lwjgl.opengl.GL14;
 
 /** Shared live data and drawing for the in-game HUD and the editor preview. */
 public final class HudRenderer {
+    // Keep HUD text legible over bright terrain as well as dark scenes.
+    static final int BACKDROP_RGB = 0x10141D;
+    static final int BACKDROP_ALPHA = 208;
+    static final int HUD_TEXT = 0xFFFFFF;
+    static final int HUD_ACCENT = 0xF2B56B;
     private HudRenderer() { }
     public static String text(MinecraftClient client, HudModule module) {
         switch (module) {
@@ -61,11 +66,11 @@ public final class HudRenderer {
     public static void render(MinecraftClient client, HudConfig config, int width, int height) {
         if (width < 1 || height < 1) return;
         backdrop(8, 8, 8 + textWidth(client, "SPACE CLIENT"), 18);
-        client.textRenderer.drawWithShadow("SPACE CLIENT", 9, 8, 0xF2B56B);
+        client.textRenderer.drawWithShadow("SPACE CLIENT", 9, 8, HUD_ACCENT);
         for (HudModule module : HudModule.values()) if (module.isEnabled(config)) {
             String text = text(client, module);
             draw(client, text, bounds(client, text, config.active().placement(module), width, height),
-                module == HudModule.KEYSTROKES ? 0xF2B56B : 0xFFFFFF);
+                module == HudModule.KEYSTROKES ? HUD_ACCENT : HUD_TEXT);
         }
     }
 
@@ -76,7 +81,8 @@ public final class HudRenderer {
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glDisable(GL11.GL_TEXTURE_2D);
             GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
-            GL11.glColor4f(16 / 255f, 20 / 255f, 29 / 255f, 176 / 255f);
+            GL11.glColor4f(((BACKDROP_RGB >> 16) & 0xFF) / 255f, ((BACKDROP_RGB >> 8) & 0xFF) / 255f,
+                (BACKDROP_RGB & 0xFF) / 255f, BACKDROP_ALPHA / 255f);
             GL11.glBegin(GL11.GL_QUADS);
             GL11.glVertex2i(right, top);
             GL11.glVertex2i(left, top);
