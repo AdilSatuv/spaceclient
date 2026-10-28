@@ -7,7 +7,7 @@ import net.minecraft.util.Identifier;
 
 /** One bundled, static landscape. Cover fitting keeps its proportions on resize. */
 public final class MenuBackdrop extends DrawableHelper {
-    private static final Identifier IMAGE = new Identifier("spaceclient", "menu/alpine-night.jpg");
+    private static final Identifier IMAGE = new Identifier("spaceclient", "menu/cosmic-night.jpg");
     private static final MenuBackdrop DRAW = new MenuBackdrop();
     private MenuBackdrop() { }
     public static void render(MinecraftClient client, int width, int height) {
