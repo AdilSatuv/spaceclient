@@ -11,9 +11,8 @@ import org.lwjgl.input.Mouse;
 
 /** Minecraft input/drawing adapter. Only complete gestures are committed through HudSettings. */
 public final class HudEditorScreen extends Screen {
-    private static final int TEXT = 0xEDF2FF, MUTED = 0xACB9D3, ACCENT = 0x6DDFF6;
-    private static final int BORDER = 0xFF34425D, PANEL = 0xFF151D30, SURFACE = 0xFF202C43;
-    private static final int VIOLET = 0xFF927CFF;
+    private static final int TEXT = 0xF2EEE7, MUTED = 0xB7B3AD, ACCENT = 0xD7AF6A;
+    private static final int BORDER = 0xFF303238, PANEL = 0xF2191B20, SURFACE = 0xFF222429;
     private final Screen parent;
     private HudModule selected = HudModule.FPS;
     private HudPlacement draft;
@@ -33,10 +32,14 @@ public final class HudEditorScreen extends Screen {
     private HudPlacement.Bounds bounds(HudModule module) {
         return HudRenderer.bounds(client, label(module), module == selected ? placement() : profile().placement(module), width, height);
     }
-    private int barY() { return HudEditorLayout.toolbarY(height, bounds(selected)); }
+    private boolean sidebar() { return HudEditorLayout.useSidebar(width, height, bounds(selected)); }
+    private int barY() { return sidebar() ? HudEditorLayout.sidebarY(height) : HudEditorLayout.toolbarY(height, bounds(selected)); }
     private boolean roomy() { return width >= 320 && height >= 240; }
-    private int panelWidth() { return HudEditorLayout.panelWidth(width); }
-    private int panelX() { return HudEditorLayout.panelX(width); }
+    private int panelWidth() { return sidebar() ? HudEditorLayout.SIDEBAR_WIDTH : HudEditorLayout.panelWidth(width); }
+    private int panelHeight() { return sidebar() ? HudEditorLayout.SIDEBAR_HEIGHT : HudEditorLayout.HEIGHT; }
+    private int panelX() { return sidebar() ? HudEditorLayout.sidebarX(width, bounds(selected)) : HudEditorLayout.panelX(width); }
+    private int nameBoxX() { return panelX() + (sidebar() ? 42 : 40); }
+    private int nameBoxY() { return barY() + (sidebar() ? 108 : 54); }
 
     @Override public void init() {
         String pendingName = name == null ? profile().name : name.getText();
@@ -61,28 +64,36 @@ public final class HudEditorScreen extends Screen {
     @Override public void tick() { name.tick(); }
     @Override public boolean shouldPauseGame() { return true; }
     @Override public void removed() {
+        SpaceUiFont.release();
         finishName();
         commitDraft();
         if (capturedRepeat) Keyboard.enableRepeatEvents(previousRepeat);
         SpaceClient.clicks.clear();
     }
     @Override public void render(int mouseX, int mouseY, float delta) {
-        fillGradient(0, 0, width, height, 0xB6091020, 0xDB090E1B);
+        // Keep the game visible while lifting the inspector above it.
+        fillGradient(0, 0, width, height, 0x5006080A, 0x8006080A);
         if (client.player == null || !roomy()) {
-            drawCenteredString(textRenderer, "Resize the window to edit HUD", width / 2, height / 2 - 12, TEXT);
-            drawCenteredString(textRenderer, "Esc - back", width / 2, height / 2 + 4, MUTED);
+            centerText("Resize the window to edit HUD", width / 2, height / 2 - 12, TEXT);
+            centerText("Esc - back", width / 2, height / 2 + 4, MUTED);
             return;
         }
         lastMouseX = mouseX; lastMouseY = mouseY;
         for (HudModule module : HudModule.values()) if (module != selected) drawModule(module);
         drawModule(selected);
-        int y = barY(), x = panelX(), w = panelWidth();
-        // A compact floating inspector keeps the rest of the screen available for the layout.
-        rounded(x + 2, y + 3, w, HudEditorLayout.HEIGHT, 0x88030812);
-        rounded(x, y, w, HudEditorLayout.HEIGHT, BORDER);
-        rounded(x + 1, y + 1, w - 2, HudEditorLayout.HEIGHT - 2, PANEL);
-        fill(x + 6, y + 28, x + w - 6, y + 29, 0xFF2B3850);
-        fill(x + 6, y + 76, x + w - 6, y + 77, 0xFF2B3850);
+        int y = barY(), x = panelX(), w = panelWidth(), h = panelHeight();
+        rounded(x + 2, y + 3, w, h, 0x88000000);
+        rounded(x, y, w, h, BORDER);
+        rounded(x + 1, y + 1, w - 2, h - 2, PANEL);
+        if (sidebar()) {
+            SpaceUiFont.draw(client, "HUD EDITOR", x + 8, y + 10, TEXT);
+            fill(x + 8, y + 27, x + w - 8, y + 28, BORDER);
+            fill(x + 8, y + 76, x + w - 8, y + 77, BORDER);
+            fill(x + 8, y + 194, x + w - 8, y + 195, BORDER);
+        } else {
+            fill(x + 6, y + 28, x + w - 6, y + 29, BORDER);
+            fill(x + 6, y + 76, x + w - 6, y + 77, BORDER);
+        }
         String hoverHint = "";
         for (Action action : controls()) {
             boolean hovered = action.contains(mouseX, mouseY);
@@ -92,43 +103,66 @@ public final class HudEditorScreen extends Screen {
                 || action.id == (profilesTab ? 51 : 50);
             boolean primary = action.id == 13;
             box(action.x, action.y, action.width, 20, chosen, hovered && action.enabled, action.enabled, primary);
-            int ink = !action.enabled ? 0x77839A : primary ? 0x10192B : confirmed ? ACCENT : TEXT;
-            drawCenteredString(textRenderer, textRenderer.trimToWidth(action.label, action.width - 6),
+            int ink = !action.enabled ? 0x817E78 : primary ? 0x15120E : confirmed ? ACCENT : TEXT;
+            centerText(SpaceUiFont.trimToWidth(action.label, action.width - 6),
                 action.x + action.width / 2, action.y + 6, ink);
             if (hovered) hoverHint = action.hint;
         }
-        if (profilesTab) {
-            textRenderer.drawWithShadow("Name", x + 6, y + 60, MUTED);
-            box(x + 32, y + 54, 90, 20, name.isFocused(), false, !settings().isReadOnly(), false);
-            name.x = x + 34; name.y = y + 60; name.render();
-            textRenderer.drawWithShadow("L/P: tabs", x + 180, y + 60, MUTED);
+        if (sidebar()) {
+            SpaceUiFont.draw(client, "L/P: tabs", x + 8, y + 182, MUTED);
+            if (profilesTab) {
+                SpaceUiFont.draw(client, "Name", x + 8, y + 114, MUTED);
+                box(nameBoxX(), nameBoxY(), 90, 20, name.isFocused(), false, !settings().isReadOnly(), false);
+                name.x = nameBoxX() + 2; name.y = nameBoxY() + 6; name.render();
+            } else {
+                SpaceUiFont.draw(client, "MODULE", x + 8, y + 88, MUTED);
+                SpaceUiFont.draw(client, "POSITION", x + 8, y + 108, MUTED);
+                SpaceUiFont.draw(client, "SCALE", x + 8, y + 134, MUTED);
+                SpaceUiFont.draw(client, String.format(Locale.ROOT, "%.1fx", placement().scale), x + 88, y + 134, TEXT);
+                SpaceUiFont.draw(client, "ANCHOR", x + 8, y + 160, MUTED);
+            }
+        } else if (profilesTab) {
+            SpaceUiFont.draw(client, "Name", x + 6, y + 60, MUTED);
+            box(nameBoxX(), nameBoxY(), 90, 20, name.isFocused(), false, !settings().isReadOnly(), false);
+            name.x = nameBoxX() + 2; name.y = nameBoxY() + 6; name.render();
+            SpaceUiFont.draw(client, "L/P: tabs", x + 180, y + 60, MUTED);
         } else {
-            textRenderer.drawWithShadow("MOVE", x + 6, y + 36, MUTED);
-            textRenderer.drawWithShadow("SCALE", x + 132, y + 36, MUTED);
-            textRenderer.drawWithShadow(String.format(Locale.ROOT, "%.1fx", placement().scale), x + 190, y + 36, ACCENT);
-            textRenderer.drawWithShadow("ANCHOR", x + 6, y + 60, MUTED);
-            textRenderer.drawWithShadow("L/P: tabs", x + 207, y + 60, MUTED);
+            SpaceUiFont.draw(client, "MOVE", x + 6, y + 36, MUTED);
+            SpaceUiFont.draw(client, "SCALE", x + 132, y + 36, MUTED);
+            SpaceUiFont.draw(client, String.format(Locale.ROOT, "%.1fx", placement().scale), x + 190, y + 36, ACCENT);
+            SpaceUiFont.draw(client, "EDGE", x + 6, y + 60, MUTED);
+            SpaceUiFont.draw(client, "L/P: tabs", x + 207, y + 60, MUTED);
         }
         String message = confirmation.message();
         if (message.isEmpty()) message = settings().getError();
         if (message.isEmpty() && settings().isReadOnly()) message = settings().getNotice();
         if (message.isEmpty()) message = hoverHint.isEmpty() ? status : hoverHint;
-        if (message.isEmpty()) message = profilesTab ? "1/2: profile  |  N: rename" : "Tab: module  |  Arrows: move  |  +/-: scale";
+        if (message.isEmpty()) message = sidebar() ? "Arrows: move | +/-: scale" : profilesTab ? "1/2: profile  |  N: rename" : "Tab: module  |  Arrows: move  |  +/-: scale";
         if (confirmation.message().isEmpty() && !profile().enabled && !settings().isReadOnly() && settings().getError().isEmpty() && hoverHint.isEmpty()) message = "HUD hidden; this is a layout preview. Esc - modules";
-        textRenderer.drawWithShadow(textRenderer.trimToWidth(message, w - 12), x + 6, y + 81,
-            settings().getError().isEmpty() ? MUTED : 0xFFC078);
+        int messageY = y + (sidebar() ? 196 : 81);
+        if (sidebar()) {
+            // Long notices must stay understandable in the narrower inspector.
+            String first = SpaceUiFont.trimToWidth(message, w - 16);
+            SpaceUiFont.draw(client, first, x + 8, messageY, settings().getError().isEmpty() ? MUTED : ACCENT);
+            if (first.length() < message.length()) {
+                String rest = message.substring(first.length()).trim();
+                SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(rest, w - 16), x + 8, messageY + 11,
+                    settings().getError().isEmpty() ? MUTED : ACCENT);
+            }
+        } else SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(message, w - 12), x + 6, messageY,
+            settings().getError().isEmpty() ? MUTED : ACCENT);
     }
     private void drawModule(HudModule module) {
         HudPlacement.Bounds b = bounds(module);
         int left = Math.max(0, (int) Math.floor(b.x) - 2), top = Math.max(0, (int) Math.floor(b.y) - 2);
         int right = Math.min(width, (int) Math.ceil(b.x + b.width) + 2), bottom = Math.min(height, (int) Math.ceil(b.y + b.height) + 2);
-        int border = module == selected ? 0xFF6DDFF6 : BORDER;
+        int border = module == selected ? 0xFFD7AF6A : BORDER;
         fill(left, top, right, top + 1, border); fill(left, bottom - 1, right, bottom, border);
         fill(left, top, left + 1, bottom, border); fill(right - 1, top, right, bottom, border);
         if (module == selected) {
             // Corner handles distinguish selection by shape as well as colour.
-            fill(left, top, Math.min(right, left + 3), Math.min(bottom, top + 3), 0xFFEDF2FF);
-            fill(Math.max(left, right - 3), Math.max(top, bottom - 3), right, bottom, 0xFFEDF2FF);
+            fill(left, top, Math.min(right, left + 3), Math.min(bottom, top + 3), 0xFFF2EEE7);
+            fill(Math.max(left, right - 3), Math.max(top, bottom - 3), right, bottom, 0xFFF2EEE7);
         }
         boolean visible = profile().enabled && module.isEnabled(settings().getConfig());
         HudRenderer.draw(client, label(module), b, visible ? (module == HudModule.KEYSTROKES ? HudRenderer.HUD_ACCENT : HudRenderer.HUD_TEXT) : MUTED);
@@ -137,7 +171,36 @@ public final class HudEditorScreen extends Screen {
         List<Action> actions = new ArrayList<>();
         int y = barY(), x = panelX(), w = panelWidth();
         boolean editable = !settings().isReadOnly();
-        actions.add(new Action(50, "LAYOUT", x + 6, y + 6, 42, true, "Layout controls (L)"));
+        String anchor = (placement().horizontal == HudPlacement.Horizontal.LEFT ? "L" : "R")
+            + "/" + (placement().vertical == HudPlacement.Vertical.TOP ? "T" : "B");
+        if (sidebar()) {
+            actions.add(new Action(13, "Done", x + w - 54, y + 5, 46, true, "Return to modules (Esc); changes save automatically"));
+            actions.add(new Action(14, "<", x + 8, y + 31, 20, true, "Previous module (Shift+Tab / PgUp)"));
+            actions.add(new Action(12, selected.getTitle(), x + 30, y + 31, 88, true, "Next module (Tab / PgDn)"));
+            actions.add(new Action(15, ">", x + 120, y + 31, 20, true, "Next module (Tab / PgDn)"));
+            actions.add(new Action(50, "LAYOUT", x + 8, y + 54, 65, true, "Layout controls (L)"));
+            actions.add(new Action(51, "PROFILES", x + 77, y + 54, 70, true, "Profile and import/export controls (P)"));
+            if (profilesTab) {
+                actions.add(new Action(10, "1: " + settings().getConfig().profile(0).name, x + 8, y + 82, 65, editable, "Select HUD profile 1 (key 1)"));
+                actions.add(new Action(11, "2: " + settings().getConfig().profile(1).name, x + 77, y + 82, 70, editable, "Select HUD profile 2 (key 2)"));
+                actions.add(new Action(47, confirmation.isPending(47) ? "Yes" : "Import", x + 8, y + 134, 44, editable, "Import and replace this profile (I)"));
+                actions.add(new Action(48, "Export", x + 56, y + 134, 44, editable, "Export this profile (O)"));
+                actions.add(new Action(30, "Save", x + 104, y + 134, 44, editable, "Save profile name (N, then Enter)"));
+                actions.add(new Action(45, confirmation.isPending(45) ? "Yes" : "Reset all", x + 8, y + 160, 70, editable, "Reset this profile layout (Home)"));
+            } else {
+                actions.add(new Action(46, selected.isEnabled(settings().getConfig()) ? "ON" : "OFF", x + 105, y + 82, 42, editable, "Toggle selected module (Space)"));
+                actions.add(new Action(40, "<", x + 58, y + 102, 20, editable, "Move left one GUI unit (Left arrow)"));
+                actions.add(new Action(41, ">", x + 80, y + 102, 20, editable, "Move right one GUI unit (Right arrow)"));
+                actions.add(new Action(42, "^", x + 102, y + 102, 20, editable, "Move up one GUI unit (Up arrow)"));
+                actions.add(new Action(43, "v", x + 124, y + 102, 20, editable, "Move down one GUI unit (Down arrow)"));
+                actions.add(new Action(20, "-", x + 62, y + 128, 20, editable, "Smaller widget (- or mouse wheel over widget)"));
+                actions.add(new Action(21, "+", x + 120, y + 128, 20, editable, "Larger widget (+ or mouse wheel over widget)"));
+                actions.add(new Action(22, anchor, x + 54, y + 154, 40, editable, "Change edge anchors, keep current position (A)"));
+                actions.add(new Action(44, "Reset", x + 98, y + 154, 48, editable, "Reset selected placement and scale (R)"));
+            }
+            return actions;
+        }
+        actions.add(new Action(50, "EDIT", x + 6, y + 6, 42, true, "Layout controls (L)"));
         actions.add(new Action(51, "PROFILES", x + 51, y + 6, 56, true, "Profile and import/export controls (P)"));
         actions.add(new Action(14, "<", x + 110, y + 6, 18, true, "Previous module (Shift+Tab / PgUp)"));
         actions.add(new Action(12, selected.getTitle(), x + 130, y + 6, 68, true, "Next module (Tab / PgDn)"));
@@ -149,7 +212,7 @@ public final class HudEditorScreen extends Screen {
             actions.add(new Action(45, confirmation.isPending(45) ? "Yes" : "Reset all", x + 154, y + 30, 54, editable, "Reset this profile layout (Home)"));
             actions.add(new Action(47, confirmation.isPending(47) ? "Yes" : "Import", x + 212, y + 30, 42, editable, "Import and replace this profile (I)"));
             actions.add(new Action(48, "Export", x + 258, y + 30, 42, editable, "Export this profile (O)"));
-            actions.add(new Action(30, "Save", x + 126, y + 54, 44, editable, "Save profile name (N, then Enter)"));
+            actions.add(new Action(30, "Save", x + 134, y + 54, 44, editable, "Save profile name (N, then Enter)"));
         } else {
             actions.add(new Action(40, "<", x + 36, y + 30, 20, editable, "Move left one GUI unit (Left arrow)"));
             actions.add(new Action(41, ">", x + 58, y + 30, 20, editable, "Move right one GUI unit (Right arrow)"));
@@ -157,8 +220,6 @@ public final class HudEditorScreen extends Screen {
             actions.add(new Action(43, "v", x + 102, y + 30, 20, editable, "Move down one GUI unit (Down arrow)"));
             actions.add(new Action(20, "-", x + 164, y + 30, 22, editable, "Smaller widget (- or mouse wheel over widget)"));
             actions.add(new Action(21, "+", x + 220, y + 30, 22, editable, "Larger widget (+ or mouse wheel over widget)"));
-            String anchor = (placement().horizontal == HudPlacement.Horizontal.LEFT ? "L" : "R")
-                + "/" + (placement().vertical == HudPlacement.Vertical.TOP ? "T" : "B");
             actions.add(new Action(22, anchor, x + 48, y + 54, 42, editable, "Change edge anchors, keep current position (A)"));
             actions.add(new Action(44, "Reset", x + 96, y + 54, 46, editable, "Reset selected placement and scale (R)"));
             actions.add(new Action(46, selected.isEnabled(settings().getConfig()) ? "ON" : "OFF", x + 148, y + 54, 42, editable, "Toggle selected module (Space)"));
@@ -166,12 +227,15 @@ public final class HudEditorScreen extends Screen {
         return actions;
     }
     private void box(int x, int y, int w, int h, boolean focused, boolean hovered, boolean enabled, boolean primary) {
-        int edge = focused ? 0xFF6DDFF6 : hovered ? 0xFF607595 : 0xFF34425D;
-        int inside = !enabled ? 0xFF192235 : primary ? (hovered ? 0xFFA4EDFB : 0xFF6DDFF6)
-            : focused ? 0xFF293D57 : hovered ? 0xFF2B3A54 : SURFACE;
+        int edge = focused ? 0xFFD7AF6A : hovered ? 0xFF71695C : BORDER;
+        int inside = !enabled ? 0xFF1A1B1E : primary ? (hovered ? 0xFFE6C78F : 0xFFD7AF6A)
+            : focused ? 0xFF373027 : hovered ? 0xFF30302F : SURFACE;
         rounded(x, y, w, h, primary ? inside : edge);
         if (!primary) rounded(x + 1, y + 1, w - 2, h - 2, inside);
-        if (focused && !primary) fill(x + 4, y + h - 2, x + w - 4, y + h - 1, VIOLET);
+        if (focused && !primary) fill(x + 4, y + h - 2, x + w - 4, y + h - 1, 0xFFD7AF6A);
+    }
+    private void centerText(String text, int centerX, int y, int color) {
+        SpaceUiFont.draw(client, text, centerX - SpaceUiFont.width(text) / 2f, y, color);
     }
     private void rounded(int x, int y, int w, int h, int color) {
         fill(x + 2, y, x + w - 2, y + h, color);
@@ -182,7 +246,7 @@ public final class HudEditorScreen extends Screen {
         if (button != 0 || !roomy() || client.player == null || dragging) return;
         int yBar = barY();
         int xBar = panelX();
-        if (profilesTab && x >= xBar + 32 && x < xBar + 122 && y >= yBar + 54 && y < yBar + 74) {
+        if (profilesTab && x >= nameBoxX() && x < nameBoxX() + 90 && y >= nameBoxY() && y < nameBoxY() + 20) {
             cancelConfirmation();
             if (name.isFocused()) name.mouseClicked(x, y, button);
             else focusName();
@@ -196,7 +260,7 @@ public final class HudEditorScreen extends Screen {
         }
         cancelConfirmation();
         // Empty inspector space is not part of the draggable canvas.
-        if (x >= xBar && x < xBar + panelWidth() && y >= yBar && y < yBar + HudEditorLayout.HEIGHT) return;
+        if (x >= xBar && x < xBar + panelWidth() && y >= yBar && y < yBar + panelHeight()) return;
         if (settings().isReadOnly()) return;
         if (bounds(selected).contains(x, y)) { beginDrag(selected, x, y); return; }
         HudModule[] modules = HudModule.values();

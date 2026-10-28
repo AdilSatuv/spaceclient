@@ -39,6 +39,22 @@ public class HudPlacementTest {
             }
         }
     }
+    @Test public void adaptiveInspectorNeverCoversSelectedBoundsAtDifferentSizes() {
+        for (int width : new int[] {320, 427, 500, 640, 960}) for (int height : new int[] {240, 360, 540})
+            for (int textWidth : new int[] {20, 100, 400}) for (double scale : new double[] {0.5, 1, 3})
+                for (int x = 0; x <= width; x += 17) for (int y = 0; y <= height; y += 17) {
+                    HudPlacement.Bounds b = new HudPlacement(Horizontal.LEFT, Vertical.TOP, x, y, scale)
+                        .resolve(width, height, textWidth, 10);
+                    boolean side = HudEditorLayout.useSidebar(width, height, b);
+                    int px = side ? HudEditorLayout.sidebarX(width, b) : HudEditorLayout.panelX(width);
+                    int py = side ? HudEditorLayout.sidebarY(height) : HudEditorLayout.toolbarY(height, b);
+                    int pw = side ? HudEditorLayout.SIDEBAR_WIDTH : HudEditorLayout.panelWidth(width);
+                    int ph = side ? HudEditorLayout.SIDEBAR_HEIGHT : HudEditorLayout.HEIGHT;
+                    assertTrue(px >= 0 && py >= 0 && px + pw <= width && py + ph <= height);
+                    assertTrue(b.x + b.width + 2 <= px || b.x - 2 >= px + pw
+                        || b.y + b.height + 2 <= py || b.y - 2 >= py + ph);
+                }
+    }
     @Test public void everyAnchorKeepsEvenOversizedWidgetsInsideSmallAndLargeViewports() {
         for (Horizontal hx : Horizontal.values()) for (Vertical vy : Vertical.values())
             for (int[] viewport : new int[][] {{1, 1}, {427, 240}, {640, 360}, {960, 540}}) {
