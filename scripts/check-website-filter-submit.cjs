@@ -4,9 +4,25 @@ const assert = require('node:assert/strict');
 async function checkFilterSubmit({ browser, base, setScenario, results, firefox }) {
   const page = await browser.newPage();
   let report;
+  let pending;
+  await page.setRequestInterception(true);
+  page.on('request', (request) => {
+    const submission = pending;
+    if (submission && request.isNavigationRequest()) {
+      // Keep the old document alive until its submit status reaches the test.
+      Promise.all([submission.release, new Promise((resolve) => setTimeout(resolve, 1200))]).then(
+        () => request.continue().catch(() => {}),
+      );
+    } else {
+      request.continue().catch(() => {});
+    }
+  });
   await page.exposeFunction('__reportFilterSubmit', (state) => report?.(state));
   const submit = async (method, expected = { q: 'CPS', category: '', status: '' }) => {
     const observed = new Promise((resolve) => (report = resolve));
+    let release;
+    pending = { release: new Promise((resolve) => (release = resolve)) };
+    const route = new URL(page.url()).pathname;
     await page.evaluate(() => {
       document.addEventListener(
         'submit',
@@ -28,24 +44,44 @@ async function checkFilterSubmit({ browser, base, setScenario, results, firefox 
       );
     });
     const navigation = page.waitForNavigation({ waitUntil: 'networkidle0' });
-    if (method === 'keyboard') {
-      await page.focus('input[name=q]');
-      await page.keyboard.press('Enter');
-    } else {
-      await page.click('.filter-form button');
+    // The observation and navigation run concurrently; handle early rejection too.
+    navigation.catch(() => {});
+    try {
+      if (method === 'keyboard') {
+        await page.focus('input[name=q]');
+        await page.keyboard.press('Enter');
+      } else {
+        await page.click('.filter-form button');
+      }
+      let timeout;
+      let state;
+      try {
+        state = await Promise.race([
+          observed,
+          new Promise(
+            (_, reject) =>
+              (timeout = setTimeout(() => reject(new Error('No submit observation')), 5000)),
+          ),
+        ]);
+      } finally {
+        clearTimeout(timeout);
+      }
+      assert.match(state.status, /^Запрос отправлен\. Пока показано прежнее состояние\./);
+      assert.ok(state.live === 'polite' || state.live === null, 'role=status is polite by default');
+      assert.equal(state.disabled, false);
+      assert.deepEqual(state.values, expected);
+      if (expected.q === 'CPS') assert.match(state.oldCount, /Найдено: 6/);
+      release();
+      await navigation;
+    } catch (error) {
+      throw new Error(`Filter submit at ${route} via ${method}: ${error.message}`, {
+        cause: error,
+      });
+    } finally {
+      release();
+      pending = undefined;
+      report = undefined;
     }
-    const state = await Promise.race([
-      observed,
-      new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('No submit observation')), 5000),
-      ),
-    ]);
-    assert.match(state.status, /^Запрос отправлен\. Пока показано прежнее состояние\./);
-    assert.ok(state.live === 'polite' || state.live === null, 'role=status is polite by default');
-    assert.equal(state.disabled, false);
-    assert.deepEqual(state.values, expected);
-    if (expected.q === 'CPS') assert.match(state.oldCount, /Найдено: 6/);
-    await navigation;
   };
   try {
     await page.setCacheEnabled(false);
@@ -111,14 +147,6 @@ async function checkFilterSubmit({ browser, base, setScenario, results, firefox 
       setScenario({ delayMs: 0 });
     }
     await page.goto(base + '/help', { waitUntil: 'networkidle0' });
-    await page.setRequestInterception(true);
-    page.on('request', (request) => {
-      if (request.isNavigationRequest() && new URL(request.url()).pathname === '/help') {
-        setTimeout(() => request.continue().catch(() => {}), 1200);
-      } else {
-        request.continue().catch(() => {});
-      }
-    });
     await page.type('input[name=q]', 'вход');
     await submit('keyboard', { q: 'вход' });
     assert.equal(new URL(page.url()).searchParams.get('q'), 'вход');
