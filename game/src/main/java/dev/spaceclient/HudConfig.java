@@ -1,5 +1,6 @@
 package dev.spaceclient;
 
+import dev.spaceclient.hud.HudAppearance;
 import dev.spaceclient.hud.HudModule;
 import dev.spaceclient.hud.HudPlacement;
 import dev.spaceclient.hud.HudProfile;
@@ -42,17 +43,28 @@ public final class HudConfig {
         Properties properties = readProperties(file);
         String schema = properties.getProperty("schemaVersion", "1");
         if (!schema.matches("[1-9][0-9]*")) throw new InvalidConfigException("Invalid HUD schema version");
-        if (!schema.equals("1") && !schema.equals("2") && !schema.equals("3") && !schema.equals("4") && !schema.equals("5") && !schema.equals("6")) throw new UnsupportedSchemaException();
-        if (!schema.equals("6")) config.migrationSourceVersion = Integer.parseInt(schema);
+        if (!schema.equals("1") && !schema.equals("2") && !schema.equals("3") && !schema.equals("4") && !schema.equals("5") && !schema.equals("6") && !schema.equals("7")) throw new UnsupportedSchemaException();
+        if (!schema.equals("7")) config.migrationSourceVersion = Integer.parseInt(schema);
         if (schema.equals("1")) {
-            config.profiles[0] = readProfile(properties, "", "Profile 1");
+            config.profiles[0] = readProfile(properties, "", "Profile 1", false);
             config.profiles[1] = config.profiles[0].copy();
             config.profiles[1].name = "Profile 2";
         } else {
             try { config.select(Integer.parseInt(properties.getProperty("activeProfile", "0"))); }
             catch (IllegalArgumentException exception) { throw new InvalidConfigException("Invalid active HUD profile", exception); }
             for (int i = 0; i < config.profiles.length; i++)
-                config.profiles[i] = readProfile(properties, "profile." + i + ".", "Profile " + (i + 1));
+                config.profiles[i] = readProfile(properties, "profile." + i + ".", "Profile " + (i + 1), schema.equals("7"));
+        }
+        if (schema.equals("7")) {
+            // Schema 7 is always written as a complete snapshot; missing keys must not
+            // silently reset layout or flags on a subsequent save.
+            Properties required = new Properties();
+            required.setProperty("schemaVersion", "7");
+            required.setProperty("activeProfile", Integer.toString(config.activeProfile));
+            for (int i = 0; i < config.profiles.length; i++)
+                writeProfile(required, "profile." + i + ".", config.profiles[i]);
+            if (!properties.stringPropertyNames().containsAll(required.stringPropertyNames()))
+                throw new InvalidConfigException("Incomplete HUD schema 7 configuration");
         }
         return config;
     }
@@ -73,7 +85,7 @@ public final class HudConfig {
         return properties;
     }
 
-    private static HudProfile readProfile(Properties properties, String prefix, String defaultName) throws IOException {
+    private static HudProfile readProfile(Properties properties, String prefix, String defaultName, boolean appearanceFields) throws IOException {
         try {
             HudProfile profile = new HudProfile(properties.getProperty(prefix + "name", defaultName));
             profile.enabled = readBoolean(properties, prefix + "enabled");
@@ -97,6 +109,16 @@ public final class HudConfig {
                     Double.parseDouble(properties.getProperty(key + "x", Double.toString(defaults.x))),
                     Double.parseDouble(properties.getProperty(key + "y", Double.toString(defaults.y))),
                     Double.parseDouble(properties.getProperty(key + "scale", "1.0"))));
+                if (appearanceFields) {
+                    String appearanceKey = prefix + "appearance." + module.getId() + ".";
+                    String color = properties.getProperty(appearanceKey + "color");
+                    String backdrop = properties.getProperty(appearanceKey + "backdrop");
+                    String shadow = properties.getProperty(appearanceKey + "shadow");
+                    if (color == null || backdrop == null || shadow == null)
+                        throw new InvalidConfigException("Missing HUD appearance: " + module.getId());
+                    profile.setAppearance(module, new HudAppearance(HudAppearance.Color.valueOf(color),
+                        HudAppearance.Backdrop.valueOf(backdrop), readBoolean(properties, appearanceKey + "shadow")));
+                }
             }
             return profile;
         } catch (IllegalArgumentException exception) { throw new InvalidConfigException("Invalid HUD profile", exception); }
@@ -135,12 +157,17 @@ public final class HudConfig {
             properties.setProperty(key + "x", Double.toString(placement.x));
             properties.setProperty(key + "y", Double.toString(placement.y));
             properties.setProperty(key + "scale", Double.toString(placement.scale));
+            HudAppearance appearance = profile.appearance(module);
+            String appearanceKey = prefix + "appearance." + module.getId() + ".";
+            properties.setProperty(appearanceKey + "color", appearance.color.name());
+            properties.setProperty(appearanceKey + "backdrop", appearance.backdrop.name());
+            properties.setProperty(appearanceKey + "shadow", Boolean.toString(appearance.shadow));
         }
     }
 
     public void save(Path file) throws IOException {
         Properties properties = new Properties();
-        properties.setProperty("schemaVersion", "6");
+        properties.setProperty("schemaVersion", "7");
         properties.setProperty("activeProfile", Integer.toString(activeProfile));
         for (int i = 0; i < profiles.length; i++) writeProfile(properties, "profile." + i + ".", profiles[i]);
         writeAtomic(file, properties);
@@ -149,22 +176,29 @@ public final class HudConfig {
     public static void exportProfile(Path file, HudProfile profile) throws IOException {
         Properties properties = new Properties();
         properties.setProperty("format", "spaceclient-hud-profile");
-        properties.setProperty("schemaVersion", "1");
+        properties.setProperty("schemaVersion", "2");
         writeProfile(properties, "", profile);
         writeAtomic(file, properties);
     }
 
     public static HudProfile importProfile(Path file) throws IOException {
         Properties properties = readProperties(file);
+        String version = properties.getProperty("schemaVersion");
         if (!"spaceclient-hud-profile".equals(properties.getProperty("format"))
-                || !"1".equals(properties.getProperty("schemaVersion")))
+                || (!"1".equals(version) && !"2".equals(version)))
             throw new InvalidConfigException("Unsupported HUD profile export");
-        HudProfile profile = readProfile(properties, "", "Imported");
+        HudProfile profile = readProfile(properties, "", "Imported", "2".equals(version));
         Properties expected = new Properties();
         expected.setProperty("format", "spaceclient-hud-profile");
-        expected.setProperty("schemaVersion", "1");
+        expected.setProperty("schemaVersion", version);
         writeProfile(expected, "", profile);
-        // Accept exact historical shapes, never a partial extension.
+        if ("2".equals(version)) {
+            if (!properties.stringPropertyNames().equals(expected.stringPropertyNames()))
+                throw new InvalidConfigException("Incomplete or unknown HUD profile fields");
+            return profile;
+        }
+        // Version 1 did not contain appearance fields. Accept only complete historical shapes.
+        for (HudModule module : HudModule.values()) removeAppearanceFields(expected, module.getId());
         Properties vitalsEra = new Properties();
         vitalsEra.putAll(expected);
         removeModuleFields(vitalsEra, "armor");
@@ -187,6 +221,11 @@ public final class HudConfig {
                 && !properties.stringPropertyNames().equals(legacy.stringPropertyNames()))
             throw new InvalidConfigException("Incomplete or unknown HUD profile fields");
         return profile;
+    }
+
+    private static void removeAppearanceFields(Properties properties, String module) {
+        for (String field : new String[] { "color", "backdrop", "shadow" })
+            properties.remove("appearance." + module + "." + field);
     }
 
     private static void removeModuleFields(Properties properties, String module) {

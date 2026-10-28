@@ -34,7 +34,7 @@ public class HudMigrationTest {
         assertArrayEquals(original, Files.readAllBytes(backups.get(0)));
         assertFalse(settings.getConfig().profile(1).compass);
         assertTrue(settings.toggle(HudModule.COMPASS));
-        assertTrue(new String(Files.readAllBytes(file()), StandardCharsets.ISO_8859_1).contains("schemaVersion=6"));
+        assertTrue(new String(Files.readAllBytes(file()), StandardCharsets.ISO_8859_1).contains("schemaVersion=7"));
         assertTrue(HudConfig.load(file()).profile(1).compass);
         assertFalse(HudConfig.load(file()).profile(0).fps);
         assertFalse(HudConfig.load(file()).profile(1).cps);
@@ -93,7 +93,7 @@ public class HudMigrationTest {
         assertEquals(1, backups.size());
         assertArrayEquals(original, Files.readAllBytes(backups.get(0)));
         assertTrue(settings.toggle(HudModule.HEALTH));
-        assertTrue(new String(Files.readAllBytes(file()), StandardCharsets.ISO_8859_1).contains("schemaVersion=6"));
+        assertTrue(new String(Files.readAllBytes(file()), StandardCharsets.ISO_8859_1).contains("schemaVersion=7"));
         HudConfig updated = HudConfig.load(file());
         assertTrue(updated.profile(0).health);
         assertTrue(updated.profile(0).clock);

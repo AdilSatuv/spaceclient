@@ -170,7 +170,8 @@ public final class HudEditorScreen extends Screen {
             fill(Math.max(left, right - 3), Math.max(top, bottom - 3), right, bottom, 0xFFF2EEE7);
         }
         boolean visible = profile().enabled && module.isEnabled(settings().getConfig());
-        HudRenderer.draw(client, label(module), b, visible ? (module == HudModule.KEYSTROKES ? HudRenderer.HUD_ACCENT : HudRenderer.HUD_TEXT) : MUTED);
+        HudAppearance appearance = profile().appearance(module);
+        HudRenderer.draw(client, label(module), b, appearance, visible ? HudRenderer.color(module, appearance) : MUTED);
     }
     private List<Action> controls() {
         List<Action> actions = new ArrayList<>();

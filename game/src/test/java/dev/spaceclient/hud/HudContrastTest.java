@@ -15,6 +15,7 @@ public class HudContrastTest {
         }
         assertTrue("white HUD text must meet 4.5:1", contrast(HudRenderer.HUD_TEXT, backdrop) >= 4.5);
         assertTrue("amber HUD text must meet 4.5:1", contrast(HudRenderer.HUD_ACCENT, backdrop) >= 4.5);
+        assertTrue("aqua HUD text must meet 4.5:1", contrast(HudRenderer.HUD_AQUA, backdrop) >= 4.5);
     }
 
     private static double contrast(int foreground, double[] background) {

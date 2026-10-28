@@ -80,7 +80,7 @@ public class HudSettingsTest {
     }
 
     @Test public void futureSchemaIsNeverOverwrittenOrRenamed() throws Exception {
-        write("schemaVersion=7\ncustomFutureField=keep-me\n");
+        write("schemaVersion=8\ncustomFutureField=keep-me\n");
         byte[] original = Files.readAllBytes(file());
         HudSettings settings = HudSettings.open(file());
         assertTrue(settings.isReadOnly());
