@@ -30,9 +30,16 @@ public abstract class MenuScreenMixin implements MenuFocus {
     @Inject(method = "renderBackground(I)V", at = @At("HEAD"), cancellable = true)
     private void spaceclient$background(int offset, CallbackInfo ci) {
         if (MenuTheme.applies((Screen) (Object) this)) {
-            MenuTheme.background(width, height, client.world != null);
+            if (client.world == null) {
+                dev.spaceclient.menu.MenuBackdrop.render(client, width, height);
+                MenuTheme.sectionSurface(width, height);
+            } else MenuTheme.background(width, height, true);
             ci.cancel();
         }
+    }
+    @Inject(method = "render", at = @At("RETURN"))
+    private void spaceclient$sectionHeader(int mouseX, int mouseY, float delta, CallbackInfo ci) {
+        MenuTheme.sectionHeader(client, (Screen) (Object) this, width, height);
     }
     @Inject(method = "mouseClicked", at = @At("HEAD"))
     private void spaceclient$mouse(int x, int y, int button, CallbackInfo ci) {

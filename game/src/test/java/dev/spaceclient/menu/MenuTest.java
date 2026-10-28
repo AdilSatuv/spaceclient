@@ -9,6 +9,17 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class MenuTest {
+    @Test public void cardDescriptionsHaveEnglishAndRussianResources() throws Exception {
+        for (String locale : new String[] {"en_US", "ru_RU"}) {
+            java.util.Properties strings = new java.util.Properties();
+            try (java.io.InputStream stream = getClass().getResourceAsStream("/assets/spaceclient/lang/" + locale + ".lang")) {
+                assertNotNull(stream);
+                strings.load(new java.io.InputStreamReader(stream, java.nio.charset.StandardCharsets.UTF_8));
+            }
+            for (String key : new String[] {"keyboard", "worlds", "servers", "realms", "settings", "language", "quit"})
+                assertFalse("Missing " + locale + "/" + key, strings.getProperty("space.menu." + key, "").isEmpty());
+        }
+    }
     @Test public void menuFitsScaledWindowsAndKeepsHeadingAndFooterClear() {
         for (int w : new int[] {240, 320, 427, 640, 960, 1920})
             for (int h : new int[] {220, 240, 270, 300, 360, 540, 1080})
@@ -17,7 +28,7 @@ public class MenuTest {
                     assertTrue(l.left - 12 >= 0);
                     assertTrue(l.left + l.width + 12 <= w);
                     assertTrue(l.panelTop + 31 + 14 < l.top);
-                    assertTrue(l.top + (count - 1) * l.step + 20 <= l.panelBottom);
+                    assertTrue(l.top + (count - 1) * l.step + l.buttonHeight <= l.panelBottom);
                     assertTrue(l.panelBottom <= h - 16);
                     assertTrue(l.step >= 22);
                 }

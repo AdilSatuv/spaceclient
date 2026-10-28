@@ -6,6 +6,7 @@ import dev.spaceclient.menu.MenuLayout;
 import dev.spaceclient.menu.MenuNavigation;
 import dev.spaceclient.menu.MenuTheme;
 import dev.spaceclient.menu.MenuBackdrop;
+import dev.spaceclient.menu.MenuButtonSize;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
@@ -44,6 +45,7 @@ public abstract class TitleMenuMixin extends Screen {
             button.x = spaceclient$layout.left;
             button.y = spaceclient$layout.top + row++ * spaceclient$layout.step;
             button.setWidth(spaceclient$layout.width);
+            ((MenuButtonSize) button).spaceclient$setHeight(spaceclient$layout.buttonHeight);
         }
     }
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
@@ -62,6 +64,7 @@ public abstract class TitleMenuMixin extends Screen {
                 (layout.panelTop + 9) / 1.6f, MenuTheme.GOLD);
         } finally { GlStateManager.popMatrix(); }
         spaceclient$center("Minecraft 1.8.9", layout.panelTop + 31, MenuTheme.MUTED);
+        MenuTheme.titleDetails(client, layout, width, height);
         super.render(mouseX, mouseY, delta);
         // The native Realms service still owns notification rendering and mouse behavior.
         if (areRealmsNotificationsEnabled() && realmsNotificationScreen != null)
