@@ -5,6 +5,8 @@ import dev.spaceclient.menu.MenuFocus;
 import dev.spaceclient.menu.MenuLayout;
 import dev.spaceclient.menu.MenuNavigation;
 import dev.spaceclient.menu.MenuTheme;
+import dev.spaceclient.menu.MenuBackdrop;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -48,10 +50,17 @@ public abstract class TitleMenuMixin extends Screen {
     private void spaceclient$render(int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (spaceclient$layout == null) return;
         MenuLayout layout = spaceclient$layout;
-        MenuTheme.background(width, height, false);
+        MenuBackdrop.render(client, width, height);
         MenuTheme.panel(layout.left - 12, layout.panelTop, layout.width + 24,
             layout.panelBottom - layout.panelTop);
-        spaceclient$center("S  P  A  C  E", layout.panelTop + 12, MenuTheme.GOLD);
+        GlStateManager.pushMatrix();
+        try {
+            GlStateManager.scale(1.6f, 1.6f, 1);
+            String brand = "S P A C E";
+            SpaceUiFont.draw(client, brand,
+                (layout.left + layout.width / 2f) / 1.6f - SpaceUiFont.width(brand) / 2f,
+                (layout.panelTop + 9) / 1.6f, MenuTheme.GOLD);
+        } finally { GlStateManager.popMatrix(); }
         spaceclient$center("Minecraft 1.8.9", layout.panelTop + 31, MenuTheme.MUTED);
         super.render(mouseX, mouseY, delta);
         // The native Realms service still owns notification rendering and mouse behavior.
@@ -62,7 +71,8 @@ public abstract class TitleMenuMixin extends Screen {
         ci.cancel();
     }
     @Unique private void spaceclient$center(String text, int y, int color) {
-        SpaceUiFont.draw(client, text, (width - SpaceUiFont.width(text)) / 2f, y, color);
+        SpaceUiFont.draw(client, text,
+            spaceclient$layout.left + (spaceclient$layout.width - SpaceUiFont.width(text)) / 2f, y, color);
     }
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     private void spaceclient$keys(char character, int key, CallbackInfo ci) {

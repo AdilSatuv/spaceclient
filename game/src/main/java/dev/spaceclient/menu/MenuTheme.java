@@ -38,8 +38,8 @@ public final class MenuTheme extends DrawableHelper {
         fill(0, 0, width, 1, 0xFF6F6250);
     }
     public static void panel(int x, int y, int width, int height) {
-        fill(x, y, x + width, y + height, 0xFF41434A);
-        fill(x + 1, y + 1, x + width - 1, y + height - 1, 0xFF101114);
+        fill(x, y, x + width, y + height, 0x7041434A);
+        fill(x + 1, y + 1, x + width - 1, y + height - 1, 0xE0101114);
         fill(x + 16, y, x + width - 16, y + 1, GOLD);
     }
     public static void button(MinecraftClient client, ButtonWidget button, int height,
