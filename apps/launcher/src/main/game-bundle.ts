@@ -49,6 +49,21 @@ const required = [
   'dev/spaceclient/hud/HudRenderer.class',
   'dev/spaceclient/hud/HudEditorLayout.class',
   'dev/spaceclient/hud/HudEditorScreen.class',
+  'dev/spaceclient/hud/HudEditorConfirmation.class',
+  'dev/spaceclient/hud/HudModule.class',
+  'dev/spaceclient/hud/HudAppearance.class',
+  'dev/spaceclient/hud/HudAppearance$Color.class',
+  'dev/spaceclient/hud/HudAppearance$Backdrop.class',
+  'dev/spaceclient/hud/HudContentSettings.class',
+  'dev/spaceclient/hud/HudContentSettings$ClockFormat.class',
+  'dev/spaceclient/hud/HudContentSettings$CpsMode.class',
+  'dev/spaceclient/hud/HudSettings.class',
+  'dev/spaceclient/hud/HudModulesLayout.class',
+  'dev/spaceclient/hud/HudModulesScreen.class',
+  'dev/spaceclient/hud/HudModuleSettingsScreen.class',
+  'dev/spaceclient/hud/SpaceUiFont.class',
+  'assets/spaceclient/font/DejaVuSans.ttf',
+  'assets/spaceclient/font/LICENSE-DejaVu.txt',
 ];
 function failure(): never {
   throw new UserFacingError(

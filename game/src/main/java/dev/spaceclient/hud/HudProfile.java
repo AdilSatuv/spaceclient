@@ -10,8 +10,14 @@ public final class HudProfile {
     public boolean clock = false, speed = false;
     public boolean health = false, hunger = false;
     public boolean armor = false, effects = false;
+    private HudContentSettings content = HudContentSettings.defaults();
     private final EnumMap<HudModule, HudPlacement> placements = new EnumMap<>(HudModule.class);
-    public HudProfile(String name) { this.name = validName(name); resetLayout(); }
+    private final EnumMap<HudModule, HudAppearance> appearances = new EnumMap<>(HudModule.class);
+    public HudProfile(String name) {
+        this.name = validName(name);
+        resetLayout();
+        for (HudModule module : HudModule.values()) appearances.put(module, HudAppearance.defaults());
+    }
     public static String validName(String value) {
         if (value == null || !value.equals(value.trim()) || value.isEmpty()
                 || value.codePointCount(0, value.length()) > 32 || value.indexOf('\u00a7') >= 0
@@ -21,7 +27,17 @@ public final class HudProfile {
             throw new IllegalArgumentException("HUD profile name must contain 1-32 plain characters");
         return value;
     }
+    public HudContentSettings content() { return content; }
+    public void setContent(HudContentSettings value) {
+        if (value == null) throw new IllegalArgumentException("Missing HUD content settings");
+        content = value;
+    }
     public HudPlacement placement(HudModule module) { return placements.get(module); }
+    public HudAppearance appearance(HudModule module) { return appearances.get(module); }
+    public void setAppearance(HudModule module, HudAppearance appearance) {
+        if (module == null || appearance == null) throw new IllegalArgumentException("Missing HUD appearance");
+        appearances.put(module, appearance);
+    }
     public void place(HudModule module, HudPlacement placement) {
         if (module == null || placement == null) throw new IllegalArgumentException("Missing HUD placement");
         placements.put(module, placement);
@@ -36,7 +52,9 @@ public final class HudProfile {
         copy.clock = clock; copy.speed = speed;
         copy.health = health; copy.hunger = hunger;
         copy.armor = armor; copy.effects = effects;
-        copy.placements.putAll(placements); // Placements are immutable.
+        copy.placements.putAll(placements); // Placements and appearances are immutable.
+        copy.appearances.putAll(appearances);
+        copy.content = content; // Immutable.
         return copy;
     }
 }

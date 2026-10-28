@@ -24,7 +24,12 @@ public final class HudEditorScreen extends Screen {
     private String status = "";
     private final HudEditorConfirmation confirmation = new HudEditorConfirmation();
 
-    public HudEditorScreen(Screen parent) { this.parent = parent; }
+    public HudEditorScreen(Screen parent) { this(parent, HudModule.FPS); }
+    public HudEditorScreen(Screen parent, HudModule selected) {
+        if (selected == null) throw new IllegalArgumentException("Missing HUD module");
+        this.parent = parent;
+        this.selected = selected;
+    }
     private HudSettings settings() { return SpaceClient.hud; }
     private HudProfile profile() { return settings().getConfig().active(); }
     private HudPlacement placement() { return draft == null ? profile().placement(selected) : draft; }
@@ -165,7 +170,8 @@ public final class HudEditorScreen extends Screen {
             fill(Math.max(left, right - 3), Math.max(top, bottom - 3), right, bottom, 0xFFF2EEE7);
         }
         boolean visible = profile().enabled && module.isEnabled(settings().getConfig());
-        HudRenderer.draw(client, label(module), b, visible ? (module == HudModule.KEYSTROKES ? HudRenderer.HUD_ACCENT : HudRenderer.HUD_TEXT) : MUTED);
+        HudAppearance appearance = profile().appearance(module);
+        HudRenderer.draw(client, label(module), b, appearance, visible ? HudRenderer.color(module, appearance) : MUTED);
     }
     private List<Action> controls() {
         List<Action> actions = new ArrayList<>();
@@ -309,6 +315,7 @@ public final class HudEditorScreen extends Screen {
     }
     @Override protected void keyPressed(char character, int key) {
         if (key == Keyboard.KEY_ESCAPE) {
+            if (Keyboard.isRepeatEvent()) return;
             if (cancelConfirmation()) return;
             if (name.isFocused()) { name.setText(profile().name); name.setFocused(false); return; }
             commitDraft(); client.setScreen(parent); return;

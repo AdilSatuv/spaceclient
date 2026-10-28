@@ -54,7 +54,7 @@ public class HudProfilesTest {
         assertEquals(1, settings.getConfig().profile(1).placement(HudModule.CPS).scale, 0);
         Properties properties = new Properties();
         try (java.io.InputStream input = Files.newInputStream(file())) { properties.load(input); }
-        assertEquals("6", properties.getProperty("schemaVersion"));
+        assertEquals("8", properties.getProperty("schemaVersion"));
         assertArrayEquals(original, Files.readAllBytes(backups.get(0)));
     }
     @Test public void compassDefaultsOffInExistingProfilesAndPersistsIndependently() throws Exception {
@@ -85,6 +85,17 @@ public class HudProfilesTest {
 
         Properties legacy = new Properties();
         try (java.io.InputStream in = Files.newInputStream(exported)) { legacy.load(in); }
+        // Reconstruct the last version-1 export before stepping back through older shapes.
+        legacy.setProperty("schemaVersion", "1");
+        legacy.remove("content.coordinates.precision");
+        legacy.remove("content.clock.format");
+        legacy.remove("content.clock.seconds");
+        legacy.remove("content.fps.label");
+        legacy.remove("content.cps.mode");
+        for (HudModule module : HudModule.values()) for (String field : new String[] {"color", "backdrop", "shadow"})
+            legacy.remove("appearance." + module.getId() + "." + field);
+        try (java.io.OutputStream out = Files.newOutputStream(exported)) { legacy.store(out, "Schema 1 export"); }
+        assertTrue(HudConfig.importProfile(exported).compass);
         for (String module : new String[] {"armor", "effects"}) {
             legacy.remove(module);
             for (String field : new String[] {"horizontal", "vertical", "x", "y", "scale"})
@@ -290,7 +301,7 @@ public class HudProfilesTest {
             assertFalse(recovered.isReadOnly());
             assertTrue(recovered.getNotice().contains("backed up"));
         }
-        byte[] future = "schemaVersion=7\nkeep=true\n".getBytes(StandardCharsets.ISO_8859_1);
+        byte[] future = "schemaVersion=9\nkeep=true\n".getBytes(StandardCharsets.ISO_8859_1);
         Files.write(file(), future);
         HudSettings readOnly = HudSettings.open(file());
         assertTrue(readOnly.isReadOnly());
