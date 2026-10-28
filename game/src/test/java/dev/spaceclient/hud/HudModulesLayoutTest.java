@@ -14,9 +14,21 @@ public class HudModulesLayoutTest {
             assertTrue(l.cardX(0) + l.cardWidth + 8 <= l.cardX(1));
             assertTrue(l.cardX(1) + l.cardWidth <= l.contentLeft + l.contentWidth);
             assertTrue(l.cardY(0) + l.cardHeight + 6 <= l.cardY(2));
-            assertTrue(l.cardY(2) + l.cardHeight <= l.top + l.panelHeight - 44);
+            assertTrue(l.cardY(l.pageSize - 2) + l.cardHeight <= l.top + l.panelHeight - 44);
             assertTrue(l.footerY() + 20 <= l.top + l.panelHeight);
             assertTrue(l.contentLeft + 84 <= l.contentLeft + l.contentWidth - 68);
         }
+    }
+    @Test public void paginationFitsSixCardsWhenRoomyAndFourWhenCompact() {
+        HudModulesLayout compact = new HudModulesLayout(427, 240);
+        HudModulesLayout roomy = new HudModulesLayout(640, 360);
+        assertEquals(4, compact.pageSize);
+        assertEquals(6, roomy.pageSize);
+        assertTrue(compact.sidebar);
+        assertEquals(2, HudModulePages.count(8, roomy.pageSize));
+        assertEquals(6, HudModulePages.first(1, 8, roomy.pageSize));
+        assertEquals(8, HudModulePages.end(1, 8, roomy.pageSize));
+        assertEquals(1, HudModulePages.forIndex(6, 8, roomy.pageSize));
+        assertEquals(0, HudModulePages.clamp(1, 3, roomy.pageSize));
     }
 }

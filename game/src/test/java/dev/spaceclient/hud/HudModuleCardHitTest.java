@@ -7,7 +7,7 @@ public class HudModuleCardHitTest {
     @Test public void toggleRegionIncludesBadgeButNeverLeavesItsCard() {
         for (int[] size : new int[][] {{320, 240}, {427, 240}, {640, 360}, {960, 540}}) {
             HudModulesLayout layout = new HudModulesLayout(size[0], size[1]);
-            for (int i = 0; i < HudModulePages.PAGE_SIZE; i++) {
+            for (int i = 0; i < layout.pageSize; i++) {
                 int x = layout.cardX(i), y = layout.cardY(i);
                 int w = layout.cardWidth, h = layout.cardHeight;
                 // Badge is x+w-36..x+w-8, y+6+inset..y+20+inset.

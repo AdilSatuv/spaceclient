@@ -9,6 +9,13 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class MenuTest {
+    @Test public void nativeSectionScreensAreRecognizedByType() {
+        assertTrue(MenuTheme.applies(new net.minecraft.client.gui.screen.SettingsScreen(null, null)));
+        assertTrue(MenuTheme.applies(new net.minecraft.client.gui.screen.world.SelectWorldScreen(null)));
+        assertTrue(MenuTheme.applies(new net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen(null)));
+        assertFalse(MenuTheme.applies(new net.minecraft.client.gui.screen.ChatScreen()));
+        assertFalse(MenuTheme.applies(null));
+    }
     @Test public void bundledBackdropDecodesWithoutMinecraftResourcePacks() throws Exception {
         try (java.io.InputStream stream = getClass().getResourceAsStream("/assets/spaceclient/menu/cosmic-night.jpg")) {
             assertNotNull(stream);

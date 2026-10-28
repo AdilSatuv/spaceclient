@@ -34,6 +34,7 @@ public final class HudModulesScreen extends Screen {
         }
         Keyboard.enableRepeatEvents(true);
         layout = new HudModulesLayout(width, height);
+        page = HudModulePages.clamp(page, modules.size(), layout.pageSize);
         panelWidth = layout.panelWidth; panelHeight = layout.panelHeight;
         left = layout.left; top = layout.top;
         sidebar = layout.sidebar;
@@ -97,7 +98,7 @@ public final class HudModulesScreen extends Screen {
         SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(profile, contentWidth - 55), contentLeft + 9, top + 78, TEXT);
         stateBadge(contentLeft + contentWidth - 38, top + 75, SpaceClient.hud.getConfig().active().enabled);
 
-        for (int i = HudModulePages.first(page, modules.size()); i < HudModulePages.end(page, modules.size()); i++) {
+        for (int i = HudModulePages.first(page, modules.size(), layout.pageSize); i < HudModulePages.end(page, modules.size(), layout.pageSize); i++) {
             HudModule module = modules.get(i);
             int x = cardX(i), y = cardY(i);
             boolean enabled = module.isEnabled(SpaceClient.hud.getConfig());
@@ -110,6 +111,8 @@ public final class HudModulesScreen extends Screen {
             stateBadge(x + cardWidth - 36, y + 6 + insetY, enabled);
             SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(module.getDescription(), Math.max(1, cardWidth - 36)),
                 x + 28, y + 23 + insetY, MUTED);
+            if (cardHeight >= 44 && cardWidth >= 145)
+                SpaceUiFont.draw(client, ">", x + cardWidth - 13, y + cardHeight - 16, MUTED);
         }
         if (modules.isEmpty()) {
             centerText("No modules found", contentLeft + contentWidth / 2, top + 110, TEXT);
@@ -121,7 +124,7 @@ public final class HudModulesScreen extends Screen {
         if (status.isEmpty() && !SpaceClient.hud.getConfig().active().enabled) status = "HUD hidden; turn it on above";
         if (status.isEmpty() && readOnly) status = "Settings are read-only";
         if (status.isEmpty()) {
-            for (int i = HudModulePages.first(page, modules.size()); i < HudModulePages.end(page, modules.size()); i++) {
+            for (int i = HudModulePages.first(page, modules.size(), layout.pageSize); i < HudModulePages.end(page, modules.size(), layout.pageSize); i++) {
                 if (hovered(mouseX, mouseY, cardX(i), cardY(i), cardWidth, cardHeight)) {
                     status = "Click: settings  |  ON/OFF: toggle";
                     break;
@@ -138,7 +141,7 @@ public final class HudModulesScreen extends Screen {
             int prevX = contentLeft, nextX = contentLeft + 64;
             box(prevX, footerY, 20, 20, focus == previousControl(), hovered(mouseX, mouseY, prevX, footerY, 20, 20));
             centerText("<", prevX + 10, footerY + 6, TEXT);
-            centerText((page + 1) + "/" + HudModulePages.count(modules.size()), contentLeft + 42, footerY + 6, MUTED);
+            centerText((page + 1) + "/" + HudModulePages.count(modules.size(), layout.pageSize), contentLeft + 42, footerY + 6, MUTED);
             box(nextX, footerY, 20, 20, focus == nextControl(), hovered(mouseX, mouseY, nextX, footerY, 20, 20));
             centerText(">", nextX + 10, footerY + 6, TEXT);
         }
@@ -177,7 +180,7 @@ public final class HudModulesScreen extends Screen {
         if (hasPages() && (key == Keyboard.KEY_PRIOR || key == Keyboard.KEY_NEXT)) {
             if (!Keyboard.isRepeatEvent()) {
                 changePage(key == Keyboard.KEY_PRIOR ? -1 : 1);
-                focus = HudModulePages.first(page, modules.size()) + 2;
+                focus = HudModulePages.first(page, modules.size(), layout.pageSize) + 2;
                 updateFocus();
             }
             return;
@@ -190,7 +193,7 @@ public final class HudModulesScreen extends Screen {
                 search.keyPressed(character, key);
                 query = search.getText();
                 modules = HudModule.search(query);
-                page = HudModulePages.clamp(page, modules.size());
+                page = HudModulePages.clamp(page, modules.size(), layout.pageSize);
             }
             return;
         }
@@ -226,7 +229,7 @@ public final class HudModulesScreen extends Screen {
             if (hasPages() && hovered(x, y, contentLeft + 64, footerY, 20, 20)) {
                 focus = nextControl(); changePage(1); updateFocus(); return;
             }
-            for (int i = HudModulePages.first(page, modules.size()); i < HudModulePages.end(page, modules.size()); i++) {
+            for (int i = HudModulePages.first(page, modules.size(), layout.pageSize); i < HudModulePages.end(page, modules.size(), layout.pageSize); i++) {
                 if (hovered(x, y, cardX(i), cardY(i), cardWidth, cardHeight)) {
                     focus = i + 2; updateFocus();
                     activate(focus, isToggleHit(x, y, cardX(i), cardY(i), cardWidth, cardHeight)); return;
@@ -252,21 +255,22 @@ public final class HudModulesScreen extends Screen {
         }
     }
 
-    private boolean hasPages() { return HudModulePages.count(modules.size()) > 1; }
+    private boolean hasPages() { return HudModulePages.count(modules.size(), layout.pageSize) > 1; }
     private int previousControl() { return modules.size() + 4; }
     private int nextControl() { return modules.size() + 5; }
     private int controlCount() { return modules.size() + 4 + (hasPages() ? 2 : 0); }
-    private void changePage(int delta) { page = HudModulePages.move(page, delta, modules.size()); }
+    private void changePage(int delta) { page = HudModulePages.move(page, delta, modules.size(), layout.pageSize); }
     private void updateFocus() {
         search.setFocused(focus == 0);
-        if (focus >= 2 && focus < modules.size() + 2) page = HudModulePages.forIndex(focus - 2, modules.size());
+        if (focus >= 2 && focus < modules.size() + 2) page = HudModulePages.forIndex(focus - 2, modules.size(), layout.pageSize);
     }
     private int cardX(int index) { return layout.cardX(index); }
     private int cardY(int index) { return layout.cardY(index); }
 
     private void stateBadge(int x, int y, boolean enabled) {
-        rounded(x, y, 28, 14, enabled ? 0xFF5C4A31 : 0xFF292B2F);
-        centerText(enabled ? "ON" : "OFF", x + 14, y + 3, enabled ? 0xFFF2D49C : MUTED);
+        rounded(x + 2, y + 1, 24, 12, enabled ? 0xFFD2AC70 : 0xFF3A3C41);
+        int knob = enabled ? x + 15 : x + 4;
+        rounded(knob, y + 2, 10, 10, enabled ? 0xFFF5F2EB : 0xFF96989E);
     }
 
     private void primaryButton(int x, int y, int w, int h, boolean focused, boolean hovered) {

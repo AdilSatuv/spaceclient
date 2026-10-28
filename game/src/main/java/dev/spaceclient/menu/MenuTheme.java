@@ -6,6 +6,21 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.screen.GameMenuScreen;
+import net.minecraft.client.gui.screen.SettingsScreen;
+import net.minecraft.client.gui.screen.VideoOptionsScreen;
+import net.minecraft.client.gui.screen.ResourcePackScreen;
+import net.minecraft.client.gui.screen.SoundsScreen;
+import net.minecraft.client.gui.screen.AddServerScreen;
+import net.minecraft.client.gui.screen.DirectConnectScreen;
+import net.minecraft.client.gui.screen.OpenToLanScreen;
+import net.minecraft.client.gui.screen.world.SelectWorldScreen;
+import net.minecraft.client.gui.screen.world.CreateWorldScreen;
+import net.minecraft.client.gui.screen.world.EditWorldScreen;
+import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
+import net.minecraft.client.gui.screen.options.ChatOptionsScreen;
+import net.minecraft.client.gui.screen.options.SkinOptionsScreen;
+import net.minecraft.client.gui.screen.options.ControlsOptionsScreen;
+import net.minecraft.client.gui.screen.options.LanguageOptionsScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.OptionButtonWidget;
 import net.minecraft.client.resource.language.I18n;
@@ -18,18 +33,15 @@ public final class MenuTheme extends DrawableHelper {
     private MenuTheme() { }
     public static boolean applies(Screen screen) {
         if (screen == null) return false;
-        String name = screen.getClass().getName();
         return screen instanceof TitleScreen || screen instanceof GameMenuScreen
-            || name.startsWith("net.minecraft.client.gui.screen.options.")
-            || name.startsWith("net.minecraft.client.gui.screen.world.")
-            || name.startsWith("net.minecraft.client.gui.screen.multiplayer.")
-            || name.equals("net.minecraft.client.gui.screen.SettingsScreen")
-            || name.equals("net.minecraft.client.gui.screen.VideoOptionsScreen")
-            || name.equals("net.minecraft.client.gui.screen.ResourcePackScreen")
-            || name.equals("net.minecraft.client.gui.screen.SoundsScreen")
-            || name.equals("net.minecraft.client.gui.screen.AddServerScreen")
-            || name.equals("net.minecraft.client.gui.screen.DirectConnectScreen")
-            || name.equals("net.minecraft.client.gui.screen.OpenToLanScreen");
+            || screen instanceof SettingsScreen || screen instanceof VideoOptionsScreen
+            || screen instanceof ResourcePackScreen || screen instanceof SoundsScreen
+            || screen instanceof AddServerScreen || screen instanceof DirectConnectScreen
+            || screen instanceof OpenToLanScreen || screen instanceof SelectWorldScreen
+            || screen instanceof CreateWorldScreen || screen instanceof EditWorldScreen
+            || screen instanceof MultiplayerScreen || screen instanceof ChatOptionsScreen
+            || screen instanceof SkinOptionsScreen || screen instanceof ControlsOptionsScreen
+            || screen instanceof LanguageOptionsScreen;
     }
     public static boolean standard(ButtonWidget button) {
         return button.getClass() == ButtonWidget.class || button.getClass() == OptionButtonWidget.class;
@@ -59,10 +71,9 @@ public final class MenuTheme extends DrawableHelper {
         fill(24, 28, width - 24, 29, 0xFF6F6250);
     }
     public static void sectionHeader(MinecraftClient client, Screen screen, int width, int height) {
-        String name = screen.getClass().getName();
-        String key = name.equals("net.minecraft.client.gui.screen.SettingsScreen") ? "options.title"
-            : name.equals("net.minecraft.client.gui.screen.world.SelectWorldScreen") ? "selectWorld.title"
-            : name.equals("net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen") ? "multiplayer.title" : null;
+        String key = screen instanceof SettingsScreen ? "options.title"
+            : screen instanceof SelectWorldScreen ? "selectWorld.title"
+            : screen instanceof MultiplayerScreen ? "multiplayer.title" : null;
         if (key == null || width < 320 || height < 240) return;
         fill(0, 0, width, 28, 0xFF101114);
         String title = SpaceUiFont.trimToWidth(I18n.translate(key), width - 160);
