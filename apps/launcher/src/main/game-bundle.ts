@@ -61,6 +61,7 @@ const required = [
   'dev/spaceclient/hud/HudModulesLayout.class',
   'dev/spaceclient/hud/HudModulesScreen.class',
   'dev/spaceclient/hud/HudModuleIcons.class',
+  'dev/spaceclient/hud/HudViewport.class',
   'dev/spaceclient/hud/HudModuleSettingsScreen.class',
   'dev/spaceclient/hud/SpaceUiFont.class',
   'assets/spaceclient/font/DejaVuSans.ttf',
