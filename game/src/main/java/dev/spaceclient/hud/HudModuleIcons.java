@@ -5,6 +5,40 @@ import org.lwjgl.opengl.GL11;
 /** Original line icons in a 22-unit grid; state and the current GUI transform are restored. */
 final class HudModuleIcons {
     private HudModuleIcons() { }
+    static void drawSection(HudSection section, int x, int y, int size, boolean selected) {
+        GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT | GL11.GL_CURRENT_BIT | GL11.GL_LINE_BIT);
+        GL11.glPushMatrix();
+        try {
+            GL11.glTranslatef(x, y, 0);
+            GL11.glScalef(size / 22f, size / 22f, 1);
+            GL11.glDisable(GL11.GL_TEXTURE_2D); GL11.glDisable(GL11.GL_DEPTH_TEST);
+            GL11.glEnable(GL11.GL_BLEND); GL11.glEnable(GL11.GL_LINE_SMOOTH);
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            GL11.glLineWidth(1.3f);
+            if (selected) GL11.glColor4f(.88f, .76f, .55f, 1);
+            else GL11.glColor4f(.65f, .67f, .70f, 1);
+            switch (section) {
+                case HOME:
+                    path(false, 1,10, 11,2, 21,10); path(false, 4,9, 4,20, 9,20, 9,14, 13,14, 13,20, 18,20, 18,9); break;
+                case COMBAT:
+                    circle(11,11,8); path(false, 11,0, 11,5); path(false, 11,17, 11,22);
+                    path(false, 0,11, 5,11); path(false, 17,11, 22,11); break;
+                case VISUALS:
+                    path(true, 1,11, 5,6, 9,4, 13,4, 17,6, 21,11, 17,16, 13,18, 9,18, 5,16);
+                    circle(11,11,3); break;
+                case HUD:
+                    rect(2,3,20,16); path(false, 11,16, 11,20); path(false, 7,20, 15,20); break;
+                case PLAYER: case SETTINGS:
+                    circle(11,11,8); circle(11,11,3);
+                    path(false, 11,0, 11,3); path(false, 11,19, 11,22);
+                    path(false, 0,11, 3,11); path(false, 19,11, 22,11); break;
+                case WORLD:
+                    path(false, 16,2, 19,4, 17,7, 14,8, 7,19, 4,20, 2,18, 3,15, 12,8, 13,4, 16,2); break;
+                case MISC:
+                    rect(2,2,9,9); rect(13,2,20,9); rect(2,13,9,20); rect(13,13,20,20); break;
+            }
+        } finally { GL11.glPopMatrix(); GL11.glPopAttrib(); }
+    }
     static void draw(HudModule module, int x, int y, int size) {
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT | GL11.GL_CURRENT_BIT | GL11.GL_LINE_BIT);
         GL11.glPushMatrix();

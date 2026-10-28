@@ -4,7 +4,9 @@ import dev.spaceclient.SpaceClient;
 import com.mojang.blaze3d.platform.GlStateManager;
 import java.util.List;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.SettingsScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import dev.spaceclient.mods.ModsScreen;
 import org.lwjgl.input.Keyboard;
 
 /** Minecraft adapter: drawing and input only; persistence lives in HudSettings. */
@@ -18,7 +20,8 @@ public final class HudModulesScreen extends Screen {
     private static final int CARD_FOCUS = 0xFF2A2824;
     private TextFieldWidget search;
     private String query = "";
-    private List<HudModule> modules = HudModule.search("");
+    private HudSection section = HudSection.HUD;
+    private List<HudModule> modules = section.search("");
     private int focus = -1;
     private int page;
     private int left, top, panelWidth, panelHeight, contentLeft, contentWidth, cardWidth, cardHeight;
@@ -80,12 +83,12 @@ public final class HudModulesScreen extends Screen {
         rounded(left + 2, top + 3, panelWidth, panelHeight, 0x90000000);
         rounded(left, top, panelWidth, panelHeight, BORDER);
         rounded(left + 1, top + 1, panelWidth - 2, panelHeight - 2, 0xFF101114);
-        if (sidebar) drawSidebar();
+        if (sidebar) drawSidebar(mouseX, mouseY);
 
         GlStateManager.pushMatrix();
         try {
             GlStateManager.scale(2f, 2f, 1);
-            SpaceUiFont.draw(client, "HUD", contentLeft / 2f, (top + 19) / 2f, TEXT);
+            SpaceUiFont.draw(client, section.label, contentLeft / 2f, (top + 19) / 2f, TEXT);
         } finally { GlStateManager.popMatrix(); }
         int editorX = contentLeft + contentWidth - 82, editorY = top + 20;
         primaryButton(editorX, editorY, 82, 20, focus == modules.size() + 2,
@@ -102,10 +105,8 @@ public final class HudModulesScreen extends Screen {
         boolean readOnly = SpaceClient.hud.isReadOnly();
         box(layout.profileLeft, layout.profileTop, layout.profileWidth, 23, focus == 1,
             hovered(mouseX, mouseY, layout.profileLeft, layout.profileTop, layout.profileWidth, 23));
-        String profile = SpaceClient.hud.getConfig().active().name;
-        if (!sidebar) SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(profile, layout.profileWidth - 48),
-            layout.profileLeft + 7, layout.profileTop + 6, TEXT);
-        int masterSwitchX = sidebar ? layout.profileLeft + (layout.profileWidth - 28) / 2 : layout.profileLeft + layout.profileWidth - 34;
+        SpaceUiFont.draw(client, "HUD", layout.profileLeft + 6, layout.profileTop + 6, TEXT);
+        int masterSwitchX = layout.profileLeft + layout.profileWidth - 34;
         stateBadge(masterSwitchX, layout.profileTop + 4, SpaceClient.hud.getConfig().active().enabled);
 
         for (int i = HudModulePages.first(page, modules.size(), layout.pageSize); i < HudModulePages.end(page, modules.size(), layout.pageSize); i++) {
@@ -132,7 +133,7 @@ public final class HudModulesScreen extends Screen {
 
         String status = SpaceClient.hud.getError();
         if (status.isEmpty()) status = SpaceClient.hud.getNotice();
-        if (status.isEmpty() && !SpaceClient.hud.getConfig().active().enabled) status = "HUD hidden; enable MASTER";
+        if (status.isEmpty() && !SpaceClient.hud.getConfig().active().enabled) status = "HUD hidden; enable HUD";
         if (status.isEmpty() && readOnly) status = "Settings are read-only";
         if (status.isEmpty()) {
             for (int i = HudModulePages.first(page, modules.size(), layout.pageSize); i < HudModulePages.end(page, modules.size(), layout.pageSize); i++) {
@@ -142,7 +143,7 @@ public final class HudModulesScreen extends Screen {
                 }
             }
         }
-        if (status.isEmpty()) status = "Customize your in-game overlay";
+        if (status.isEmpty()) status = section.description;
         SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(status, contentWidth - 90), contentLeft + 2, top + 46,
             readOnly || !SpaceClient.hud.getError().isEmpty() ? ACCENT : MUTED);
 
@@ -158,27 +159,43 @@ public final class HudModulesScreen extends Screen {
         int doneX = contentLeft + contentWidth - 68;
         box(doneX, footerY, 68, 20, focus == modules.size() + 3, hovered(mouseX, mouseY, doneX, footerY, 68, 20));
         centerText("Done / Esc", doneX + 34, footerY + 6, TEXT);
-        if (contentWidth >= 360) SpaceUiFont.draw(client, "Enter: settings  |  Space: toggle", contentLeft + 96, footerY + 6, MUTED);
+        if (showGameMods()) {
+            box(contentLeft + 96, footerY, 88, 20, focus == gameModsControl(), hovered(mouseX, mouseY, contentLeft + 96, footerY, 88, 20));
+            centerText("Game mods", contentLeft + 140, footerY + 6, TEXT);
+        } else if (contentWidth >= 360) SpaceUiFont.draw(client, "Enter: settings  |  Space: toggle", contentLeft + 96, footerY + 6, MUTED);
     }
 
-    private void drawSidebar() {
+    private void drawSidebar(int mouseX, int mouseY) {
         fill(left + layout.sidebarWidth, top + 1, left + layout.sidebarWidth + 1, top + panelHeight - 1, BORDER);
         SpaceUiFont.draw(client, "S P A C E", left + 15, top + 19, TEXT);
-        rounded(left + 7, top + 74, layout.sidebarWidth - 14, 27, 0xFF252321);
-        fill(left + 7, top + 77, left + 9, top + 98, 0xFFD7AF6A);
-        int iconX = left + 19, iconY = top + 81;
-        fill(iconX, iconY, iconX + 12, iconY + 1, ACCENT | 0xFF000000);
-        fill(iconX, iconY, iconX + 1, iconY + 9, ACCENT | 0xFF000000);
-        fill(iconX + 11, iconY, iconX + 12, iconY + 9, ACCENT | 0xFF000000);
-        fill(iconX, iconY + 9, iconX + 12, iconY + 10, ACCENT | 0xFF000000);
-        fill(iconX + 5, iconY + 10, iconX + 7, iconY + 13, ACCENT | 0xFF000000);
-        SpaceUiFont.draw(client, "HUD", left + (layout.sidebarWidth >= 100 ? 41 : 35), top + 82, TEXT);
-        SpaceUiFont.draw(client, "MODULES", left + 15, top + 119, MUTED);
-        SpaceUiFont.draw(client, "MASTER", left + 9, layout.profileTop - 13, MUTED);
-        fill(left + 10, top + panelHeight - 54, left + layout.sidebarWidth - 10, top + panelHeight - 53, BORDER);
-        SpaceUiFont.draw(client, "PROFILE", left + 12, top + panelHeight - 45, MUTED);
-        SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(SpaceClient.hud.getConfig().active().name, layout.sidebarWidth - 24),
-            left + 12, top + panelHeight - 30, TEXT);
+        for (HudSection item : HudSection.values()) {
+            int y = sectionY(item), x = left + 7, w = layout.sidebarWidth - 14;
+            boolean selected = item == section;
+            boolean focused = focus == sectionControlStart() + item.ordinal();
+            boolean over = hovered(mouseX, mouseY, x, y, w, 25);
+            if (selected || focused || over) rounded(x, y, w, 25, focused ? 0xFF3C352B : 0xFF252321);
+            if (selected || focused) fill(x, y + 3, x + 2, y + 22, 0xFFD7AF6A);
+            HudModuleIcons.drawSection(item, left + 17, y + 6, 13, selected);
+            SpaceUiFont.draw(client, item.label, left + 39, y + 7, selected ? TEXT : MUTED);
+        }
+        fill(left + 10, sectionY(HudSection.SETTINGS) - 7, left + layout.sidebarWidth - 10, sectionY(HudSection.SETTINGS) - 6, BORDER);
+    }
+
+    private int sectionY(HudSection item) {
+        return layout.sectionTop(item);
+    }
+    private int sectionControlStart() { return modules.size() + 4 + (hasPages() ? 2 : 0); }
+    private boolean showGameMods() { return section == HudSection.PLAYER || section == HudSection.VISUALS; }
+    private int gameModsControl() { return sectionControlStart() + (sidebar ? HudSection.values().length : 0); }
+    private void selectSection(HudSection next) {
+        if (next == HudSection.SETTINGS) { client.setScreen(new SettingsScreen(this, client.options)); return; }
+        section = next;
+        query = "";
+        search.setText(query);
+        modules = section.search(query);
+        page = 0;
+        focus = sectionControlStart() + next.ordinal();
+        updateFocus();
     }
 
     private boolean roomy() { return width >= 320 && height >= 240; }
@@ -211,7 +228,7 @@ public final class HudModulesScreen extends Screen {
             } else {
                 search.keyPressed(character, key);
                 query = search.getText();
-                modules = HudModule.search(query);
+                modules = section.search(query);
                 page = HudModulePages.clamp(page, modules.size(), layout.pageSize);
             }
             return;
@@ -229,6 +246,13 @@ public final class HudModulesScreen extends Screen {
         if (button != 0 || !roomy()) return;
         x = viewport.toUi(x);
         y = viewport.toUi(y);
+        if (sidebar) {
+            for (HudSection item : HudSection.values()) {
+                if (hovered(x, y, left + 7, sectionY(item), layout.sidebarWidth - 14, 25)) {
+                    selectSection(item); return;
+                }
+            }
+        }
         if (hovered(x, y, contentLeft, top + layout.searchTop, layout.searchWidth, 23)) {
             focus = 0;
             updateFocus();
@@ -250,6 +274,9 @@ public final class HudModulesScreen extends Screen {
             if (hasPages() && hovered(x, y, contentLeft + 64, footerY, 20, 20)) {
                 focus = nextControl(); changePage(1); updateFocus(); return;
             }
+            if (showGameMods() && hovered(x, y, contentLeft + 96, footerY, 88, 20)) {
+                focus = gameModsControl(); updateFocus(); client.setScreen(new ModsScreen(this)); return;
+            }
             for (int i = HudModulePages.first(page, modules.size(), layout.pageSize); i < HudModulePages.end(page, modules.size(), layout.pageSize); i++) {
                 if (hovered(x, y, cardX(i), cardY(i), cardWidth, cardHeight)) {
                     focus = i + 2; updateFocus();
@@ -268,6 +295,9 @@ public final class HudModulesScreen extends Screen {
         else if (control == modules.size() + 3) client.setScreen(null);
         else if (hasPages() && control == previousControl()) changePage(-1);
         else if (hasPages() && control == nextControl()) changePage(1);
+        else if (showGameMods() && control == gameModsControl()) client.setScreen(new ModsScreen(this));
+        else if (sidebar && control >= sectionControlStart() && control < sectionControlStart() + HudSection.values().length)
+            selectSection(HudSection.values()[control - sectionControlStart()]);
         else if (control >= 2 && control < modules.size() + 2) {
             HudModule module = modules.get(control - 2);
             if (toggleModule) {
@@ -279,7 +309,7 @@ public final class HudModulesScreen extends Screen {
     private boolean hasPages() { return HudModulePages.count(modules.size(), layout.pageSize) > 1; }
     private int previousControl() { return modules.size() + 4; }
     private int nextControl() { return modules.size() + 5; }
-    private int controlCount() { return modules.size() + 4 + (hasPages() ? 2 : 0); }
+    private int controlCount() { return sectionControlStart() + (sidebar ? HudSection.values().length : 0) + (showGameMods() ? 1 : 0); }
     private void changePage(int delta) { page = HudModulePages.move(page, delta, modules.size(), layout.pageSize); }
     private void updateFocus() {
         search.setFocused(focus == 0);
@@ -289,17 +319,7 @@ public final class HudModulesScreen extends Screen {
     private int cardY(int index) { return layout.cardY(index); }
 
     private void stateBadge(int x, int y, boolean enabled) {
-        capsule(x + 2, y + 1, 24, 12, enabled ? 0xFFD2AC70 : 0xFF3A3C41);
-        int knob = enabled ? x + 15 : x + 4;
-        capsule(knob, y + 2, 10, 10, enabled ? 0xFFF5F2EB : 0xFF96989E);
-    }
-
-    private void capsule(int x, int y, int w, int h, int color) {
-        for (int row = 0; row < h; row++) {
-            double dy = row + .5 - h / 2.0;
-            int inset = Math.max(0, (int) Math.ceil(h / 2.0 - Math.sqrt(h * h / 4.0 - dy * dy)));
-            fill(x + inset, y + row, x + w - inset, y + row + 1, color);
-        }
+        HudSwitch.draw(x, y, enabled);
     }
 
     private void primaryButton(int x, int y, int w, int h, boolean focused, boolean hovered) {

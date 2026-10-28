@@ -16,10 +16,10 @@ final class HudModulesLayout {
         contentLeft = left + (sidebar ? sidebarWidth + 18 : 12);
         contentWidth = Math.max(0, left + panelWidth - 12 - contentLeft);
         cardWidth = Math.max(0, (contentWidth - 8) / 2);
-        profileWidth = sidebar ? sidebarWidth - 14 : 92;
-        searchWidth = Math.max(0, sidebar ? contentWidth : contentWidth - profileWidth - 8);
-        profileLeft = sidebar ? left + 7 : contentLeft + searchWidth + 8;
-        profileTop = sidebar ? top + panelHeight - 79 : top + 44;
+        profileWidth = 74;
+        searchWidth = Math.max(0, sidebar ? contentWidth : contentWidth - 92 - 8);
+        profileLeft = sidebar ? contentLeft + contentWidth - 164 : contentLeft + searchWidth + 8;
+        profileTop = sidebar ? top + 20 : top + 44;
         searchTop = panelHeight >= 300 ? 67 : 44;
         cardsTop = panelHeight >= 300 ? 106 : 74;
         pageSize = panelHeight >= 220 ? 6 : 4;
@@ -29,5 +29,8 @@ final class HudModulesLayout {
 
     int cardX(int index) { return contentLeft + ((index % pageSize) % 2) * (cardWidth + 8); }
     int cardY(int index) { return top + cardsTop + ((index % pageSize) / 2) * (cardHeight + 6); }
+    int sectionTop(HudSection section) {
+        return section == HudSection.SETTINGS ? top + panelHeight - 29 : top + 43 + section.ordinal() * 28;
+    }
     int footerY() { return top + panelHeight - 27; }
 }
