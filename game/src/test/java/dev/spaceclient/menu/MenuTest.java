@@ -9,6 +9,23 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class MenuTest {
+    @Test public void leftAlignedMenuRetainsUsableSpaceAtNormalScaledWidths() {
+        for (int width : new int[] {320, 427, 640, 960}) {
+            MenuLayout layout = new MenuLayout(width, 240, 6);
+            assertTrue(layout.left >= 12);
+            assertTrue(layout.width >= 160);
+            assertTrue(layout.left + layout.width + 12 <= width * .67);
+        }
+    }
+    @Test public void secretSettingsSoundOverrideKeepsThemedRendering() {
+        net.minecraft.client.gui.screen.SettingsScreen settings = new net.minecraft.client.gui.screen.SettingsScreen(null, null);
+        net.minecraft.client.gui.widget.ButtonWidget secret = new net.minecraft.client.gui.widget.ButtonWidget(8675309, 0, 0, "Secret") {
+            @Override public void playDownSound(net.minecraft.client.sound.SoundManager sound) { }
+        };
+        assertFalse(MenuTheme.standard(secret));
+        assertTrue(MenuTheme.themedButton(secret, settings));
+        assertFalse(MenuTheme.themedButton(secret, new net.minecraft.client.gui.screen.ChatScreen()));
+    }
     @Test public void nativeSectionScreensAreRecognizedByType() {
         assertTrue(MenuTheme.applies(new net.minecraft.client.gui.screen.SettingsScreen(null, null)));
         assertTrue(MenuTheme.applies(new net.minecraft.client.gui.screen.world.SelectWorldScreen(null)));

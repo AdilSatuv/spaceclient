@@ -46,6 +46,10 @@ public final class MenuTheme extends DrawableHelper {
     public static boolean standard(ButtonWidget button) {
         return button.getClass() == ButtonWidget.class || button.getClass() == OptionButtonWidget.class;
     }
+    public static boolean themedButton(ButtonWidget button, Screen screen) {
+        // This vanilla subclass changes only its click sound; its rendering is inherited.
+        return standard(button) || (screen instanceof SettingsScreen && button.id == 8675309);
+    }
     public static void background(int width, int height, boolean inWorld) {
         DRAW.fillGradient(0, 0, width, height, inWorld ? 0xD5101114 : 0xFF191B20,
             inWorld ? 0xEE090A0D : 0xFF090A0D);

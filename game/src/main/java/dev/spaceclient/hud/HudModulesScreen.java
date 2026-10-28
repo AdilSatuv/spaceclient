@@ -41,7 +41,7 @@ public final class HudModulesScreen extends Screen {
         contentLeft = layout.contentLeft; contentWidth = layout.contentWidth;
         cardWidth = layout.cardWidth; cardHeight = layout.cardHeight;
         search = new TextFieldWidget(0, textRenderer, contentLeft + 30, top + 50,
-            Math.max(1, contentWidth - 38), 16);
+            Math.max(1, layout.searchWidth - 38), 16);
         search.setHasBorder(false);
         search.setMaxLength(64);
         search.setEditableColor(TEXT);
@@ -78,25 +78,24 @@ public final class HudModulesScreen extends Screen {
             GlStateManager.scale(1.3f, 1.3f, 1);
             SpaceUiFont.draw(client, "HUD", contentLeft / 1.3f, (top + 9) / 1.3f, TEXT);
         } finally { GlStateManager.popMatrix(); }
-        SpaceUiFont.draw(client, "Customize your overlay", contentLeft, top + 27, MUTED);
         int editorX = contentLeft + contentWidth - 82, editorY = top + 10;
         primaryButton(editorX, editorY, 82, 20, focus == modules.size() + 2,
             hovered(mouseX, mouseY, editorX, editorY, 82, 20));
         centerText("Edit HUD", editorX + 41, editorY + 6, 0x17130D);
 
-        box(contentLeft, top + 44, contentWidth, 23, focus == 0,
-            hovered(mouseX, mouseY, contentLeft, top + 44, contentWidth, 23));
+        box(contentLeft, top + 44, layout.searchWidth, 23, focus == 0,
+            hovered(mouseX, mouseY, contentLeft, top + 44, layout.searchWidth, 23));
         searchIcon(contentLeft + 10, top + 51);
         search.render();
         if (query.isEmpty() && !search.isFocused())
             SpaceUiFont.draw(client, "Search modules...", contentLeft + 30, top + 50, MUTED);
 
         boolean readOnly = SpaceClient.hud.isReadOnly();
-        box(contentLeft, top + 73, contentWidth, 19, focus == 1,
-            hovered(mouseX, mouseY, contentLeft, top + 73, contentWidth, 19));
-        String profile = "HUD / " + SpaceClient.hud.getConfig().active().name;
-        SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(profile, contentWidth - 55), contentLeft + 9, top + 78, TEXT);
-        stateBadge(contentLeft + contentWidth - 38, top + 75, SpaceClient.hud.getConfig().active().enabled);
+        box(layout.profileLeft, top + 44, layout.profileWidth, 23, focus == 1,
+            hovered(mouseX, mouseY, layout.profileLeft, top + 44, layout.profileWidth, 23));
+        String profile = SpaceClient.hud.getConfig().active().name;
+        SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(profile, layout.profileWidth - 48), layout.profileLeft + 7, top + 50, TEXT);
+        stateBadge(layout.profileLeft + layout.profileWidth - 34, top + 48, SpaceClient.hud.getConfig().active().enabled);
 
         for (int i = HudModulePages.first(page, modules.size(), layout.pageSize); i < HudModulePages.end(page, modules.size(), layout.pageSize); i++) {
             HudModule module = modules.get(i);
@@ -131,9 +130,8 @@ public final class HudModulesScreen extends Screen {
                 }
             }
         }
-        if (status.isEmpty()) status = contentWidth < 360 ? "Enter: settings  |  Space: toggle"
-            : hasPages() ? "PgUp / PgDn: pages" : "Changes save automatically";
-        SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(status, contentWidth - 4), contentLeft + 2, top + panelHeight - 44,
+        if (status.isEmpty()) status = "Customize your in-game overlay";
+        SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(status, contentWidth - 90), contentLeft + 2, top + 27,
             readOnly || !SpaceClient.hud.getError().isEmpty() ? ACCENT : MUTED);
 
         int footerY = layout.footerY();
@@ -208,12 +206,12 @@ public final class HudModulesScreen extends Screen {
 
     @Override protected void mouseClicked(int x, int y, int button) {
         if (button != 0 || !roomy()) return;
-        if (hovered(x, y, contentLeft, top + 44, contentWidth, 23)) {
+        if (hovered(x, y, contentLeft, top + 44, layout.searchWidth, 23)) {
             focus = 0;
             updateFocus();
             search.mouseClicked(x, y, button);
             search.setFocused(true);
-        } else if (hovered(x, y, contentLeft, top + 73, contentWidth, 19)) {
+        } else if (hovered(x, y, layout.profileLeft, top + 44, layout.profileWidth, 23)) {
             focus = 1;
             updateFocus();
             activate(focus, true);

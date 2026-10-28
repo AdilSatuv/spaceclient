@@ -19,7 +19,7 @@ public abstract class MenuButtonMixin implements MenuButtonSize {
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     private void spaceclient$render(MinecraftClient client, int mouseX, int mouseY, CallbackInfo ci) {
         ButtonWidget button = (ButtonWidget) (Object) this;
-        if (!MenuTheme.applies(client.currentScreen) || !MenuTheme.standard(button)) return;
+        if (!MenuTheme.applies(client.currentScreen) || !MenuTheme.themedButton(button, client.currentScreen)) return;
         if (button.visible) {
             hovered = mouseX >= button.x && mouseY >= button.y
                 && mouseX < button.x + button.getWidth() && mouseY < button.y + height;

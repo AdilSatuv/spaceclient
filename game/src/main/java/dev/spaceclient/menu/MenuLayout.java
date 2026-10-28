@@ -4,8 +4,9 @@ package dev.spaceclient.menu;
 public final class MenuLayout {
     public final int left, top, width, step, panelTop, panelBottom, buttonHeight;
     public MenuLayout(int screenWidth, int screenHeight, int count) {
-        width = Math.min(260, Math.max(1, screenWidth - 32));
-        left = screenWidth >= 560 ? Math.max(32, screenWidth * 3 / 40) : (screenWidth - width) / 2;
+        width = screenWidth >= 320 ? Math.min(260, Math.max(160, screenWidth * 46 / 100))
+            : Math.min(240, Math.max(1, screenWidth - 32));
+        left = screenWidth >= 320 ? Math.max(16, screenWidth * 3 / 40) : (screenWidth - width) / 2;
         buttonHeight = screenHeight >= 300 ? 28 : 20;
         step = buttonHeight + (screenHeight >= 300 ? 6 : 2);
         int block = Math.max(1, count) * step - (step - buttonHeight);

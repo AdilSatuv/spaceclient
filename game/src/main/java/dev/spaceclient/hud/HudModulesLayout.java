@@ -4,7 +4,7 @@ package dev.spaceclient.hud;
 final class HudModulesLayout {
     final int left, top, panelWidth, panelHeight, contentLeft, contentWidth, cardWidth, cardHeight;
     final boolean sidebar;
-    final int pageSize;
+    final int pageSize, searchWidth, profileLeft, profileWidth;
 
     HudModulesLayout(int width, int height) {
         panelWidth = Math.max(0, Math.min(600, width - 24));
@@ -15,12 +15,15 @@ final class HudModulesLayout {
         contentLeft = left + (sidebar ? 82 : 12);
         contentWidth = Math.max(0, left + panelWidth - 12 - contentLeft);
         cardWidth = Math.max(0, (contentWidth - 8) / 2);
-        pageSize = panelHeight >= 270 ? 6 : 4;
+        profileWidth = 92;
+        searchWidth = Math.max(0, contentWidth - profileWidth - 8);
+        profileLeft = contentLeft + searchWidth + 8;
+        pageSize = panelHeight >= 220 ? 6 : 4;
         int rows = pageSize / 2;
-        cardHeight = Math.max(36, Math.min(72, (panelHeight - 156 - (rows - 2) * 6) / rows));
+        cardHeight = Math.max(36, Math.min(72, (panelHeight - 74 - 27 - 4 - (rows - 1) * 6) / rows));
     }
 
     int cardX(int index) { return contentLeft + ((index % pageSize) % 2) * (cardWidth + 8); }
-    int cardY(int index) { return top + 98 + ((index % pageSize) / 2) * (cardHeight + 6); }
+    int cardY(int index) { return top + 74 + ((index % pageSize) / 2) * (cardHeight + 6); }
     int footerY() { return top + panelHeight - 27; }
 }
