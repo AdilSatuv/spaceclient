@@ -17,6 +17,14 @@ export type SpaceBundleManifest = {
   sha256: string;
 };
 export type InstalledSpace = SpaceBundleManifest & { relativePath: 'mods/space-client.jar' };
+const expectedMixins = [
+  'ClientMixin',
+  'HudMixin',
+  'GameMenuMixin',
+  'AutoSprintMixin',
+  'FreeLookRendererMixin',
+  'FreeLookInputMixin',
+];
 const required = [
   'fabric.mod.json',
   'spaceclient.mixins.json',
@@ -27,6 +35,9 @@ const required = [
   'dev/spaceclient/mixin/ClientMixin.class',
   'dev/spaceclient/mixin/HudMixin.class',
   'dev/spaceclient/mixin/GameMenuMixin.class',
+  'dev/spaceclient/mixin/AutoSprintMixin.class',
+  'dev/spaceclient/mixin/FreeLookRendererMixin.class',
+  'dev/spaceclient/mixin/FreeLookInputMixin.class',
   'dev/spaceclient/hud/HudPlacement.class',
   'dev/spaceclient/hud/HudProfile.class',
   'dev/spaceclient/hud/HudRenderer.class',
@@ -163,8 +174,8 @@ export async function inspectSpaceJar(path: string, expectedTree?: string, signa
     mixin.package !== 'dev.spaceclient.mixin' ||
     mixin.compatibilityLevel !== 'JAVA_8' ||
     !Array.isArray(mixin.client) ||
-    mixin.client.length !== 3 ||
-    !['ClientMixin', 'HudMixin', 'GameMenuMixin'].every((name) => mixin.client.includes(name))
+    mixin.client.length !== expectedMixins.length ||
+    !expectedMixins.every((name) => mixin.client.includes(name))
   )
     failure();
   signal?.throwIfAborted();

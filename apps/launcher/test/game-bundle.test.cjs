@@ -19,7 +19,14 @@ function entries() {
     required: true,
     package: 'dev.spaceclient.mixin',
     compatibilityLevel: 'JAVA_8',
-    client: ['ClientMixin', 'HudMixin', 'GameMenuMixin'],
+    client: [
+      'ClientMixin',
+      'HudMixin',
+      'GameMenuMixin',
+      'AutoSprintMixin',
+      'FreeLookRendererMixin',
+      'FreeLookInputMixin',
+    ],
   };
   return [
     { name: 'fabric.mod.json', data: JSON.stringify(mod) },
@@ -35,6 +42,9 @@ function entries() {
       'mixin/ClientMixin',
       'mixin/HudMixin',
       'mixin/GameMenuMixin',
+      'mixin/AutoSprintMixin',
+      'mixin/FreeLookRendererMixin',
+      'mixin/FreeLookInputMixin',
       'hud/HudPlacement',
       'hud/HudProfile',
       'hud/HudRenderer',
@@ -114,15 +124,26 @@ test('named developer bytecode and newer bytecode are rejected before bundling',
   }
 });
 
-test('pause-menu integration requires its class and the exact pinned mixin set', async (t) => {
-  const { source, inspectSpaceJar } = await fixture(t, (value) =>
-    value.filter((entry) => entry.name !== 'dev/spaceclient/mixin/GameMenuMixin.class'),
-  );
-  await assert.rejects(inspectSpaceJar(source));
+test('all pinned mixin classes and the exact mixin set are required', async (t) => {
+  const pinned = [
+    'ClientMixin',
+    'HudMixin',
+    'GameMenuMixin',
+    'AutoSprintMixin',
+    'FreeLookRendererMixin',
+    'FreeLookInputMixin',
+  ];
+  for (const name of pinned) {
+    const candidate = await fixture(t, (value) =>
+      value.filter((entry) => entry.name !== `dev/spaceclient/mixin/${name}.class`),
+    );
+    await assert.rejects(candidate.inspectSpaceJar(candidate.source));
+  }
   for (const client of [
-    ['ClientMixin', 'HudMixin'],
-    ['ClientMixin', 'HudMixin', 'HudMixin'],
-    ['ClientMixin', 'HudMixin', 'GameMenuMixin', 'OtherMixin'],
+    pinned.filter((name) => name !== 'FreeLookInputMixin'),
+    [...pinned, 'OtherMixin'],
+    [...pinned.slice(0, -1), 'OtherMixin'],
+    [...pinned.slice(0, -1), pinned[0]],
   ]) {
     const candidate = await fixture(t, (value) => {
       const mixin = JSON.parse(value[1].data);
