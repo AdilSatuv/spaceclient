@@ -24,6 +24,9 @@ const expectedMixins = [
   'AutoSprintMixin',
   'FreeLookRendererMixin',
   'FreeLookInputMixin',
+  'MenuButtonMixin',
+  'MenuScreenMixin',
+  'TitleMenuMixin',
 ];
 const required = [
   'fabric.mod.json',
@@ -38,6 +41,9 @@ const required = [
   'dev/spaceclient/mixin/AutoSprintMixin.class',
   'dev/spaceclient/mixin/FreeLookRendererMixin.class',
   'dev/spaceclient/mixin/FreeLookInputMixin.class',
+  'dev/spaceclient/mixin/MenuButtonMixin.class',
+  'dev/spaceclient/mixin/MenuScreenMixin.class',
+  'dev/spaceclient/mixin/TitleMenuMixin.class',
   'dev/spaceclient/hud/HudPlacement.class',
   'dev/spaceclient/hud/HudProfile.class',
   'dev/spaceclient/hud/HudRenderer.class',

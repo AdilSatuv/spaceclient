@@ -26,6 +26,9 @@ function entries() {
       'AutoSprintMixin',
       'FreeLookRendererMixin',
       'FreeLookInputMixin',
+      'MenuButtonMixin',
+      'MenuScreenMixin',
+      'TitleMenuMixin',
     ],
   };
   return [
@@ -45,6 +48,9 @@ function entries() {
       'mixin/AutoSprintMixin',
       'mixin/FreeLookRendererMixin',
       'mixin/FreeLookInputMixin',
+      'mixin/MenuButtonMixin',
+      'mixin/MenuScreenMixin',
+      'mixin/TitleMenuMixin',
       'hud/HudPlacement',
       'hud/HudProfile',
       'hud/HudRenderer',
@@ -132,6 +138,9 @@ test('all pinned mixin classes and the exact mixin set are required', async (t) 
     'AutoSprintMixin',
     'FreeLookRendererMixin',
     'FreeLookInputMixin',
+    'MenuButtonMixin',
+    'MenuScreenMixin',
+    'TitleMenuMixin',
   ];
   for (const name of pinned) {
     const candidate = await fixture(t, (value) =>
