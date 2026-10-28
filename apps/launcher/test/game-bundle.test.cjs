@@ -50,7 +50,16 @@ function entries() {
       'hud/HudRenderer',
       'hud/HudEditorLayout',
       'hud/HudEditorScreen',
+      'hud/HudEditorConfirmation',
+      'hud/HudModule',
+      'hud/HudSettings',
+      'hud/HudModulesLayout',
+      'hud/HudModulesScreen',
+      'hud/HudModuleSettingsScreen',
+      'hud/SpaceUiFont',
     ].map((name) => ({ name: 'dev/spaceclient/' + name + '.class', data: header })),
+    { name: 'assets/spaceclient/font/DejaVuSans.ttf', data: 'font fixture' },
+    { name: 'assets/spaceclient/font/LICENSE-DejaVu.txt', data: 'license fixture' },
   ];
 }
 async function fixture(t, change = (value) => value) {
@@ -161,10 +170,27 @@ test('profile and editor classes cannot be omitted from the pinned game bundle',
     'HudRenderer',
     'HudEditorLayout',
     'HudEditorScreen',
+    'HudEditorConfirmation',
+    'HudModule',
+    'HudSettings',
+    'HudModulesLayout',
+    'HudModulesScreen',
+    'HudModuleSettingsScreen',
+    'SpaceUiFont',
   ]) {
     const candidate = await fixture(t, (value) =>
       value.filter((entry) => entry.name !== `dev/spaceclient/hud/${name}.class`),
     );
+    await assert.rejects(candidate.inspectSpaceJar(candidate.source));
+  }
+});
+
+test('font and its redistribution notice cannot be omitted from the game bundle', async (t) => {
+  for (const name of [
+    'assets/spaceclient/font/DejaVuSans.ttf',
+    'assets/spaceclient/font/LICENSE-DejaVu.txt',
+  ]) {
+    const candidate = await fixture(t, (value) => value.filter((entry) => entry.name !== name));
     await assert.rejects(candidate.inspectSpaceJar(candidate.source));
   }
 });

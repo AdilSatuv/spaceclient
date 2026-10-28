@@ -119,7 +119,17 @@ public final class HudModulesScreen extends Screen {
         String status = SpaceClient.hud.getError();
         if (status.isEmpty()) status = SpaceClient.hud.getNotice();
         if (status.isEmpty() && !SpaceClient.hud.getConfig().active().enabled) status = "HUD hidden; turn it on above";
-        if (status.isEmpty()) status = readOnly ? "Settings are read-only" : hasPages() ? "PgUp / PgDn: pages" : "Changes save automatically";
+        if (status.isEmpty() && readOnly) status = "Settings are read-only";
+        if (status.isEmpty()) {
+            for (int i = HudModulePages.first(page, modules.size()); i < HudModulePages.end(page, modules.size()); i++) {
+                if (hovered(mouseX, mouseY, cardX(i), cardY(i), cardWidth, cardHeight)) {
+                    status = "Click: settings  |  ON/OFF: toggle";
+                    break;
+                }
+            }
+        }
+        if (status.isEmpty()) status = contentWidth < 360 ? "Enter: settings  |  Space: toggle"
+            : hasPages() ? "PgUp / PgDn: pages" : "Changes save automatically";
         SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(status, contentWidth - 4), contentLeft + 2, top + panelHeight - 44,
             readOnly || !SpaceClient.hud.getError().isEmpty() ? ACCENT : MUTED);
 
@@ -135,7 +145,7 @@ public final class HudModulesScreen extends Screen {
         int doneX = contentLeft + contentWidth - 68;
         box(doneX, footerY, 68, 20, focus == modules.size() + 3, hovered(mouseX, mouseY, doneX, footerY, 68, 20));
         centerText("Done / Esc", doneX + 34, footerY + 6, TEXT);
-        if (contentWidth >= 360) SpaceUiFont.draw(client, "Tab: select  |  Space: toggle", contentLeft + 96, footerY + 6, MUTED);
+        if (contentWidth >= 360) SpaceUiFont.draw(client, "Enter: settings  |  Space: toggle", contentLeft + 96, footerY + 6, MUTED);
     }
 
     private void drawSidebar() {
@@ -155,7 +165,7 @@ public final class HudModulesScreen extends Screen {
 
     @Override protected void keyPressed(char character, int key) {
         if (key == Keyboard.KEY_ESCAPE) {
-            super.keyPressed(character, key);
+            if (!Keyboard.isRepeatEvent()) super.keyPressed(character, key);
             return;
         }
         if (!roomy()) return;
@@ -189,7 +199,7 @@ public final class HudModulesScreen extends Screen {
             updateFocus();
         } else if ((key == Keyboard.KEY_RETURN || key == Keyboard.KEY_NUMPADENTER || key == Keyboard.KEY_SPACE)
                 && !Keyboard.isRepeatEvent()) {
-            activate(focus);
+            activate(focus, key == Keyboard.KEY_SPACE);
         }
     }
 
@@ -203,11 +213,11 @@ public final class HudModulesScreen extends Screen {
         } else if (hovered(x, y, contentLeft, top + 73, contentWidth, 19)) {
             focus = 1;
             updateFocus();
-            activate(focus);
+            activate(focus, true);
         } else if (hovered(x, y, contentLeft + contentWidth - 82, top + 10, 82, 20)) {
             focus = modules.size() + 2;
             updateFocus();
-            activate(focus);
+            activate(focus, false);
         } else {
             int footerY = layout.footerY();
             if (hasPages() && hovered(x, y, contentLeft, footerY, 20, 20)) {
@@ -218,22 +228,28 @@ public final class HudModulesScreen extends Screen {
             }
             for (int i = HudModulePages.first(page, modules.size()); i < HudModulePages.end(page, modules.size()); i++) {
                 if (hovered(x, y, cardX(i), cardY(i), cardWidth, cardHeight)) {
-                    focus = i + 2; updateFocus(); activate(focus); return;
+                    focus = i + 2; updateFocus();
+                    activate(focus, isToggleHit(x, y, cardX(i), cardY(i), cardWidth, cardHeight)); return;
                 }
             }
             if (hovered(x, y, contentLeft + contentWidth - 68, footerY, 68, 20)) {
-                focus = modules.size() + 3; updateFocus(); activate(focus);
+                focus = modules.size() + 3; updateFocus(); activate(focus, false);
             }
         }
     }
 
-    private void activate(int control) {
+    private void activate(int control, boolean toggleModule) {
         if (control == 1 && !SpaceClient.hud.isReadOnly()) SpaceClient.toggleHud();
         else if (control == modules.size() + 2) client.setScreen(new HudEditorScreen(this));
         else if (control == modules.size() + 3) client.setScreen(null);
         else if (hasPages() && control == previousControl()) changePage(-1);
         else if (hasPages() && control == nextControl()) changePage(1);
-        else if (control >= 2 && control < modules.size() + 2 && !SpaceClient.hud.isReadOnly()) SpaceClient.hud.toggle(modules.get(control - 2));
+        else if (control >= 2 && control < modules.size() + 2) {
+            HudModule module = modules.get(control - 2);
+            if (toggleModule) {
+                if (!SpaceClient.hud.isReadOnly()) SpaceClient.hud.toggle(module);
+            } else client.setScreen(new HudModuleSettingsScreen(this, module));
+        }
     }
 
     private boolean hasPages() { return HudModulePages.count(modules.size()) > 1; }
@@ -296,6 +312,13 @@ public final class HudModulesScreen extends Screen {
         fill(x + 2, y, x + w - 2, y + h, color);
         fill(x, y + 2, x + w, y + h - 2, color);
         fill(x + 1, y + 1, x + w - 1, y + h - 1, color);
+    }
+
+    /** Four GUI units around the visible badge are reserved for toggling. */
+    static boolean isToggleHit(int px, int py, int x, int y, int width, int height) {
+        int badgeY = y + 6 + (height - 36) / 2;
+        return px >= x + width - 40 && px < x + width - 4
+            && py >= badgeY - 4 && py < badgeY + 18;
     }
 
     private boolean hovered(int x, int y, int left, int top, int width, int height) {
