@@ -100,6 +100,7 @@ public final class HudModuleSettingsScreen extends Screen {
         if (notice.isEmpty() && settings().isReadOnly()) notice = settings().getNotice();
         if (notice.isEmpty() && tab == 1 && appearance().backdrop != HudAppearance.Backdrop.STRONG)
             notice = "Lighter background may reduce readability";
+        if (notice.isEmpty() && placement().scale > 1.4) notice = "Preview fitted to the available space";
         if (notice.isEmpty()) notice = status.isEmpty() ? "Tab: select  |  Enter / Space: activate" : status;
         SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(notice, panelWidth - 28), left + 14, top + 181,
             settings().getError().isEmpty() ? MUTED : ACCENT);
@@ -231,7 +232,8 @@ public final class HudModuleSettingsScreen extends Screen {
     }
     /** A compact sample uses the same font, color and backdrop as the actual HUD. */
     private void drawPreview() {
-        SpaceUiFont.draw(client, "Preview", left + 14, top + 44, MUTED);
+        double scale = previewScale(placement().scale);
+        SpaceUiFont.draw(client, placement().scale > scale ? "Preview*" : "Preview", left + 14, top + 44, MUTED);
         int x = left + 78;
         int available = panelWidth - 94;
         fill(x - 2, top + 41, left + panelWidth - 14, top + 58, 0xFF555359);
@@ -240,7 +242,7 @@ public final class HudModuleSettingsScreen extends Screen {
             return;
         }
         String text = HudRenderer.text(client, module);
-        int maxTextWidth = Math.max(1, available - 6);
+        int maxTextWidth = Math.max(1, (int) Math.floor((available - 6) / scale));
         String sample = client.textRenderer.trimToWidth(text, maxTextWidth);
         if (client.textRenderer.getStringWidth(text) > maxTextWidth) {
             String ellipsis = "...";
@@ -248,10 +250,12 @@ public final class HudModuleSettingsScreen extends Screen {
             sample = client.textRenderer.trimToWidth(text, prefixWidth) + ellipsis;
         }
         if (sample.isEmpty()) return;
-        HudPlacement inPanel = new HudPlacement(HudPlacement.Horizontal.LEFT, HudPlacement.Vertical.TOP, x + 2, top + 44, 1);
+        HudPlacement inPanel = new HudPlacement(HudPlacement.Horizontal.LEFT, HudPlacement.Vertical.TOP, x + 2, top + 43, scale);
         HudPlacement.Bounds b = HudRenderer.bounds(client, sample, inPanel, width, height);
         HudRenderer.draw(client, sample, b, appearance(), HudRenderer.color(module, appearance()));
     }
+    /** The short preview row fits up to 1.4x; larger preferred scales stay saved unchanged. */
+    static double previewScale(double preferred) { return Math.min(1.4, preferred); }
     private String label(String value) {
         return value.substring(0, 1) + value.substring(1).toLowerCase(Locale.ROOT);
     }
