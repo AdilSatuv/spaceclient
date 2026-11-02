@@ -1,6 +1,7 @@
 package dev.spaceclient.mixin;
 
 import dev.spaceclient.mods.ZoomRuntime;
+import dev.spaceclient.mods.FovRuntime;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,6 +18,11 @@ public abstract class ZoomRendererMixin {
     }
     @Inject(method = "getFov(FZ)F", at = @At("RETURN"), cancellable = true)
     private void spaceclient$zoomFov(float delta, boolean worldProjection, CallbackInfoReturnable<Float> callback) {
-        if (worldProjection) callback.setReturnValue((float) (callback.getReturnValue() / ZoomRuntime.state.divisor()));
+        if (worldProjection) {
+            float projection=(float)(callback.getReturnValue()/ZoomRuntime.state.divisor());
+            // One final projection owns both Zoom and FOV Control culling updates.
+            FovRuntime.projection(MinecraftClient.getInstance(),projection);
+            callback.setReturnValue(projection);
+        }
     }
 }
