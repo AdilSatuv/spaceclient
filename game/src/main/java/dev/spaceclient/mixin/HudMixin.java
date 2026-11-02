@@ -26,5 +26,6 @@ public abstract class HudMixin {
                 || client.currentScreen instanceof HudModuleSettingsScreen || client.currentScreen instanceof GameModuleSettingsScreen) return;
         Window window = new Window(client);
         HudRenderer.render(client, config, window.getWidth(), window.getHeight());
+        dev.spaceclient.hud.DurabilityWarningRenderer.render(client,window.getWidth(),window.getHeight());
     }
 }

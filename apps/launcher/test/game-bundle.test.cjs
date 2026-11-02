@@ -36,6 +36,7 @@ function entries() {
       'NoHurtCamMixin',
       'WeatherWorldMixin',
       'WeatherRendererMixin',
+      'ChatTimestampMixin',
     ],
   };
   return [
@@ -65,6 +66,7 @@ function entries() {
       'mixin/NoHurtCamMixin',
       'mixin/WeatherWorldMixin',
       'mixin/WeatherRendererMixin',
+      'mixin/ChatTimestampMixin',
       'mods/ModSettings',
       'mods/ModSettings$Brightness',
       'mods/ModSettings$TimePreset',
@@ -73,6 +75,12 @@ function entries() {
       'mods/SnaplookState',
       'mods/SnaplookRuntime',
       'mods/WeatherRuntime',
+      'mods/ModSettings$ChatTimeFormat',
+      'mods/ModSettings$DurabilityThreshold',
+      'mods/ChatTimestamp',
+      'mods/ChatTimestampRuntime',
+      'mods/DurabilityAlert',
+      'hud/DurabilityWarningRenderer',
       'mods/ModSettings$Options',
       'mods/ModSettings$SprintMode',
       'mods/GameplayModule',
@@ -176,6 +184,12 @@ test('gameplay modules and their settings cannot disappear from an otherwise val
     'mods/SnaplookState',
     'mods/SnaplookRuntime',
     'mods/WeatherRuntime',
+    'mods/ModSettings$ChatTimeFormat',
+    'mods/ModSettings$DurabilityThreshold',
+    'mods/ChatTimestamp',
+    'mods/ChatTimestampRuntime',
+    'mods/DurabilityAlert',
+    'hud/DurabilityWarningRenderer',
     'mods/GameplayModule',
     'mods/ModuleShortcuts',
     'mods/GameModuleSettingsScreen',
@@ -269,6 +283,7 @@ test('all pinned mixin classes and the exact mixin set are required', async (t) 
     'NoHurtCamMixin',
     'WeatherWorldMixin',
     'WeatherRendererMixin',
+    'ChatTimestampMixin',
   ];
   for (const name of pinned) {
     const candidate = await fixture(t, (value) =>

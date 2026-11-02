@@ -83,6 +83,8 @@ public final class GameModuleSettingsScreen extends Screen {
             return key==0?"Choose a hold key to use Snaplook.":ModuleKeys.conflicts(client,key)||ModuleKeys.usedByToggle(settings(),null,key)
                 ?"Hold key unavailable: choose an unused key":"Hold "+ModuleKeys.label(key)+" for this view. Release to return.";
         }
+        if(module==GameplayModule.CHAT_TIMESTAMPS)return "Local arrival time; existing messages keep their timestamps.";
+        if(module==GameplayModule.DURABILITY_WARNING)return "Checks worn armor and your held item while the HUD is visible.";
         if(module==GameplayModule.WEATHER_CHANGER)return "Overworld display only; server weather stays unchanged.";
         if(module==GameplayModule.NO_HURT_CAM)return "Keeps the camera steady on damage; death view stays enabled.";
         if(module==GameplayModule.FULLBRIGHT)return "Brightens rendering; your saved Minecraft brightness stays unchanged.";
@@ -101,6 +103,8 @@ public final class GameModuleSettingsScreen extends Screen {
             row(a,2,"Hold key",capturing&&!capturingToggle?"Press key...":ModuleKeys.label(settings().snaplookKey()));
             row(a,15,"Perspective",settings().snapPerspective().label);
         }
+        else if(module==GameplayModule.CHAT_TIMESTAMPS)row(a,17,"Time format",settings().chatTimeFormat().label);
+        else if(module==GameplayModule.DURABILITY_WARNING)row(a,18,"Warn at",settings().durabilityThreshold().percent+"% or less");
         else if(module==GameplayModule.WEATHER_CHANGER)row(a,16,"Weather",label(settings().weatherMode().name()));
         else if(module==GameplayModule.ZOOM){
             row(a,2,"Hold key",capturing&&!capturingToggle?"Press key...":ModuleKeys.label(settings().zoomKey()));
@@ -161,6 +165,8 @@ public final class GameModuleSettingsScreen extends Screen {
         else if(id==14)saved=settings().timePreset(ModSettings.TimePreset.values()[Math.floorMod(settings().timePreset().ordinal()+direction,ModSettings.TimePreset.values().length)]);
         else if(id==15)saved=settings().snapPerspective(ModSettings.SnapPerspective.values()[Math.floorMod(settings().snapPerspective().ordinal()+direction,ModSettings.SnapPerspective.values().length)]);
         else if(id==16)saved=settings().weatherMode(ModSettings.WeatherMode.values()[Math.floorMod(settings().weatherMode().ordinal()+direction,ModSettings.WeatherMode.values().length)]);
+        else if(id==17)saved=settings().chatTimeFormat(ModSettings.ChatTimeFormat.values()[Math.floorMod(settings().chatTimeFormat().ordinal()+direction,ModSettings.ChatTimeFormat.values().length)]);
+        else if(id==18)saved=settings().durabilityThreshold(ModSettings.DurabilityThreshold.values()[Math.floorMod(settings().durabilityThreshold().ordinal()+direction,ModSettings.DurabilityThreshold.values().length)]);
         else if(id==98)saved=settings().reset(module);else return;
         status=saved?"Saved":"Could not save settings";
     }

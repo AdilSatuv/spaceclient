@@ -34,6 +34,7 @@ const expectedMixins = [
   'NoHurtCamMixin',
   'WeatherWorldMixin',
   'WeatherRendererMixin',
+  'ChatTimestampMixin',
 ];
 const required = [
   'fabric.mod.json',
@@ -58,6 +59,7 @@ const required = [
   'dev/spaceclient/mixin/NoHurtCamMixin.class',
   'dev/spaceclient/mixin/WeatherWorldMixin.class',
   'dev/spaceclient/mixin/WeatherRendererMixin.class',
+  'dev/spaceclient/mixin/ChatTimestampMixin.class',
   'dev/spaceclient/mods/ModSettings.class',
   'dev/spaceclient/mods/ModSettings$Brightness.class',
   'dev/spaceclient/mods/ModSettings$TimePreset.class',
@@ -66,6 +68,12 @@ const required = [
   'dev/spaceclient/mods/SnaplookState.class',
   'dev/spaceclient/mods/SnaplookRuntime.class',
   'dev/spaceclient/mods/WeatherRuntime.class',
+  'dev/spaceclient/mods/ModSettings$ChatTimeFormat.class',
+  'dev/spaceclient/mods/ModSettings$DurabilityThreshold.class',
+  'dev/spaceclient/mods/ChatTimestamp.class',
+  'dev/spaceclient/mods/ChatTimestampRuntime.class',
+  'dev/spaceclient/mods/DurabilityAlert.class',
+  'dev/spaceclient/hud/DurabilityWarningRenderer.class',
   'dev/spaceclient/mods/ModSettings$Options.class',
   'dev/spaceclient/mods/ModSettings$SprintMode.class',
   'dev/spaceclient/mods/GameplayModule.class',

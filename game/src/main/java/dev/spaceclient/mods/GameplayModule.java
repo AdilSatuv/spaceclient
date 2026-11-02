@@ -12,7 +12,9 @@ public enum GameplayModule {
     TIME_CHANGER("Time Changer", "Choose the sky's time of day", "time changer day night sunset sunrise время день ночь закат рассвет"),
     NO_HURT_CAM("No Hurt Cam", "Keep your camera steady when hurt", "no hurt cam damage shake tilt тряска камера урон качание"),
     SNAPLOOK("Snaplook", "Hold a key for a quick perspective view", "snaplook perspective third person взгляд вид третье лицо"),
-    WEATHER_CHANGER("Weather Changer", "Choose clear skies, rain or snow", "weather changer clear rain snow погода дождь снег ясно");
+    WEATHER_CHANGER("Weather Changer", "Choose clear skies, rain or snow", "weather changer clear rain snow погода дождь снег ясно"),
+    CHAT_TIMESTAMPS("Chat Timestamps", "Show when new chat messages arrived", "chat timestamps time чат время сообщения"),
+    DURABILITY_WARNING("Durability Warning", "Warn when equipped items are nearly broken", "durability warning alert armor tool прочность предупреждение броня инструмент");
     public final String title, description;
     private final String search;
     GameplayModule(String title, String description, String aliases) {
@@ -27,6 +29,7 @@ public enum GameplayModule {
             case FULLBRIGHT: return s.fullbright(); case TIME_CHANGER: return s.timeChanger();
             case NO_HURT_CAM: return s.noHurtCam();
             case SNAPLOOK: return s.snaplook(); case WEATHER_CHANGER: return s.weatherChanger();
+            case CHAT_TIMESTAMPS: return s.chatTimestamps(); case DURABILITY_WARNING: return s.durabilityWarning();
             default: throw new AssertionError(this);
         }
     }
@@ -37,6 +40,7 @@ public enum GameplayModule {
             case FULLBRIGHT: return s.toggleFullbright(); case TIME_CHANGER: return s.toggleTimeChanger();
             case NO_HURT_CAM: return s.toggleNoHurtCam();
             case SNAPLOOK: return s.toggleSnaplook(); case WEATHER_CHANGER: return s.toggleWeatherChanger();
+            case CHAT_TIMESTAMPS: return s.toggleChatTimestamps(); case DURABILITY_WARNING: return s.toggleDurabilityWarning();
             default: throw new AssertionError(this);
         }
     }

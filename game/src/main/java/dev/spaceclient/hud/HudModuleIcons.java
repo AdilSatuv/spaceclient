@@ -52,6 +52,10 @@ final class HudModuleIcons {
                     path(true,11,1,20,5,19,14,11,21,3,14,2,5);path(false,6,11,16,11);break;
                 case SNAPLOOK:
                     rect(2,5,16,18);path(false,16,9,22,5,22,18,16,14);circle(9,11,3);break;
+                case CHAT_TIMESTAMPS:
+                    path(true,1,2,21,2,21,16,9,16,4,21,4,16,1,16);path(false,5,7,17,7);path(false,5,11,13,11);break;
+                case DURABILITY_WARNING:
+                    path(true,11,1,22,21,0,21);path(false,11,7,11,13);circle(11,17,1);break;
                 case WEATHER_CHANGER:
                     path(false,4,13,2,12,1,9,3,6,7,6,8,2,13,1,17,5,17,7,20,7,22,10,21,13,4,13);
                     path(false,6,16,4,20);path(false,12,16,10,20);path(false,18,16,16,20);break;

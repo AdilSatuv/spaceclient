@@ -19,6 +19,16 @@ public final class ModSettings {
         SnapPerspective(String label,int view){this.label=label;this.view=view;}
     }
     public enum WeatherMode { CLEAR, RAIN, SNOW }
+    public enum ChatTimeFormat {
+        HOURS_MINUTES("24h / minutes", "HH:mm"), SECONDS("24h / seconds", "HH:mm:ss"), TWELVE_HOUR("12h / minutes", "hh:mm a");
+        public final String label, pattern;
+        ChatTimeFormat(String label,String pattern){this.label=label;this.pattern=pattern;}
+    }
+    public enum DurabilityThreshold {
+        FIVE(5), TEN(10), TWENTY(20);
+        public final int percent;
+        DurabilityThreshold(int percent){this.percent=percent;}
+    }
     public enum Brightness {
         SOFT(4), BRIGHT(8), FULL(16);
         public final float gamma;
@@ -35,6 +45,9 @@ public final class ModSettings {
     private String error = "";
     private static final class Options {
         boolean autoSprint, freeLook, zoom, crosshair, fullbright, timeChanger, noHurtCam, snaplook, weatherChanger;
+        boolean chatTimestamps, durabilityWarning;
+        ChatTimeFormat chatTimeFormat=ChatTimeFormat.HOURS_MINUTES;
+        DurabilityThreshold durabilityThreshold=DurabilityThreshold.TEN;
         int snaplookKey; // Unbound: preserve all existing user hold/toggle bindings.
         SnapPerspective snapPerspective=SnapPerspective.FRONT;
         WeatherMode weatherMode=WeatherMode.CLEAR;
@@ -51,6 +64,7 @@ public final class ModSettings {
             o.fullbright = fullbright; o.timeChanger = timeChanger; o.brightness = brightness; o.timePreset = timePreset;
             o.noHurtCam = noHurtCam;
             o.snaplook=snaplook;o.weatherChanger=weatherChanger;o.snaplookKey=snaplookKey;o.snapPerspective=snapPerspective;o.weatherMode=weatherMode;
+            o.chatTimestamps=chatTimestamps;o.durabilityWarning=durabilityWarning;o.chatTimeFormat=chatTimeFormat;o.durabilityThreshold=durabilityThreshold;
             o.sprintMode = sprintMode; o.freeLookKey = freeLookKey; o.zoomKey = zoomKey;
             o.zoomFactor = zoomFactor; o.zoomSmooth = zoomSmooth; o.style = style;
             o.toggleKeys = toggleKeys.clone();
@@ -66,10 +80,10 @@ public final class ModSettings {
             Properties p = new Properties();
             try (InputStream in = Files.newInputStream(file)) { p.load(in); }
             String schema = p.getProperty("schemaVersion", "");
-            if (!schema.matches("[1-6]")) throw new IOException("Unsupported settings");
+            if (!schema.matches("[1-7]")) throw new IOException("Unsupported settings");
             int version = Integer.parseInt(schema);
             boolean legacy = version == 1;
-            if (p.size() != (legacy ? 3 : version == 2 ? 17 : version == 3 ? 21 : version == 4 ? 27 : version==5 ? 29 : 36))
+            if (p.size() != (legacy ? 3 : version == 2 ? 17 : version == 3 ? 21 : version == 4 ? 27 : version==5 ? 29 : version==6 ? 36 : 42))
                 throw new IOException("Unsupported settings");
             Options o = new Options();
             o.autoSprint = bool(p, "autoSprint"); o.freeLook = bool(p, "freeLook");
@@ -84,7 +98,7 @@ public final class ModSettings {
                     integer(p, "crosshairThickness", 1, 4), bool(p, "crosshairDot"), bool(p, "crosshairOutline"));
             }
             if (version >= 3) for (GameplayModule m : GameplayModule.values())
-                if (version >= 6 || (version==5 && m.ordinal()<GameplayModule.SNAPLOOK.ordinal())
+                if (version >= 7 || (version==6 && m.ordinal()<GameplayModule.CHAT_TIMESTAMPS.ordinal()) || (version==5 && m.ordinal()<GameplayModule.SNAPLOOK.ordinal())
                         || (version == 4 && m.ordinal() < GameplayModule.NO_HURT_CAM.ordinal())
                         || (version == 3 && m.ordinal() < GameplayModule.FULLBRIGHT.ordinal()))
                     o.toggleKeys[m.ordinal()] = integer(p, "toggleKey." + m.name(), 0, 255);
@@ -97,6 +111,11 @@ public final class ModSettings {
             if(version>=6) {
                 o.snaplook=bool(p,"snaplook");o.weatherChanger=bool(p,"weatherChanger");o.snaplookKey=integer(p,"snaplookKey",0,255);
                 o.snapPerspective=SnapPerspective.valueOf(p.getProperty("snapPerspective",""));o.weatherMode=WeatherMode.valueOf(p.getProperty("weatherMode",""));
+            }
+            if(version>=7) {
+                o.chatTimestamps=bool(p,"chatTimestamps");o.durabilityWarning=bool(p,"durabilityWarning");
+                o.chatTimeFormat=ChatTimeFormat.valueOf(p.getProperty("chatTimeFormat",""));
+                o.durabilityThreshold=DurabilityThreshold.valueOf(p.getProperty("durabilityThreshold",""));
             }
             s.value = o;
         } catch (IOException | IllegalArgumentException ex) {
@@ -124,6 +143,10 @@ public final class ModSettings {
     public boolean noHurtCam() { return value.noHurtCam; }
     public boolean snaplook(){return value.snaplook;}
     public boolean weatherChanger(){return value.weatherChanger;}
+    public boolean chatTimestamps(){return value.chatTimestamps;}
+    public boolean durabilityWarning(){return value.durabilityWarning;}
+    public ChatTimeFormat chatTimeFormat(){return value.chatTimeFormat;}
+    public DurabilityThreshold durabilityThreshold(){return value.durabilityThreshold;}
     public int snaplookKey(){return value.snaplookKey;}
     public SnapPerspective snapPerspective(){return value.snapPerspective;}
     public WeatherMode weatherMode(){return value.weatherMode;}
@@ -158,6 +181,10 @@ public final class ModSettings {
     public boolean toggleNoHurtCam() { return change(o -> o.noHurtCam = !o.noHurtCam); }
     public boolean toggleSnaplook(){return change(o->o.snaplook=!o.snaplook);}
     public boolean toggleWeatherChanger(){return change(o->o.weatherChanger=!o.weatherChanger);}
+    public boolean toggleChatTimestamps(){return change(o->o.chatTimestamps=!o.chatTimestamps);}
+    public boolean toggleDurabilityWarning(){return change(o->o.durabilityWarning=!o.durabilityWarning);}
+    public boolean chatTimeFormat(ChatTimeFormat v){return change(o->{if(v==null)throw new IllegalArgumentException();o.chatTimeFormat=v;});}
+    public boolean durabilityThreshold(DurabilityThreshold v){return change(o->{if(v==null)throw new IllegalArgumentException();o.durabilityThreshold=v;});}
     public boolean snaplookKey(int v){return change(o->{checkKey(v);o.snaplookKey=v;});}
     public boolean snapPerspective(SnapPerspective v){return change(o->{if(v==null)throw new IllegalArgumentException();o.snapPerspective=v;});}
     public boolean weatherMode(WeatherMode v){return change(o->{if(v==null)throw new IllegalArgumentException();o.weatherMode=v;});}
@@ -182,6 +209,8 @@ public final class ModSettings {
                 case NO_HURT_CAM: break;
                 case SNAPLOOK: o.snaplookKey=0;o.snapPerspective=SnapPerspective.FRONT;break;
                 case WEATHER_CHANGER: o.weatherMode=WeatherMode.CLEAR;break;
+                case CHAT_TIMESTAMPS: o.chatTimeFormat=ChatTimeFormat.HOURS_MINUTES;break;
+                case DURABILITY_WARNING: o.durabilityThreshold=DurabilityThreshold.TEN;break;
                 default: throw new IllegalArgumentException();
             }
         });
@@ -193,7 +222,9 @@ public final class ModSettings {
         try {
             Options o = value.copy(); mutation.accept(o);
             Properties p = new Properties();
-            p.setProperty("schemaVersion", "6");
+            p.setProperty("schemaVersion", "7");
+            p.setProperty("chatTimestamps",Boolean.toString(o.chatTimestamps));p.setProperty("durabilityWarning",Boolean.toString(o.durabilityWarning));
+            p.setProperty("chatTimeFormat",o.chatTimeFormat.name());p.setProperty("durabilityThreshold",o.durabilityThreshold.name());
             p.setProperty("snaplook",Boolean.toString(o.snaplook));p.setProperty("weatherChanger",Boolean.toString(o.weatherChanger));
             p.setProperty("snaplookKey",Integer.toString(o.snaplookKey));p.setProperty("snapPerspective",o.snapPerspective.name());p.setProperty("weatherMode",o.weatherMode.name());
             p.setProperty("noHurtCam", Boolean.toString(o.noHurtCam));

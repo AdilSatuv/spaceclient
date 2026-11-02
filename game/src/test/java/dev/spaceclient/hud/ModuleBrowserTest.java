@@ -9,6 +9,15 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class ModuleBrowserTest {
+    @Test public void newUtilityModsAreSearchableInAppropriateSectionsAndCanBeFavorited() throws Exception {
+        assertEquals(34,HudSection.HOME.catalog("").size());
+        assertEquals(GameplayModule.CHAT_TIMESTAMPS,HudSection.MISC.catalog("чат").get(0).game);
+        assertEquals(GameplayModule.DURABILITY_WARNING,HudSection.PLAYER.catalog("прочность").get(0).game);
+        assertTrue(HudSection.VISUALS.catalog("timestamps").isEmpty());assertTrue(HudSection.WORLD.catalog("durability warning").isEmpty());
+        ModuleBrowserSettings s=ModuleBrowserSettings.open(Files.createTempDirectory("space-new-utils").resolve("browser"));
+        assertTrue(s.toggleFavorite("game.CHAT_TIMESTAMPS"));assertTrue(s.toggleFavorite("game.DURABILITY_WARNING"));
+        assertTrue(s.favorite("game.CHAT_TIMESTAMPS"));assertTrue(s.favorite("game.DURABILITY_WARNING"));
+    }
     @Test public void favoritesPersistWithoutEnablingModulesAndCombineWithSearchAndCategory() throws Exception {
         Path dir=Files.createTempDirectory("space-browser");
         ModSettings mods=ModSettings.open(dir.resolve("mods")); HudConfig hud=new HudConfig();
