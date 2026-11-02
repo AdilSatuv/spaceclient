@@ -34,5 +34,5 @@ export interface LauncherDependencies {
   installation: InstallationPort;
   launch: LaunchPort;
   desktop: DesktopPort;
-  inspectJava(path: string | null): Promise<JavaInfo>;
+  inspectJava(path: string | null, signal?: AbortSignal): Promise<JavaInfo>;
 }

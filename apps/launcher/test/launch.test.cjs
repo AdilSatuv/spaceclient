@@ -314,6 +314,24 @@ test('verified local plan owns fixed JVM/RAM/classpath/natives arguments and off
   assert.equal(offlineUuid('Notch'), 'b50ad385829d3141a2167e7d7539ba7f');
   assert.notEqual(offlineUuid('Notch'), offlineUuid('notch'));
 });
+test('local preflight passes its cancellation signal into the runtime probe', async (t) => {
+  const f = await installation(t);
+  const controller = new AbortController();
+  let receivedSignal;
+  f.dependencies.runtime = async (_path, signal) => {
+    receivedSignal = signal;
+    return { usable: true };
+  };
+  await f.prepareLocalLaunch(
+    f.root,
+    profile,
+    'SpaceTester',
+    f.pin,
+    controller.signal,
+    f.dependencies,
+  );
+  assert.equal(receivedSignal, controller.signal);
+});
 test('changed/missing classpath bytes, extra mods, bundle mismatch, native corruption and junctions block launch', async (t) => {
   const f = await installation(t);
   const library = path.join(f.root, 'libraries/test.jar');

@@ -1,12 +1,14 @@
 import type { CommandHandlers } from '../../shared/ipc.ts';
 import type { LauncherDependencies } from './ports.ts';
+import type { JavaInfo } from '../../shared/models.ts';
 import { UserFacingError } from './user-facing-error.ts';
 
 export class LauncherApplication {
   readonly commands: CommandHandlers;
   private readonly dependencies: LauncherDependencies;
-  private checkingJava = false;
+  private checkingJava: { controller: AbortController; done: Promise<JavaInfo> } | null = null;
   private choosingJava = false;
+  private closing = false;
 
   constructor(dependencies: LauncherDependencies) {
     this.dependencies = dependencies;
@@ -51,12 +53,20 @@ export class LauncherApplication {
     };
   }
   get running() {
-    return this.dependencies.installation.running || this.dependencies.launch.running;
+    return (
+      this.dependencies.installation.running ||
+      this.dependencies.launch.running ||
+      this.checkingJava !== null
+    );
   }
   async shutdown() {
+    this.closing = true;
+    const check = this.checkingJava;
+    check?.controller.abort();
     await Promise.all([
       this.dependencies.installation.shutdown(),
       this.dependencies.launch.shutdown(),
+      check?.done.catch(() => {}),
     ]);
   }
 
@@ -73,13 +83,21 @@ export class LauncherApplication {
     }
   }
   private async checkJava(payload: unknown) {
+    if (this.closing) throw new UserFacingError('Лаунчер завершает работу.');
     if (this.checkingJava) throw new UserFacingError('Проверка Java уже выполняется.');
     const profile = this.dependencies.profiles.profile(payload);
-    this.checkingJava = true;
+    const controller = new AbortController();
+    const check = {
+      controller,
+      done: Promise.resolve().then(() =>
+        this.dependencies.inspectJava(profile.javaPath, controller.signal),
+      ),
+    };
+    this.checkingJava = check;
     try {
-      return await this.dependencies.inspectJava(profile.javaPath);
+      return await check.done;
     } finally {
-      this.checkingJava = false;
+      if (this.checkingJava === check) this.checkingJava = null;
     }
   }
 }

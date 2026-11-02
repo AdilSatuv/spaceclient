@@ -64,7 +64,7 @@ export async function prepareLocalLaunch(
     );
   if (!profile.javaPath) throw new UserFacingError('Выберите Java 21 x64 в настройках профиля.');
   const executable = javaPath(profile.javaPath);
-  const runtime = await dependencies.runtime(executable);
+  const runtime = await dependencies.runtime(executable, signal);
   signal.throwIfAborted();
   if (!runtime.usable) throw new UserFacingError(runtime.message);
   const plan = await dependencies.version(root, signal);
