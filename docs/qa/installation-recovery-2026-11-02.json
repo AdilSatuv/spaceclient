@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-02",
+  "branch": "fix/core-launch-recovery",
+  "previousHead": "98fb68adc61c9090b986a29a81d4e3ecc5e9c463",
+  "codeCommit": "42033c2ead0ab738ff0c81e8fa65ba9be4bbed21",
+  "regressionsFailedBeforeFix": [
+    "an idle installation service accepted start after shutdown",
+    "shutdown did not close admission permanently after cancellation",
+    "disk guidance reported 320 MiB for a synthetic plan requiring 673 MiB",
+    "ENOSPC exposed no recoverable cause or action"
+  ],
+  "launcherTests": { "passed": 127, "failed": 0, "cancelled": 0, "skipped": 0 },
+  "typecheck": "passed",
+  "requiredGameBundleBuild": "passed",
+  "formatChangedFiles": "passed",
+  "formatLauncherWithEndOfLineAuto": "passed",
+  "recoveryIntegration": {
+    "realQueueAndDownloader": true,
+    "temporaryFilesAndHashChecks": true,
+    "transport": "fake",
+    "nativeExtraction": "fake",
+    "cancelledPartialBytes": 7,
+    "resumedRange": "bytes=7-",
+    "totalRequests": 2,
+    "verifiedCacheRewritten": false,
+    "previousReceiptPreservedOnCancellation": true,
+    "launchReady": false
+  },
+  "filesystemCodes": ["ENOSPC", "EDQUOT", "EACCES", "EPERM", "EBUSY", "ETXTBSY"],
+  "filesystemFailures": "injected Node error codes; no real disk-full/ACL/NTFS lock experiment",
+  "headlessElectron": {
+    "passed": true,
+    "report": ".reports/launcher-ui/run-fdb5100c-3ed5-4722-9f53-c1497aa63a6d/report.json",
+    "checkedAt": "2026-11-02T16:05:30.793Z",
+    "checks": 10,
+    "screenshots": 14,
+    "rendererErrors": 0
+  },
+  "codebaseMemory": {
+    "project": "spaceclient-core-features-20261102",
+    "root": "C:/Users/user/Documents/Codex/2026-11-02/space-client-core-features/work/spaceclient-core",
+    "indexedAt": "2026-11-02T16:05:28Z",
+    "nodes": 8789,
+    "edges": 19736,
+    "exactChangedPathsChecked": 2,
+    "coverage": "no_recorded_issue",
+    "freshness": "metadata_changed",
+    "sourceVerifiedDirectly": true
+  },
+  "userRuntimeModified": false,
+  "gameStarted": false,
+  "pushed": false,
+  "published": false
+}
