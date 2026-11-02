@@ -1,6 +1,7 @@
 package dev.spaceclient.hud;
 
 import dev.spaceclient.SpaceClient;
+import com.mojang.blaze3d.platform.GlStateManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -14,6 +15,7 @@ public final class HudModuleSettingsScreen extends Screen {
     private final Screen parent;
     private final HudModule module;
     private int left, top, panelWidth, focus;
+    private HudViewport viewport;
     private int tab; // 0: layout, 1: appearance, 2: module content
     private String status = "";
     private final HudSwitch.Motion toggleMotion;
@@ -35,9 +37,10 @@ public final class HudModuleSettingsScreen extends Screen {
     private boolean roomy() { return width >= 320 && height >= 240; }
 
     @Override public void init() {
-        panelWidth = Math.max(0, Math.min(380, width - 24));
-        left = (width - panelWidth) / 2;
-        top = (height - 224) / 2;
+        viewport = new HudViewport(width, height);
+        panelWidth = Math.max(0, Math.min(500, viewport.width - 24));
+        left = (viewport.width - panelWidth) / 2;
+        top = (viewport.height - 224) / 2;
         SpaceClient.clicks.clear();
     }
     @Override public void removed() {
@@ -53,6 +56,13 @@ public final class HudModuleSettingsScreen extends Screen {
             center("Esc - back", width / 2, height / 2 + 4, MUTED);
             return;
         }
+        GlStateManager.pushMatrix();
+        try {
+            GlStateManager.scale(viewport.scale, viewport.scale, 1);
+            renderPanel(viewport.toUi(mouseX), viewport.toUi(mouseY));
+        } finally { GlStateManager.popMatrix(); }
+    }
+    private void renderPanel(int mouseX, int mouseY) {
         rounded(left + 2, top + 3, panelWidth, 224, 0x90000000);
         rounded(left, top, panelWidth, 224, BORDER);
         rounded(left + 1, top + 1, panelWidth - 2, 222, PANEL);
@@ -188,6 +198,7 @@ public final class HudModuleSettingsScreen extends Screen {
     }
     @Override protected void mouseClicked(int x, int y, int button) {
         if (button != 0 || !roomy()) return;
+        x = viewport.toUi(x); y = viewport.toUi(y);
         List<Action> visible = controls();
         for (int i = 0; i < visible.size(); i++) if (visible.get(i).contains(x, y)) {
             focus = i;
@@ -281,7 +292,7 @@ public final class HudModuleSettingsScreen extends Screen {
         }
         if (sample.isEmpty()) return;
         HudPlacement inPanel = new HudPlacement(HudPlacement.Horizontal.LEFT, HudPlacement.Vertical.TOP, x + 2, top + 43, scale);
-        HudPlacement.Bounds b = HudRenderer.bounds(client, sample, inPanel, width, height);
+        HudPlacement.Bounds b = HudRenderer.bounds(client, sample, inPanel, viewport.width, viewport.height);
         HudRenderer.draw(client, sample, b, appearance(), HudRenderer.color(module, appearance()));
     }
     /** The short preview row fits up to 1.4x; larger preferred scales stay saved unchanged. */
