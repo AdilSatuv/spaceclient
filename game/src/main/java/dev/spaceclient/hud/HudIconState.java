@@ -18,7 +18,7 @@ final class HudIconState implements AutoCloseable {
     private final int materialFace=GL11.glGetInteger(GL11.GL_COLOR_MATERIAL_FACE),materialMode=GL11.glGetInteger(GL11.GL_COLOR_MATERIAL_PARAMETER);
     private final int src=GL11.glGetInteger(GL14.GL_BLEND_SRC_RGB),dst=GL11.glGetInteger(GL14.GL_BLEND_DST_RGB),srcAlpha=GL11.glGetInteger(GL14.GL_BLEND_SRC_ALPHA),dstAlpha=GL11.glGetInteger(GL14.GL_BLEND_DST_ALPHA);
     private final float alphaRef=GL11.glGetFloat(GL11.GL_ALPHA_TEST_REF);
-    private final FloatBuffer color=BufferUtils.createFloatBuffer(4);
+    private final FloatBuffer color=BufferUtils.createFloatBuffer(16);
     private final int texture;
     private final boolean textured;
     HudIconState() {
