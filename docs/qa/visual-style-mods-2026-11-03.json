@@ -1,0 +1,198 @@
+{
+  "date": "2026-11-03",
+  "implementationCommit": "154db3d",
+  "sourceCommits": [
+    "ffb5829",
+    "b85c3f7",
+    "154db3d"
+  ],
+  "bundle": {
+    "schemaVersion": 1,
+    "channel": "development",
+    "modVersion": "0.1.0",
+    "minecraftVersion": "1.8.9",
+    "loaderVersion": "0.18.3",
+    "gameSourceTree": "9dc08c72a2d29c89be60babccf7c836d33c0c29f",
+    "size": 978441,
+    "sha256": "cb51d851f8b01c29374ce89893ac8274b0b11ab85de76e5947c20d954c03c396"
+  },
+  "modules": {
+    "gameplay": 14,
+    "hud": 23,
+    "catalog": 37,
+    "newOptIn": [
+      "BLOCK_OVERLAY",
+      "HIT_COLOR",
+      "FOV_CONTROL"
+    ],
+    "newToggleKeysUnboundByDefault": true,
+    "modsSchema": 8,
+    "modsFields": 57,
+    "unchangedHudSchema": 17,
+    "unchangedProfileExport": 12
+  },
+  "featureReferences": [
+    {
+      "url": "https://www.badlion.net/wiki/block-overlay?lang=ja",
+      "accessed": "2026-11-02"
+    },
+    {
+      "url": "https://www.lunarclient.com/news/lunar-client-mods-for-the-best-pvp-experience",
+      "accessed": "2026-11-02"
+    },
+    {
+      "url": "https://www.lunarclient.com/news/patch-notes-7",
+      "accessed": "2026-11-02"
+    }
+  ],
+  "checks": {
+    "javaTests": 225,
+    "launcherTests": 112,
+    "typecheck": true,
+    "prettier": true,
+    "gameBuild": true,
+    "strictLauncherBuild": true,
+    "sourceStampVerified": true,
+    "gitDiffCheck": true,
+    "exactRequiredMixins": 20,
+    "newClassesJava8": true
+  },
+  "legacyFixture": {
+    "file": "game/src/test/resources/hud-legacy/mods-schema7-0c2c0f5.properties",
+    "sha256": "de37019065d22aa1235e601de08e565de7c7f4c3540508e10e5306dd73a410a4",
+    "generatedByPreviousJarBeforeSourceChanges": true
+  },
+  "codebaseMemory": {
+    "project": "spaceclient-mods-menus",
+    "rootVerified": true,
+    "graphNavigationUsed": true,
+    "indexedAt": "2026-11-02T18:20:29Z",
+    "mode": "fast",
+    "nodes": 7697,
+    "edges": 19219,
+    "skipped": 0,
+    "tracesResolved": [
+      "BlockOverlayRenderer.draw <- BlockOverlayMixin.spaceclient$blockStyle",
+      "FovRuntime.projection <- ZoomRendererMixin.spaceclient$zoomFov"
+    ],
+    "partialFiles": [
+      "apps/launcher/src/renderer/style.css",
+      "game/build.gradle",
+      "game/gradlew"
+    ],
+    "caveat": "Coverage remains metadata_changed; changed source files read from disk. Docs and ignored QA artifacts excluded by design."
+  },
+  "native": {
+    "exitCode": 0,
+    "resolution": [
+      1280,
+      720
+    ],
+    "checks": {
+      "hiddenCanvas": true,
+      "nativeSearchCardsControlsPreviewsKeys": true,
+      "allBlockModesAndPaletteUiCycle": true,
+      "nativeSelectedFullAndSlabShapes": true,
+      "fillDepthTestObserved": true,
+      "blockGlStateAndCachePreserved": true,
+      "nativeRedAndCustomVioletHurtTint": true,
+      "tintStrengthAndBufferBounds": true,
+      "playersOnlyHealthyDeadDisabledGuards": true,
+      "nativeSprintFlightBowFovSamples": true,
+      "steadyReducedFullDynamicProjection": true,
+      "zoomCompositionAndHandProjection": true,
+      "foreignCameraNativeProjection": true,
+      "stationaryAndPausedFovCullingRefresh": true,
+      "minecraftFovAndOptionsBytesUnchanged": true,
+      "settingsPersistence": true,
+      "serverBlockUnchangedAndClientSampleRestored": true,
+      "physicalInputTested": false,
+      "multiplayerTested": false,
+      "userWorldOpened": false
+    },
+    "additionalAssertions": {
+      "offGridNumericControlValues": true,
+      "stableAndHandProjectionDoNotDirtyTerrain": true,
+      "disabledFovRefreshesNativeCulling": true
+    },
+    "tenFinalCapturesVisuallyInspected": true,
+    "noObservedFatalMixinOrTextureErrorsInFinalRun": true,
+    "findingAndResolution": "Initial pass exited 0 but visual inspection found missing distant terrain after widening FOV with stationary/paused camera. Added culling refresh regression; it caught the separate return hook being skipped by Zoom cancellation. Moved refresh to the shared final world-projection callback and re-ran all native checks and captures successfully. Only the crashed own QA process was stopped."
+  },
+  "installation": {
+    "sha256": "cb51d851f8b01c29374ce89893ac8274b0b11ab85de76e5947c20d954c03c396",
+    "gameSourceTree": "9dc08c72a2d29c89be60babccf7c836d33c0c29f",
+    "preflight": true,
+    "settingsAndWorldMetadataPreserved": true,
+    "checkedFiles": 5
+  },
+  "screenshots": [
+    {
+      "file": "outputs/visual-style-mods-2026-11-03/66-block-overlay-settings.png",
+      "sha256": "72821a8c694110455fe2cb7fdb655430bde17b9eb24700f9abeccc7bf893cc0b",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/visual-style-mods-2026-11-03/67-hit-color-settings.png",
+      "sha256": "9f116ab29cb09e8e92f6345c45b0e0108a7ec083ff2cde054a28b0735734c8e5",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/visual-style-mods-2026-11-03/68-fov-control-settings.png",
+      "sha256": "a5b0ea6bf50c8373da9ee7480f55979a8318d76055a1f99b1b05d22e67a5ed1a",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/visual-style-mods-2026-11-03/69-block-overlay-aqua.png",
+      "sha256": "5dc4ffffbcc382e2d105d29f9c83b021b7aa0653f3efe9a23373b14cb31fdf3a",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/visual-style-mods-2026-11-03/70-block-overlay-rainbow.png",
+      "sha256": "cbb8acd34236f0be3e441612729d38f1f863a63d8fe945f15393fcd84876c917",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/visual-style-mods-2026-11-03/71-block-overlay-slab.png",
+      "sha256": "5fcfbb9bd035c20773faf80211ae1b8afc0f2373fcf438fd474425f2ebcd4dbb",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/visual-style-mods-2026-11-03/72-native-hit-color.png",
+      "sha256": "6c35fdbcb6a862b71b183366c8d65b8072334a745d1111242a472d39ad9463ab",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/visual-style-mods-2026-11-03/73-custom-hit-color.png",
+      "sha256": "db64f754d1fc0313e25d8ca25bfce89884474d0613b2211eb322242eb8beff81",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/visual-style-mods-2026-11-03/74-fov-wide.png",
+      "sha256": "4a7f1de142e42425c957cc6b5450f75b7dbb840d6772886615370089442cfa6e",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/visual-style-mods-2026-11-03/75-fov-close.png",
+      "sha256": "d241998047691aac2d5f2489b19857fa73849b88b0eded97f0ec4441c2a965df",
+      "width": 1280,
+      "height": 720
+    }
+  ],
+  "limitations": [
+    "Direct native API calls and client-side block/entity/input samples in the isolated QA world; no physical input or multiplayer packets exercised.",
+    "Full and slab native selection boxes covered; no exhaustive block/biome/resource-pack/shader matrix.",
+    "Native hurt-render capture uses a pig sample; players-only policy includes a direct player sample, not a network player render.",
+    "Underwater/death FOV effects and performance not separately accepted. Driver may limit outline line width.",
+    "Only the QA-created world opened. User game remained closed after final installation. Own implementation and icons; no competitor code/assets copied."
+  ]
+}

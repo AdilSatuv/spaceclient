@@ -1,5 +1,13 @@
 # Передача работы между чатами Space Client
 
+## Block Overlay, Hit Color и FOV Control · 3 ноября 2026
+
+Три новых opt-in модуля: Block Overlay (native selection box, outline/fill/both, opacity/width, 7 цветов с Rainbow); Hit Color (native hurt-tint buffer, strength, players-only, death/healthy guard); FOV Control (60–110°, dynamic0–100%, camera-only, Zoom composition). Live vector previews, поиск/разделы/избранное, Toggle keys unbound. 14 игровых + 23 HUD = 37 карточек. Mods schema8/57 полей с реальным schema7 fixture; HUD17/export12/browser1 прежние. [Описание](VISUAL-STYLE-MODS-2026-11-03.md), [QA](qa/visual-style-mods-2026-11-03.json).
+
+225 Java + 112 launcher tests, TypeScript, Prettier, game/strict launcher builds прошли. Native: cards/search/previews/key capture/reserved guard, colors/modes/off-grid controls; full/slab selected shapes, depth test, GL state/cache/width; native red→violet hurt buffer, strength и runtime guards; native sprint/fly/bow FOV samples, steady/reduced/full, Zoom/hand/foreign camera, culling refresh при stationary/paused FOV и отключении, стабильная/hand projection без лишнего refresh. Начальные captures обнаружили пропуски terrain после FOV resize; regression затем поймал ранний RETURN от Zoom. Исправлено в общем final-projection hook (`154db3d`, также `ffb5829`/`b85c3f7`), полный повтор прошёл, 10 финальных кадров осмотрены, exit0. Physical input, multiplayer, весь resource-pack/shader/block matrix, underwater/death FOV и performance не приняты; native samples описаны отдельно.
+
+Итоговый JAR `cb51d851f8b01c29374ce89893ac8274b0b11ab85de76e5947c20d954c03c396` установлен при закрытой пользовательской игре; preflight и сохранность options/config/level.dat подтверждены, игру после установки не запускали. Только QA client samples создавались/удалялись, server block не менялся. Codebase Memory обновлён 2026-11-02T18:20:29Z (по UTC, локально уже 3 ноября), 7697 nodes / 19219 edges, skipped=0. Trace BlockOverlayRenderer ← BlockOverlayMixin и FovRuntime.projection ← ZoomRendererMixin разрешены; partial parse и metadata_changed оговорены. Всё локально, main не менялся.
+
 ## Chat Timestamps и Durability Warning · 2 ноября 2026
 
 Два новых opt-in модуля: локальное время новых chat messages (24h/minutes, 24h/seconds, 12h/minutes; копии сохраняют native click/hover/style) и тихое live-предупреждение о прочности надетой брони/выбранной руки (5/10/20%, худшая относительная прочность, пропуск Unbreakable). 11 игровых + 23 HUD = 34 карточки. Новые Toggle key unbound. Mods schema7/42 поля, реальный schema6 fixture из предыдущего JAR; HUD17/export12/browser1 без изменений. [Описание](CHAT-AND-ALERT-MODS-2026-11-02.md), [QA](qa/chat-alert-mods-2026-11-02.json).
