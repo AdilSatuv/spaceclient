@@ -27,7 +27,7 @@ public class EnvironmentModsSettingsTest {
         assertTrue(s.toggleWeatherChanger());assertTrue(s.weatherMode(ModSettings.WeatherMode.SNOW));assertTrue(s.toggleKey(GameplayModule.SNAPLOOK,51));assertTrue(s.toggleKey(GameplayModule.WEATHER_CHANGER,52));
         s=ModSettings.open(file());assertTrue(s.snaplook());assertTrue(s.weatherChanger());assertEquals(50,s.snaplookKey());assertEquals(ModSettings.SnapPerspective.BACK,s.snapPerspective());
         assertEquals(ModSettings.WeatherMode.SNOW,s.weatherMode());assertEquals(51,s.toggleKey(GameplayModule.SNAPLOOK));assertEquals(52,s.toggleKey(GameplayModule.WEATHER_CHANGER));
-        assertEquals("8",read().getProperty("schemaVersion"));assertEquals(57,read().size());assertTrue(s.noHurtCam());assertEquals(39,s.toggleKey(GameplayModule.NO_HURT_CAM));
+        assertEquals("9",read().getProperty("schemaVersion"));assertEquals(94,read().size());assertTrue(s.noHurtCam());assertEquals(39,s.toggleKey(GameplayModule.NO_HURT_CAM));
     }
     @Test public void resetOnlyTouchesTheSelectedModulesKeysAndEffectOptions()throws Exception {
         ModSettings s=ModSettings.open(file());s.toggleSnaplook();s.toggleWeatherChanger();s.snaplookKey(50);s.snapPerspective(ModSettings.SnapPerspective.BACK);
@@ -39,7 +39,7 @@ public class EnvironmentModsSettingsTest {
     @Test public void malformedNewAndFutureFilesAreKeptReadOnlyWithoutPartialState()throws Exception {
         ModSettings s=ModSettings.open(file());assertTrue(s.toggleZoom());Properties good=read();
         for(String[] change:new String[][]{{"snaplook",null},{"weatherChanger","yes"},{"snaplookKey","256"},{"snapPerspective","ORBIT"},{"weatherMode","STORM"},
-                {"toggleKey.SNAPLOOK",null},{"toggleKey.WEATHER_CHANGER",null},{"schemaVersion","9"},{"schemaVersion","06"},{"extra","keep"}}) {
+                {"toggleKey.SNAPLOOK",null},{"toggleKey.WEATHER_CHANGER",null},{"schemaVersion","10"},{"schemaVersion","06"},{"extra","keep"}}) {
             Properties p=new Properties();p.putAll(good);if(change[1]==null)p.remove(change[0]);else p.setProperty(change[0],change[1]);write(p);byte[] bytes=Files.readAllBytes(file());
             ModSettings r=ModSettings.open(file());assertTrue(change[0],r.isReadOnly());assertFalse(r.toggleSnaplook());assertFalse(r.toggleWeatherChanger());assertArrayEquals(bytes,Files.readAllBytes(file()));
         }

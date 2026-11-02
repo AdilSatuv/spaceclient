@@ -11,8 +11,10 @@ public final class ModuleKeys {
     public static boolean toggleConflicts(MinecraftClient c, GameplayModule module, int key) {
         if (conflicts(c, key)) return true;
         if (usedByHold(SpaceClient.mods,null,key)) return true;
-        return usedByToggle(SpaceClient.mods, module, key);
+        return usedByToggle(SpaceClient.mods, module, key)||usedByAutoText(SpaceClient.mods,-1,key);
     }
+    public static boolean usedByAutoText(ModSettings s,int except,int key){if(s==null||key==0)return false;for(int i=0;i<3;i++)if(i!=except&&s.autoTextKey(i)==key)return true;return false;}
+    public static boolean autoTextConflicts(MinecraftClient c,int slot,int key){return conflicts(c,key)||usedByHold(SpaceClient.mods,null,key)||usedByToggle(SpaceClient.mods,null,key)||usedByAutoText(SpaceClient.mods,slot,key);}
     public static boolean usedByToggle(ModSettings settings, GameplayModule except, int key) {
         if (settings == null || key == 0) return false;
         for (GameplayModule m : GameplayModule.values()) if (m != except && settings.toggleKey(m) == key) return true;
@@ -34,7 +36,7 @@ public final class ModuleKeys {
     }
     public static boolean held(MinecraftClient c, int key) {
         return key > 0 && key < Keyboard.KEYBOARD_SIZE && Keyboard.isCreated() && !conflicts(c, key)
-            && !usedByToggle(SpaceClient.mods, null, key) && Keyboard.isKeyDown(key);
+            && !usedByToggle(SpaceClient.mods, null, key) && !usedByAutoText(SpaceClient.mods,-1,key) && Keyboard.isKeyDown(key);
     }
     public static String label(int key) {
         if (key == 0) return "Unbound";

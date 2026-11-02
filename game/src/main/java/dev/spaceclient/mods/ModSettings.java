@@ -12,6 +12,12 @@ import java.util.function.Consumer;
 
 /** Gameplay settings remain independent of HUD profiles. Writes commit atomically. */
 public final class ModSettings {
+    public enum SoundTheme { VANILLA, SOFT, CRISP, ARCADE }
+    public enum KillChime {
+        OFF("Off",""), ORB("Orb","random.orb"), PLING("Pling","note.pling"), LEVEL_UP("Level up","random.levelup");
+        public final String label,id;
+        KillChime(String label,String id){this.label=label;this.id=id;}
+    }
     public enum SprintMode { AUTO, TOGGLE }
     public enum SnapPerspective {
         FIRST("First person",0), BACK("Behind",1), FRONT("Front",2);
@@ -49,6 +55,26 @@ public final class ModSettings {
     private boolean readOnly;
     private String error = "";
     private static final class Options {
+        boolean animations,autoText,gui,hitboxes,itemPhysics,itemSize,sounds;
+        boolean animationBlockHit=true;
+        boolean animationEat=true;
+        boolean animationBow=true;
+        int guiScale=2;
+        VisualPalette hitboxColor=VisualPalette.AQUA;
+        int hitboxWidth=1;
+        boolean hitboxPlayers=true;
+        boolean hitboxMobs=true;
+        boolean hitboxItems=false;
+        int physicsSpeed=2;
+        boolean physicsFlat=true;
+        int heldItemScale=80;
+        int droppedItemScale=100;
+        SoundTheme blockSounds=SoundTheme.CRISP;
+        SoundTheme combatSounds=SoundTheme.SOFT;
+        KillChime killChime=KillChime.ORB;
+        int soundsVolume=70;
+        int[] autoTextKeys=new int[3];
+        String[] autoTextMessages={"","",""};
         boolean autoSprint, freeLook, zoom, crosshair, fullbright, timeChanger, noHurtCam, snaplook, weatherChanger;
         boolean chatTimestamps, durabilityWarning, blockOverlay, hitColor, fovControl;
         VisualPalette blockColor=VisualPalette.AQUA, damageColor=VisualPalette.VIOLET;
@@ -69,6 +95,31 @@ public final class ModSettings {
         int[] toggleKeys = new int[GameplayModule.values().length];
         Options copy() {
             Options o = new Options();
+            o.animations=animations;
+            o.autoText=autoText;
+            o.gui=gui;
+            o.hitboxes=hitboxes;
+            o.itemPhysics=itemPhysics;
+            o.itemSize=itemSize;
+            o.sounds=sounds;
+            o.animationBlockHit=animationBlockHit;
+            o.animationEat=animationEat;
+            o.animationBow=animationBow;
+            o.guiScale=guiScale;
+            o.hitboxColor=hitboxColor;
+            o.hitboxWidth=hitboxWidth;
+            o.hitboxPlayers=hitboxPlayers;
+            o.hitboxMobs=hitboxMobs;
+            o.hitboxItems=hitboxItems;
+            o.physicsSpeed=physicsSpeed;
+            o.physicsFlat=physicsFlat;
+            o.heldItemScale=heldItemScale;
+            o.droppedItemScale=droppedItemScale;
+            o.blockSounds=blockSounds;
+            o.combatSounds=combatSounds;
+            o.killChime=killChime;
+            o.soundsVolume=soundsVolume;
+            o.autoTextKeys=autoTextKeys.clone();o.autoTextMessages=autoTextMessages.clone();
             o.autoSprint = autoSprint; o.freeLook = freeLook; o.zoom = zoom; o.crosshair = crosshair;
             o.fullbright = fullbright; o.timeChanger = timeChanger; o.brightness = brightness; o.timePreset = timePreset;
             o.noHurtCam = noHurtCam;
@@ -88,14 +139,14 @@ public final class ModSettings {
         ModSettings s = new ModSettings(file);
         try {
             if (!Files.exists(file)) return s;
-            if (Files.size(file) > 4096) throw new IOException("File too large");
+            if (Files.size(file) > 8192) throw new IOException("File too large");
             Properties p = new Properties();
             try (InputStream in = Files.newInputStream(file)) { p.load(in); }
             String schema = p.getProperty("schemaVersion", "");
-            if (!schema.matches("[1-8]")) throw new IOException("Unsupported settings");
+            if (!schema.matches("[1-9]")) throw new IOException("Unsupported settings");
             int version = Integer.parseInt(schema);
             boolean legacy = version == 1;
-            if (p.size() != (legacy ? 3 : version == 2 ? 17 : version == 3 ? 21 : version == 4 ? 27 : version==5 ? 29 : version==6 ? 36 : version==7 ? 42 : 57))
+            if (p.size() != (legacy ? 3 : version == 2 ? 17 : version == 3 ? 21 : version == 4 ? 27 : version==5 ? 29 : version==6 ? 36 : version==7 ? 42 : version==8 ? 57 : 94))
                 throw new IOException("Unsupported settings");
             Options o = new Options();
             o.autoSprint = bool(p, "autoSprint"); o.freeLook = bool(p, "freeLook");
@@ -110,7 +161,7 @@ public final class ModSettings {
                     integer(p, "crosshairThickness", 1, 4), bool(p, "crosshairDot"), bool(p, "crosshairOutline"));
             }
             if (version >= 3) for (GameplayModule m : GameplayModule.values())
-                if (version >= 8 || (version==7 && m.ordinal()<GameplayModule.BLOCK_OVERLAY.ordinal()) || (version==6 && m.ordinal()<GameplayModule.CHAT_TIMESTAMPS.ordinal()) || (version==5 && m.ordinal()<GameplayModule.SNAPLOOK.ordinal())
+                if (version >= 9 || (version==8 && m.ordinal()<GameplayModule.ANIMATIONS.ordinal()) || (version==7 && m.ordinal()<GameplayModule.BLOCK_OVERLAY.ordinal()) || (version==6 && m.ordinal()<GameplayModule.CHAT_TIMESTAMPS.ordinal()) || (version==5 && m.ordinal()<GameplayModule.SNAPLOOK.ordinal())
                         || (version == 4 && m.ordinal() < GameplayModule.NO_HURT_CAM.ordinal())
                         || (version == 3 && m.ordinal() < GameplayModule.FULLBRIGHT.ordinal()))
                     o.toggleKeys[m.ordinal()] = integer(p, "toggleKey." + m.name(), 0, 255);
@@ -135,6 +186,33 @@ public final class ModSettings {
                 o.blockMode=BlockMode.valueOf(p.getProperty("blockMode",""));o.blockOpacity=integer(p,"blockOpacity",5,60);o.blockWidth=integer(p,"blockWidth",1,5);
                 o.hitOpacity=integer(p,"hitOpacity",5,80);o.hitPlayersOnly=bool(p,"hitPlayersOnly");
                 o.cameraFov=integer(p,"cameraFov",60,110);o.dynamicFov=integer(p,"dynamicFov",0,100);
+            }
+            if(version>=9){
+                o.animations=bool(p,"animations");
+                o.autoText=bool(p,"autoText");
+                o.gui=bool(p,"gui");
+                o.hitboxes=bool(p,"hitboxes");
+                o.itemPhysics=bool(p,"itemPhysics");
+                o.itemSize=bool(p,"itemSize");
+                o.sounds=bool(p,"sounds");
+                o.animationBlockHit=bool(p,"animationBlockHit");
+                o.animationEat=bool(p,"animationEat");
+                o.animationBow=bool(p,"animationBow");
+                o.guiScale=integer(p,"guiScale",0,4);
+                o.hitboxColor=VisualPalette.valueOf(p.getProperty("hitboxColor",""));
+                o.hitboxWidth=integer(p,"hitboxWidth",1,3);
+                o.hitboxPlayers=bool(p,"hitboxPlayers");
+                o.hitboxMobs=bool(p,"hitboxMobs");
+                o.hitboxItems=bool(p,"hitboxItems");
+                o.physicsSpeed=integer(p,"physicsSpeed",1,5);
+                o.physicsFlat=bool(p,"physicsFlat");
+                o.heldItemScale=integer(p,"heldItemScale",50,150);
+                o.droppedItemScale=integer(p,"droppedItemScale",25,200);
+                o.blockSounds=SoundTheme.valueOf(p.getProperty("blockSounds",""));
+                o.combatSounds=SoundTheme.valueOf(p.getProperty("combatSounds",""));
+                o.killChime=KillChime.valueOf(p.getProperty("killChime",""));
+                o.soundsVolume=integer(p,"soundsVolume",0,100);
+                for(int i=0;i<3;i++){o.autoTextKeys[i]=integer(p,"autoText.key."+i,0,255);o.autoTextMessages[i]=p.getProperty("autoText.message."+i);checkText(o.autoTextMessages[i]);}
             }
             s.value = o;
         } catch (IOException | IllegalArgumentException ex) {
@@ -162,6 +240,61 @@ public final class ModSettings {
     public boolean noHurtCam() { return value.noHurtCam; }
     public boolean snaplook(){return value.snaplook;}
     public boolean weatherChanger(){return value.weatherChanger;}
+    public boolean animations(){return value.animations;}
+    public boolean toggleAnimations(){return change(o->o.animations=!o.animations);}
+    public boolean autoText(){return value.autoText;}
+    public boolean toggleAutoText(){return change(o->o.autoText=!o.autoText);}
+    public boolean gui(){return value.gui;}
+    public boolean toggleGui(){return change(o->o.gui=!o.gui);}
+    public boolean hitboxes(){return value.hitboxes;}
+    public boolean toggleHitboxes(){return change(o->o.hitboxes=!o.hitboxes);}
+    public boolean itemPhysics(){return value.itemPhysics;}
+    public boolean toggleItemPhysics(){return change(o->o.itemPhysics=!o.itemPhysics);}
+    public boolean itemSize(){return value.itemSize;}
+    public boolean toggleItemSize(){return change(o->o.itemSize=!o.itemSize);}
+    public boolean sounds(){return value.sounds;}
+    public boolean toggleSounds(){return change(o->o.sounds=!o.sounds);}
+    public boolean animationBlockHit(){return value.animationBlockHit;}
+    public boolean animationBlockHit(boolean v){return change(o->{o.animationBlockHit=v;});}
+    public boolean animationEat(){return value.animationEat;}
+    public boolean animationEat(boolean v){return change(o->{o.animationEat=v;});}
+    public boolean animationBow(){return value.animationBow;}
+    public boolean animationBow(boolean v){return change(o->{o.animationBow=v;});}
+    public int guiScale(){return value.guiScale;}
+    public boolean guiScale(int v){return change(o->{range(v,0,4);o.guiScale=v;});}
+    public VisualPalette hitboxColor(){return value.hitboxColor;}
+    public boolean hitboxColor(VisualPalette v){return change(o->{if(v==null)throw new IllegalArgumentException();o.hitboxColor=v;});}
+    public int hitboxWidth(){return value.hitboxWidth;}
+    public boolean hitboxWidth(int v){return change(o->{range(v,1,3);o.hitboxWidth=v;});}
+    public boolean hitboxPlayers(){return value.hitboxPlayers;}
+    public boolean hitboxPlayers(boolean v){return change(o->{o.hitboxPlayers=v;});}
+    public boolean hitboxMobs(){return value.hitboxMobs;}
+    public boolean hitboxMobs(boolean v){return change(o->{o.hitboxMobs=v;});}
+    public boolean hitboxItems(){return value.hitboxItems;}
+    public boolean hitboxItems(boolean v){return change(o->{o.hitboxItems=v;});}
+    public int physicsSpeed(){return value.physicsSpeed;}
+    public boolean physicsSpeed(int v){return change(o->{range(v,1,5);o.physicsSpeed=v;});}
+    public boolean physicsFlat(){return value.physicsFlat;}
+    public boolean physicsFlat(boolean v){return change(o->{o.physicsFlat=v;});}
+    public int heldItemScale(){return value.heldItemScale;}
+    public boolean heldItemScale(int v){return change(o->{range(v,50,150);o.heldItemScale=v;});}
+    public int droppedItemScale(){return value.droppedItemScale;}
+    public boolean droppedItemScale(int v){return change(o->{range(v,25,200);o.droppedItemScale=v;});}
+    public SoundTheme blockSounds(){return value.blockSounds;}
+    public boolean blockSounds(SoundTheme v){return change(o->{if(v==null)throw new IllegalArgumentException();o.blockSounds=v;});}
+    public SoundTheme combatSounds(){return value.combatSounds;}
+    public boolean combatSounds(SoundTheme v){return change(o->{if(v==null)throw new IllegalArgumentException();o.combatSounds=v;});}
+    public KillChime killChime(){return value.killChime;}
+    public boolean killChime(KillChime v){return change(o->{if(v==null)throw new IllegalArgumentException();o.killChime=v;});}
+    public int soundsVolume(){return value.soundsVolume;}
+    public boolean soundsVolume(int v){return change(o->{range(v,0,100);o.soundsVolume=v;});}
+    private static void slot(int slot){range(slot,0,2);}
+    public int autoTextKey(int slot){slot(slot);return value.autoTextKeys[slot];}
+    public String autoTextMessage(int slot){slot(slot);return value.autoTextMessages[slot];}
+    public boolean autoTextKey(int slot,int key){return change(o->{slot(slot);checkKey(key);o.autoTextKeys[slot]=key;});}
+    public boolean autoTextMessage(int slot,String text){return change(o->{slot(slot);checkText(text);o.autoTextMessages[slot]=text;});}
+    public static boolean validText(String text){return text!=null&&text.length()<=100&&text.codePoints().allMatch(cp->!Character.isISOControl(cp)&&Character.getType(cp)!=Character.FORMAT&&Character.getType(cp)!=Character.SURROGATE&&cp!=0x00A7);}
+    private static void checkText(String text){if(!validText(text))throw new IllegalArgumentException("Invalid message");}
     public boolean blockOverlay(){return value.blockOverlay;}
     public boolean hitColor(){return value.hitColor;}
     public boolean fovControl(){return value.fovControl;}
@@ -253,6 +386,13 @@ public final class ModSettings {
                 case NO_HURT_CAM: break;
                 case SNAPLOOK: o.snaplookKey=0;o.snapPerspective=SnapPerspective.FRONT;break;
                 case WEATHER_CHANGER: o.weatherMode=WeatherMode.CLEAR;break;
+                case ANIMATIONS:o.animationBlockHit=true;o.animationEat=true;o.animationBow=true;break;
+                case AUTO_TEXT:o.autoTextKeys=new int[3];o.autoTextMessages=new String[]{"","",""};break;
+                case GUI:o.guiScale=2;break;
+                case HITBOXES:o.hitboxColor=VisualPalette.AQUA;o.hitboxWidth=1;o.hitboxPlayers=true;o.hitboxMobs=true;o.hitboxItems=false;break;
+                case ITEM_PHYSICS:o.physicsSpeed=2;o.physicsFlat=true;break;
+                case ITEM_SIZE:o.heldItemScale=80;o.droppedItemScale=100;break;
+                case SOUNDS:o.blockSounds=SoundTheme.CRISP;o.combatSounds=SoundTheme.SOFT;o.killChime=KillChime.ORB;o.soundsVolume=70;break;
                 case BLOCK_OVERLAY:o.blockColor=VisualPalette.AQUA;o.blockMode=BlockMode.BOTH;o.blockOpacity=20;o.blockWidth=2;break;
                 case HIT_COLOR:o.damageColor=VisualPalette.VIOLET;o.hitOpacity=55;o.hitPlayersOnly=false;break;
                 case FOV_CONTROL:o.cameraFov=90;o.dynamicFov=0;break;
@@ -269,7 +409,32 @@ public final class ModSettings {
         try {
             Options o = value.copy(); mutation.accept(o);
             Properties p = new Properties();
-            p.setProperty("schemaVersion", "8");
+            p.setProperty("schemaVersion", "9");
+            p.setProperty("animations",Boolean.toString(o.animations));
+            p.setProperty("autoText",Boolean.toString(o.autoText));
+            p.setProperty("gui",Boolean.toString(o.gui));
+            p.setProperty("hitboxes",Boolean.toString(o.hitboxes));
+            p.setProperty("itemPhysics",Boolean.toString(o.itemPhysics));
+            p.setProperty("itemSize",Boolean.toString(o.itemSize));
+            p.setProperty("sounds",Boolean.toString(o.sounds));
+            p.setProperty("animationBlockHit",Boolean.toString(o.animationBlockHit));
+            p.setProperty("animationEat",Boolean.toString(o.animationEat));
+            p.setProperty("animationBow",Boolean.toString(o.animationBow));
+            p.setProperty("guiScale",Integer.toString(o.guiScale));
+            p.setProperty("hitboxColor",o.hitboxColor.name());
+            p.setProperty("hitboxWidth",Integer.toString(o.hitboxWidth));
+            p.setProperty("hitboxPlayers",Boolean.toString(o.hitboxPlayers));
+            p.setProperty("hitboxMobs",Boolean.toString(o.hitboxMobs));
+            p.setProperty("hitboxItems",Boolean.toString(o.hitboxItems));
+            p.setProperty("physicsSpeed",Integer.toString(o.physicsSpeed));
+            p.setProperty("physicsFlat",Boolean.toString(o.physicsFlat));
+            p.setProperty("heldItemScale",Integer.toString(o.heldItemScale));
+            p.setProperty("droppedItemScale",Integer.toString(o.droppedItemScale));
+            p.setProperty("blockSounds",o.blockSounds.name());
+            p.setProperty("combatSounds",o.combatSounds.name());
+            p.setProperty("killChime",o.killChime.name());
+            p.setProperty("soundsVolume",Integer.toString(o.soundsVolume));
+            for(int i=0;i<3;i++){p.setProperty("autoText.key."+i,Integer.toString(o.autoTextKeys[i]));p.setProperty("autoText.message."+i,o.autoTextMessages[i]);}
             p.setProperty("blockOverlay",Boolean.toString(o.blockOverlay));p.setProperty("hitColor",Boolean.toString(o.hitColor));p.setProperty("fovControl",Boolean.toString(o.fovControl));
             p.setProperty("blockColor",o.blockColor.name());p.setProperty("damageColor",o.damageColor.name());p.setProperty("blockMode",o.blockMode.name());
             p.setProperty("blockOpacity",Integer.toString(o.blockOpacity));p.setProperty("blockWidth",Integer.toString(o.blockWidth));

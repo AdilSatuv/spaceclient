@@ -20,7 +20,7 @@ public class VisualStyleModsTest {
    boolean old=m.ordinal()<GameplayModule.BLOCK_OVERLAY.ordinal();assertEquals(old,m.enabled(s));assertEquals(old?keys[m.ordinal()]:0,s.toggleKey(m));}
   assertEquals(ModSettings.ChatTimeFormat.SECONDS,s.chatTimeFormat());assertEquals(ModSettings.DurabilityThreshold.TWENTY,s.durabilityThreshold());assertEquals(ModSettings.WeatherMode.SNOW,s.weatherMode());assertEquals(50,s.snaplookKey());
   assertEquals(90,s.cameraFov());assertEquals(0,s.dynamicFov());assertEquals(VisualPalette.AQUA,s.blockColor());assertEquals(ModSettings.BlockMode.BOTH,s.blockMode());assertEquals(20,s.blockOpacity());assertEquals(2,s.blockWidth());assertEquals(VisualPalette.VIOLET,s.damageColor());assertEquals(55,s.hitOpacity());assertFalse(s.hitPlayersOnly());
-  assertTrue(s.toggleBlockOverlay());assertEquals("8",read().getProperty("schemaVersion"));assertEquals(57,read().size());s=ModSettings.open(file());assertFalse(s.isReadOnly());assertTrue(s.blockOverlay());assertTrue(s.chatTimestamps());assertEquals(41,s.toggleKey(GameplayModule.DURABILITY_WARNING));
+  assertTrue(s.toggleBlockOverlay());assertEquals("9",read().getProperty("schemaVersion"));assertEquals(94,read().size());s=ModSettings.open(file());assertFalse(s.isReadOnly());assertTrue(s.blockOverlay());assertTrue(s.chatTimestamps());assertEquals(41,s.toggleKey(GameplayModule.DURABILITY_WARNING));
  }
  @Test public void visualModesColorsAndBoundsSurviveRoundTrips()throws Exception {
   ModSettings s=ModSettings.open(file());s.toggleBlockOverlay();s.toggleHitColor();s.toggleFovControl();
@@ -40,7 +40,7 @@ public class VisualStyleModsTest {
  }
  @Test public void malformedNewFieldsAndFutureSchemaStayReadOnlyWithoutPartialState()throws Exception {
   ModSettings s=ModSettings.open(file());s.toggleHitColor();Properties good=read();
-  for(String[] change:new String[][]{{"blockOverlay",null},{"hitColor","yes"},{"fovControl",null},{"blockColor","UV"},{"damageColor","UV"},{"blockMode","GLOW"},{"blockOpacity","0"},{"blockWidth","6"},{"hitOpacity","81"},{"hitPlayersOnly","maybe"},{"cameraFov","111"},{"dynamicFov","-1"},{"toggleKey.BLOCK_OVERLAY",null},{"toggleKey.HIT_COLOR","256"},{"toggleKey.FOV_CONTROL",null},{"schemaVersion","9"},{"extra","keep"}}){
+  for(String[] change:new String[][]{{"blockOverlay",null},{"hitColor","yes"},{"fovControl",null},{"blockColor","UV"},{"damageColor","UV"},{"blockMode","GLOW"},{"blockOpacity","0"},{"blockWidth","6"},{"hitOpacity","81"},{"hitPlayersOnly","maybe"},{"cameraFov","111"},{"dynamicFov","-1"},{"toggleKey.BLOCK_OVERLAY",null},{"toggleKey.HIT_COLOR","256"},{"toggleKey.FOV_CONTROL",null},{"schemaVersion","10"},{"extra","keep"}}){
    Properties p=new Properties();p.putAll(good);if(change[1]==null)p.remove(change[0]);else p.setProperty(change[0],change[1]);write(p);byte[] bytes=Files.readAllBytes(file());ModSettings r=ModSettings.open(file());assertTrue(change[0],r.isReadOnly());assertFalse(r.toggleBlockOverlay());assertFalse(r.toggleHitColor());assertFalse(r.toggleFovControl());assertArrayEquals(bytes,Files.readAllBytes(file()));}
  }
  @Test public void invalidInputAndFailedIoRevertAllNewFields()throws Exception {

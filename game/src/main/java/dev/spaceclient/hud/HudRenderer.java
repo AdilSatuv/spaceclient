@@ -91,6 +91,7 @@ public final class HudRenderer {
         return placement.resolve(width, height, textWidth(client, text), 10);
     }
     public static int moduleWidth(MinecraftClient client,HudModule module,String text) {
+        if(module==HudModule.ITEM_COUNTER)return textWidth(client,text)+27;
         if(module==HudModule.INVENTORY)return InventoryHud.WIDTH;
         if(module==HudModule.EXPERIENCE)return Math.max(120,textWidth(client,text)+6);
         HudContentSettings content=SpaceClient.hud.getConfig().active().content();
@@ -105,6 +106,7 @@ public final class HudRenderer {
         return width;
     }
     public static int moduleHeight(MinecraftClient client,HudModule module) {
+        if(module==HudModule.ITEM_COUNTER)return 22;
         if(module==HudModule.INVENTORY)return InventoryHud.height(SpaceClient.hud.getConfig().active().content().inventoryHotbar);
         if(module==HudModule.EXPERIENCE)return 22;
         HudContentSettings c=SpaceClient.hud.getConfig().active().content();
@@ -120,6 +122,7 @@ public final class HudRenderer {
         return placement.resolve(width,height,moduleWidth(client,module,text),moduleHeight(client,module));
     }
     public static void drawModule(MinecraftClient client,HudModule module,String text,HudPlacement.Bounds bounds,HudAppearance appearance,int color) {
+        if(module==HudModule.ITEM_COUNTER){ItemCounterHud.draw(client,text,bounds,appearance,color);return;}
         if(module==HudModule.INVENTORY){InventoryHud.draw(client,SpaceClient.hud.getConfig().active().content(),bounds,appearance,color);return;}
         if(module==HudModule.EXPERIENCE){drawExperience(client,text,bounds,appearance,color);return;}
         HudContentSettings content=SpaceClient.hud.getConfig().active().content();

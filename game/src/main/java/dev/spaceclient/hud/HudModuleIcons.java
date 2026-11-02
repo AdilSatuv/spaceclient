@@ -62,6 +62,13 @@ final class HudModuleIcons {
                     path(true,11,1,18,10,20,15,17,20,11,22,5,20,2,15,4,10);break;
                 case FOV_CONTROL:
                     path(false,1,3,11,11,1,19);path(false,21,3,11,11,21,19);circle(11,11,3);break;
+                case ANIMATIONS:path(false,3,20,18,3,21,6,6,21,3,20);path(false,2,4,7,4);path(false,1,9,6,9);break;
+                case AUTO_TEXT:rect(1,3,21,17);path(false,5,21,9,17);path(false,5,8,17,8);path(false,5,12,14,12);break;
+                case GUI:rect(1,3,21,17);path(false,5,21,17,21);path(false,11,17,11,21);break;
+                case HITBOXES:rect(3,1,19,21);path(false,3,7,19,7);path(false,8,1,8,21);break;
+                case ITEM_PHYSICS:path(true,2,8,11,3,20,8,20,17,11,22,2,17);path(false,11,3,11,0);path(false,8,1,11,4,14,1);break;
+                case ITEM_SIZE:rect(6,6,16,16);path(false,1,6,1,1,6,1);path(false,16,21,21,21,21,16);break;
+                case SOUNDS:path(true,1,8,6,8,12,3,12,21,6,16,1,16);path(false,16,7,19,12,16,17);path(false,19,3,23,12,19,21);break;
                 case WEATHER_CHANGER:
                     path(false,4,13,2,12,1,9,3,6,7,6,8,2,13,1,17,5,17,7,20,7,22,10,21,13,4,13);
                     path(false,6,16,4,20);path(false,12,16,10,20);path(false,18,16,16,20);break;

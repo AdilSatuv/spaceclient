@@ -35,10 +35,10 @@ enum HudSection {
     }
     private boolean includes(GameplayModule module) {
         if (this == HOME) return true;
-        if (this == PLAYER) return module == GameplayModule.TOGGLE_SPRINT || module == GameplayModule.FREE_LOOK || module == GameplayModule.SNAPLOOK || module == GameplayModule.DURABILITY_WARNING || module == GameplayModule.FOV_CONTROL;
-        if (this == VISUALS) return module != GameplayModule.TOGGLE_SPRINT && module != GameplayModule.CHAT_TIMESTAMPS && module != GameplayModule.DURABILITY_WARNING;
-        if (this == MISC) return module == GameplayModule.CHAT_TIMESTAMPS || module == GameplayModule.DURABILITY_WARNING;
-        if (this == WORLD) return module == GameplayModule.TIME_CHANGER || module == GameplayModule.WEATHER_CHANGER;
-        return this == COMBAT && (module == GameplayModule.CROSSHAIR || module == GameplayModule.NO_HURT_CAM || module == GameplayModule.HIT_COLOR);
+        if (this == PLAYER) return module == GameplayModule.TOGGLE_SPRINT || module == GameplayModule.FREE_LOOK || module == GameplayModule.SNAPLOOK || module == GameplayModule.DURABILITY_WARNING || module == GameplayModule.FOV_CONTROL || module == GameplayModule.ANIMATIONS || module == GameplayModule.ITEM_SIZE;
+        if (this == VISUALS) return module != GameplayModule.TOGGLE_SPRINT && module != GameplayModule.CHAT_TIMESTAMPS && module != GameplayModule.DURABILITY_WARNING && module != GameplayModule.AUTO_TEXT && module != GameplayModule.SOUNDS;
+        if (this == MISC) return module == GameplayModule.CHAT_TIMESTAMPS || module == GameplayModule.DURABILITY_WARNING || module == GameplayModule.AUTO_TEXT || module == GameplayModule.GUI || module == GameplayModule.SOUNDS;
+        if (this == WORLD) return module == GameplayModule.TIME_CHANGER || module == GameplayModule.WEATHER_CHANGER || module == GameplayModule.ITEM_PHYSICS;
+        return this == COMBAT && (module == GameplayModule.CROSSHAIR || module == GameplayModule.NO_HURT_CAM || module == GameplayModule.HIT_COLOR || module == GameplayModule.HITBOXES || module == GameplayModule.ANIMATIONS);
     }
 }

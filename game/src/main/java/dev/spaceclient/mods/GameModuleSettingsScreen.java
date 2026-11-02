@@ -21,7 +21,9 @@ public final class GameModuleSettingsScreen extends Screen {
     private HudViewport viewport;
     private int left,top,panelWidth,focus;
     private boolean capturing;
-    private boolean capturingToggle;
+    private boolean capturingToggle,capturingMacro,editingText;
+    private int macroSlot;
+    private String macroBuffer="";
     private String status="";
     public GameModuleSettingsScreen(Screen parent,GameplayModule module) {
         this.parent=parent;this.module=module;motion=new HudSwitch.Motion(module.enabled(SpaceClient.mods));
@@ -32,7 +34,7 @@ public final class GameModuleSettingsScreen extends Screen {
     }
     @Override public boolean shouldPauseGame(){return true;}
     @Override public void removed(){SpaceUiFont.release();SpaceClient.clicks.clear();}
-    public boolean capturingKey(){return capturing;}
+    public boolean capturingKey(){return capturing||editingText;}
     private ModSettings settings(){return SpaceClient.mods;}
     @Override public void render(int mx,int my,float delta){
         fillGradient(0,0,width,height,0x85070709,0xA70A0B0E);
@@ -55,6 +57,7 @@ public final class GameModuleSettingsScreen extends Screen {
                 Action a=actions.get(i);boolean selected=focus==i,hovered=a.contains(mx,my);
                 UiShapes.rounded(a.x,a.y,a.w,27,4,selected?0xFFD7AF6A:0xFF3A3B3E);
                 UiShapes.rounded(a.x+1,a.y+1,a.w-2,25,3,selected||hovered?0xFF2A2824:0xFF191B20);
+                if(a.id==33){String message=editingText?macroBuffer+"|":settings().autoTextMessage(macroSlot);SpaceUiFont.draw(client,SpaceUiFont.trimToWidth("Text: "+(message.isEmpty()?"Click to type...":message),a.w-18),a.x+9,a.y+8,TEXT);continue;}
                 SpaceUiFont.draw(client,a.label,a.x+9,a.y+8,settings().isReadOnly()&&a.id!=99?MUTED:TEXT);
                 if(a.id==0)HudSwitch.draw(a.x+a.w-37,a.y+6,motion.sample(module.enabled(settings()),System.nanoTime()));
                 else SpaceUiFont.draw(client,a.value,a.x+a.w-9-SpaceUiFont.width(a.value),a.y+8,a.id==99?TEXT:ACCENT);
@@ -67,13 +70,15 @@ public final class GameModuleSettingsScreen extends Screen {
                 GlStateManager.pushMatrix();GlStateManager.translate(left+panelWidth-75,top+283,0);GlStateManager.scale(fit,fit,1);
                 CrosshairRenderer.draw(0,0,settings().crosshairStyle());GlStateManager.popMatrix();
             }else{
-                SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(hint,panelWidth-40),left+20,top+192,MUTED);
-                SpaceUiFont.draw(client,"Toggle key enables or disables this module",left+20,top+213,MUTED);
-                SpaceUiFont.draw(client,"Settings save automatically",left+20,top+234,MUTED);
+                int infoTop=Math.max(192,86+((actions.size()-1)/2)*34+4);
+                SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(hint,panelWidth-40),left+20,top+infoTop,MUTED);
+                SpaceUiFont.draw(client,"Toggle key enables or disables this module",left+20,top+infoTop+21,MUTED);
+                SpaceUiFont.draw(client,"Settings save automatically",left+20,top+infoTop+42,MUTED);
             }
             if(module==GameplayModule.BLOCK_OVERLAY||module==GameplayModule.HIT_COLOR||module==GameplayModule.FOV_CONTROL)
                 VisualModPreview.draw(client,module,settings(),left+20,top+259,panelWidth-40);
             String notice=settings().error();
+            if(editingText)notice="Enter: save text / Esc: cancel / Ctrl+V: paste";
             if(notice.isEmpty())notice=capturing?"Press a key / Esc: cancel / Backspace: unbind":status;
             if(notice.isEmpty())notice="Tab: select  |  Enter: change  |  Left / Right: adjust";
             SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(notice,panelWidth-40),left+20,top+311,notice.equals(settings().error())&&!notice.isEmpty()?ACCENT:MUTED);
@@ -85,6 +90,13 @@ public final class GameModuleSettingsScreen extends Screen {
             return key==0?"Choose a hold key to use Snaplook.":ModuleKeys.conflicts(client,key)||ModuleKeys.usedByToggle(settings(),null,key)
                 ?"Hold key unavailable: choose an unused key":"Hold "+ModuleKeys.label(key)+" for this view. Release to return.";
         }
+        if(module==GameplayModule.ANIMATIONS)return "Legacy-style first-person poses; combat timing stays native.";
+        if(module==GameplayModule.AUTO_TEXT)return "Only during gameplay; at most one message per second.";
+        if(module==GameplayModule.GUI)return "Effective: "+new net.minecraft.client.util.Window(client).getScaleFactor()+"x; limited by your window size.";
+        if(module==GameplayModule.HITBOXES)return "Depth-tested boxes; choose the entity types below.";
+        if(module==GameplayModule.ITEM_PHYSICS)return "Visual motion only; item pickup stays unchanged.";
+        if(module==GameplayModule.ITEM_SIZE)return "First-person items and drops; maps keep their native size.";
+        if(module==GameplayModule.SOUNDS)return "Blocks include steps; target down: attacked in the last 3s.";
         if(module==GameplayModule.BLOCK_OVERLAY)return "Styles the block you point at; respects its shape and depth.";
         if(module==GameplayModule.HIT_COLOR)return "Damage tint on visible models; death tint stays native.";
         if(module==GameplayModule.FOV_CONTROL)return "0% dynamics: steady view. Saved Minecraft FOV stays unchanged.";
@@ -102,7 +114,14 @@ public final class GameModuleSettingsScreen extends Screen {
         List<Action>a=new ArrayList<Action>();
         row(a,0,"Enabled","");
         row(a,12,"Toggle key",capturing&&capturingToggle?"Press key...":ModuleKeys.label(settings().toggleKey(module)));
-        if(module==GameplayModule.TOGGLE_SPRINT)row(a,1,"Mode",settings().sprintMode()==ModSettings.SprintMode.AUTO?"Auto":"Toggle");
+        if(module==GameplayModule.ANIMATIONS){row(a,28,"Block hit",on(settings().animationBlockHit()));row(a,29,"Eating",on(settings().animationEat()));row(a,30,"Bow pose",on(settings().animationBow()));}
+        else if(module==GameplayModule.AUTO_TEXT){row(a,31,"Slot",Integer.toString(macroSlot+1));row(a,32,"Hotkey",capturing&&capturingMacro?"Press key...":ModuleKeys.label(settings().autoTextKey(macroSlot)));a.add(new Action(33,"Text","",left+20,top+154,panelWidth-40));}
+        else if(module==GameplayModule.GUI)row(a,34,"GUI scale",settings().guiScale()==0?"Auto":settings().guiScale()+"x");
+        else if(module==GameplayModule.HITBOXES){row(a,35,"Color",label(settings().hitboxColor().name()));row(a,36,"Line width",Integer.toString(settings().hitboxWidth()));row(a,37,"Players",on(settings().hitboxPlayers()));row(a,38,"Mobs",on(settings().hitboxMobs()));row(a,39,"Items",on(settings().hitboxItems()));}
+        else if(module==GameplayModule.ITEM_PHYSICS){row(a,40,"Spin speed",settings().physicsSpeed()+"x");row(a,41,"Flat on ground",on(settings().physicsFlat()));}
+        else if(module==GameplayModule.ITEM_SIZE){row(a,42,"First person",settings().heldItemScale()+"%");row(a,43,"Dropped items",settings().droppedItemScale()+"%");}
+        else if(module==GameplayModule.SOUNDS){row(a,44,"Blocks / steps",label(settings().blockSounds().name()));row(a,45,"Combat",label(settings().combatSounds().name()));row(a,46,"Target down",settings().killChime().label);row(a,47,"Effect volume",settings().soundsVolume()+"%");row(a,48,"Preview sound","Play");}
+        else if(module==GameplayModule.TOGGLE_SPRINT)row(a,1,"Mode",settings().sprintMode()==ModSettings.SprintMode.AUTO?"Auto":"Toggle");
         else if(module==GameplayModule.FREE_LOOK)row(a,2,"Hold key",capturing&&!capturingToggle?"Press key...":ModuleKeys.label(settings().freeLookKey()));
         else if(module==GameplayModule.SNAPLOOK){
             row(a,2,"Hold key",capturing&&!capturingToggle?"Press key...":ModuleKeys.label(settings().snaplookKey()));
@@ -137,16 +156,25 @@ public final class GameModuleSettingsScreen extends Screen {
         a.add(new Action(id,label,value,left+20+(i%2)*(w+12),top+86+(i/2)*34,w));
     }
     private static int step(int current,int min,int max,int amount,int direction){return min+Math.floorMod((current-min)/amount+direction,(max-min)/amount+1)*amount;}
+    private static String on(boolean value){return value?"On":"Off";}
+    private void saveText(){boolean saved=settings().autoTextMessage(macroSlot,macroBuffer);editingText=false;status=saved?"Text saved":"Could not save text";}
     private static String label(String s){return s.substring(0,1)+s.substring(1).toLowerCase(Locale.ROOT);}
     @Override protected void keyPressed(char c,int key){
+        if(editingText){
+            if(key==Keyboard.KEY_ESCAPE){editingText=false;status="Edit cancelled";return;}
+            if(key==Keyboard.KEY_RETURN||key==Keyboard.KEY_NUMPADENTER){saveText();return;}
+            if(key==Keyboard.KEY_BACK){if(!macroBuffer.isEmpty())macroBuffer=macroBuffer.substring(0,macroBuffer.offsetByCodePoints(macroBuffer.length(),-1));return;}
+            if(key==Keyboard.KEY_V&&hasControlDown()){String pasted=getClipboard();if(pasted!=null){String candidate=macroBuffer+pasted;if(ModSettings.validText(candidate))macroBuffer=candidate;}return;}
+            if(c>=32&&c!=127&&c!=167&&macroBuffer.length()<100)macroBuffer+=c;return;
+        }
         if(capturing){
             if(Keyboard.isRepeatEvent())return;
             if(key==Keyboard.KEY_ESCAPE){capturing=false;return;}
             int code=key==Keyboard.KEY_BACK?0:key;
-            boolean conflict = capturingToggle ? ModuleKeys.toggleConflicts(client,module,code)
-                : ModuleKeys.conflicts(client,code)||ModuleKeys.usedByHold(settings(),module,code)||ModuleKeys.usedByToggle(settings(),null,code);
+            boolean conflict = capturingMacro?ModuleKeys.autoTextConflicts(client,macroSlot,code):capturingToggle ? ModuleKeys.toggleConflicts(client,module,code)
+                : ModuleKeys.conflicts(client,code)||ModuleKeys.usedByHold(settings(),module,code)||ModuleKeys.usedByToggle(settings(),null,code)||ModuleKeys.usedByAutoText(settings(),-1,code);
             if(code!=0&&conflict){status="Key already used; choose another key";capturing=false;return;}
-            boolean saved=capturingToggle?settings().toggleKey(module,code):settings().holdKey(module,code);
+            boolean saved=capturingMacro?settings().autoTextKey(macroSlot,code):capturingToggle?settings().toggleKey(module,code):settings().holdKey(module,code);
             capturing=false;status=saved?"Key saved":"Could not save key";return;
         }
         if(key==Keyboard.KEY_ESCAPE){client.setScreen(parent);return;}
@@ -155,12 +183,13 @@ public final class GameModuleSettingsScreen extends Screen {
         if(!Keyboard.isRepeatEvent()&&(key==Keyboard.KEY_RETURN||key==Keyboard.KEY_NUMPADENTER||key==Keyboard.KEY_SPACE||key==Keyboard.KEY_LEFT||key==Keyboard.KEY_RIGHT))activate(controls().get(focus).id,key==Keyboard.KEY_LEFT?-1:1);
     }
     @Override protected void mouseClicked(int x,int y,int button){
-        if(button!=0||capturing||width<320||height<240)return;x=viewport.toUi(x);y=viewport.toUi(y);
+        if(button!=0||capturing||width<320||height<240)return;if(editingText)saveText();x=viewport.toUi(x);y=viewport.toUi(y);
         List<Action>a=controls();for(int i=0;i<a.size();i++)if(a.get(i).contains(x,y)){focus=i;activate(a.get(i).id,1);return;}
     }
     private void activate(int id,int direction){
         if(id==99){client.setScreen(parent);return;}if(settings().isReadOnly())return;
-        if(id==2||id==12){capturing=true;capturingToggle=id==12;status="";return;}
+        if(id==2||id==12||id==32){capturing=true;capturingToggle=id==12;capturingMacro=id==32;status="";return;}
+        if(id==33){editingText=true;macroBuffer=settings().autoTextMessage(macroSlot);return;}
         CrosshairStyle s=settings().crosshairStyle();boolean saved;
         if(id==0)saved=module.toggle(settings());
         else if(id==1)saved=settings().sprintMode(settings().sprintMode()==ModSettings.SprintMode.AUTO?ModSettings.SprintMode.TOGGLE:ModSettings.SprintMode.AUTO);
@@ -188,6 +217,25 @@ public final class GameModuleSettingsScreen extends Screen {
         else if(id==25)saved=settings().hitPlayersOnly(!settings().hitPlayersOnly());
         else if(id==26)saved=settings().cameraFov(step(settings().cameraFov(),60,110,5,direction));
         else if(id==27)saved=settings().dynamicFov(step(settings().dynamicFov(),0,100,25,direction));
+        else if(id==28)saved=settings().animationBlockHit(!settings().animationBlockHit());
+        else if(id==29)saved=settings().animationEat(!settings().animationEat());
+        else if(id==30)saved=settings().animationBow(!settings().animationBow());
+        else if(id==31){macroSlot=Math.floorMod(macroSlot+direction,3);return;}
+        else if(id==34)saved=settings().guiScale(Math.floorMod(settings().guiScale()+direction,5));
+        else if(id==35)saved=settings().hitboxColor(VisualPalette.values()[Math.floorMod(settings().hitboxColor().ordinal()+direction,VisualPalette.values().length)]);
+        else if(id==36)saved=settings().hitboxWidth(1+Math.floorMod(settings().hitboxWidth()-1+direction,3));
+        else if(id==37)saved=settings().hitboxPlayers(!settings().hitboxPlayers());
+        else if(id==38)saved=settings().hitboxMobs(!settings().hitboxMobs());
+        else if(id==39)saved=settings().hitboxItems(!settings().hitboxItems());
+        else if(id==40)saved=settings().physicsSpeed(1+Math.floorMod(settings().physicsSpeed()-1+direction,5));
+        else if(id==41)saved=settings().physicsFlat(!settings().physicsFlat());
+        else if(id==42)saved=settings().heldItemScale(step(settings().heldItemScale(),50,150,10,direction));
+        else if(id==43)saved=settings().droppedItemScale(step(settings().droppedItemScale(),25,200,25,direction));
+        else if(id==44)saved=settings().blockSounds(ModSettings.SoundTheme.values()[Math.floorMod(settings().blockSounds().ordinal()+direction,ModSettings.SoundTheme.values().length)]);
+        else if(id==45)saved=settings().combatSounds(ModSettings.SoundTheme.values()[Math.floorMod(settings().combatSounds().ordinal()+direction,ModSettings.SoundTheme.values().length)]);
+        else if(id==46)saved=settings().killChime(ModSettings.KillChime.values()[Math.floorMod(settings().killChime().ordinal()+direction,ModSettings.KillChime.values().length)]);
+        else if(id==47)saved=settings().soundsVolume(step(settings().soundsVolume(),0,100,10,direction));
+        else if(id==48){SoundRuntime.preview(client);status=settings().killChime()==ModSettings.KillChime.OFF?"Choose a target-down sound first":"Preview played";return;}
         else if(id==98)saved=settings().reset(module);else return;
         status=saved?"Saved":"Could not save settings";
     }

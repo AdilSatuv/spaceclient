@@ -9,6 +9,10 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class ModuleBrowserTest {
+    @Test public void clientPackHasSearchAliasesAndAppropriateSections()throws Exception{
+        assertEquals(GameplayModule.GUI,HudSection.MISC.catalog("масштаб").get(0).game);assertEquals(GameplayModule.AUTO_TEXT,HudSection.MISC.catalog("auto text").get(0).game);assertEquals(GameplayModule.HITBOXES,HudSection.COMBAT.catalog("hit box").get(0).game);assertEquals(GameplayModule.ITEM_PHYSICS,HudSection.WORLD.catalog("item physics").get(0).game);
+        assertTrue(HudSection.VISUALS.catalog("auto text").isEmpty());assertTrue(HudSection.VISUALS.catalog("sounds").isEmpty());ModuleBrowserSettings s=ModuleBrowserSettings.open(Files.createTempDirectory("space-pack-favs").resolve("browser"));for(GameplayModule m:GameplayModule.values())assertTrue(s.toggleFavorite("game."+m.name()));
+    }
     @Test public void newVisualModsHaveSearchAliasesSectionsAndFavorites()throws Exception {
         assertEquals(GameplayModule.BLOCK_OVERLAY,HudSection.VISUALS.catalog("заливка").get(0).game);
         assertEquals(GameplayModule.HIT_COLOR,HudSection.COMBAT.catalog("hit color").get(0).game);
@@ -18,7 +22,7 @@ public class ModuleBrowserTest {
         for(GameplayModule m:new GameplayModule[]{GameplayModule.BLOCK_OVERLAY,GameplayModule.HIT_COLOR,GameplayModule.FOV_CONTROL})assertTrue(s.toggleFavorite("game."+m.name()));
     }
     @Test public void newUtilityModsAreSearchableInAppropriateSectionsAndCanBeFavorited() throws Exception {
-        assertEquals(37,HudSection.HOME.catalog("").size());
+        assertEquals(44,HudSection.HOME.catalog("").size());
         assertEquals(GameplayModule.CHAT_TIMESTAMPS,HudSection.MISC.catalog("чат").get(0).game);
         assertEquals(GameplayModule.DURABILITY_WARNING,HudSection.PLAYER.catalog("прочность").get(0).game);
         assertTrue(HudSection.VISUALS.catalog("timestamps").isEmpty());assertTrue(HudSection.WORLD.catalog("durability warning").isEmpty());

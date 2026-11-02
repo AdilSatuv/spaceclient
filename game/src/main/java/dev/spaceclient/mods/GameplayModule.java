@@ -17,7 +17,14 @@ public enum GameplayModule {
     DURABILITY_WARNING("Durability Warning", "Warn when equipped items are nearly broken", "durability warning alert armor tool прочность предупреждение броня инструмент"),
     BLOCK_OVERLAY("Block Overlay", "Color the outline and fill of your selected block", "block overlay outline fill rainbow блок обводка заливка радуга"),
     HIT_COLOR("Hit Color", "Customize the damage tint of visible entities", "hit color hurt damage tint цвет урон подсветка"),
-    FOV_CONTROL("FOV Control", "Choose your view angle and dynamic FOV strength", "fov control field view sprint bow угол обзор камера лук");
+    FOV_CONTROL("FOV Control", "Choose your view angle and dynamic FOV strength", "fov control field view sprint bow угол обзор камера лук"),
+    ANIMATIONS("Animations", "Legacy-style block hit, eating and bow poses", "animations 1.7 blockhit анимации"),
+    AUTO_TEXT("Auto Text", "Three messages with your own hotkeys", "autotext auto text macro сообщение макрос"),
+    GUI("GUI", "Choose the game interface scale", "gui scale interface масштаб интерфейс"),
+    HITBOXES("Hitboxes", "Depth-tested entity bounding boxes", "hit box hitbox boxes хитбоксы"),
+    ITEM_PHYSICS("Item Physics", "Dropped items tumble and rest on the ground", "item physics физика предметы"),
+    ITEM_SIZE("Item Size", "Resize first-person and dropped items", "item size размер предметов"),
+    SOUNDS("Sounds", "Customize block, combat and target-down sounds", "sounds kill sound звуки убийство блоки");
     public final String title, description;
     private final String search;
     GameplayModule(String title, String description, String aliases) {
@@ -34,6 +41,13 @@ public enum GameplayModule {
             case SNAPLOOK: return s.snaplook(); case WEATHER_CHANGER: return s.weatherChanger();
             case CHAT_TIMESTAMPS: return s.chatTimestamps(); case DURABILITY_WARNING: return s.durabilityWarning();
             case BLOCK_OVERLAY: return s.blockOverlay(); case HIT_COLOR: return s.hitColor(); case FOV_CONTROL: return s.fovControl();
+            case ANIMATIONS: return s.animations();
+            case AUTO_TEXT: return s.autoText();
+            case GUI: return s.gui();
+            case HITBOXES: return s.hitboxes();
+            case ITEM_PHYSICS: return s.itemPhysics();
+            case ITEM_SIZE: return s.itemSize();
+            case SOUNDS: return s.sounds();
             default: throw new AssertionError(this);
         }
     }
@@ -46,6 +60,13 @@ public enum GameplayModule {
             case SNAPLOOK: return s.toggleSnaplook(); case WEATHER_CHANGER: return s.toggleWeatherChanger();
             case CHAT_TIMESTAMPS: return s.toggleChatTimestamps(); case DURABILITY_WARNING: return s.toggleDurabilityWarning();
             case BLOCK_OVERLAY: return s.toggleBlockOverlay(); case HIT_COLOR: return s.toggleHitColor(); case FOV_CONTROL: return s.toggleFovControl();
+            case ANIMATIONS: return s.toggleAnimations();
+            case AUTO_TEXT: return s.toggleAutoText();
+            case GUI: return s.toggleGui();
+            case HITBOXES: return s.toggleHitboxes();
+            case ITEM_PHYSICS: return s.toggleItemPhysics();
+            case ITEM_SIZE: return s.toggleItemSize();
+            case SOUNDS: return s.toggleSounds();
             default: throw new AssertionError(this);
         }
     }

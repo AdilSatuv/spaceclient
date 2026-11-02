@@ -13,6 +13,9 @@ import dev.spaceclient.mods.ModuleShortcuts;
 import dev.spaceclient.mods.SprintRuntime;
 import dev.spaceclient.mods.ZoomRuntime;
 import dev.spaceclient.mods.SnaplookRuntime;
+import dev.spaceclient.mods.*;
+import net.minecraft.client.util.Window;
+import org.spongepowered.asm.mixin.Shadow;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -28,11 +31,15 @@ public abstract class ClientMixin {
     @Unique private final KeyPressGate spaceclient$sprintPress = new KeyPressGate();
     @Unique private final ModuleShortcuts spaceclient$shortcuts = new ModuleShortcuts();
     @Unique private Object spaceclient$sprintOwner;
+    @Unique private int spaceclient$lastGuiScale;
+    @Shadow private void onResolutionChanged(int width,int height) { }
 
     @Inject(method = "tick()V", at = @At("HEAD"))
     private void spaceclient$tick(CallbackInfo callback) {
         SnaplookRuntime.end();
         MinecraftClient client = MinecraftClient.getInstance();
+        AutoTextRuntime.context(client);SoundRuntime.context(client);
+        if(client.options!=null){int scale=new Window(client).getScaleFactor();if(spaceclient$lastGuiScale!=0&&spaceclient$lastGuiScale!=scale)onResolutionChanged(client.width,client.height);spaceclient$lastGuiScale=scale;}
         SpaceClient.session.update(System.nanoTime(), client.player != null && client.world != null, client.isPaused());
         if (client.currentScreen != null || client.player == null || !client.focused) SpaceClient.clicks.clear();
         if (spaceclient$sprintOwner != client.player || SpaceClient.mods == null || !SpaceClient.mods.autoSprint()) {
@@ -70,6 +77,7 @@ public abstract class ClientMixin {
                 return;
             }
         }
+        if (AutoTextRuntime.dispatch(client,Keyboard.getEventKey(),Keyboard.getEventNanoseconds(),true))return;
         if (SpaceClient.mods != null && SpaceClient.mods.autoSprint()
                 && SpaceClient.mods.sprintMode() == ModSettings.SprintMode.TOGGLE
                 && Keyboard.getEventKey() == client.options.sprintKey.getCode()
@@ -85,5 +93,6 @@ public abstract class ClientMixin {
         MinecraftClient client = MinecraftClient.getInstance();
         boolean gameplay = client.currentScreen == null && client.player != null && client.focused;
         SpaceClient.clicks.onMouseEvent(Mouse.getEventButton(), Mouse.getEventButtonState(), gameplay);
+        AnimationsRuntime.mouse(client,Mouse.getEventButton(),Mouse.getEventButtonState());
     }
 }

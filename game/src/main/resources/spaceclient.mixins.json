@@ -2,6 +2,6 @@
   "required": true,
   "package": "dev.spaceclient.mixin",
   "compatibilityLevel": "JAVA_8",
-  "client": ["HudMixin", "ClientMixin", "GameMenuMixin", "AutoSprintMixin", "FreeLookRendererMixin", "FreeLookInputMixin", "MenuButtonMixin", "MenuScreenMixin", "TitleMenuMixin", "ZoomRendererMixin", "CrosshairMixin", "FullbrightMixin", "TimeChangerMixin", "NoHurtCamMixin", "WeatherWorldMixin", "WeatherRendererMixin", "ChatTimestampMixin", "BlockOverlayMixin", "HitColorMixin", "FovControlMixin"],
+  "client": ["HudMixin", "ClientMixin", "GameMenuMixin", "AutoSprintMixin", "FreeLookRendererMixin", "FreeLookInputMixin", "MenuButtonMixin", "MenuScreenMixin", "TitleMenuMixin", "ZoomRendererMixin", "CrosshairMixin", "FullbrightMixin", "TimeChangerMixin", "NoHurtCamMixin", "WeatherWorldMixin", "WeatherRendererMixin", "ChatTimestampMixin", "BlockOverlayMixin", "HitColorMixin", "FovControlMixin", "HeldPresentationMixin", "DroppedItemMixin", "HitboxesMixin", "GuiScaleMixin", "SoundSystemMixin", "SoundAttackMixin", "SoundDeathMixin"],
   "injectors": { "defaultRequire": 1 }
 }
