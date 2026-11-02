@@ -51,6 +51,8 @@ public final class HudRenderer {
             case ITEM_COUNTER: return ItemCounterHud.text(client);
             case DAY_COUNTER: return WorldHud.day(client);
             case LIGHT_LEVEL: return WorldHud.light(client);
+            case EXPERIENCE: return PlayerStatsHud.experience(client).text();
+            case ARROW_COUNTER: return PlayerStatsHud.arrows(client);
             case PING: return ContextHud.ping(client,content);
             case BIOME: return ContextHud.biome(client,content);
             case PACK_DISPLAY: return ContextHud.packs(client,content);
@@ -88,6 +90,7 @@ public final class HudRenderer {
         return placement.resolve(width, height, textWidth(client, text), 10);
     }
     public static int moduleWidth(MinecraftClient client,HudModule module,String text) {
+        if(module==HudModule.EXPERIENCE)return Math.max(120,textWidth(client,text)+6);
         HudContentSettings content=SpaceClient.hud.getConfig().active().content();
         if(module==HudModule.ARMOR&&content.equipment.armorStyle==EquipmentContent.Style.ICONS)return EquipmentLayout.armorWidth(content.equipment.hand?5:4,EquipmentHudRenderer.armorCell(client,content.equipment));
         if(module==HudModule.POTION_EFFECTS&&content.equipment.effectStyle==EquipmentContent.Style.ICONS)return EquipmentLayout.EFFECT_WIDTH;
@@ -100,6 +103,7 @@ public final class HudRenderer {
         return width;
     }
     public static int moduleHeight(MinecraftClient client,HudModule module) {
+        if(module==HudModule.EXPERIENCE)return 22;
         HudContentSettings c=SpaceClient.hud.getConfig().active().content();
         if(module==HudModule.ARMOR&&c.equipment.armorStyle==EquipmentContent.Style.ICONS)return EquipmentLayout.ARMOR_HEIGHT;
         if(module==HudModule.POTION_EFFECTS&&c.equipment.effectStyle==EquipmentContent.Style.ICONS)return EquipmentLayout.effectHeight(PotionHud.effects(client).size(),c.equipment.maxEffects,c.equipment.effectTime);
@@ -113,6 +117,7 @@ public final class HudRenderer {
         return placement.resolve(width,height,moduleWidth(client,module,text),moduleHeight(client,module));
     }
     public static void drawModule(MinecraftClient client,HudModule module,String text,HudPlacement.Bounds bounds,HudAppearance appearance,int color) {
+        if(module==HudModule.EXPERIENCE){drawExperience(client,text,bounds,appearance,color);return;}
         HudContentSettings content=SpaceClient.hud.getConfig().active().content();
         if(module==HudModule.ARMOR&&content.equipment.armorStyle==EquipmentContent.Style.ICONS){EquipmentHudRenderer.armor(client,content.equipment,bounds,appearance,color);return;}
         if(module==HudModule.POTION_EFFECTS&&content.equipment.effectStyle==EquipmentContent.Style.ICONS){EquipmentHudRenderer.effects(client,content.equipment,bounds,appearance,color);return;}
@@ -121,6 +126,18 @@ public final class HudRenderer {
         KeystrokesHud.Key[] keys=keys(client,content);
         if(content.keyLayout==HudContentSettings.KeyLayout.BLOCK)drawBlock(client,keys,block(client,keys,content),bounds,appearance,color);
         else drawKeys(client,keys,bounds,appearance,color);
+    }
+    private static void drawExperience(MinecraftClient client,String text,HudPlacement.Bounds b,HudAppearance appearance,int color) {
+        ExperienceProgress xp=PlayerStatsHud.experience(client);
+        int width=moduleWidth(client,HudModule.EXPERIENCE,text),alpha=backdropAlpha(appearance);
+        GlStateManager.pushMatrix();
+        try {
+            GlStateManager.translate(b.x,b.y,0);GlStateManager.scale(b.scale,b.scale,1);
+            if(alpha!=0)UiShapes.rounded(0,0,width,22,4,(alpha<<24)|BACKDROP_RGB);
+            client.textRenderer.draw(text,4,2,color,appearance.shadow);
+            UiShapes.rounded(4,15,width-8,3,1.5f,0xFF4C5057);
+            if(xp.available&&xp.progress>0)UiShapes.rounded(4,15,(width-8)*xp.progress,3,1.5f,0xFF000000|color);
+        } finally {GlStateManager.popMatrix();}
     }
     private static void drawSprint(MinecraftClient client,String text,HudPlacement.Bounds b,HudAppearance appearance,int color) {
         boolean enabled=SpaceClient.mods!=null&&SpaceClient.mods.autoSprint();

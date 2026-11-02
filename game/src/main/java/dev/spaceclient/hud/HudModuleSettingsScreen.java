@@ -35,6 +35,7 @@ public final class HudModuleSettingsScreen extends Screen {
     }
     private boolean contextModule() { return module == HudModule.PING || module == HudModule.BIOME || module == HudModule.PACK_DISPLAY; }
     private int previewExtra() {
+        if(module==HudModule.EXPERIENCE)return 9;
         EquipmentContent e=content().equipment;
         if(module==HudModule.ARMOR&&e.armorStyle==EquipmentContent.Style.ICONS)return 25;
         if(module==HudModule.POTION_EFFECTS&&e.effectStyle==EquipmentContent.Style.ICONS)return Math.max(0,EquipmentLayout.effectHeight(e.maxEffects+1,e.maxEffects,e.effectTime)-13);

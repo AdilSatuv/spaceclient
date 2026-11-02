@@ -38,7 +38,7 @@ public class ContextMigrationTest {
         Path export=file.resolveSibling("profile.properties");HudConfig.exportProfile(export,r.profile(1));HudProfile imported=HudConfig.importProfile(export);
         assertTrue(imported.packs);assertFalse(imported.content().keystrokesMouse);
         Properties p=new Properties();try(InputStream in=Files.newInputStream(file)){p.load(in);}
-        assertEquals("15",p.getProperty("schemaVersion"));p.remove("profile.1.content.keystrokes.jump");
+        assertEquals("16",p.getProperty("schemaVersion"));p.remove("profile.1.content.keystrokes.jump");
         try(OutputStream out=Files.newOutputStream(file)){p.store(out,"Broken v11");}
         try{HudConfig.load(file);fail("Missing keystrokes setting must fail");}catch(HudConfig.InvalidConfigException expected){}
     }

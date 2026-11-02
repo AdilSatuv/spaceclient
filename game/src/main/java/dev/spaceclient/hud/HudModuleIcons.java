@@ -93,6 +93,12 @@ final class HudModuleIcons {
             GL11.glLineWidth(1.3f);
             GL11.glColor4f(.94f, .94f, .94f, 1);
             switch (module) {
+                case EXPERIENCE:
+                    path(true,8,1,14,1,14,6,18,12,18,19,15,21,7,21,4,19,4,12,8,6);
+                    path(false,4,14,18,14);path(false,9,10,13,10);break;
+                case ARROW_COUNTER:
+                    path(false,3,19,19,3,19,10);path(false,19,3,12,3);
+                    path(false,3,14,8,19);path(false,2,18,4,20);break;
                 case DAY_COUNTER:
                     rect(2,4,20,21);path(false,2,9,20,9);path(false,7,1,7,6);path(false,15,1,15,6);
                     path(false,7,13,11,13,11,18);break;

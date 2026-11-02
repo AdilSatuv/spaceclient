@@ -40,7 +40,7 @@ public class SprintHudMigrationTest {
         HudProfile imported=HudConfig.importProfile(export);assertFalse(imported.sprintStatus);
         assertEquals(23,imported.placement(HudModule.SPRINT_STATUS).y,0);
         Properties p=new Properties();try(InputStream in=Files.newInputStream(file)){p.load(in);}
-        assertEquals("15",p.getProperty("schemaVersion"));p.remove("profile.1.sprintstatus");
+        assertEquals("16",p.getProperty("schemaVersion"));p.remove("profile.1.sprintstatus");
         try(java.io.OutputStream out=Files.newOutputStream(file)){p.store(out,"Incomplete v10");}
         try{HudConfig.load(file);fail("Missing status flag must fail");}catch(HudConfig.InvalidConfigException expected){}
     }
