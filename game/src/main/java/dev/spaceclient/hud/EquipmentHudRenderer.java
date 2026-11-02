@@ -74,7 +74,7 @@ public final class EquipmentHudRenderer {
         return c.textRenderer.getStringWidth(text)<=max?text:c.textRenderer.trimToWidth(text,max-c.textRenderer.getStringWidth(".."))+"..";
     }
     private static void center(MinecraftClient c,String text,int x,int y,int color,HudAppearance a){c.textRenderer.draw(text,x-c.textRenderer.getStringWidth(text)/2f,y,color,a.shadow);}
-    private static void textState() {
+    static void textState() {
         GlStateManager.disableLighting();GlStateManager.disableDepthTest();GlStateManager.enableTexture();GlStateManager.enableAlphaTest();
         GlStateManager.alphaFunc(GL11.GL_GREATER,.1f);GlStateManager.enableBlend();GlStateManager.blendFuncSeparate(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA,GL11.GL_ONE,GL11.GL_ZERO);GlStateManager.color(1,1,1,1);
         GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA,GL11.GL_ONE,GL11.GL_ZERO);

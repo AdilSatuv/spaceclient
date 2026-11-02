@@ -31,6 +31,7 @@ const expectedMixins = [
   'CrosshairMixin',
   'FullbrightMixin',
   'TimeChangerMixin',
+  'NoHurtCamMixin',
 ];
 const required = [
   'fabric.mod.json',
@@ -52,6 +53,7 @@ const required = [
   'dev/spaceclient/mixin/CrosshairMixin.class',
   'dev/spaceclient/mixin/FullbrightMixin.class',
   'dev/spaceclient/mixin/TimeChangerMixin.class',
+  'dev/spaceclient/mixin/NoHurtCamMixin.class',
   'dev/spaceclient/mods/ModSettings.class',
   'dev/spaceclient/mods/ModSettings$Brightness.class',
   'dev/spaceclient/mods/ModSettings$TimePreset.class',
@@ -105,6 +107,7 @@ const required = [
   'dev/spaceclient/hud/WorldLabels.class',
   'dev/spaceclient/hud/ExperienceProgress.class',
   'dev/spaceclient/hud/PlayerStatsHud.class',
+  'dev/spaceclient/hud/InventoryHud.class',
   'dev/spaceclient/hud/ContextLabels.class',
   'dev/spaceclient/hud/EquipmentContent.class',
   'dev/spaceclient/hud/EquipmentContent$Style.class',

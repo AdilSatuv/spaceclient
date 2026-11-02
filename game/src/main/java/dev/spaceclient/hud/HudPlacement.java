@@ -18,6 +18,7 @@ public final class HudPlacement {
         return Double.isFinite(value) && value >= min && value <= max;
     }
     public static HudPlacement defaults(HudModule module) {
+        if(module==HudModule.INVENTORY)return new HudPlacement(Horizontal.LEFT,Vertical.BOTTOM,8,48,1);
         if(module==HudModule.EXPERIENCE||module==HudModule.ARROW_COUNTER)
             return new HudPlacement(Horizontal.RIGHT,Vertical.TOP,8,module==HudModule.EXPERIENCE?80:104,1);
         if(module==HudModule.PING||module==HudModule.BIOME||module==HudModule.PACK_DISPLAY||module==HudModule.DAY_COUNTER||module==HudModule.LIGHT_LEVEL)

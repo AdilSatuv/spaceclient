@@ -17,6 +17,7 @@ public final class HudContentSettings {
     public final KeyLayout keyLayout;
     public final SprintDisplay sprintDisplay;
     public final EquipmentContent equipment;
+    public final boolean inventoryHotbar, inventoryOverlays;
 
     public HudContentSettings(int coordinatesPrecision, ClockFormat clockFormat, boolean clockSeconds) {
         this(coordinatesPrecision, clockFormat, clockSeconds, true, CpsMode.BOTH);
@@ -44,6 +45,14 @@ public final class HudContentSettings {
                               boolean fpsLabel, CpsMode cpsMode, boolean keystrokesJump, boolean keystrokesMouse,
                               boolean pingLabel, boolean biomeLabel, boolean packLabel, int packNames,
                               KeyLayout keyLayout, SprintDisplay sprintDisplay, EquipmentContent equipment) {
+        this(coordinatesPrecision,clockFormat,clockSeconds,fpsLabel,cpsMode,keystrokesJump,keystrokesMouse,pingLabel,biomeLabel,packLabel,packNames,keyLayout,sprintDisplay,equipment,false,true);
+    }
+    public HudContentSettings(int coordinatesPrecision, ClockFormat clockFormat, boolean clockSeconds,
+                              boolean fpsLabel, CpsMode cpsMode, boolean keystrokesJump, boolean keystrokesMouse,
+                              boolean pingLabel, boolean biomeLabel, boolean packLabel, int packNames,
+                              KeyLayout keyLayout, SprintDisplay sprintDisplay, EquipmentContent equipment,
+                              boolean inventoryHotbar, boolean inventoryOverlays) {
+        this.inventoryHotbar=inventoryHotbar;this.inventoryOverlays=inventoryOverlays;
         if(equipment==null)throw new IllegalArgumentException("Missing equipment formats");this.equipment=equipment;
         if(keyLayout==null||sprintDisplay==null)throw new IllegalArgumentException("Missing widget format");
         this.keyLayout=keyLayout;this.sprintDisplay=sprintDisplay;
@@ -59,46 +68,52 @@ public final class HudContentSettings {
         this.pingLabel = pingLabel; this.biomeLabel = biomeLabel; this.packLabel = packLabel; this.packNames = packNames;
     }
     public static HudContentSettings defaults() { return new HudContentSettings(1, ClockFormat.H24, true); }
+    public HudContentSettings withInventoryHotbar(boolean value) {
+        return new HudContentSettings(coordinatesPrecision,clockFormat,clockSeconds,fpsLabel,cpsMode,keystrokesJump,keystrokesMouse,pingLabel,biomeLabel,packLabel,packNames,keyLayout,sprintDisplay,equipment,value,inventoryOverlays);
+    }
+    public HudContentSettings withInventoryOverlays(boolean value) {
+        return new HudContentSettings(coordinatesPrecision,clockFormat,clockSeconds,fpsLabel,cpsMode,keystrokesJump,keystrokesMouse,pingLabel,biomeLabel,packLabel,packNames,keyLayout,sprintDisplay,equipment,inventoryHotbar,value);
+    }
     public HudContentSettings withCoordinatesPrecision(int value) {
-        return new HudContentSettings(value, clockFormat, clockSeconds, fpsLabel, cpsMode, keystrokesJump, keystrokesMouse, pingLabel, biomeLabel, packLabel, packNames, keyLayout, sprintDisplay, equipment);
+        return new HudContentSettings(value, clockFormat, clockSeconds, fpsLabel, cpsMode, keystrokesJump, keystrokesMouse, pingLabel, biomeLabel, packLabel, packNames, keyLayout, sprintDisplay, equipment, inventoryHotbar, inventoryOverlays);
     }
     public HudContentSettings withClockFormat(ClockFormat value) {
-        return new HudContentSettings(coordinatesPrecision, value, clockSeconds, fpsLabel, cpsMode, keystrokesJump, keystrokesMouse, pingLabel, biomeLabel, packLabel, packNames, keyLayout, sprintDisplay, equipment);
+        return new HudContentSettings(coordinatesPrecision, value, clockSeconds, fpsLabel, cpsMode, keystrokesJump, keystrokesMouse, pingLabel, biomeLabel, packLabel, packNames, keyLayout, sprintDisplay, equipment, inventoryHotbar, inventoryOverlays);
     }
     public HudContentSettings withClockSeconds(boolean value) {
-        return new HudContentSettings(coordinatesPrecision, clockFormat, value, fpsLabel, cpsMode, keystrokesJump, keystrokesMouse, pingLabel, biomeLabel, packLabel, packNames, keyLayout, sprintDisplay, equipment);
+        return new HudContentSettings(coordinatesPrecision, clockFormat, value, fpsLabel, cpsMode, keystrokesJump, keystrokesMouse, pingLabel, biomeLabel, packLabel, packNames, keyLayout, sprintDisplay, equipment, inventoryHotbar, inventoryOverlays);
     }
     public HudContentSettings withFpsLabel(boolean value) {
-        return new HudContentSettings(coordinatesPrecision, clockFormat, clockSeconds, value, cpsMode, keystrokesJump, keystrokesMouse, pingLabel, biomeLabel, packLabel, packNames, keyLayout, sprintDisplay, equipment);
+        return new HudContentSettings(coordinatesPrecision, clockFormat, clockSeconds, value, cpsMode, keystrokesJump, keystrokesMouse, pingLabel, biomeLabel, packLabel, packNames, keyLayout, sprintDisplay, equipment, inventoryHotbar, inventoryOverlays);
     }
     public HudContentSettings withCpsMode(CpsMode value) {
-        return new HudContentSettings(coordinatesPrecision, clockFormat, clockSeconds, fpsLabel, value, keystrokesJump, keystrokesMouse, pingLabel, biomeLabel, packLabel, packNames, keyLayout, sprintDisplay, equipment);
+        return new HudContentSettings(coordinatesPrecision, clockFormat, clockSeconds, fpsLabel, value, keystrokesJump, keystrokesMouse, pingLabel, biomeLabel, packLabel, packNames, keyLayout, sprintDisplay, equipment, inventoryHotbar, inventoryOverlays);
     }
     public HudContentSettings withKeystrokesJump(boolean value) {
-        return new HudContentSettings(coordinatesPrecision,clockFormat,clockSeconds,fpsLabel,cpsMode,value,keystrokesMouse, pingLabel, biomeLabel, packLabel, packNames, keyLayout, sprintDisplay, equipment);
+        return new HudContentSettings(coordinatesPrecision,clockFormat,clockSeconds,fpsLabel,cpsMode,value,keystrokesMouse, pingLabel, biomeLabel, packLabel, packNames, keyLayout, sprintDisplay, equipment, inventoryHotbar, inventoryOverlays);
     }
     public HudContentSettings withKeystrokesMouse(boolean value) {
-        return new HudContentSettings(coordinatesPrecision,clockFormat,clockSeconds,fpsLabel,cpsMode,keystrokesJump,value, pingLabel, biomeLabel, packLabel, packNames, keyLayout, sprintDisplay, equipment);
+        return new HudContentSettings(coordinatesPrecision,clockFormat,clockSeconds,fpsLabel,cpsMode,keystrokesJump,value, pingLabel, biomeLabel, packLabel, packNames, keyLayout, sprintDisplay, equipment, inventoryHotbar, inventoryOverlays);
     }
     public HudContentSettings withPingLabel(boolean value) {
-        return new HudContentSettings(coordinatesPrecision,clockFormat,clockSeconds,fpsLabel,cpsMode,keystrokesJump,keystrokesMouse,value,biomeLabel,packLabel,packNames, keyLayout, sprintDisplay, equipment);
+        return new HudContentSettings(coordinatesPrecision,clockFormat,clockSeconds,fpsLabel,cpsMode,keystrokesJump,keystrokesMouse,value,biomeLabel,packLabel,packNames, keyLayout, sprintDisplay, equipment, inventoryHotbar, inventoryOverlays);
     }
     public HudContentSettings withBiomeLabel(boolean value) {
-        return new HudContentSettings(coordinatesPrecision,clockFormat,clockSeconds,fpsLabel,cpsMode,keystrokesJump,keystrokesMouse,pingLabel,value,packLabel,packNames, keyLayout, sprintDisplay, equipment);
+        return new HudContentSettings(coordinatesPrecision,clockFormat,clockSeconds,fpsLabel,cpsMode,keystrokesJump,keystrokesMouse,pingLabel,value,packLabel,packNames, keyLayout, sprintDisplay, equipment, inventoryHotbar, inventoryOverlays);
     }
     public HudContentSettings withPackLabel(boolean value) {
-        return new HudContentSettings(coordinatesPrecision,clockFormat,clockSeconds,fpsLabel,cpsMode,keystrokesJump,keystrokesMouse,pingLabel,biomeLabel,value,packNames, keyLayout, sprintDisplay, equipment);
+        return new HudContentSettings(coordinatesPrecision,clockFormat,clockSeconds,fpsLabel,cpsMode,keystrokesJump,keystrokesMouse,pingLabel,biomeLabel,value,packNames, keyLayout, sprintDisplay, equipment, inventoryHotbar, inventoryOverlays);
     }
     public HudContentSettings withPackNames(int value) {
-        return new HudContentSettings(coordinatesPrecision,clockFormat,clockSeconds,fpsLabel,cpsMode,keystrokesJump,keystrokesMouse,pingLabel,biomeLabel,packLabel,value, keyLayout, sprintDisplay, equipment);
+        return new HudContentSettings(coordinatesPrecision,clockFormat,clockSeconds,fpsLabel,cpsMode,keystrokesJump,keystrokesMouse,pingLabel,biomeLabel,packLabel,value, keyLayout, sprintDisplay, equipment, inventoryHotbar, inventoryOverlays);
     }
     public HudContentSettings withKeyLayout(KeyLayout value) {
-        return new HudContentSettings(coordinatesPrecision,clockFormat,clockSeconds,fpsLabel,cpsMode,keystrokesJump,keystrokesMouse,pingLabel,biomeLabel,packLabel,packNames,value,sprintDisplay, equipment);
+        return new HudContentSettings(coordinatesPrecision,clockFormat,clockSeconds,fpsLabel,cpsMode,keystrokesJump,keystrokesMouse,pingLabel,biomeLabel,packLabel,packNames,value,sprintDisplay, equipment, inventoryHotbar, inventoryOverlays);
     }
     public HudContentSettings withSprintDisplay(SprintDisplay value) {
-        return new HudContentSettings(coordinatesPrecision,clockFormat,clockSeconds,fpsLabel,cpsMode,keystrokesJump,keystrokesMouse,pingLabel,biomeLabel,packLabel,packNames,keyLayout,value, equipment);
+        return new HudContentSettings(coordinatesPrecision,clockFormat,clockSeconds,fpsLabel,cpsMode,keystrokesJump,keystrokesMouse,pingLabel,biomeLabel,packLabel,packNames,keyLayout,value, equipment, inventoryHotbar, inventoryOverlays);
     }
     public HudContentSettings withEquipment(EquipmentContent value) {
-        return new HudContentSettings(coordinatesPrecision,clockFormat,clockSeconds,fpsLabel,cpsMode,keystrokesJump,keystrokesMouse,pingLabel,biomeLabel,packLabel,packNames,keyLayout,sprintDisplay,value);
+        return new HudContentSettings(coordinatesPrecision,clockFormat,clockSeconds,fpsLabel,cpsMode,keystrokesJump,keystrokesMouse,pingLabel,biomeLabel,packLabel,packNames,keyLayout,sprintDisplay,value, inventoryHotbar, inventoryOverlays);
     }
 }

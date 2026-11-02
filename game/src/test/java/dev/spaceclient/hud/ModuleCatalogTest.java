@@ -38,6 +38,7 @@ public class ModuleCatalogTest {
         assertEquals(GameplayModule.FULLBRIGHT,home.get(4).game);assertEquals(GameplayModule.TIME_CHANGER,home.get(5).game);
         assertEquals(GameplayModule.FULLBRIGHT,HudSection.VISUALS.catalog("яркость").get(0).game);
         assertEquals(GameplayModule.TIME_CHANGER,HudSection.WORLD.catalog("закат").get(0).game);
+        assertEquals(GameplayModule.NO_HURT_CAM,HudSection.COMBAT.catalog("качание").get(0).game);
         assertTrue(HudSection.PLAYER.catalog("fullbright").isEmpty());
     }
 }

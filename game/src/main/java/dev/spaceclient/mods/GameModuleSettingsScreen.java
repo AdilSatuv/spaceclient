@@ -78,6 +78,7 @@ public final class GameModuleSettingsScreen extends Screen {
         }finally{GlStateManager.popMatrix();}
     }
     private String hint(){
+        if(module==GameplayModule.NO_HURT_CAM)return "Keeps the camera steady on damage; death view stays enabled.";
         if(module==GameplayModule.FULLBRIGHT)return "Brightens rendering; your saved Minecraft brightness stays unchanged.";
         if(module==GameplayModule.TIME_CHANGER)return "Overworld sky only; world time and Day Counter stay live.";
         if(module==GameplayModule.FREE_LOOK)return ModuleKeys.conflicts(client,settings().freeLookKey())?"Key unavailable: choose an unused key":"Hold "+ModuleKeys.label(settings().freeLookKey())+" to look around. Release to restore your view.";
@@ -95,7 +96,7 @@ public final class GameModuleSettingsScreen extends Screen {
             row(a,3,"Magnification",settings().zoomFactor()+"x");row(a,4,"Smooth zoom",settings().zoomSmooth()?"On":"Off");
         }else if(module==GameplayModule.FULLBRIGHT)row(a,13,"Intensity",label(settings().brightness().name()));
         else if(module==GameplayModule.TIME_CHANGER)row(a,14,"Sky time",label(settings().timePreset().name()));
-        else{
+        else if(module==GameplayModule.CROSSHAIR){
             CrosshairStyle s=settings().crosshairStyle();
             row(a,5,"Shape",label(s.shape.name()));row(a,6,"Color",label(s.color.name()));row(a,7,"Size",Integer.toString(s.size));
             row(a,8,"Gap",Integer.toString(s.gap));row(a,9,"Thickness",Integer.toString(s.thickness));

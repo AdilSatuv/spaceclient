@@ -34,7 +34,7 @@ public class VisualModsTest {
         assertEquals(48,s.freeLookKey());assertEquals(34,s.zoomKey());assertEquals(7,s.zoomFactor());assertFalse(s.zoomSmooth());
         assertEquals(ModSettings.SprintMode.TOGGLE,s.sprintMode());assertEquals(CrosshairStyle.Shape.RING,s.crosshairStyle().shape);
         assertEquals(9,s.crosshairStyle().size);assertFalse(s.crosshairStyle().outline);
-        assertTrue(s.toggleFullbright());assertEquals("4",read().getProperty("schemaVersion"));
+        assertTrue(s.toggleFullbright());assertEquals("5",read().getProperty("schemaVersion"));
         ModSettings saved=ModSettings.open(file());assertTrue(saved.fullbright());assertFalse(saved.timeChanger());
         assertEquals(33,saved.toggleKey(GameplayModule.CROSSHAIR));assertEquals(7,saved.zoomFactor());
     }
@@ -63,7 +63,7 @@ public class VisualModsTest {
         ModSettings s=ModSettings.open(file());assertTrue(s.toggleZoom());Properties original=read();
         for(String[] change:new String[][]{{"fullbright",null},{"brightness","GLOW"},{"timePreset","MIDNIGHT"},
                 {"timeChanger","yes"},{"toggleKey.FULLBRIGHT","256"},{"toggleKey.TIME_CHANGER",null},
-                {"schemaVersion","5"},{"schemaVersion","04"},{"unrecognized","keep"}}) {
+                {"schemaVersion","6"},{"schemaVersion","04"},{"unrecognized","keep"}}) {
             Properties bad=new Properties();bad.putAll(original);
             if(change[1]==null)bad.remove(change[0]);else bad.setProperty(change[0],change[1]);write(bad);
             byte[] bytes=Files.readAllBytes(file());ModSettings readonly=ModSettings.open(file());

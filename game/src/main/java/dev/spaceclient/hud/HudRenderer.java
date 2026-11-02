@@ -53,6 +53,7 @@ public final class HudRenderer {
             case LIGHT_LEVEL: return WorldHud.light(client);
             case EXPERIENCE: return PlayerStatsHud.experience(client).text();
             case ARROW_COUNTER: return PlayerStatsHud.arrows(client);
+            case INVENTORY: return InventoryHud.text(client,content.inventoryHotbar);
             case PING: return ContextHud.ping(client,content);
             case BIOME: return ContextHud.biome(client,content);
             case PACK_DISPLAY: return ContextHud.packs(client,content);
@@ -90,6 +91,7 @@ public final class HudRenderer {
         return placement.resolve(width, height, textWidth(client, text), 10);
     }
     public static int moduleWidth(MinecraftClient client,HudModule module,String text) {
+        if(module==HudModule.INVENTORY)return InventoryHud.WIDTH;
         if(module==HudModule.EXPERIENCE)return Math.max(120,textWidth(client,text)+6);
         HudContentSettings content=SpaceClient.hud.getConfig().active().content();
         if(module==HudModule.ARMOR&&content.equipment.armorStyle==EquipmentContent.Style.ICONS)return EquipmentLayout.armorWidth(content.equipment.hand?5:4,EquipmentHudRenderer.armorCell(client,content.equipment));
@@ -103,6 +105,7 @@ public final class HudRenderer {
         return width;
     }
     public static int moduleHeight(MinecraftClient client,HudModule module) {
+        if(module==HudModule.INVENTORY)return InventoryHud.height(SpaceClient.hud.getConfig().active().content().inventoryHotbar);
         if(module==HudModule.EXPERIENCE)return 22;
         HudContentSettings c=SpaceClient.hud.getConfig().active().content();
         if(module==HudModule.ARMOR&&c.equipment.armorStyle==EquipmentContent.Style.ICONS)return EquipmentLayout.ARMOR_HEIGHT;
@@ -117,6 +120,7 @@ public final class HudRenderer {
         return placement.resolve(width,height,moduleWidth(client,module,text),moduleHeight(client,module));
     }
     public static void drawModule(MinecraftClient client,HudModule module,String text,HudPlacement.Bounds bounds,HudAppearance appearance,int color) {
+        if(module==HudModule.INVENTORY){InventoryHud.draw(client,SpaceClient.hud.getConfig().active().content(),bounds,appearance,color);return;}
         if(module==HudModule.EXPERIENCE){drawExperience(client,text,bounds,appearance,color);return;}
         HudContentSettings content=SpaceClient.hud.getConfig().active().content();
         if(module==HudModule.ARMOR&&content.equipment.armorStyle==EquipmentContent.Style.ICONS){EquipmentHudRenderer.armor(client,content.equipment,bounds,appearance,color);return;}

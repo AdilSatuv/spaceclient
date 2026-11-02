@@ -28,7 +28,7 @@ public final class ModSettings {
     private boolean readOnly;
     private String error = "";
     private static final class Options {
-        boolean autoSprint, freeLook, zoom, crosshair, fullbright, timeChanger;
+        boolean autoSprint, freeLook, zoom, crosshair, fullbright, timeChanger, noHurtCam;
         Brightness brightness = Brightness.FULL;
         TimePreset timePreset = TimePreset.DAY;
         SprintMode sprintMode = SprintMode.AUTO;
@@ -40,6 +40,7 @@ public final class ModSettings {
             Options o = new Options();
             o.autoSprint = autoSprint; o.freeLook = freeLook; o.zoom = zoom; o.crosshair = crosshair;
             o.fullbright = fullbright; o.timeChanger = timeChanger; o.brightness = brightness; o.timePreset = timePreset;
+            o.noHurtCam = noHurtCam;
             o.sprintMode = sprintMode; o.freeLookKey = freeLookKey; o.zoomKey = zoomKey;
             o.zoomFactor = zoomFactor; o.zoomSmooth = zoomSmooth; o.style = style;
             o.toggleKeys = toggleKeys.clone();
@@ -55,10 +56,10 @@ public final class ModSettings {
             Properties p = new Properties();
             try (InputStream in = Files.newInputStream(file)) { p.load(in); }
             String schema = p.getProperty("schemaVersion", "");
-            if (!schema.matches("[1-4]")) throw new IOException("Unsupported settings");
+            if (!schema.matches("[1-5]")) throw new IOException("Unsupported settings");
             int version = Integer.parseInt(schema);
             boolean legacy = version == 1;
-            if (version < 1 || version > 4 || p.size() != (legacy ? 3 : version == 2 ? 17 : version == 3 ? 21 : 27))
+            if (p.size() != (legacy ? 3 : version == 2 ? 17 : version == 3 ? 21 : version == 4 ? 27 : 29))
                 throw new IOException("Unsupported settings");
             Options o = new Options();
             o.autoSprint = bool(p, "autoSprint"); o.freeLook = bool(p, "freeLook");
@@ -73,13 +74,15 @@ public final class ModSettings {
                     integer(p, "crosshairThickness", 1, 4), bool(p, "crosshairDot"), bool(p, "crosshairOutline"));
             }
             if (version >= 3) for (GameplayModule m : GameplayModule.values())
-                if (version >= 4 || m.ordinal() < GameplayModule.FULLBRIGHT.ordinal())
+                if (version >= 5 || (version == 4 && m.ordinal() < GameplayModule.NO_HURT_CAM.ordinal())
+                        || (version == 3 && m.ordinal() < GameplayModule.FULLBRIGHT.ordinal()))
                     o.toggleKeys[m.ordinal()] = integer(p, "toggleKey." + m.name(), 0, 255);
             if (version >= 4) {
                 o.fullbright = bool(p, "fullbright"); o.timeChanger = bool(p, "timeChanger");
                 o.brightness = Brightness.valueOf(p.getProperty("brightness", ""));
                 o.timePreset = TimePreset.valueOf(p.getProperty("timePreset", ""));
             }
+            if (version >= 5) o.noHurtCam = bool(p, "noHurtCam");
             s.value = o;
         } catch (IOException | IllegalArgumentException ex) {
             s.readOnly = true;
@@ -103,6 +106,7 @@ public final class ModSettings {
     public boolean crosshair() { return value.crosshair; }
     public boolean fullbright() { return value.fullbright; }
     public boolean timeChanger() { return value.timeChanger; }
+    public boolean noHurtCam() { return value.noHurtCam; }
     public Brightness brightness() { return value.brightness; }
     public TimePreset timePreset() { return value.timePreset; }
     /** Overrides the lightmap read only; never assigns to GameOptions.gamma. */
@@ -125,6 +129,7 @@ public final class ModSettings {
     public boolean toggleCrosshair() { return change(o -> o.crosshair = !o.crosshair); }
     public boolean toggleFullbright() { return change(o -> o.fullbright = !o.fullbright); }
     public boolean toggleTimeChanger() { return change(o -> o.timeChanger = !o.timeChanger); }
+    public boolean toggleNoHurtCam() { return change(o -> o.noHurtCam = !o.noHurtCam); }
     public boolean brightness(Brightness v) { return change(o -> { if(v==null)throw new IllegalArgumentException(); o.brightness=v; }); }
     public boolean timePreset(TimePreset v) { return change(o -> { if(v==null)throw new IllegalArgumentException(); o.timePreset=v; }); }
     public boolean sprintMode(SprintMode v) { return change(o -> { if (v == null) throw new IllegalArgumentException(); o.sprintMode = v; }); }
@@ -143,6 +148,7 @@ public final class ModSettings {
                 case CROSSHAIR: o.style = CrosshairStyle.defaults(); break;
                 case FULLBRIGHT: o.brightness = Brightness.FULL; break;
                 case TIME_CHANGER: o.timePreset = TimePreset.DAY; break;
+                case NO_HURT_CAM: break;
                 default: throw new IllegalArgumentException();
             }
         });
@@ -154,7 +160,8 @@ public final class ModSettings {
         try {
             Options o = value.copy(); mutation.accept(o);
             Properties p = new Properties();
-            p.setProperty("schemaVersion", "4");
+            p.setProperty("schemaVersion", "5");
+            p.setProperty("noHurtCam", Boolean.toString(o.noHurtCam));
             p.setProperty("fullbright", Boolean.toString(o.fullbright)); p.setProperty("timeChanger", Boolean.toString(o.timeChanger));
             p.setProperty("brightness", o.brightness.name()); p.setProperty("timePreset", o.timePreset.name());
             for (GameplayModule m : GameplayModule.values()) p.setProperty("toggleKey." + m.name(), Integer.toString(o.toggleKeys[m.ordinal()]));

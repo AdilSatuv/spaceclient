@@ -33,6 +33,7 @@ function entries() {
       'CrosshairMixin',
       'FullbrightMixin',
       'TimeChangerMixin',
+      'NoHurtCamMixin',
     ],
   };
   return [
@@ -59,6 +60,7 @@ function entries() {
       'mixin/CrosshairMixin',
       'mixin/FullbrightMixin',
       'mixin/TimeChangerMixin',
+      'mixin/NoHurtCamMixin',
       'mods/ModSettings',
       'mods/ModSettings$Brightness',
       'mods/ModSettings$TimePreset',
@@ -112,6 +114,7 @@ function entries() {
       'hud/WorldLabels',
       'hud/ExperienceProgress',
       'hud/PlayerStatsHud',
+      'hud/InventoryHud',
       'hud/ContextLabels',
       'hud/EquipmentContent',
       'hud/EquipmentContent$Style',
@@ -249,6 +252,7 @@ test('all pinned mixin classes and the exact mixin set are required', async (t) 
     'CrosshairMixin',
     'FullbrightMixin',
     'TimeChangerMixin',
+    'NoHurtCamMixin',
   ];
   for (const name of pinned) {
     const candidate = await fixture(t, (value) =>
@@ -296,6 +300,7 @@ test('profile and editor classes cannot be omitted from the pinned game bundle',
     'WorldLabels',
     'ExperienceProgress',
     'PlayerStatsHud',
+    'InventoryHud',
     'EquipmentContent',
     'EquipmentContent$Style',
     'EquipmentContent$Durability',

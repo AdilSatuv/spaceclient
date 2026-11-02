@@ -31,10 +31,12 @@ public final class HudModuleSettingsScreen extends Screen {
     private HudAppearance appearance() { return settings().getConfig().active().appearance(module); }
     private HudContentSettings content() { return settings().getConfig().active().content(); }
     private boolean hasContentSettings() {
+        if(module==HudModule.INVENTORY)return true;
         return module == HudModule.COORDINATES || module == HudModule.CLOCK || module == HudModule.FPS || module == HudModule.CPS || module == HudModule.KEYSTROKES || module == HudModule.SPRINT_STATUS || module == HudModule.ARMOR || module == HudModule.POTION_EFFECTS || contextModule();
     }
     private boolean contextModule() { return module == HudModule.PING || module == HudModule.BIOME || module == HudModule.PACK_DISPLAY; }
     private int previewExtra() {
+        if(module==HudModule.INVENTORY)return InventoryHud.height(content().inventoryHotbar)-13;
         if(module==HudModule.EXPERIENCE)return 9;
         EquipmentContent e=content().equipment;
         if(module==HudModule.ARMOR&&e.armorStyle==EquipmentContent.Style.ICONS)return 25;
@@ -81,7 +83,11 @@ public final class HudModuleSettingsScreen extends Screen {
         drawPreview();
         fill(left + 14, bodyTop + 61, left + panelWidth - 14, bodyTop + 62, BORDER);
         if (tab == 2) {
-            if (module == HudModule.ARMOR || module == HudModule.POTION_EFFECTS) {
+            if(module==HudModule.INVENTORY) {
+                SpaceUiFont.draw(client,"Show hotbar",left+16,bodyTop+73,TEXT);
+                SpaceUiFont.draw(client,"Item overlays",left+16,bodyTop+101,TEXT);
+                SpaceUiFont.draw(client,"Counts and durability bars",left+16,bodyTop+129,MUTED);
+            } else if (module == HudModule.ARMOR || module == HudModule.POTION_EFFECTS) {
                 SpaceUiFont.draw(client,"Display style",left+16,bodyTop+73,TEXT);
                 SpaceUiFont.draw(client,module==HudModule.ARMOR?"Durability":"Shown effects",left+16,bodyTop+101,TEXT);
                 SpaceUiFont.draw(client,module==HudModule.ARMOR?"Held item":"Show duration",left+16,bodyTop+129,TEXT);
@@ -165,7 +171,10 @@ public final class HudModuleSettingsScreen extends Screen {
         }
         if (tab == 2 && hasContentSettings()) {
             HudContentSettings c = content();
-            if (module == HudModule.ARMOR || module == HudModule.POTION_EFFECTS) {
+            if(module==HudModule.INVENTORY) {
+                actions.add(new Action(32,c.inventoryHotbar?"ON":"OFF",right-98,bodyTop+67,98,editable));
+                actions.add(new Action(33,c.inventoryOverlays?"ON":"OFF",right-98,bodyTop+95,98,editable));
+            } else if (module == HudModule.ARMOR || module == HudModule.POTION_EFFECTS) {
                 EquipmentContent e=c.equipment;boolean armor=module==HudModule.ARMOR;
                 actions.add(new Action(armor?26:29,label((armor?e.armorStyle:e.effectStyle).name())+"  >",right-98,bodyTop+67,98,editable));
                 actions.add(new Action(armor?27:30,(armor?label(e.durability.name()):Integer.toString(e.maxEffects))+"  >",right-98,bodyTop+95,98,editable));
@@ -243,7 +252,9 @@ public final class HudModuleSettingsScreen extends Screen {
         if (id == 5) { client.setScreen(new HudEditorScreen(this, module)); return; }
         if (settings().isReadOnly()) return;
         boolean saved;
-        if (id >=26 && id<=31) {
+        if(id==32)saved=settings().content(content().withInventoryHotbar(!content().inventoryHotbar));
+        else if(id==33)saved=settings().content(content().withInventoryOverlays(!content().inventoryOverlays));
+        else if (id >=26 && id<=31) {
             EquipmentContent e=content().equipment;
             if(id==26)e=e.armorStyle(e.armorStyle==EquipmentContent.Style.TEXT?EquipmentContent.Style.ICONS:EquipmentContent.Style.TEXT);
             else if(id==27)e=e.durability(e.durability==EquipmentContent.Durability.PERCENT?EquipmentContent.Durability.REMAINING:EquipmentContent.Durability.PERCENT);
@@ -275,7 +286,8 @@ public final class HudModuleSettingsScreen extends Screen {
         } else if (id == 16) saved = settings().content(content().withClockSeconds(!content().clockSeconds));
         else if (id == 17) {
             HudContentSettings c = content();
-            if (module == HudModule.ARMOR) c=c.withEquipment(c.equipment.armorStyle(EquipmentContent.Style.TEXT).durability(EquipmentContent.Durability.PERCENT).hand(true));
+            if(module==HudModule.INVENTORY)c=c.withInventoryHotbar(false).withInventoryOverlays(true);
+            else if (module == HudModule.ARMOR) c=c.withEquipment(c.equipment.armorStyle(EquipmentContent.Style.TEXT).durability(EquipmentContent.Durability.PERCENT).hand(true));
             else if(module==HudModule.POTION_EFFECTS)c=c.withEquipment(c.equipment.effectStyle(EquipmentContent.Style.TEXT).maxEffects(2).effectTime(true));
             else if (module == HudModule.COORDINATES) c = c.withCoordinatesPrecision(1);
             else if (module == HudModule.CLOCK) c = c.withClockFormat(HudContentSettings.ClockFormat.H24).withClockSeconds(true);

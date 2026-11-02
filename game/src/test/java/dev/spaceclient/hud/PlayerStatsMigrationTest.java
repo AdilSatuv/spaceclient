@@ -49,7 +49,7 @@ public class PlayerStatsMigrationTest {
         Path file=directory.getRoot().toPath().resolve("export");HudProfile p=new HudProfile("Stats");p.experience=true;p.arrows=true;
         p.place(HudModule.EXPERIENCE,new HudPlacement(HudPlacement.Horizontal.RIGHT,HudPlacement.Vertical.BOTTOM,21,33,1.5));
         p.setAppearance(HudModule.EXPERIENCE,new HudAppearance(HudAppearance.Color.GOLD,HudAppearance.Backdrop.OFF,false));
-        HudConfig.exportProfile(file,p);assertEquals("11",read(file).getProperty("schemaVersion"));
+        HudConfig.exportProfile(file,p);assertEquals("12",read(file).getProperty("schemaVersion"));
         HudProfile imported=HudConfig.importProfile(file);assertTrue(imported.experience);assertTrue(imported.arrows);
         assertEquals(21,imported.placement(HudModule.EXPERIENCE).x,0);assertEquals(1.5,imported.placement(HudModule.EXPERIENCE).scale,0);
         assertEquals(HudAppearance.Backdrop.OFF,imported.appearance(HudModule.EXPERIENCE).backdrop);

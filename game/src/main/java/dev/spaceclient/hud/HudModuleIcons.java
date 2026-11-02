@@ -48,6 +48,8 @@ final class HudModuleIcons {
                     path(false,3,3,5,5);path(false,17,17,19,19);path(false,3,19,5,17);path(false,17,5,19,3);break;
                 case TIME_CHANGER:
                     circle(11,11,9);path(false,11,5,11,11,16,11);path(false,11,0,11,2);break;
+                case NO_HURT_CAM:
+                    path(true,11,1,20,5,19,14,11,21,3,14,2,5);path(false,6,11,16,11);break;
             }
         } finally { GL11.glPopMatrix(); GL11.glPopAttrib(); }
     }
@@ -99,6 +101,9 @@ final class HudModuleIcons {
             GL11.glLineWidth(1.3f);
             GL11.glColor4f(.94f, .94f, .94f, 1);
             switch (module) {
+                case INVENTORY:
+                    rect(1,2,21,20);path(false,1,8,21,8);path(false,1,14,21,14);
+                    path(false,8,2,8,20);path(false,14,2,14,20);break;
                 case EXPERIENCE:
                     path(true,8,1,14,1,14,6,18,12,18,19,15,21,7,21,4,19,4,12,8,6);
                     path(false,4,14,18,14);path(false,9,10,13,10);break;

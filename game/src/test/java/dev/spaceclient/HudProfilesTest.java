@@ -54,7 +54,7 @@ public class HudProfilesTest {
         assertEquals(1, settings.getConfig().profile(1).placement(HudModule.CPS).scale, 0);
         Properties properties = new Properties();
         try (java.io.InputStream input = Files.newInputStream(file())) { properties.load(input); }
-        assertEquals("16", properties.getProperty("schemaVersion"));
+        assertEquals("17", properties.getProperty("schemaVersion"));
         assertArrayEquals(original, Files.readAllBytes(backups.get(0)));
     }
     @Test public void compassDefaultsOffInExistingProfilesAndPersistsIndependently() throws Exception {
@@ -302,7 +302,7 @@ public class HudProfilesTest {
             assertFalse(recovered.isReadOnly());
             assertTrue(recovered.getNotice().contains("backed up"));
         }
-        byte[] future = "schemaVersion=17\nkeep=true\n".getBytes(StandardCharsets.ISO_8859_1);
+        byte[] future = "schemaVersion=18\nkeep=true\n".getBytes(StandardCharsets.ISO_8859_1);
         Files.write(file(), future);
         HudSettings readOnly = HudSettings.open(file());
         assertTrue(readOnly.isReadOnly());

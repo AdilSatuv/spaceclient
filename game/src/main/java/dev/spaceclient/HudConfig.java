@@ -45,9 +45,9 @@ public final class HudConfig {
         Properties properties = readProperties(file);
         String schema = properties.getProperty("schemaVersion", "1");
         if (!schema.matches("[1-9][0-9]*")) throw new InvalidConfigException("Invalid HUD schema version");
-        if (!schema.matches("[1-9]|1[0-6]")) throw new UnsupportedSchemaException();
+        if (!schema.matches("[1-9]|1[0-7]")) throw new UnsupportedSchemaException();
         int version = Integer.parseInt(schema);
-        if (version != 16) config.migrationSourceVersion = version;
+        if (version != 17) config.migrationSourceVersion = version;
         if (schema.equals("1")) {
             config.profiles[0] = readProfile(properties, "", "Profile 1", version);
             config.profiles[1] = config.profiles[0].copy();
@@ -84,6 +84,8 @@ public final class HudConfig {
                 removeWorldFields(required,"profile."+i+".");
             if (version < 16) for (int i = 0; i < config.profiles.length; i++)
                 removePlayerStatsFields(required,"profile."+i+".");
+            if (version < 17) for (int i = 0; i < config.profiles.length; i++)
+                removeInventoryFields(required,"profile."+i+".");
             if (!properties.stringPropertyNames().containsAll(required.stringPropertyNames()))
                 throw new InvalidConfigException("Incomplete HUD schema " + schema + " configuration");
         }
@@ -133,6 +135,7 @@ public final class HudConfig {
             profile.lightLevel=version>=15&&readBoolean(properties,prefix+"lightlevel",false);
             profile.experience=version>=16&&readBoolean(properties,prefix+"experience",false);
             profile.arrows=version>=16&&readBoolean(properties,prefix+"arrows",false);
+            profile.inventory=version>=17&&readBoolean(properties,prefix+"inventory",false);
             for (HudModule module : HudModule.values()) {
                 HudPlacement defaults = HudPlacement.defaults(module);
                 String key = prefix + "layout." + module.getId() + ".";
@@ -146,7 +149,8 @@ public final class HudConfig {
                         && (version >= 10 || module != HudModule.SPRINT_STATUS)
                         && (version >= 11 || module.ordinal() < HudModule.PING.ordinal())
                         && (version >= 15 || module.ordinal() < HudModule.DAY_COUNTER.ordinal())
-                        && (version >= 16 || module.ordinal() < HudModule.EXPERIENCE.ordinal())) {
+                        && (version >= 16 || module.ordinal() < HudModule.EXPERIENCE.ordinal())
+                        && (version >= 17 || module.ordinal() < HudModule.INVENTORY.ordinal())) {
                     String appearanceKey = prefix + "appearance." + module.getId() + ".";
                     String color = properties.getProperty(appearanceKey + "color");
                     String backdrop = properties.getProperty(appearanceKey + "backdrop");
@@ -182,7 +186,9 @@ public final class HudConfig {
                         readBoolean(properties,prefix+"content.armor.hand"),
                         EquipmentContent.Style.valueOf(properties.getProperty(prefix+"content.effects.style","")),
                         Integer.parseInt(properties.getProperty(prefix+"content.effects.limit","")),
-                        readBoolean(properties,prefix+"content.effects.time"))));
+                        readBoolean(properties,prefix+"content.effects.time")),
+                    version >= 17 && readBoolean(properties,prefix+"content.inventory.hotbar"),
+                    version < 17 || readBoolean(properties,prefix+"content.inventory.overlays")));
             }
             return profile;
         } catch (IllegalArgumentException exception) { throw new InvalidConfigException("Invalid HUD profile", exception); }
@@ -224,6 +230,7 @@ public final class HudConfig {
         properties.setProperty(prefix+"lightlevel",Boolean.toString(profile.lightLevel));
         properties.setProperty(prefix+"experience",Boolean.toString(profile.experience));
         properties.setProperty(prefix+"arrows",Boolean.toString(profile.arrows));
+        properties.setProperty(prefix+"inventory",Boolean.toString(profile.inventory));
         HudContentSettings content = profile.content();
         properties.setProperty(prefix + "content.coordinates.precision", Integer.toString(content.coordinatesPrecision));
         properties.setProperty(prefix + "content.clock.format", content.clockFormat.name());
@@ -245,6 +252,8 @@ public final class HudConfig {
         properties.setProperty(prefix+"content.effects.style",equipment.effectStyle.name());
         properties.setProperty(prefix+"content.effects.limit",Integer.toString(equipment.maxEffects));
         properties.setProperty(prefix+"content.effects.time",Boolean.toString(equipment.effectTime));
+        properties.setProperty(prefix+"content.inventory.hotbar",Boolean.toString(content.inventoryHotbar));
+        properties.setProperty(prefix+"content.inventory.overlays",Boolean.toString(content.inventoryOverlays));
         for (HudModule module : HudModule.values()) {
             HudPlacement placement = profile.placement(module);
             String key = prefix + "layout." + module.getId() + ".";
@@ -263,7 +272,7 @@ public final class HudConfig {
 
     public void save(Path file) throws IOException {
         Properties properties = new Properties();
-        properties.setProperty("schemaVersion", "16");
+        properties.setProperty("schemaVersion", "17");
         properties.setProperty("activeProfile", Integer.toString(activeProfile));
         for (int i = 0; i < profiles.length; i++) writeProfile(properties, "profile." + i + ".", profiles[i]);
         writeAtomic(file, properties);
@@ -272,7 +281,7 @@ public final class HudConfig {
     public static void exportProfile(Path file, HudProfile profile) throws IOException {
         Properties properties = new Properties();
         properties.setProperty("format", "spaceclient-hud-profile");
-        properties.setProperty("schemaVersion", "11");
+        properties.setProperty("schemaVersion", "12");
         writeProfile(properties, "", profile);
         writeAtomic(file, properties);
     }
@@ -281,7 +290,7 @@ public final class HudConfig {
         Properties properties = readProperties(file);
         String version = properties.getProperty("schemaVersion");
         if (!"spaceclient-hud-profile".equals(properties.getProperty("format"))
-                || version == null || !version.matches("[1-9]|1[01]"))
+                || version == null || !version.matches("[1-9]|1[0-2]"))
             throw new InvalidConfigException("Unsupported HUD profile export");
         HudProfile profile = readProfile(properties, "", "Imported", Integer.parseInt(version) + 5);
         Properties expected = new Properties();
@@ -297,6 +306,7 @@ public final class HudConfig {
         if (Integer.parseInt(version) < 9) removeEquipmentFormats(expected, "");
         if (Integer.parseInt(version) < 10) removeWorldFields(expected, "");
         if (Integer.parseInt(version) < 11) removePlayerStatsFields(expected, "");
+        if (Integer.parseInt(version) < 12) removeInventoryFields(expected, "");
         if (!"1".equals(version)) {
             if (!properties.stringPropertyNames().equals(expected.stringPropertyNames()))
                 throw new InvalidConfigException("Incomplete or unknown HUD profile fields");
@@ -339,6 +349,12 @@ public final class HudConfig {
         properties.remove(prefix + "content.cps.mode");
         properties.remove(prefix + "content.keystrokes.jump");
         properties.remove(prefix + "content.keystrokes.mouse");
+    }
+    private static void removeInventoryFields(Properties properties,String prefix) {
+        properties.remove(prefix+"inventory");
+        properties.remove(prefix+"content.inventory.hotbar");properties.remove(prefix+"content.inventory.overlays");
+        for(String key:new String[]{"horizontal","vertical","x","y","scale"})properties.remove(prefix+"layout.inventory."+key);
+        for(String key:new String[]{"color","backdrop","shadow"})properties.remove(prefix+"appearance.inventory."+key);
     }
     private static void removePlayerStatsFields(Properties properties,String prefix) {
         for(String id:new String[]{"experience","arrows"}) {
