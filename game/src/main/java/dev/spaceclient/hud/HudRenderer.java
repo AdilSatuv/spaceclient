@@ -53,10 +53,12 @@ public final class HudRenderer {
             case BIOME: return ContextHud.biome(client,content);
             case PACK_DISPLAY: return ContextHud.packs(client,content);
             case SPRINT_STATUS:
-                if (client.player == null) return "ToggleSprint: --";
+                boolean compact=content.sprintDisplay==HudContentSettings.SprintDisplay.COMPACT;
+                if (client.player == null) return compact?"Sprint --":"ToggleSprint: --";
                 boolean enabled = SpaceClient.mods != null && SpaceClient.mods.autoSprint();
-                return SprintStatus.text(enabled, enabled && SprintRuntime.state.requested(true, SpaceClient.mods.sprintMode()),
-                    client.player.isSprinting());
+                boolean requested=enabled && SprintRuntime.state.requested(true, SpaceClient.mods.sprintMode());
+                return compact?SprintStatus.compact(enabled,requested,client.player.isSprinting())
+                    :SprintStatus.text(enabled,requested,client.player.isSprinting());
             default: throw new AssertionError(module);
         }
     }
@@ -84,18 +86,62 @@ public final class HudRenderer {
         return placement.resolve(width, height, textWidth(client, text), 10);
     }
     public static int moduleWidth(MinecraftClient client,HudModule module,String text) {
+        HudContentSettings content=SpaceClient.hud.getConfig().active().content();
+        if(module==HudModule.SPRINT_STATUS&&content.sprintDisplay==HudContentSettings.SprintDisplay.COMPACT)return textWidth(client,text)+12;
         if(module!=HudModule.KEYSTROKES)return textWidth(client,text);
+        if(content.keyLayout==HudContentSettings.KeyLayout.BLOCK)return block(client,keys(client,content),content).width;
         int width=2;
         for(KeystrokesHud.Key key:keys(client,SpaceClient.hud.getConfig().active().content()))
             width+=KeystrokesHud.cellWidth(key,client.textRenderer::getStringWidth);
         return width;
     }
+    public static int moduleHeight(MinecraftClient client,HudModule module) {
+        HudContentSettings c=SpaceClient.hud.getConfig().active().content();
+        if(module==HudModule.KEYSTROKES&&c.keyLayout==HudContentSettings.KeyLayout.BLOCK)return block(client,keys(client,c),c).height;
+        return module==HudModule.SPRINT_STATUS&&c.sprintDisplay==HudContentSettings.SprintDisplay.COMPACT?14:10;
+    }
+    private static KeystrokesLayout block(MinecraftClient client,KeystrokesHud.Key[] keys,HudContentSettings content) {
+        return KeystrokesLayout.block(keys,content.keystrokesJump,content.keystrokesMouse,client.textRenderer::getStringWidth);
+    }
     public static HudPlacement.Bounds bounds(MinecraftClient client,HudModule module,String text,HudPlacement placement,int width,int height) {
-        return placement.resolve(width,height,moduleWidth(client,module,text),10);
+        return placement.resolve(width,height,moduleWidth(client,module,text),moduleHeight(client,module));
     }
     public static void drawModule(MinecraftClient client,HudModule module,String text,HudPlacement.Bounds bounds,HudAppearance appearance,int color) {
+        HudContentSettings content=SpaceClient.hud.getConfig().active().content();
+        if(module==HudModule.SPRINT_STATUS&&content.sprintDisplay==HudContentSettings.SprintDisplay.COMPACT){drawSprint(client,text,bounds,appearance,color);return;}
         if(module!=HudModule.KEYSTROKES){draw(client,text,bounds,appearance,color);return;}
-        drawKeys(client,keys(client,SpaceClient.hud.getConfig().active().content()),bounds,appearance,color);
+        KeystrokesHud.Key[] keys=keys(client,content);
+        if(content.keyLayout==HudContentSettings.KeyLayout.BLOCK)drawBlock(client,keys,block(client,keys,content),bounds,appearance,color);
+        else drawKeys(client,keys,bounds,appearance,color);
+    }
+    private static void drawSprint(MinecraftClient client,String text,HudPlacement.Bounds b,HudAppearance appearance,int color) {
+        boolean enabled=SpaceClient.mods!=null&&SpaceClient.mods.autoSprint();
+        boolean requested=enabled&&SprintRuntime.state.requested(true,SpaceClient.mods.sprintMode());
+        int dot=!requested?0x90959E:client.player!=null&&client.player.isSprinting()?0x81D496:HUD_ACCENT;
+        GlStateManager.pushMatrix();
+        try {
+            GlStateManager.translate(b.x,b.y,0);GlStateManager.scale(b.scale,b.scale,1);
+            int alpha=backdropAlpha(appearance);
+            if(alpha!=0)UiShapes.rounded(0,0,textWidth(client,text)+12,14,4,(alpha<<24)|BACKDROP_RGB);
+            UiShapes.rounded(3,4,5,5,2.5f,0xFF000000|dot);
+            client.textRenderer.draw(text,12,2,color,appearance.shadow);
+        } finally {GlStateManager.popMatrix();}
+    }
+    private static void drawBlock(MinecraftClient client,KeystrokesHud.Key[] keys,KeystrokesLayout layout,HudPlacement.Bounds b,HudAppearance appearance,int color) {
+        GlStateManager.pushMatrix();
+        try {
+            GlStateManager.translate(b.x,b.y,0);GlStateManager.scale(b.scale,b.scale,1);
+            int alpha=backdropAlpha(appearance);
+            for(KeystrokesLayout.Cell cell:layout.cells) {
+                KeystrokesHud.Key key=keys[cell.keyIndex];
+                if(key.pressed||alpha!=0)UiShapes.rounded(cell.x,cell.y,cell.width,cell.height,3,
+                    key.pressed?0xF0000000|color:(alpha<<24)|BACKDROP_RGB);
+                String label=key.label;int max=cell.width-6;
+                if(client.textRenderer.getStringWidth(label)>max)label=client.textRenderer.trimToWidth(label,Math.max(0,max-client.textRenderer.getStringWidth("..")))+"..";
+                client.textRenderer.draw(label,cell.x+(cell.width-client.textRenderer.getStringWidth(label))/2f,cell.y+5,
+                    key.pressed?BACKDROP_RGB:color,!key.pressed&&appearance.shadow);
+            }
+        } finally {GlStateManager.popMatrix();}
     }
     public static void drawKeys(MinecraftClient client,KeystrokesHud.Key[] keys,HudPlacement.Bounds bounds,HudAppearance appearance,int color) {
         GlStateManager.pushMatrix();

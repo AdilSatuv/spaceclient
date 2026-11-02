@@ -44,9 +44,9 @@ public final class HudConfig {
         Properties properties = readProperties(file);
         String schema = properties.getProperty("schemaVersion", "1");
         if (!schema.matches("[1-9][0-9]*")) throw new InvalidConfigException("Invalid HUD schema version");
-        if (!schema.matches("[1-9]|1[0-2]")) throw new UnsupportedSchemaException();
+        if (!schema.matches("[1-9]|1[0-3]")) throw new UnsupportedSchemaException();
         int version = Integer.parseInt(schema);
-        if (version != 12) config.migrationSourceVersion = version;
+        if (version != 13) config.migrationSourceVersion = version;
         if (schema.equals("1")) {
             config.profiles[0] = readProfile(properties, "", "Profile 1", version);
             config.profiles[1] = config.profiles[0].copy();
@@ -75,6 +75,8 @@ public final class HudConfig {
                 removeContextFields(required, "profile." + i + ".");
             if (version < 12) for (int i = 0; i < config.profiles.length; i++)
                 removeContextContentFields(required, "profile." + i + ".");
+            if (version < 13) for (int i = 0; i < config.profiles.length; i++)
+                removeWidgetFormats(required, "profile." + i + ".");
             if (!properties.stringPropertyNames().containsAll(required.stringPropertyNames()))
                 throw new InvalidConfigException("Incomplete HUD schema " + schema + " configuration");
         }
@@ -158,7 +160,9 @@ public final class HudConfig {
                     version < 12 || readBoolean(properties,prefix + "content.ping.label"),
                     version < 12 || readBoolean(properties,prefix + "content.biome.label"),
                     version < 12 || readBoolean(properties,prefix + "content.packs.label"),
-                    version < 12 ? 2 : Integer.parseInt(properties.getProperty(prefix + "content.packs.names", ""))));
+                    version < 12 ? 2 : Integer.parseInt(properties.getProperty(prefix + "content.packs.names", "")),
+                    version < 13 ? HudContentSettings.KeyLayout.LINE : HudContentSettings.KeyLayout.valueOf(properties.getProperty(prefix + "content.keystrokes.layout", "")),
+                    version < 13 ? HudContentSettings.SprintDisplay.FULL : HudContentSettings.SprintDisplay.valueOf(properties.getProperty(prefix + "content.sprint.display", ""))));
             }
             return profile;
         } catch (IllegalArgumentException exception) { throw new InvalidConfigException("Invalid HUD profile", exception); }
@@ -208,6 +212,8 @@ public final class HudConfig {
         properties.setProperty(prefix + "content.biome.label", Boolean.toString(content.biomeLabel));
         properties.setProperty(prefix + "content.packs.label", Boolean.toString(content.packLabel));
         properties.setProperty(prefix + "content.packs.names", Integer.toString(content.packNames));
+        properties.setProperty(prefix + "content.keystrokes.layout", content.keyLayout.name());
+        properties.setProperty(prefix + "content.sprint.display", content.sprintDisplay.name());
         for (HudModule module : HudModule.values()) {
             HudPlacement placement = profile.placement(module);
             String key = prefix + "layout." + module.getId() + ".";
@@ -226,7 +232,7 @@ public final class HudConfig {
 
     public void save(Path file) throws IOException {
         Properties properties = new Properties();
-        properties.setProperty("schemaVersion", "12");
+        properties.setProperty("schemaVersion", "13");
         properties.setProperty("activeProfile", Integer.toString(activeProfile));
         for (int i = 0; i < profiles.length; i++) writeProfile(properties, "profile." + i + ".", profiles[i]);
         writeAtomic(file, properties);
@@ -235,7 +241,7 @@ public final class HudConfig {
     public static void exportProfile(Path file, HudProfile profile) throws IOException {
         Properties properties = new Properties();
         properties.setProperty("format", "spaceclient-hud-profile");
-        properties.setProperty("schemaVersion", "7");
+        properties.setProperty("schemaVersion", "8");
         writeProfile(properties, "", profile);
         writeAtomic(file, properties);
     }
@@ -244,7 +250,7 @@ public final class HudConfig {
         Properties properties = readProperties(file);
         String version = properties.getProperty("schemaVersion");
         if (!"spaceclient-hud-profile".equals(properties.getProperty("format"))
-                || version == null || !version.matches("[1-7]"))
+                || version == null || !version.matches("[1-8]"))
             throw new InvalidConfigException("Unsupported HUD profile export");
         HudProfile profile = readProfile(properties, "", "Imported", Integer.parseInt(version) + 5);
         Properties expected = new Properties();
@@ -256,6 +262,7 @@ public final class HudConfig {
         if (Integer.parseInt(version) < 5) removeSprintFields(expected, "");
         if (Integer.parseInt(version) < 6) removeContextFields(expected, "");
         if (Integer.parseInt(version) < 7) removeContextContentFields(expected, "");
+        if (Integer.parseInt(version) < 8) removeWidgetFormats(expected, "");
         if (!"1".equals(version)) {
             if (!properties.stringPropertyNames().equals(expected.stringPropertyNames()))
                 throw new InvalidConfigException("Incomplete or unknown HUD profile fields");
@@ -289,6 +296,7 @@ public final class HudConfig {
 
     private static void removeContentFields(Properties properties, String prefix) {
         removeContextContentFields(properties, prefix);
+        removeWidgetFormats(properties, prefix);
         properties.remove(prefix + "content.coordinates.precision");
         properties.remove(prefix + "content.clock.format");
         properties.remove(prefix + "content.clock.seconds");
@@ -296,6 +304,9 @@ public final class HudConfig {
         properties.remove(prefix + "content.cps.mode");
         properties.remove(prefix + "content.keystrokes.jump");
         properties.remove(prefix + "content.keystrokes.mouse");
+    }
+    private static void removeWidgetFormats(Properties properties, String prefix) {
+        properties.remove(prefix + "content.keystrokes.layout"); properties.remove(prefix + "content.sprint.display");
     }
     private static void removeContextContentFields(Properties properties, String prefix) {
         for (String key : new String[]{"ping.label","biome.label","packs.label","packs.names"}) properties.remove(prefix + "content." + key);

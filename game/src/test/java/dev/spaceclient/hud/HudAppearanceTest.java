@@ -83,7 +83,7 @@ public class HudAppearanceTest {
         assertConfigured(HudConfig.load(file()).profile(0).appearance(HudModule.FPS));
         Properties properties = new Properties();
         try (java.io.InputStream in = Files.newInputStream(file())) { properties.load(in); }
-        assertEquals("12", properties.getProperty("schemaVersion"));
+        assertEquals("13", properties.getProperty("schemaVersion"));
     }
     @Test public void failedAppearanceWriteRestoresSnapshot() throws Exception {
         HudSettings settings = HudSettings.open(file());

@@ -31,16 +31,18 @@ public final class HudModuleSettingsScreen extends Screen {
     private HudAppearance appearance() { return settings().getConfig().active().appearance(module); }
     private HudContentSettings content() { return settings().getConfig().active().content(); }
     private boolean hasContentSettings() {
-        return module == HudModule.COORDINATES || module == HudModule.CLOCK || module == HudModule.FPS || module == HudModule.CPS || module == HudModule.KEYSTROKES || contextModule();
+        return module == HudModule.COORDINATES || module == HudModule.CLOCK || module == HudModule.FPS || module == HudModule.CPS || module == HudModule.KEYSTROKES || module == HudModule.SPRINT_STATUS || contextModule();
     }
     private boolean contextModule() { return module == HudModule.PING || module == HudModule.BIOME || module == HudModule.PACK_DISPLAY; }
+    private int previewExtra() { return module == HudModule.KEYSTROKES && content().keyLayout == HudContentSettings.KeyLayout.BLOCK ? 70 : 0; }
+    private int panelHeight() { return 224 + previewExtra(); }
     private boolean roomy() { return width >= 320 && height >= 240; }
 
     @Override public void init() {
         viewport = new HudViewport(width, height);
         panelWidth = Math.max(0, Math.min(500, viewport.width - 24));
         left = (viewport.width - panelWidth) / 2;
-        top = (viewport.height - 224) / 2;
+        top = (viewport.height - panelHeight()) / 2;
         SpaceClient.clicks.clear();
     }
     @Override public void removed() {
@@ -63,50 +65,54 @@ public final class HudModuleSettingsScreen extends Screen {
         } finally { GlStateManager.popMatrix(); }
     }
     private void renderPanel(int mouseX, int mouseY) {
-        rounded(left + 2, top + 3, panelWidth, 224, 0x90000000);
-        rounded(left, top, panelWidth, 224, BORDER);
-        rounded(left + 1, top + 1, panelWidth - 2, 222, PANEL);
+        int bodyTop = top + previewExtra();
+        rounded(left + 2, top + 3, panelWidth, panelHeight(), 0x90000000);
+        rounded(left, top, panelWidth, panelHeight(), BORDER);
+        rounded(left + 1, top + 1, panelWidth - 2, panelHeight()-2, PANEL);
         SpaceUiFont.draw(client, "MODULE", left + 14, top + 12, ACCENT);
         SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(module.getTitle(), panelWidth - 28), left + 14, top + 29, TEXT);
         drawPreview();
-        fill(left + 14, top + 61, left + panelWidth - 14, top + 62, BORDER);
+        fill(left + 14, bodyTop + 61, left + panelWidth - 14, bodyTop + 62, BORDER);
         if (tab == 2) {
-            if (contextModule()) {
-                SpaceUiFont.draw(client,"Show label",left+16,top+73,TEXT);
+            if (module == HudModule.SPRINT_STATUS) {
+                SpaceUiFont.draw(client,"Display style",left+16,bodyTop+73,TEXT);
+                SpaceUiFont.draw(client,"Compact shows armed and running state",left+16,bodyTop+101,MUTED);
+            } else if (contextModule()) {
+                SpaceUiFont.draw(client,"Show label",left+16,bodyTop + 73,TEXT);
                 if (module == HudModule.PACK_DISPLAY) {
-                    SpaceUiFont.draw(client,"Visible pack names",left+16,top+101,TEXT);
-                    SpaceUiFont.draw(client,"Remaining packs shown as +N",left+16,top+129,MUTED);
-                } else SpaceUiFont.draw(client,"Off shows only the value",left+16,top+101,MUTED);
+                    SpaceUiFont.draw(client,"Visible pack names",left+16,bodyTop + 101,TEXT);
+                    SpaceUiFont.draw(client,"Remaining packs shown as +N",left+16,bodyTop + 129,MUTED);
+                } else SpaceUiFont.draw(client,"Off shows only the value",left+16,bodyTop + 101,MUTED);
             } else if (module == HudModule.KEYSTROKES) {
-                SpaceUiFont.draw(client,"Jump key",left+16,top+73,TEXT);
-                SpaceUiFont.draw(client,"Attack / use keys",left+16,top+101,TEXT);
-                SpaceUiFont.draw(client,"Uses your current key bindings",left+16,top+129,MUTED);
+                SpaceUiFont.draw(client,"Jump key",left+16,bodyTop + 73,TEXT);
+                SpaceUiFont.draw(client,"Attack / use keys",left+16,bodyTop + 101,TEXT);
+                SpaceUiFont.draw(client,"Layout",left+16,bodyTop + 129,TEXT);
             } else if (module == HudModule.COORDINATES) {
-                SpaceUiFont.draw(client, "Decimal places", left + 16, top + 73, TEXT);
-                SpaceUiFont.draw(client, "0 rounds to a whole number", left + 16, top + 101, MUTED);
+                SpaceUiFont.draw(client, "Decimal places", left + 16, bodyTop + 73, TEXT);
+                SpaceUiFont.draw(client, "0 rounds to a whole number", left + 16, bodyTop + 101, MUTED);
             } else if (module == HudModule.FPS) {
-                SpaceUiFont.draw(client, "Show FPS label", left + 16, top + 73, TEXT);
-                SpaceUiFont.draw(client, "Off shows only the number", left + 16, top + 101, MUTED);
+                SpaceUiFont.draw(client, "Show FPS label", left + 16, bodyTop + 73, TEXT);
+                SpaceUiFont.draw(client, "Off shows only the number", left + 16, bodyTop + 101, MUTED);
             } else if (module == HudModule.CPS) {
-                SpaceUiFont.draw(client, "Mouse buttons", left + 16, top + 73, TEXT);
-                SpaceUiFont.draw(client, "Choose both, left or right", left + 16, top + 101, MUTED);
+                SpaceUiFont.draw(client, "Mouse buttons", left + 16, bodyTop + 73, TEXT);
+                SpaceUiFont.draw(client, "Choose both, left or right", left + 16, bodyTop + 101, MUTED);
             } else {
-                SpaceUiFont.draw(client, "Time format", left + 16, top + 73, TEXT);
-                SpaceUiFont.draw(client, "Show seconds", left + 16, top + 101, TEXT);
-                SpaceUiFont.draw(client, "Uses your local time", left + 16, top + 129, MUTED);
+                SpaceUiFont.draw(client, "Time format", left + 16, bodyTop + 73, TEXT);
+                SpaceUiFont.draw(client, "Show seconds", left + 16, bodyTop + 101, TEXT);
+                SpaceUiFont.draw(client, "Uses your local time", left + 16, bodyTop + 129, MUTED);
             }
-            SpaceUiFont.draw(client, "Reset content", left + 16, top + 157, MUTED);
+            SpaceUiFont.draw(client, "Reset content", left + 16, bodyTop + 157, MUTED);
         } else if (tab == 1) {
-            SpaceUiFont.draw(client, "Text color", left + 16, top + 73, TEXT);
-            SpaceUiFont.draw(client, "Background", left + 16, top + 101, TEXT);
-            SpaceUiFont.draw(client, "Text shadow", left + 16, top + 129, TEXT);
-            SpaceUiFont.draw(client, "Reset appearance", left + 16, top + 157, MUTED);
+            SpaceUiFont.draw(client, "Text color", left + 16, bodyTop + 73, TEXT);
+            SpaceUiFont.draw(client, "Background", left + 16, bodyTop + 101, TEXT);
+            SpaceUiFont.draw(client, "Text shadow", left + 16, bodyTop + 129, TEXT);
+            SpaceUiFont.draw(client, "Reset appearance", left + 16, bodyTop + 157, MUTED);
         } else {
-            SpaceUiFont.draw(client, "Enabled", left + 16, top + 73, TEXT);
-            SpaceUiFont.draw(client, "Scale", left + 16, top + 101, TEXT);
-            SpaceUiFont.draw(client, String.format(Locale.ROOT, "%.1fx", placement().scale), left + panelWidth - 114, top + 101, TEXT);
-            SpaceUiFont.draw(client, "Anchor", left + 16, top + 129, TEXT);
-            SpaceUiFont.draw(client, "Reset this module's placement", left + 16, top + 157, MUTED);
+            SpaceUiFont.draw(client, "Enabled", left + 16, bodyTop + 73, TEXT);
+            SpaceUiFont.draw(client, "Scale", left + 16, bodyTop + 101, TEXT);
+            SpaceUiFont.draw(client, String.format(Locale.ROOT, "%.1fx", placement().scale), left + panelWidth - 114, bodyTop + 101, TEXT);
+            SpaceUiFont.draw(client, "Anchor", left + 16, bodyTop + 129, TEXT);
+            SpaceUiFont.draw(client, "Reset this module's placement", left + 16, bodyTop + 157, MUTED);
         }
         List<Action> visible = controls();
         for (int i = 0; i < visible.size(); i++) {
@@ -126,13 +132,14 @@ public final class HudModuleSettingsScreen extends Screen {
             notice = "Lighter background may reduce readability";
         if (notice.isEmpty() && placement().scale > 1.4) notice = "Preview fitted to the available space";
         if (notice.isEmpty()) notice = status.isEmpty() ? "Tab: select  |  Enter / Space: activate" : status;
-        SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(notice, panelWidth - 28), left + 14, top + 181,
+        SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(notice, panelWidth - 28), left + 14, bodyTop + 181,
             settings().getError().isEmpty() ? MUTED : ACCENT);
     }
 
     private List<Action> controls() {
         List<Action> actions = new ArrayList<>();
         boolean editable = !settings().isReadOnly();
+        int bodyTop = top + previewExtra();
         int right = left + panelWidth - 14;
         HudPlacement p = placement();
         String anchor = (p.horizontal == HudPlacement.Horizontal.LEFT ? "L" : "R") + "/"
@@ -147,39 +154,42 @@ public final class HudModuleSettingsScreen extends Screen {
         }
         if (tab == 2 && hasContentSettings()) {
             HudContentSettings c = content();
-            if (contextModule()) {
+            if (module == HudModule.SPRINT_STATUS) {
+                actions.add(new Action(25,label(c.sprintDisplay.name())+"  >",right-98,bodyTop+67,98,editable));
+            } else if (contextModule()) {
                 boolean label = module == HudModule.PING ? c.pingLabel : module == HudModule.BIOME ? c.biomeLabel : c.packLabel;
-                actions.add(new Action(22,label?"ON":"OFF",right-98,top+67,98,editable));
-                if (module == HudModule.PACK_DISPLAY) actions.add(new Action(23,c.packNames+"  >",right-98,top+95,98,editable));
+                actions.add(new Action(22,label?"ON":"OFF",right-98,bodyTop + 67,98,editable));
+                if (module == HudModule.PACK_DISPLAY) actions.add(new Action(23,c.packNames+"  >",right-98,bodyTop + 95,98,editable));
             } else if (module == HudModule.KEYSTROKES) {
-                actions.add(new Action(20,c.keystrokesJump?"ON":"OFF",right-98,top+67,98,editable));
-                actions.add(new Action(21,c.keystrokesMouse?"ON":"OFF",right-98,top+95,98,editable));
+                actions.add(new Action(20,c.keystrokesJump?"ON":"OFF",right-98,bodyTop + 67,98,editable));
+                actions.add(new Action(21,c.keystrokesMouse?"ON":"OFF",right-98,bodyTop + 95,98,editable));
+                actions.add(new Action(24,label(c.keyLayout.name())+"  >",right-98,bodyTop+123,98,editable));
             } else if (module == HudModule.COORDINATES) {
-                actions.add(new Action(14, Integer.toString(c.coordinatesPrecision) + "  >", right - 98, top + 67, 98, editable));
+                actions.add(new Action(14, Integer.toString(c.coordinatesPrecision) + "  >", right - 98, bodyTop + 67, 98, editable));
             } else if (module == HudModule.FPS) {
-                actions.add(new Action(18, c.fpsLabel ? "ON" : "OFF", right - 98, top + 67, 98, editable));
+                actions.add(new Action(18, c.fpsLabel ? "ON" : "OFF", right - 98, bodyTop + 67, 98, editable));
             } else if (module == HudModule.CPS) {
-                actions.add(new Action(19, label(c.cpsMode.name()) + "  >", right - 98, top + 67, 98, editable));
+                actions.add(new Action(19, label(c.cpsMode.name()) + "  >", right - 98, bodyTop + 67, 98, editable));
             } else {
-                actions.add(new Action(15, (c.clockFormat == HudContentSettings.ClockFormat.H24 ? "24 hour" : "12 hour") + "  >", right - 98, top + 67, 98, editable));
-                actions.add(new Action(16, c.clockSeconds ? "ON" : "OFF", right - 98, top + 95, 98, editable));
+                actions.add(new Action(15, (c.clockFormat == HudContentSettings.ClockFormat.H24 ? "24 hour" : "12 hour") + "  >", right - 98, bodyTop + 67, 98, editable));
+                actions.add(new Action(16, c.clockSeconds ? "ON" : "OFF", right - 98, bodyTop + 95, 98, editable));
             }
-            actions.add(new Action(17, "Reset", right - 98, top + 151, 98, editable));
+            actions.add(new Action(17, "Reset", right - 98, bodyTop + 151, 98, editable));
         } else if (tab == 1) {
             HudAppearance a = appearance();
-            actions.add(new Action(8, label(a.color.name()) + "  >", right - 98, top + 67, 98, editable));
-            actions.add(new Action(9, label(a.backdrop.name()) + "  >", right - 98, top + 95, 98, editable));
-            actions.add(new Action(10, a.shadow ? "ON" : "OFF", right - 98, top + 123, 98, editable));
-            actions.add(new Action(11, "Reset", right - 98, top + 151, 98, editable));
+            actions.add(new Action(8, label(a.color.name()) + "  >", right - 98, bodyTop + 67, 98, editable));
+            actions.add(new Action(9, label(a.backdrop.name()) + "  >", right - 98, bodyTop + 95, 98, editable));
+            actions.add(new Action(10, a.shadow ? "ON" : "OFF", right - 98, bodyTop + 123, 98, editable));
+            actions.add(new Action(11, "Reset", right - 98, bodyTop + 151, 98, editable));
         } else {
-            actions.add(new Action(0, module.isEnabled(settings().getConfig()) ? "ON" : "OFF", right - 54, top + 67, 54, editable));
-            actions.add(new Action(1, "-", right - 142, top + 95, 26, editable && p.scale > 0.5));
-            actions.add(new Action(2, "+", right - 54, top + 95, 26, editable && p.scale < 3.0));
-            actions.add(new Action(3, anchor + "  >", right - 54, top + 123, 54, editable && client.player != null));
-            actions.add(new Action(4, "Reset", right - 54, top + 151, 54, editable));
+            actions.add(new Action(0, module.isEnabled(settings().getConfig()) ? "ON" : "OFF", right - 54, bodyTop + 67, 54, editable));
+            actions.add(new Action(1, "-", right - 142, bodyTop + 95, 26, editable && p.scale > 0.5));
+            actions.add(new Action(2, "+", right - 54, bodyTop + 95, 26, editable && p.scale < 3.0));
+            actions.add(new Action(3, anchor + "  >", right - 54, bodyTop + 123, 54, editable && client.player != null));
+            actions.add(new Action(4, "Reset", right - 54, bodyTop + 151, 54, editable));
         }
-        actions.add(new Action(5, "Edit layout", right - 154, top + 196, 90, true));
-        actions.add(new Action(6, "Back", right - 58, top + 196, 58, true));
+        actions.add(new Action(5, "Edit layout", right - 154, bodyTop + 196, 90, true));
+        actions.add(new Action(6, "Back", right - 58, bodyTop + 196, 58, true));
         return actions;
     }
 
@@ -217,7 +227,9 @@ public final class HudModuleSettingsScreen extends Screen {
         if (id == 5) { client.setScreen(new HudEditorScreen(this, module)); return; }
         if (settings().isReadOnly()) return;
         boolean saved;
-        if (id == 22) saved = settings().content(module == HudModule.PING ? content().withPingLabel(!content().pingLabel)
+        if (id == 24) saved = settings().content(content().withKeyLayout(content().keyLayout==HudContentSettings.KeyLayout.LINE ? HudContentSettings.KeyLayout.BLOCK : HudContentSettings.KeyLayout.LINE));
+        else if (id == 25) saved = settings().content(content().withSprintDisplay(content().sprintDisplay==HudContentSettings.SprintDisplay.FULL ? HudContentSettings.SprintDisplay.COMPACT : HudContentSettings.SprintDisplay.FULL));
+        else if (id == 22) saved = settings().content(module == HudModule.PING ? content().withPingLabel(!content().pingLabel)
             : module == HudModule.BIOME ? content().withBiomeLabel(!content().biomeLabel) : content().withPackLabel(!content().packLabel));
         else if (id == 23) saved = settings().content(content().withPackNames(content().packNames % 3 + 1));
         else if (id == 20) saved = settings().content(content().withKeystrokesJump(!content().keystrokesJump));
@@ -241,7 +253,8 @@ public final class HudModuleSettingsScreen extends Screen {
             else if (module == HudModule.CLOCK) c = c.withClockFormat(HudContentSettings.ClockFormat.H24).withClockSeconds(true);
             else if (module == HudModule.FPS) c = c.withFpsLabel(true);
             else if (module == HudModule.CPS) c = c.withCpsMode(HudContentSettings.CpsMode.BOTH);
-            else if (module == HudModule.KEYSTROKES) c = c.withKeystrokesJump(true).withKeystrokesMouse(true);
+            else if (module == HudModule.KEYSTROKES) c = c.withKeystrokesJump(true).withKeystrokesMouse(true).withKeyLayout(HudContentSettings.KeyLayout.LINE);
+            else if (module == HudModule.SPRINT_STATUS) c = c.withSprintDisplay(HudContentSettings.SprintDisplay.FULL);
             else if (module == HudModule.PING) c = c.withPingLabel(true);
             else if (module == HudModule.BIOME) c = c.withBiomeLabel(true);
             else if (module == HudModule.PACK_DISPLAY) c = c.withPackLabel(true).withPackNames(2);
@@ -266,34 +279,29 @@ public final class HudModuleSettingsScreen extends Screen {
             int next = (p.horizontal.ordinal() * 2 + p.vertical.ordinal() + 1) % 4;
             String text = HudRenderer.text(client, module);
             saved = settings().place(module, p.anchored(HudPlacement.Horizontal.values()[next / 2],
-                HudPlacement.Vertical.values()[next % 2], width, height, HudRenderer.moduleWidth(client, module, text), 10));
+                HudPlacement.Vertical.values()[next % 2], width, height, HudRenderer.moduleWidth(client, module, text), HudRenderer.moduleHeight(client,module)));
         } else if (id == 4) saved = settings().reset(module);
         else return;
+        top = (viewport.height - panelHeight()) / 2;
         status = saved ? "Saved to the active profile" : settings().getError();
     }
     /** A compact sample uses the same font, color and backdrop as the actual HUD. */
     private void drawPreview() {
-        double scale = previewScale(placement().scale);
-        SpaceUiFont.draw(client, placement().scale > scale ? "Preview*" : "Preview", left + 14, top + 44, MUTED);
-        int x = left + 78;
-        int available = panelWidth - 94;
-        fill(x - 2, top + 41, left + panelWidth - 14, top + 58, 0xFF555359);
-        if (client.player == null) {
-            SpaceUiFont.draw(client, SpaceUiFont.trimToWidth("Unavailable", available), x + 2, top + 44, TEXT);
-            return;
+        int x=left+78,available=panelWidth-94,previewHeight=17+previewExtra();
+        fill(x-2,top+41,left+panelWidth-14,top+41+previewHeight,0xFF555359);
+        if(client.player==null) {
+            SpaceUiFont.draw(client,"Preview",left+14,top+44,MUTED);
+            SpaceUiFont.draw(client,"Unavailable",x+2,top+44,TEXT);return;
         }
-        String text = HudRenderer.text(client, module);
-        int maxTextWidth = Math.max(1, (int) Math.floor((available - 6) / scale));
-        String sample = client.textRenderer.trimToWidth(text, maxTextWidth);
-        if (client.textRenderer.getStringWidth(text) > maxTextWidth) {
-            String ellipsis = "...";
-            int prefixWidth = Math.max(0, maxTextWidth - client.textRenderer.getStringWidth(ellipsis));
-            sample = client.textRenderer.trimToWidth(text, prefixWidth) + ellipsis;
-        }
-        if (sample.isEmpty()) return;
-        HudPlacement inPanel = new HudPlacement(HudPlacement.Horizontal.LEFT, HudPlacement.Vertical.TOP, x + 2, top + 43, scale);
-        HudPlacement.Bounds b = HudRenderer.bounds(client, sample, inPanel, viewport.width, viewport.height);
-        HudRenderer.draw(client, sample, b, appearance(), HudRenderer.color(module, appearance()));
+        String text=HudRenderer.text(client,module);
+        HudPlacement sample=new HudPlacement(HudPlacement.Horizontal.LEFT,HudPlacement.Vertical.TOP,0,0,previewScale(placement().scale));
+        HudPlacement.Bounds b=sample.resolve(available-6,previewHeight-4,HudRenderer.moduleWidth(client,module,text),HudRenderer.moduleHeight(client,module));
+        SpaceUiFont.draw(client,b.scale<placement().scale?"Preview*":"Preview",left+14,top+44,MUTED);
+        GlStateManager.pushMatrix();
+        try {
+            GlStateManager.translate(x+2,top+43,0);
+            HudRenderer.drawModule(client,module,text,b,appearance(),HudRenderer.color(module,appearance()));
+        } finally {GlStateManager.popMatrix();}
     }
     /** The short preview row fits up to 1.4x; larger preferred scales stay saved unchanged. */
     static double previewScale(double preferred) { return Math.min(1.4, preferred); }

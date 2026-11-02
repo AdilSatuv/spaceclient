@@ -6,6 +6,13 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class SprintStatusTest {
+    @Test public void compactTextKeepsArmedAndActualMovementStatesDistinct() {
+        assertEquals("Sprint OFF",SprintStatus.compact(false,true,true));
+        assertEquals("Sprint OFF",SprintStatus.compact(true,false,false));
+        assertEquals("Sprint ON / READY",SprintStatus.compact(true,true,false));
+        assertEquals("Sprint ON / RUN",SprintStatus.compact(true,true,true));
+        assertEquals("Sprint OFF / RUN",SprintStatus.compact(true,false,true));
+    }
     @Test public void showsModuleAndToggleStateSeparatelyFromActualVanillaSprinting() {
         SprintState state=new SprintState();
         assertEquals("ToggleSprint: OFF | Disabled",SprintStatus.text(false,false,false));

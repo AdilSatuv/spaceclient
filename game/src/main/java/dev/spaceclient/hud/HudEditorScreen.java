@@ -294,7 +294,7 @@ public final class HudEditorScreen extends Screen {
                 HudPlacement.Bounds b=bounds(selected);
                 double[] p=HudAlignment.snap(px,py,b.width,b.height,width,height,neighbours,grid);px=p[0];py=p[1];
             }
-            draft=placement().at(px,py,width,height,HudRenderer.moduleWidth(client,selected,label(selected)),10,!hasShiftDown());
+            draft=placement().at(px,py,width,height,HudRenderer.moduleWidth(client,selected,label(selected)),HudRenderer.moduleHeight(client,selected),!hasShiftDown());
         }
     }
     @Override protected void mouseReleased(int x, int y, int button) {
@@ -369,7 +369,7 @@ public final class HudEditorScreen extends Screen {
     private void nudge(int dx, int dy) {
         HudPlacement.Bounds b = bounds(selected);
         if(hasShiftDown()){dx*=10;dy*=10;}
-        draft = placement().at(b.x + dx, b.y + dy, width, height, HudRenderer.moduleWidth(client, selected, label(selected)), 10, false);
+        draft = placement().at(b.x + dx, b.y + dy, width, height, HudRenderer.moduleWidth(client, selected, label(selected)), HudRenderer.moduleHeight(client,selected), false);
     }
     private void scale(double delta) {
         draft = placement().withScale(Math.max(0.5, Math.min(3, Math.round((placement().scale + delta) * 10) / 10.0)));
@@ -413,7 +413,7 @@ public final class HudEditorScreen extends Screen {
         else if (id == 22) {
             int anchor = (placement().horizontal.ordinal() * 2 + placement().vertical.ordinal() + 1) % 4;
             draft = placement().anchored(HudPlacement.Horizontal.values()[anchor / 2], HudPlacement.Vertical.values()[anchor % 2],
-                width, height, HudRenderer.moduleWidth(client, selected, label(selected)), 10);
+                width, height, HudRenderer.moduleWidth(client, selected, label(selected)), HudRenderer.moduleHeight(client,selected));
             commitDraft(); return;
         } else if (id >= 40 && id <= 43) {
             nudge(id == 40 ? -1 : id == 41 ? 1 : 0, id == 42 ? -1 : id == 43 ? 1 : 0);

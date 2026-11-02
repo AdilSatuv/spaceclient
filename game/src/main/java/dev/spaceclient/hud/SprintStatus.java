@@ -8,4 +8,8 @@ public final class SprintStatus {
         return "ToggleSprint: " + (requested ? "ON" : "OFF")
             + (sprinting ? " | Sprinting" : requested ? " | Ready" : "");
     }
+    public static String compact(boolean moduleEnabled, boolean requested, boolean sprinting) {
+        if(!moduleEnabled)return "Sprint OFF";
+        return "Sprint " + (requested?"ON":"OFF") + (sprinting?" / RUN":requested?" / READY":"");
+    }
 }
