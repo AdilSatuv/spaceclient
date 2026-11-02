@@ -136,6 +136,7 @@ public final class GameModuleSettingsScreen extends Screen {
         int i=a.size(),w=(panelWidth-52)/2;
         a.add(new Action(id,label,value,left+20+(i%2)*(w+12),top+86+(i/2)*34,w));
     }
+    private static int step(int current,int min,int max,int amount,int direction){return min+Math.floorMod((current-min)/amount+direction,(max-min)/amount+1)*amount;}
     private static String label(String s){return s.substring(0,1)+s.substring(1).toLowerCase(Locale.ROOT);}
     @Override protected void keyPressed(char c,int key){
         if(capturing){
@@ -180,13 +181,13 @@ public final class GameModuleSettingsScreen extends Screen {
         else if(id==18)saved=settings().durabilityThreshold(ModSettings.DurabilityThreshold.values()[Math.floorMod(settings().durabilityThreshold().ordinal()+direction,ModSettings.DurabilityThreshold.values().length)]);
         else if(id==19)saved=settings().blockColor(VisualPalette.values()[Math.floorMod(settings().blockColor().ordinal()+direction,VisualPalette.values().length)]);
         else if(id==20)saved=settings().blockMode(ModSettings.BlockMode.values()[Math.floorMod(settings().blockMode().ordinal()+direction,ModSettings.BlockMode.values().length)]);
-        else if(id==21)saved=settings().blockOpacity(5+Math.floorMod(settings().blockOpacity()-5+direction*5,60));
+        else if(id==21)saved=settings().blockOpacity(step(settings().blockOpacity(),5,60,5,direction));
         else if(id==22)saved=settings().blockWidth(1+Math.floorMod(settings().blockWidth()-1+direction,5));
         else if(id==23)saved=settings().damageColor(VisualPalette.values()[Math.floorMod(settings().damageColor().ordinal()+direction,VisualPalette.values().length)]);
-        else if(id==24)saved=settings().hitOpacity(5+Math.floorMod(settings().hitOpacity()-5+direction*5,80));
+        else if(id==24)saved=settings().hitOpacity(step(settings().hitOpacity(),5,80,5,direction));
         else if(id==25)saved=settings().hitPlayersOnly(!settings().hitPlayersOnly());
-        else if(id==26)saved=settings().cameraFov(60+Math.floorMod(settings().cameraFov()-60+direction*5,55));
-        else if(id==27)saved=settings().dynamicFov(Math.floorMod(settings().dynamicFov()+direction*25,125));
+        else if(id==26)saved=settings().cameraFov(step(settings().cameraFov(),60,110,5,direction));
+        else if(id==27)saved=settings().dynamicFov(step(settings().dynamicFov(),0,100,25,direction));
         else if(id==98)saved=settings().reset(module);else return;
         status=saved?"Saved":"Could not save settings";
     }
