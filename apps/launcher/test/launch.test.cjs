@@ -111,6 +111,52 @@ test('output flooding produces bounded fixed diagnostics with no raw output, nic
   assert.equal(value.status('default').phase, 'error');
   assert.equal(value.status('default').exitCode, null);
 });
+test('split Java errors produce a safe cause and next action, retain exit code and reset on retry', async () => {
+  const { value, children, tick } = await service();
+  value.start(profile, 'SpaceTester');
+  await tick();
+  children[0].stderr.write(
+    'Exception in thread SECRET-token SpaceTester C:\\private\\java.exe\nOutOfMem',
+  );
+  children[0].stderr.write('oryError: Java heap space\n');
+  children[0].emit('close', 1, null);
+  await value.settled();
+  const failed = value.status('default');
+  assert.equal(failed.phase, 'error');
+  assert.equal(failed.exitCode, 1);
+  assert.match(failed.message, /нехватке памяти/);
+  assert.match(failed.message, /RAM/);
+  assert.ok(failed.log.includes('Java сообщила о нехватке памяти.'));
+  assert.doesNotMatch(JSON.stringify(failed), /SECRET|SpaceTester|private|java\.exe/);
+  value.start(profile, 'SpaceTester');
+  await tick();
+  children[1].emit('close', 2, null);
+  await value.settled();
+  assert.doesNotMatch(value.status('default').message, /нехватке памяти/);
+  assert.equal(value.running, false);
+});
+test('a failure signature beyond the first output block is diagnosed without exposing the block', async () => {
+  const { value, children, tick } = await service();
+  value.start(profile, 'SpaceTester');
+  await tick();
+  children[0].stderr.write('SECRET'.repeat(4000) + 'Failed to create display: C:\\private\\driver');
+  children[0].emit('close', 1, null);
+  await value.settled();
+  assert.match(value.status('default').message, /OpenGL/);
+  assert.match(value.status('default').message, /драйвер/);
+  assert.doesNotMatch(JSON.stringify(value.status('default')), /SECRET|private/);
+});
+test('diagnostic output never turns a normal process close into a failed launch', async () => {
+  const { value, children, tick } = await service();
+  value.start(profile, 'SpaceTester');
+  await tick();
+  children[0].stderr.write('Exception in thread SECRET');
+  children[0].emit('close', 0, null);
+  await value.settled();
+  assert.equal(value.status('default').phase, 'exited');
+  assert.equal(value.status('default').exitCode, 0);
+  assert.match(value.status('default').message, /Можно запустить снова/);
+});
 test('per-profile processes are independent and shutdown waits for game close without killing a world', async () => {
   const { value, children, tick } = await service();
   value.start(profile, 'SpaceTester');

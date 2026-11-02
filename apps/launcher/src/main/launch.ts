@@ -1,6 +1,7 @@
 import { spawn } from 'node:child_process';
 import { UserFacingError } from './application/user-facing-error.ts';
 import { prepareLocalLaunch } from './launch-plan.ts';
+import { LaunchDiagnostics } from './launch-diagnostics.ts';
 import type { SpaceBundleManifest } from './game-bundle.ts';
 import type { Profile } from '../shared/models.ts';
 import type { LaunchStatus } from '../shared/launch.ts';
@@ -92,27 +93,13 @@ export class LaunchService {
           stdio: ['ignore', 'pipe', 'pipe'],
         });
         let failed = false;
-        const seen = new Set<string>();
+        const diagnostics = new LaunchDiagnostics();
         // Never forward raw stdout/stderr, arguments, paths, nicknames, tokens or stack traces.
-        // Each chunk is bounded and converted to a fixed diagnostic label once per process.
-        const output = (chunk: Buffer) => {
-          const text = chunk.toString('utf8', 0, Math.min(chunk.length, 8192));
-          for (const [pattern, label] of [
-            ['Loading Minecraft', 'Загрузчик начал запуск Minecraft.'],
-            ['Space Client 0.1.0 initialized', 'Игровой мод Space инициализирован.'],
-            ['OpenAL initialized', 'Звуковой движок инициализирован.'],
-            ['OutOfMemoryError', 'Java сообщила о нехватке памяти.'],
-            ['Failed to create display', 'Не удалось создать игровое окно OpenGL.'],
-            ['Exception in thread', 'Java сообщила об ошибке игрового потока.'],
-          ]) {
-            if (text.includes(pattern!) && !seen.has(label!)) {
-              seen.add(label!);
-              this.update(id, {}, label!);
-            }
-          }
+        const output = (stream: 'stdout' | 'stderr', chunk: Buffer) => {
+          for (const label of diagnostics.accept(stream, chunk)) this.update(id, {}, label);
         };
-        child.stdout?.on('data', output);
-        child.stderr?.on('data', output);
+        child.stdout?.on('data', (chunk: Buffer) => output('stdout', chunk));
+        child.stderr?.on('data', (chunk: Buffer) => output('stderr', chunk));
         child.once('spawn', () => {
           job.spawned = true;
           this.update(
@@ -128,6 +115,7 @@ export class LaunchService {
           failed = true;
         });
         child.once('close', (code, signal) => {
+          const failureMessage = diagnostics.finish();
           if (failed) {
             reject(
               new UserFacingError('Не удалось запустить Java. Проверьте сохранённый runtime.'),
@@ -142,7 +130,8 @@ export class LaunchService {
               exitCode: code,
               message: normal
                 ? 'Игра завершена. Можно запустить снова.'
-                : 'Игра завершилась с ошибкой. Проверьте Java и восстановите файлы.',
+                : (failureMessage ??
+                  'Игра завершилась с ошибкой. Проверьте Java и восстановите файлы.'),
             },
             code === null
               ? 'Процесс завершён без кода выхода.'
