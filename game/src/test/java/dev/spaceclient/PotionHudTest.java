@@ -7,6 +7,13 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class PotionHudTest {
+    @Test public void configurableLimitAndHiddenTimersKeepSortedNamesAndHonestOverflow() {
+        java.util.List<PotionHud.Effect> effects=Arrays.asList(new PotionHud.Effect(19,"Poison",0,100,false),
+            new PotionHud.Effect(5,"Strength",1,1200,false),new PotionHud.Effect(1,"Spe\u202eed",0,500,false));
+        assertEquals("Effects: Speed 1 | Strength 2 +1",PotionHud.summarize(effects,2,false));
+        assertEquals("Effects: Speed 1 0:25 +2",PotionHud.summarize(effects,1,true));
+        assertEquals("Effects: Speed 1 | Strength 2 | Poison 1",PotionHud.summarize(effects,5,false));
+    }
     @Test public void emptyUnavailableAndDurationBoundaries() {
         assertEquals("Effects --", PotionHud.text(null));
         assertEquals("Effects --", PotionHud.summarize(null));

@@ -15,8 +15,15 @@ public final class PotionHud {
     private PotionHud() { }
 
     public static String text(MinecraftClient client) {
-        if (client == null || client.player == null) return "Effects --";
+        return text(client,EquipmentContent.defaults());
+    }
+    public static String text(MinecraftClient client,EquipmentContent content) {
+        if(client==null||client.player==null)return "Effects --";
+        return summarize(effects(client),content.maxEffects,content.effectTime);
+    }
+    public static List<Effect> effects(MinecraftClient client) {
         List<Effect> effects = new ArrayList<>();
+        if(client==null||client.player==null)return effects;
         for (StatusEffectInstance active : client.player.getStatusEffectInstances()) {
             if (active == null) continue;
             int id = active.getEffectId();
@@ -25,7 +32,7 @@ public final class PotionHud {
             String name = type == null ? "Effect " + id : I18n.translate(type.getTranslationKey());
             effects.add(new Effect(id, name, active.getAmplifier(), active.getDuration(), active.isPermanent()));
         }
-        return summarize(effects);
+        effects.sort(Comparator.comparingInt(effect->effect.id));return effects;
     }
 
     /** A value type independent of Minecraft; one amplifier unit corresponds to level 1. */
@@ -39,19 +46,22 @@ public final class PotionHud {
     }
 
     public static String summarize(List<Effect> input) {
+        return summarize(input,MAX_SHOWN,true);
+    }
+    public static String summarize(List<Effect> input,int maxShown,boolean showTime) {
+        if(maxShown<1||maxShown>5)throw new IllegalArgumentException("Invalid effect limit");
         if (input == null) return "Effects --";
         List<Effect> effects = new ArrayList<>();
         for (Effect effect : input) if (effect != null) effects.add(effect);
         if (effects.isEmpty()) return "Effects: none";
         effects.sort(Comparator.comparingInt(effect -> effect.id));
         StringBuilder text = new StringBuilder("Effects: ");
-        int shown = Math.min(effects.size(), MAX_SHOWN);
+        int shown = Math.min(effects.size(), maxShown);
         for (int i = 0; i < shown; i++) {
             Effect effect = effects.get(i);
             if (i > 0) text.append(" | ");
-            text.append(safeName(effect.name, effect.id)).append(' ')
-                .append(effect.amplifier < 0 || effect.amplifier > 255 ? "?" : Integer.toString(effect.amplifier + 1))
-                .append(' ').append(duration(effect.ticks, effect.permanent));
+            text.append(title(effect));
+            if(showTime)text.append(' ').append(duration(effect.ticks,effect.permanent));
         }
         if (effects.size() > shown) text.append(" +").append(effects.size() - shown);
         return text.toString();
@@ -65,10 +75,13 @@ public final class PotionHud {
         return (seconds / 60) + ":" + (seconds % 60 < 10 ? "0" : "") + (seconds % 60);
     }
 
+    public static String title(Effect effect) {
+        return safeName(effect.name,effect.id)+" "+(effect.amplifier<0||effect.amplifier>255?"?":Integer.toString(effect.amplifier+1));
+    }
     private static String safeName(String name, int id) {
         if (name == null) return "Effect " + id;
         StringBuilder safe = new StringBuilder();
-        name.codePoints().filter(cp -> !Character.isISOControl(cp) && cp != 0x00a7)
+        name.codePoints().filter(cp -> !Character.isISOControl(cp) && cp != 0x00a7 && Character.getType(cp)!=Character.FORMAT && Character.getType(cp)!=Character.SURROGATE)
             .limit(MAX_NAME_CODEPOINTS).forEach(safe::appendCodePoint);
         String value = safe.toString().trim();
         return value.isEmpty() ? "Effect " + id : value;

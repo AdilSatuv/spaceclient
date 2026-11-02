@@ -14,4 +14,11 @@ public final class ArmorDurability {
         long percent = (remaining * 100 + maximum - 1) / maximum;
         return percent + "%";
     }
+    public static String remaining(boolean present,boolean damageable,int damage,int maximum) {
+        if(!present)return "-";if(!damageable)return "n/a";
+        return maximum<=0||damage<0||damage>maximum?"?":Integer.toString(maximum-damage);
+    }
+    public static double fraction(boolean present,boolean damageable,int damage,int maximum) {
+        return !present||!damageable||maximum<=0||damage<0||damage>maximum?Double.NaN:((double)maximum-damage)/maximum;
+    }
 }

@@ -6,6 +6,7 @@ import java.util.Properties;
 public final class HudTestFixtures {
     private HudTestFixtures() { }
     public static void removeNewModules(Properties p, String prefix) {
+        for(String key:new String[]{"armor.style","armor.durability","armor.hand","effects.style","effects.limit","effects.time"})p.remove(prefix+"content."+key);
         p.remove(prefix+"content.keystrokes.layout");p.remove(prefix+"content.sprint.display");
         for(String key:new String[]{"ping.label","biome.label","packs.label","packs.names"})p.remove(prefix+"content."+key);
         p.remove(prefix+"content.keystrokes.jump");p.remove(prefix+"content.keystrokes.mouse");

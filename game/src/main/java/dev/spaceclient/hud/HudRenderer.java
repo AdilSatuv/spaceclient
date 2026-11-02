@@ -42,8 +42,8 @@ public final class HudRenderer {
                 : HudVitals.health(client.player.getHealth(), client.player.getMaxHealth());
             case HUNGER: return client.player == null || client.player.getHungerManager() == null
                 ? HudVitals.hunger(null) : HudVitals.hunger(client.player.getHungerManager().getFoodLevel());
-            case ARMOR: return ArmorHud.text(client);
-            case POTION_EFFECTS: return PotionHud.text(client);
+            case ARMOR: return ArmorHud.text(client,content.equipment);
+            case POTION_EFFECTS: return PotionHud.text(client,content.equipment);
             case MEMORY:
                 Runtime vm = Runtime.getRuntime();
                 return HudMetrics.memory(vm.totalMemory() - vm.freeMemory(), vm.maxMemory());
@@ -87,6 +87,8 @@ public final class HudRenderer {
     }
     public static int moduleWidth(MinecraftClient client,HudModule module,String text) {
         HudContentSettings content=SpaceClient.hud.getConfig().active().content();
+        if(module==HudModule.ARMOR&&content.equipment.armorStyle==EquipmentContent.Style.ICONS)return EquipmentLayout.armorWidth(content.equipment.hand?5:4,EquipmentHudRenderer.armorCell(client,content.equipment));
+        if(module==HudModule.POTION_EFFECTS&&content.equipment.effectStyle==EquipmentContent.Style.ICONS)return EquipmentLayout.EFFECT_WIDTH;
         if(module==HudModule.SPRINT_STATUS&&content.sprintDisplay==HudContentSettings.SprintDisplay.COMPACT)return textWidth(client,text)+12;
         if(module!=HudModule.KEYSTROKES)return textWidth(client,text);
         if(content.keyLayout==HudContentSettings.KeyLayout.BLOCK)return block(client,keys(client,content),content).width;
@@ -97,6 +99,8 @@ public final class HudRenderer {
     }
     public static int moduleHeight(MinecraftClient client,HudModule module) {
         HudContentSettings c=SpaceClient.hud.getConfig().active().content();
+        if(module==HudModule.ARMOR&&c.equipment.armorStyle==EquipmentContent.Style.ICONS)return EquipmentLayout.ARMOR_HEIGHT;
+        if(module==HudModule.POTION_EFFECTS&&c.equipment.effectStyle==EquipmentContent.Style.ICONS)return EquipmentLayout.effectHeight(PotionHud.effects(client).size(),c.equipment.maxEffects,c.equipment.effectTime);
         if(module==HudModule.KEYSTROKES&&c.keyLayout==HudContentSettings.KeyLayout.BLOCK)return block(client,keys(client,c),c).height;
         return module==HudModule.SPRINT_STATUS&&c.sprintDisplay==HudContentSettings.SprintDisplay.COMPACT?14:10;
     }
@@ -108,6 +112,8 @@ public final class HudRenderer {
     }
     public static void drawModule(MinecraftClient client,HudModule module,String text,HudPlacement.Bounds bounds,HudAppearance appearance,int color) {
         HudContentSettings content=SpaceClient.hud.getConfig().active().content();
+        if(module==HudModule.ARMOR&&content.equipment.armorStyle==EquipmentContent.Style.ICONS){EquipmentHudRenderer.armor(client,content.equipment,bounds,appearance,color);return;}
+        if(module==HudModule.POTION_EFFECTS&&content.equipment.effectStyle==EquipmentContent.Style.ICONS){EquipmentHudRenderer.effects(client,content.equipment,bounds,appearance,color);return;}
         if(module==HudModule.SPRINT_STATUS&&content.sprintDisplay==HudContentSettings.SprintDisplay.COMPACT){drawSprint(client,text,bounds,appearance,color);return;}
         if(module!=HudModule.KEYSTROKES){draw(client,text,bounds,appearance,color);return;}
         KeystrokesHud.Key[] keys=keys(client,content);
