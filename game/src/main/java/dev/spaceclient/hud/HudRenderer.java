@@ -49,6 +49,8 @@ public final class HudRenderer {
                 return HudMetrics.memory(vm.totalMemory() - vm.freeMemory(), vm.maxMemory());
             case PLAYTIME: return HudMetrics.playtime(SpaceClient.session.seconds());
             case ITEM_COUNTER: return ItemCounterHud.text(client);
+            case DAY_COUNTER: return WorldHud.day(client);
+            case LIGHT_LEVEL: return WorldHud.light(client);
             case PING: return ContextHud.ping(client,content);
             case BIOME: return ContextHud.biome(client,content);
             case PACK_DISPLAY: return ContextHud.packs(client,content);

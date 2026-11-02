@@ -95,6 +95,8 @@ const required = [
   'dev/spaceclient/hud/SessionTimer.class',
   'dev/spaceclient/hud/SprintStatus.class',
   'dev/spaceclient/hud/ContextHud.class',
+  'dev/spaceclient/hud/WorldHud.class',
+  'dev/spaceclient/hud/WorldLabels.class',
   'dev/spaceclient/hud/ContextLabels.class',
   'dev/spaceclient/hud/EquipmentContent.class',
   'dev/spaceclient/hud/EquipmentContent$Style.class',

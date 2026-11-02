@@ -93,6 +93,12 @@ final class HudModuleIcons {
             GL11.glLineWidth(1.3f);
             GL11.glColor4f(.94f, .94f, .94f, 1);
             switch (module) {
+                case DAY_COUNTER:
+                    rect(2,4,20,21);path(false,2,9,20,9);path(false,7,1,7,6);path(false,15,1,15,6);
+                    path(false,7,13,11,13,11,18);break;
+                case LIGHT_LEVEL:
+                    circle(11,9,6);path(false,7,14,8,18,14,18,15,14);path(false,8,21,14,21);
+                    path(false,0,9,2,9);path(false,20,9,22,9);path(false,3,1,5,3);path(false,19,1,17,3);break;
                 case PING:
                     path(false,1,7,5,4,11,2,17,4,21,7);path(false,5,11,8,9,14,9,17,11);
                     path(false,9,15,11,14,13,15);circle(11,19,1);break;

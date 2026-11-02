@@ -25,7 +25,9 @@ public enum HudModule {
     SPRINT_STATUS("sprintstatus", "ToggleSprint HUD", "Sprint toggle and current running state", "autosprint togglesprint sprint status бег спринт статус"),
     PING("ping", "Ping", "Server-reported latency in milliseconds", "ping latency network пинг задержка сеть"),
     BIOME("biome", "Biome", "The biome at your current position", "biome world биом мир"),
-    PACK_DISPLAY("packs", "Pack Display", "Selected resource packs and server pack", "pack resource textures ресурспак текстуры пак");
+    PACK_DISPLAY("packs", "Pack Display", "Selected resource packs and server pack", "pack resource textures ресурспак текстуры пак"),
+    DAY_COUNTER("daycounter", "Day Counter", "Current world day, starting at 1", "day counter time world дни день счётчик счетчик мир"),
+    LIGHT_LEVEL("lightlevel", "Light Level", "Sky and block light at your feet", "light sky block lighting свет освещение небо блок");
 
     private final String id;
     private final String title;
@@ -34,7 +36,7 @@ public enum HudModule {
     private static final HudModule[] BROWSER_ORDER = {
         FPS, COORDINATES, KEYSTROKES, CPS, COMPASS, ARMOR,
         CLOCK, SPEED, HEALTH, HUNGER, POTION_EFFECTS, MEMORY, PLAYTIME, ITEM_COUNTER, SPRINT_STATUS,
-        PING, BIOME, PACK_DISPLAY
+        PING, BIOME, PACK_DISPLAY, DAY_COUNTER, LIGHT_LEVEL
     };
 
     HudModule(String id, String title, String description, String aliases) {
@@ -79,6 +81,8 @@ public enum HudModule {
             case PING: return config.active().ping;
             case BIOME: return config.active().biome;
             case PACK_DISPLAY: return config.active().packs;
+            case DAY_COUNTER: return config.active().dayCounter;
+            case LIGHT_LEVEL: return config.active().lightLevel;
             default: throw new AssertionError(this);
         }
     }
@@ -103,6 +107,8 @@ public enum HudModule {
             case PING: config.active().ping = enabled; break;
             case BIOME: config.active().biome = enabled; break;
             case PACK_DISPLAY: config.active().packs = enabled; break;
+            case DAY_COUNTER: config.active().dayCounter = enabled; break;
+            case LIGHT_LEVEL: config.active().lightLevel = enabled; break;
             default: throw new AssertionError(this);
         }
     }
