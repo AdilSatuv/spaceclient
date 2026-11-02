@@ -7,6 +7,6 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(EntityRenderDispatcher.class)
 public abstract class HitboxesMixin {
- @Inject(method="render(Lnet/minecraft/entity/Entity;DDDFF)Z",at=@At("RETURN"))
- private void spaceclient$hitbox(Entity e,double x,double y,double z,float yaw,float delta,CallbackInfoReturnable<Boolean> ci){if(ci.getReturnValue())HitboxRenderer.draw(e,x,y,z);}
+ @Inject(method="method_6913(Lnet/minecraft/entity/Entity;DDDFFZ)Z",at=@At("RETURN"))
+ private void spaceclient$hitbox(Entity e,double x,double y,double z,float yaw,float delta,boolean debug,CallbackInfoReturnable<Boolean> ci){if(ci.getReturnValue())HitboxRenderer.draw(e,x,y,z);}
 }
