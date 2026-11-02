@@ -1,0 +1,109 @@
+{
+  "date": "2026-11-02",
+  "implementationCommit": "38a30c2",
+  "bundle": {
+    "schemaVersion": 1,
+    "channel": "development",
+    "modVersion": "0.1.0",
+    "minecraftVersion": "1.8.9",
+    "loaderVersion": "0.18.3",
+    "gameSourceTree": "4e85ebfab050e95206ce779440a4524014506851",
+    "size": 931493,
+    "sha256": "ac5033c30a6737071c2c49e40e47303164225e396d0f33a0af181ac07105b828"
+  },
+  "checks": {
+    "javaTests": 178,
+    "launcherTests": 112,
+    "typecheck": true,
+    "prettier": true,
+    "gameBuild": true,
+    "launcherBuild": true,
+    "sourceStampVerified": true,
+    "gitDiffCheck": true
+  },
+  "codebaseMemory": {
+    "project": "spaceclient-mods-menus",
+    "rootVerified": true,
+    "graphNavigationAndInboundTraceUsed": true,
+    "indexedAt": "2026-11-02T16:13:22Z",
+    "mode": "fast",
+    "freshSourceReadAfterCoverageMetadataChanged": true,
+    "partialFiles": [
+      "apps/launcher/src/renderer/style.css",
+      "game/build.gradle",
+      "game/gradlew"
+    ],
+    "caveat": "Best-effort coverage. Docs, ignored artifacts and some tests are excluded by design."
+  },
+  "native": {
+    "exitCode": 0,
+    "resolution": [
+      1280,
+      720
+    ],
+    "checks": {
+      "hiddenCanvas": true,
+      "playerCardSwitches": true,
+      "nativeClientLevel12Progress50Percent": true,
+      "arrows64Plus7WhileHoldingBow": true,
+      "arrowStackUpdate": true,
+      "zeroStates": true,
+      "appearanceControls": true,
+      "editorHeightAndDragClamp": true,
+      "settingsFourAnchors": true,
+      "profilesAndPersistence": true,
+      "explicitClientSamples": true,
+      "physicalInputTested": false,
+      "userWorldOpened": false
+    },
+    "fiveCapturesVisuallyInspected": true,
+    "noObservedFatalMixinErrorsInFinalRun": true,
+    "qaHelperInitialFailure": "Disposable helper requested nonexistent Action.width; corrected to Action.w. Only that crashed QA process was stopped. Later full runs exited 0."
+  },
+  "installation": {
+    "sha256": "ac5033c30a6737071c2c49e40e47303164225e396d0f33a0af181ac07105b828",
+    "gameSourceTree": "4e85ebfab050e95206ce779440a4524014506851",
+    "preflight": true,
+    "settingsAndWorldMetadataPreserved": true,
+    "checkedFiles": 5
+  },
+  "screenshots": [
+    {
+      "file": "outputs/player-stats-modules-2026-11-02/31-player-stats-menu.png",
+      "sha256": "5fb55f6d7b40ca373ea52f9a7b1e49c0a39e4fbf6100f688bd3ee451b3afd805",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/player-stats-modules-2026-11-02/32-experience-settings.png",
+      "sha256": "78f88256d64aa3ec7bb1ca0c7c3f5396f41fd20cc8472b1617cacfda1ff53f73",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/player-stats-modules-2026-11-02/33-experience-editor.png",
+      "sha256": "7ec232d4a97a1b5d3ccc69222747052f13013f41e3b1481c0df236faddcd7258",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/player-stats-modules-2026-11-02/34-experience-arrows-hud.png",
+      "sha256": "66313d62343ea59a407220b7078234749b92d3a5f06b3d4ca7a0e28461c5cd2c",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/player-stats-modules-2026-11-02/35-experience-arrows-zero.png",
+      "sha256": "ad5c13d5e759356fa8afe30a1a2cc2dbefa5f064647086a56473f4f0584598e2",
+      "width": 1280,
+      "height": 720
+    }
+  ],
+  "limitations": [
+    "Explicit client XP and inventory samples in the QA world; picking up XP and firing a bow were not exercised.",
+    "Screen methods were invoked without OS input in a hidden Canvas; physical input was not tested.",
+    "Only the QA-created world opened. No multiplayer or performance measurements.",
+    "Experience progress is the fraction of the current level, not lifetime XP. Arrow Counter reports existing arrows; Creative and Infinity do not change its meaning.",
+    "User game remained closed after installation. New modules remain opt-in in both profiles."
+  ]
+}

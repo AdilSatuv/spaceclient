@@ -14,6 +14,7 @@
 - [Блок Keystrokes и компактный ToggleSprint](docs/WIDGET-LAYOUTS-2026-11-02.md) — раскладки, предпросмотр и редактор.
 - [Armor HUD и карточки эффектов](docs/EQUIPMENT-HUD-2026-11-02.md) — иконки, прочность, таймеры и игровые проверки.
 - [Day Counter и Light Level](docs/WORLD-MODULES-2026-11-02.md) — дни мира и световые каналы.
+- [Experience и Arrow Counter](docs/PLAYER-STATS-MODULES-2026-11-02.md) — полоса опыта и стрелы в инвентаре.
 - [Распределение работы между тремя чатами](docs/PARALLEL-WORK-2026-11-02.md) — области, рабочие копии и индексы Codebase Memory.
 - [ТЗ и этапы](docs/SPEC.md) — границы MVP, архитектура и критерии приёмки.
 - [Рабочий процесс](docs/DEVELOPMENT.md) — инструменты, проверки, коммиты и пуш.
