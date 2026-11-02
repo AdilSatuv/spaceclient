@@ -1,0 +1,256 @@
+{
+  "date": "2026-11-03",
+  "implementationCommit": "1af3562",
+  "sourceCommits": [
+    "af03523",
+    "1af3562"
+  ],
+  "bundle": {
+    "schemaVersion": 1,
+    "channel": "development",
+    "modVersion": "0.1.0",
+    "minecraftVersion": "1.8.9",
+    "loaderVersion": "0.18.3",
+    "gameSourceTree": "4dbebec7eb3ec03498db5383f5e2fcfb22a8c570",
+    "size": 1011090,
+    "sha256": "17adf3411476f831963530e99929ada95b9e526aec497d6d1e471eb85832c154"
+  },
+  "modules": {
+    "gameplay": 21,
+    "hud": 23,
+    "catalog": 44,
+    "newOptIn": [
+      "ANIMATIONS",
+      "AUTO_TEXT",
+      "GUI",
+      "HITBOXES",
+      "ITEM_PHYSICS",
+      "ITEM_SIZE",
+      "SOUNDS"
+    ],
+    "improvedExisting": [
+      "ITEM_COUNTER"
+    ],
+    "newToggleAndMacroKeysUnboundByDefault": true,
+    "defaultMacroMessagesEmpty": true,
+    "guiMeaningConfirmedByUser": "Game interface scale",
+    "modsSchema": 9,
+    "modsFields": 94,
+    "modsFileLimit": 8192,
+    "unchangedHudSchema": 17,
+    "unchangedProfileExport": 12
+  },
+  "featureReferences": [
+    {
+      "url": "https://www.badlion.net/wiki/animations",
+      "accessed": "2026-11-03"
+    },
+    {
+      "url": "https://www.lunarclient.com/news/top-10-underrated-lunar-client-mods-and-settings",
+      "accessed": "2026-11-03"
+    },
+    {
+      "url": "https://www.lunarclient.com/news/badlion-acquisition-next-steps",
+      "accessed": "2026-11-03"
+    }
+  ],
+  "checks": {
+    "javaTests": 239,
+    "launcherTests": 112,
+    "typecheck": true,
+    "prettier": true,
+    "gameBuild": true,
+    "strictLauncherBuild": true,
+    "sourceStampVerified": true,
+    "gitDiffCheck": true,
+    "exactRequiredMixins": 27,
+    "newClassesJava8": true
+  },
+  "legacyFixture": {
+    "file": "game/src/test/resources/hud-legacy/mods-schema8-154db3d.properties",
+    "sha256": "78e2f0807336b035054bfefd52aa86b7efe363cb6ace5148ae2d5cb8ba32f18c",
+    "generatedByPreviousJarBeforeSourceChanges": true
+  },
+  "codebaseMemory": {
+    "project": "spaceclient-mods-menus",
+    "rootVerified": true,
+    "graphNavigationUsed": true,
+    "indexedAt": "2026-11-02T19:07:58Z",
+    "mode": "fast",
+    "nodes": 7995,
+    "edges": 20819,
+    "skipped": 0,
+    "soundDeathTraceResolved": "SoundRuntime.death <- SoundDeathMixin.spaceclient$down",
+    "macroCallerVerifiedFromSource": "ClientMixin.spaceclient$keyEvent",
+    "heuristicFalsePositive": "AutoTextRuntime.dispatch trace also listed unrelated launcher registerLauncherIpc. Source verified the actual gameplay caller; that extra edge is not accepted as a real relationship.",
+    "partialFiles": [
+      "apps/launcher/src/renderer/style.css",
+      "game/build.gradle",
+      "game/gradlew"
+    ],
+    "caveat": "Coverage remains metadata_changed; changed sources read from disk. Docs/ignored QA artifacts excluded by design."
+  },
+  "native": {
+    "exitCode": 0,
+    "resolution": [
+      1280,
+      720
+    ],
+    "checks": {
+      "hiddenCanvas": true,
+      "nativeSevenCardsControlsAndPreviews": true,
+      "macroEditSaveCancelBindingsAndConflicts": true,
+      "macroTransportInterceptedNoMessagesSent": true,
+      "macroCooldownAndContextGuards": true,
+      "guiLiveResizeAndCaps": true,
+      "minecraftGuiOptionUnchanged": true,
+      "hitboxFiltersDepthAndGlState": true,
+      "counterIconStackCountAndGlState": true,
+      "nativeEatBowPoseMatrices": true,
+      "nativeBlockSwingTransform": true,
+      "nativeDroppedGroundAirAndScaleMatrices": true,
+      "nativeSoundEventAndCategoryRemap": true,
+      "soundRegistryVolumePitchAndLoopGuard": true,
+      "syntheticDeathPacketAndSingleCue": true,
+      "chimeTransportIntercepted": true,
+      "zeroVolumeAudioPipelineSamples": true,
+      "settingsAndOptionsPersistence": true,
+      "physicalInputTested": false,
+      "audioListened": false,
+      "multiplayerTested": false,
+      "userWorldOpened": false
+    },
+    "additionalAssertions": {
+      "freshWorldHitboxDrawsAfterIsolatedGlProbe": true,
+      "allSeventeenFinalCapturesVisuallyInspected": true,
+      "zeroRealChatMessagesSent": true,
+      "onlySoundPreviewChimePortsIntercepted": true
+    },
+    "noObservedFatalMixinOrTextureErrorsInFinalRun": true,
+    "findingAndResolution": [
+      "First synthetic block-use sample was cleared by client ticks before rendering. Moved only the QA input sample to render HEAD; no physical input/focus changes.",
+      "Visual inspection of a successful run found no world hitboxes: the public dispatcher overload was not the normal world path. Production moved to method_6913; QA now requires fresh world draw observations after isolated renderer checks. Full final pass and captures succeeded. Only the crashed own QA Java process was stopped."
+    ]
+  },
+  "installation": {
+    "sha256": "17adf3411476f831963530e99929ada95b9e526aec497d6d1e471eb85832c154",
+    "gameSourceTree": "4dbebec7eb3ec03498db5383f5e2fcfb22a8c570",
+    "preflight": true,
+    "settingsAndWorldMetadataPreserved": true,
+    "checkedFiles": 5
+  },
+  "screenshots": [
+    {
+      "file": "outputs/client-pack-mods-2026-11-03/76-animations-settings.png",
+      "sha256": "7128951636551f324548ecb2c3fb5f163b0fb3f68e37743f8c9bf97f61f91e65",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/client-pack-mods-2026-11-03/77-auto-text-settings.png",
+      "sha256": "0aa77c140c053cd2bf933bbecd27e965f162910b84d0fb14e799eab025a6d9ae",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/client-pack-mods-2026-11-03/78-gui-scale-settings.png",
+      "sha256": "10c9f56f41264a5eb8f1d0f8be640ee7d816b9dc60ff7a6072fa1957063a70a6",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/client-pack-mods-2026-11-03/79-hitboxes-settings.png",
+      "sha256": "1949a6da7ca13116cc5e23552cc072271f204914c4a4d1a297cb5b5f104d0f5d",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/client-pack-mods-2026-11-03/80-item-physics-settings.png",
+      "sha256": "f98b4be994edc071fae6c3ddd87158218957ec78f0e28d2268709640b1f84b20",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/client-pack-mods-2026-11-03/81-item-size-settings.png",
+      "sha256": "72dcb64cf2754e98681d78c596b4728e1811e649b70d54027848d2de43207a68",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/client-pack-mods-2026-11-03/82-sounds-settings.png",
+      "sha256": "acada28e01df21eb7a9d09fd71fa8fcc305e8b60265724d981e182dcd90081a4",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/client-pack-mods-2026-11-03/83-gui-scale-1.png",
+      "sha256": "32d1c9e2027769b7af86d55194aa4a4d9caf00312b38b328eb6f53fa4c5f9e91",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/client-pack-mods-2026-11-03/84-gui-scale-2.png",
+      "sha256": "a777d91c3fe1b7914b70547c257194b2e375e482f6f781c235a46fe599eb2059",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/client-pack-mods-2026-11-03/85-item-counter-hitboxes.png",
+      "sha256": "219ee919bdd30b26d81684794c41eef62ba6def064f00a3bf2bd264331aa202d",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/client-pack-mods-2026-11-03/86-native-held-item.png",
+      "sha256": "56618eb217a1e057acac64d0938d265292d1765867f2c80624bc8b81891fd452",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/client-pack-mods-2026-11-03/87-small-held-item.png",
+      "sha256": "c036783875acff148357668045e6a9063d7c51de9701c1db7c907af92c9624ac",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/client-pack-mods-2026-11-03/88-block-hit-animation.png",
+      "sha256": "cc013e37d4582755625345901754401ab1e88098c0634660c0ba89b91c91ba45",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/client-pack-mods-2026-11-03/89-native-dropped-item.png",
+      "sha256": "8a0ffd43d51f1c1341977c8c027ef18c264937c850f2c6a545134bb8fdab3aa4",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/client-pack-mods-2026-11-03/90-item-physics-flat.png",
+      "sha256": "052cefe4d0d601ee1183d70144817c32cb0c27f40ae2078a2e711936212fb172",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/client-pack-mods-2026-11-03/91-bow-animation.png",
+      "sha256": "ee46e4aa84f813f3ba2ab9725a5aab427afcb3d37463ba0d2da9729d3b585903",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/client-pack-mods-2026-11-03/92-eating-animation.png",
+      "sha256": "088650d4222f793bb1021e5922442819f9bb72f2f46874e84b5778d6d63a0fc6",
+      "width": 1280,
+      "height": 720
+    }
+  ],
+  "limitations": [
+    "Animations covers legacy-style block hit/eating/bow poses, not a complete historical 1.7 animation suite.",
+    "Auto Text send transport intercepted. Physical keyboard/mouse, clipboard paste and actual server delivery not exercised.",
+    "Sounds target-down cue uses death status of the same target attacked in the last 3 seconds; this is not confirmed server kill-credit attribution and destroy-only/custom protocols may not cue.",
+    "Audio native pipeline used zero-volume samples and intercepted preview/chime output; audio was not listened to and no custom audio-file import is provided.",
+    "Rendered hitbox samples cover mobs and dropped items, not network player and exhaustive occlusion/shader matrices.",
+    "GUI 1x/2x live and 0..4 bounds tested in one 1280x720 canvas; no full Unicode/high-DPI/window matrix.",
+    "No multiplayer, shader/resource-pack matrix or performance acceptance. Only the isolated QA world opened. User game left closed after installation.",
+    "Existing Minecraft sound events/assets, own implementation and icons. No competitor code/assets copied."
+  ]
+}
