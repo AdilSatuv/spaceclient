@@ -392,7 +392,7 @@ public final class HudModulesScreen extends Screen {
         try {
             GlStateManager.scale(.8f, .8f, 1);
             SpaceUiFont.draw(client, first, x / .8f, y / .8f, MUTED);
-            if (!rest.isEmpty()) SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(rest, limit), x / .8f, (y + 9) / .8f, MUTED);
+            if (!rest.isEmpty()) SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(rest, Math.max(1,(int)((width-32)/.8f))), x / .8f, (y + 9) / .8f, MUTED);
         } finally { GlStateManager.popMatrix(); }
     }
     private void box(int x, int y, int w, int h, boolean focused, boolean hovered) {
