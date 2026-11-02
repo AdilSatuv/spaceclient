@@ -1,0 +1,327 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-02",
+  "base": "0af5658f2dc0d533e8e1a60c9587248fb2b49c26",
+  "root": "C:/Users/user/Documents/Codex/2026-11-02/space-client-ux-ui/work/spaceclient-ux",
+  "branch": "ux/navigation-surfaces",
+  "implementationCommits": [
+    "711efe035f725e58672f0cb4c2de342ea7dbae46",
+    "31b55323f2874bed4eb2ddf718e7ab12c56a6960"
+  ],
+  "gameSourceTree": "1154553da1bab37e904ee227733a20d9981627f7",
+  "jarSha256": "b7c8e996e0baf518100102f8567ee904d6acab90faf777cc382f4dfc6090e9df",
+  "rendererTree": "e0527e4c7337335230b611622cc03cab518ff0d6",
+  "changedFiles": [
+    "apps/launcher/scripts/check-launcher-ui.mjs",
+    "apps/launcher/src/renderer/app.tsx",
+    "apps/launcher/src/renderer/installation-card.tsx",
+    "apps/launcher/src/renderer/pages/home.tsx",
+    "apps/launcher/src/renderer/style.css",
+    "apps/website/src/_app/styles/globals.css",
+    "apps/website/src/_app/ui/header.tsx",
+    "apps/website/src/_pages/download/ui/page.tsx",
+    "apps/website/src/_pages/features/ui/page.tsx",
+    "apps/website/src/_pages/help/ui/page.tsx",
+    "apps/website/src/_pages/updates/ui/page.tsx",
+    "apps/website/src/shared/ui/page-intro.tsx",
+    "game/src/main/java/dev/spaceclient/menu/MenuLayout.java",
+    "game/src/main/java/dev/spaceclient/menu/MenuTheme.java",
+    "game/src/test/java/dev/spaceclient/menu/MenuTest.java",
+    "scripts/check-website-accessibility.cjs"
+  ],
+  "tests": {
+    "root": 39,
+    "api": 24,
+    "launcher": 112,
+    "java": 167,
+    "typecheck": "passed",
+    "websiteProductionBuild": "passed",
+    "websiteStates": 8,
+    "websiteLayouts": 42,
+    "websiteFlows": 27,
+    "launcherViewports": 4,
+    "launcherViews": 3,
+    "format": "passed",
+    "diffCheck": "passed"
+  },
+  "minecraft": {
+    "physicalSize": [
+      1280,
+      720
+    ],
+    "finalRuns": [
+      {
+        "locale": "ru",
+        "exitCode": 0,
+        "gameSourceTree": "1154553da1bab37e904ee227733a20d9981627f7",
+        "sha256": "b7c8e996e0baf518100102f8567ee904d6acab90faf777cc382f4dfc6090e9df"
+      },
+      {
+        "locale": "en",
+        "exitCode": 0,
+        "gameSourceTree": "1154553da1bab37e904ee227733a20d9981627f7",
+        "sha256": "b7c8e996e0baf518100102f8567ee904d6acab90faf777cc382f4dfc6090e9df"
+      }
+    ],
+    "nativeTransitions": [
+      "title-options-back",
+      "title-world-list-back",
+      "title-server-list-back"
+    ],
+    "tabFocusInvoked": true,
+    "physicalInputTested": false,
+    "userWorldOpened": false,
+    "qaAddonInProductionJar": false
+  },
+  "codebaseMemory": {
+    "project": "spaceclient-ux-ui-20261102",
+    "indexedAt": "2026-11-02T16:07:50Z",
+    "exactPathsChecked": 16,
+    "serverGitMetadataAvailable": false,
+    "cliBranchAndShaVerified": true,
+    "freshnessSignal": "metadata_changed",
+    "partial": "apps/launcher/src/renderer/style.css:1-6",
+    "skippedFixture": "game/src/test/resources/hud-legacy/profile-v7-57e1593.properties",
+    "sourceCrossChecked": true
+  },
+  "preview": {
+    "url": "http://127.0.0.1:55693",
+    "apiUrl": "http://127.0.0.1:55692",
+    "publicDeployment": false
+  },
+  "boundaries": {
+    "sourceCheckoutWritten": false,
+    "userGameStopped": false,
+    "userInstanceUpdated": false,
+    "backendOrIpcChanged": false,
+    "hudOrGameplayLogicChanged": false,
+    "pushPerformed": false
+  },
+  "limitations": [
+    "No physical input or screen reader acceptance.",
+    "Minecraft 1280x720 only; RU scale options 2 and 3 both resolve to 640x360; EN option 3 resolves to 427x240.",
+    "No world, fullscreen/resize, pause menu, demo/old-GL/Realms or full resource-pack matrix.",
+    "No Firefox run, public HTTPS audit, native Java picker, OAuth or real downloads in this slice.",
+    "Framebuffer snapshots and script-driven native handlers do not prove FPS or physical input behavior."
+  ],
+  "screenshots": [
+    {
+      "file": "screenshots/launcher/home-1180x760.png",
+      "source": ".reports/launcher-ui/run-1553cf2c-5e02-446d-872d-538743d66943/home-1180x760.png",
+      "sha256": "2d848d989d9cbb0cbe05153ced2d8a23e9b0354f1271761bc8cf2ceceae6dacb"
+    },
+    {
+      "file": "screenshots/launcher/home-1000x680.png",
+      "source": ".reports/launcher-ui/run-1553cf2c-5e02-446d-872d-538743d66943/home-1000x680.png",
+      "sha256": "008d919aa7d257da45353eeb22a0ce8cd8dc70263a374cd68262d475e2542cf1"
+    },
+    {
+      "file": "screenshots/launcher/home-600x680.png",
+      "source": ".reports/launcher-ui/run-1553cf2c-5e02-446d-872d-538743d66943/home-600x680.png",
+      "sha256": "b1af86cad3dd005e5ae3b92a225313c771560011948f094380e707554cb13ca2"
+    },
+    {
+      "file": "screenshots/launcher/no-nickname-1000x680.png",
+      "source": ".reports/launcher-ui/run-1553cf2c-5e02-446d-872d-538743d66943/no-nickname-1000x680.png",
+      "sha256": "e1bd59267d6ee35372124f8bd080d09f008dc2df4bfd3c1165cece87772c604b"
+    },
+    {
+      "file": "screenshots/launcher/profiles-1180x760.png",
+      "source": ".reports/launcher-ui/run-1553cf2c-5e02-446d-872d-538743d66943/profiles-1180x760.png",
+      "sha256": "58fed080d1b729c3a6c6cd761eb1815b935f78d3a8711a573664b731d7d4c765"
+    },
+    {
+      "file": "screenshots/launcher/settings-1180x760.png",
+      "source": ".reports/launcher-ui/run-1553cf2c-5e02-446d-872d-538743d66943/settings-1180x760.png",
+      "sha256": "7750656f7eb5c0b4f32f8a1ba68b9b77a0622185693bcba087b3ee4261eb2fb2"
+    },
+    {
+      "file": "screenshots/launcher/forced-colors.png",
+      "source": ".reports/launcher-ui/run-1553cf2c-5e02-446d-872d-538743d66943/forced-colors.png",
+      "sha256": "d3d2556d7cb0d77413fd0f412deefe59f3f794f31da2265acbeb40e105b691b5"
+    },
+    {
+      "file": "screenshots/minecraft/ru/minecraft-servers-empty.png",
+      "source": ".reports/ux-menu-instance/minecraft/ux-captures/minecraft-servers-empty.png",
+      "sha256": "e1ded7388a0949233c5d5a4fecb9b50aa29eaad81fe8ba09365e9d0f4252656f",
+      "locale": "ru",
+      "physicalWidth": 1280,
+      "physicalHeight": 720,
+      "scaledWidth": 640,
+      "scaledHeight": 360,
+      "guiScaleOption": 2,
+      "hiddenCanvas": true
+    },
+    {
+      "file": "screenshots/minecraft/ru/minecraft-settings.png",
+      "source": ".reports/ux-menu-instance/minecraft/ux-captures/minecraft-settings.png",
+      "sha256": "2c789a1765ad3bc5f67d365251b79efd6af8c8f42993c8236a784bf9e82ae117",
+      "locale": "ru",
+      "physicalWidth": 1280,
+      "physicalHeight": 720,
+      "scaledWidth": 640,
+      "scaledHeight": 360,
+      "guiScaleOption": 2,
+      "hiddenCanvas": true
+    },
+    {
+      "file": "screenshots/minecraft/ru/minecraft-title-compact-focus.png",
+      "source": ".reports/ux-menu-instance/minecraft/ux-captures/minecraft-title-compact-focus.png",
+      "sha256": "76eab17ecc97924c6d4cbb0620b7bdd50e2ee1c2d654bba509f697abbb387487",
+      "locale": "ru",
+      "physicalWidth": 1280,
+      "physicalHeight": 720,
+      "scaledWidth": 640,
+      "scaledHeight": 360,
+      "guiScaleOption": 3,
+      "hiddenCanvas": true
+    },
+    {
+      "file": "screenshots/minecraft/ru/minecraft-title-compact.png",
+      "source": ".reports/ux-menu-instance/minecraft/ux-captures/minecraft-title-compact.png",
+      "sha256": "1aa9acd5791564c1a1d52845620cbe650601ed8a8795f06ef136e322a44a2773",
+      "locale": "ru",
+      "physicalWidth": 1280,
+      "physicalHeight": 720,
+      "scaledWidth": 640,
+      "scaledHeight": 360,
+      "guiScaleOption": 3,
+      "hiddenCanvas": true
+    },
+    {
+      "file": "screenshots/minecraft/ru/minecraft-title-focus.png",
+      "source": ".reports/ux-menu-instance/minecraft/ux-captures/minecraft-title-focus.png",
+      "sha256": "76eab17ecc97924c6d4cbb0620b7bdd50e2ee1c2d654bba509f697abbb387487",
+      "locale": "ru",
+      "physicalWidth": 1280,
+      "physicalHeight": 720,
+      "scaledWidth": 640,
+      "scaledHeight": 360,
+      "guiScaleOption": 2,
+      "hiddenCanvas": true
+    },
+    {
+      "file": "screenshots/minecraft/ru/minecraft-title-normal.png",
+      "source": ".reports/ux-menu-instance/minecraft/ux-captures/minecraft-title-normal.png",
+      "sha256": "1aa9acd5791564c1a1d52845620cbe650601ed8a8795f06ef136e322a44a2773",
+      "locale": "ru",
+      "physicalWidth": 1280,
+      "physicalHeight": 720,
+      "scaledWidth": 640,
+      "scaledHeight": 360,
+      "guiScaleOption": 2,
+      "hiddenCanvas": true
+    },
+    {
+      "file": "screenshots/minecraft/ru/minecraft-worlds-empty.png",
+      "source": ".reports/ux-menu-instance/minecraft/ux-captures/minecraft-worlds-empty.png",
+      "sha256": "0b170fe9233e80f30687cd358dd3c127906513134e95bb63c8d64990d0f7e99e",
+      "locale": "ru",
+      "physicalWidth": 1280,
+      "physicalHeight": 720,
+      "scaledWidth": 640,
+      "scaledHeight": 360,
+      "guiScaleOption": 2,
+      "hiddenCanvas": true
+    },
+    {
+      "file": "screenshots/minecraft/en/minecraft-servers-empty.png",
+      "source": ".reports/ux-menu-instance-en/minecraft/ux-captures/minecraft-servers-empty.png",
+      "sha256": "82339edc42ce25ddc37e158d782ca4f1a5ea9021d66332b1c2cef853690d2897",
+      "locale": "en",
+      "physicalWidth": 1280,
+      "physicalHeight": 720,
+      "scaledWidth": 640,
+      "scaledHeight": 360,
+      "guiScaleOption": 2,
+      "hiddenCanvas": true
+    },
+    {
+      "file": "screenshots/minecraft/en/minecraft-settings.png",
+      "source": ".reports/ux-menu-instance-en/minecraft/ux-captures/minecraft-settings.png",
+      "sha256": "972498b945a647c771ce82140156df42a7b99536fa1706c6563ff2927a83d711",
+      "locale": "en",
+      "physicalWidth": 1280,
+      "physicalHeight": 720,
+      "scaledWidth": 640,
+      "scaledHeight": 360,
+      "guiScaleOption": 2,
+      "hiddenCanvas": true
+    },
+    {
+      "file": "screenshots/minecraft/en/minecraft-title-compact-focus.png",
+      "source": ".reports/ux-menu-instance-en/minecraft/ux-captures/minecraft-title-compact-focus.png",
+      "sha256": "09e698597bf9a74b3931b4cbf6d96aacd9973b59288a01e3d773e908dbb429ac",
+      "locale": "en",
+      "physicalWidth": 1280,
+      "physicalHeight": 720,
+      "scaledWidth": 427,
+      "scaledHeight": 240,
+      "guiScaleOption": 3,
+      "hiddenCanvas": true
+    },
+    {
+      "file": "screenshots/minecraft/en/minecraft-title-compact.png",
+      "source": ".reports/ux-menu-instance-en/minecraft/ux-captures/minecraft-title-compact.png",
+      "sha256": "32e828ecce882ae8c1a835dc97d57d01fa51d253ebd58da33d7483e986ac52ff",
+      "locale": "en",
+      "physicalWidth": 1280,
+      "physicalHeight": 720,
+      "scaledWidth": 427,
+      "scaledHeight": 240,
+      "guiScaleOption": 3,
+      "hiddenCanvas": true
+    },
+    {
+      "file": "screenshots/minecraft/en/minecraft-title-focus.png",
+      "source": ".reports/ux-menu-instance-en/minecraft/ux-captures/minecraft-title-focus.png",
+      "sha256": "9eb1611c30ce222c1c920cb56bef18de8856c851428e6db05ce68d1dc0dacd9c",
+      "locale": "en",
+      "physicalWidth": 1280,
+      "physicalHeight": 720,
+      "scaledWidth": 640,
+      "scaledHeight": 360,
+      "guiScaleOption": 2,
+      "hiddenCanvas": true
+    },
+    {
+      "file": "screenshots/minecraft/en/minecraft-title-normal.png",
+      "source": ".reports/ux-menu-instance-en/minecraft/ux-captures/minecraft-title-normal.png",
+      "sha256": "6e00634900029f1995428dbc96a5a9e3fdfa85de98ce2f0488813e02924029f6",
+      "locale": "en",
+      "physicalWidth": 1280,
+      "physicalHeight": 720,
+      "scaledWidth": 640,
+      "scaledHeight": 360,
+      "guiScaleOption": 2,
+      "hiddenCanvas": true
+    },
+    {
+      "file": "screenshots/minecraft/en/minecraft-worlds-empty.png",
+      "source": ".reports/ux-menu-instance-en/minecraft/ux-captures/minecraft-worlds-empty.png",
+      "sha256": "ab44878cebc4e0a2a50fa32c3bd68d7c3b18b41331f04319ab61819a24436036",
+      "locale": "en",
+      "physicalWidth": 1280,
+      "physicalHeight": 720,
+      "scaledWidth": 640,
+      "scaledHeight": 360,
+      "guiScaleOption": 2,
+      "hiddenCanvas": true
+    },
+    {
+      "file": "screenshots/website/website-features-empty.png",
+      "source": ".reports/ux-preview/website-features-empty.png",
+      "sha256": "7925d989a2a8b595d3e9a25b8026c769896a0f5f11fcc1004d9b6eb6a63b9c94"
+    },
+    {
+      "file": "screenshots/website/website-help-empty-mobile.png",
+      "source": ".reports/ux-preview/website-help-empty-mobile.png",
+      "sha256": "1230782895277ea83bf1f77b6e43d1728255e3ea529acfda013ad19421d6c7e0"
+    },
+    {
+      "file": "screenshots/website/website-updates-empty.png",
+      "source": ".reports/ux-preview/website-updates-empty.png",
+      "sha256": "8e714bead62c8f6da728bc76a52a190488d9da94a621d2cd6f1f1774141880da"
+    }
+  ]
+}
