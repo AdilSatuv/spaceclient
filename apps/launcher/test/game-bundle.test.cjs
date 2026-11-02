@@ -121,6 +121,25 @@ test('bundled game metadata is bound to the committed source tree and returned w
   assert.match(manifest.sha256, /^[a-f0-9]{64}$/);
   await assert.rejects(inspectSpaceJar(source, 'b'.repeat(40)), /других исходников/);
 });
+
+test('gameplay modules and their settings cannot disappear from an otherwise valid bundle', async (t) => {
+  for (const name of [
+    'mods/ModSettings',
+    'mods/GameplayModule',
+    'mods/GameModuleSettingsScreen',
+    'mods/ZoomRuntime',
+    'mods/CrosshairRenderer',
+    'freelook/FreeLookRuntime',
+    'hud/CatalogModule',
+    'hud/SessionTimer',
+    'hud/ItemCounterHud',
+  ]) {
+    const { source, inspectSpaceJar } = await fixture(t, (value) =>
+      value.filter((entry) => entry.name !== `dev/spaceclient/${name}.class`),
+    );
+    await assert.rejects(inspectSpaceJar(source, tree));
+  }
+});
 test('wrong mod, entrypoint, version or provenance cannot become a bundle', async (t) => {
   for (const mutate of [
     (mod) => {

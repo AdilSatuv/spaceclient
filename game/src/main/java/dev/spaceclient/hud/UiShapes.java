@@ -9,10 +9,11 @@ public final class UiShapes {
     public static void rounded(float x, float y, float w, float h, float r, int color) {
         if (w <= 0 || h <= 0) return;
         r = Math.min(r, Math.min(w, h) / 2);
-        GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT | GL11.GL_CURRENT_BIT);
+        GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT | GL11.GL_CURRENT_BIT | GL11.GL_LIGHTING_BIT);
         try {
             GL11.glDisable(GL11.GL_TEXTURE_2D); GL11.glDisable(GL11.GL_DEPTH_TEST); GL11.glDisable(GL11.GL_ALPHA_TEST);
             GL11.glDisable(GL11.GL_CULL_FACE); GL11.glEnable(GL11.GL_BLEND);
+            GL11.glShadeModel(GL11.GL_SMOOTH);
             GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
             color(color, 1);
             GL11.glBegin(GL11.GL_TRIANGLE_FAN); GL11.glVertex2f(x + w/2, y + h/2);
@@ -27,8 +28,17 @@ public final class UiShapes {
         } finally { GL11.glPopAttrib(); }
     }
     private static void point(float x, float y, float w, float h, float radius, float edge, int i) {
-        double a = Math.PI * 2 * i / 64, c = Math.cos(a), s = Math.sin(a);
-        GL11.glVertex2d(x + (c >= 0 ? w-radius : radius) + edge*c, y + (s >= 0 ? h-radius : radius) + edge*s);
+        GL11.glVertex2d(edgeX(x,w,radius,edge,i),edgeY(y,h,radius,edge,i));
+    }
+    // Modulo closes the fan exactly. sin(2*pi) is slightly negative and otherwise
+    // selects the opposite vertical corner, leaving a large triangular hole.
+    static double edgeX(float x,float w,float radius,float edge,int i) {
+        double c=Math.cos(Math.PI*2*(i%64)/64);
+        return x+(c>=0?w-radius:radius)+edge*c;
+    }
+    static double edgeY(float y,float h,float radius,float edge,int i) {
+        double s=Math.sin(Math.PI*2*(i%64)/64);
+        return y+(s>=0?h-radius:radius)+edge*s;
     }
     private static void color(int color, float coverage) {
         GL11.glColor4f(((color>>16)&255)/255f,((color>>8)&255)/255f,(color&255)/255f,((color>>>24)&255)/255f*coverage);
