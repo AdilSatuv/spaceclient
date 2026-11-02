@@ -71,6 +71,8 @@ public final class GameModuleSettingsScreen extends Screen {
                 SpaceUiFont.draw(client,"Toggle key enables or disables this module",left+20,top+213,MUTED);
                 SpaceUiFont.draw(client,"Settings save automatically",left+20,top+234,MUTED);
             }
+            if(module==GameplayModule.BLOCK_OVERLAY||module==GameplayModule.HIT_COLOR||module==GameplayModule.FOV_CONTROL)
+                VisualModPreview.draw(client,module,settings(),left+20,top+259,panelWidth-40);
             String notice=settings().error();
             if(notice.isEmpty())notice=capturing?"Press a key / Esc: cancel / Backspace: unbind":status;
             if(notice.isEmpty())notice="Tab: select  |  Enter: change  |  Left / Right: adjust";
@@ -83,6 +85,9 @@ public final class GameModuleSettingsScreen extends Screen {
             return key==0?"Choose a hold key to use Snaplook.":ModuleKeys.conflicts(client,key)||ModuleKeys.usedByToggle(settings(),null,key)
                 ?"Hold key unavailable: choose an unused key":"Hold "+ModuleKeys.label(key)+" for this view. Release to return.";
         }
+        if(module==GameplayModule.BLOCK_OVERLAY)return "Styles the block you point at; respects its shape and depth.";
+        if(module==GameplayModule.HIT_COLOR)return "Damage tint on visible models; death tint stays native.";
+        if(module==GameplayModule.FOV_CONTROL)return "0% dynamics: steady view. Saved Minecraft FOV stays unchanged.";
         if(module==GameplayModule.CHAT_TIMESTAMPS)return "Local arrival time; existing messages keep their timestamps.";
         if(module==GameplayModule.DURABILITY_WARNING)return "Checks worn armor and your held item while the HUD is visible.";
         if(module==GameplayModule.WEATHER_CHANGER)return "Overworld display only; server weather stays unchanged.";
@@ -103,6 +108,12 @@ public final class GameModuleSettingsScreen extends Screen {
             row(a,2,"Hold key",capturing&&!capturingToggle?"Press key...":ModuleKeys.label(settings().snaplookKey()));
             row(a,15,"Perspective",settings().snapPerspective().label);
         }
+        else if(module==GameplayModule.BLOCK_OVERLAY){
+            row(a,19,"Color",label(settings().blockColor().name()));row(a,20,"Style",label(settings().blockMode().name()));
+            row(a,21,"Fill opacity",settings().blockOpacity()+"%");row(a,22,"Line width",Integer.toString(settings().blockWidth()));
+        }else if(module==GameplayModule.HIT_COLOR){
+            row(a,23,"Color",label(settings().damageColor().name()));row(a,24,"Tint strength",settings().hitOpacity()+"%");row(a,25,"Only players",settings().hitPlayersOnly()?"On":"Off");
+        }else if(module==GameplayModule.FOV_CONTROL){row(a,26,"View angle",settings().cameraFov()+" degrees");row(a,27,"Dynamic FOV",settings().dynamicFov()+"%");}
         else if(module==GameplayModule.CHAT_TIMESTAMPS)row(a,17,"Time format",settings().chatTimeFormat().label);
         else if(module==GameplayModule.DURABILITY_WARNING)row(a,18,"Warn at",settings().durabilityThreshold().percent+"% or less");
         else if(module==GameplayModule.WEATHER_CHANGER)row(a,16,"Weather",label(settings().weatherMode().name()));
@@ -167,6 +178,15 @@ public final class GameModuleSettingsScreen extends Screen {
         else if(id==16)saved=settings().weatherMode(ModSettings.WeatherMode.values()[Math.floorMod(settings().weatherMode().ordinal()+direction,ModSettings.WeatherMode.values().length)]);
         else if(id==17)saved=settings().chatTimeFormat(ModSettings.ChatTimeFormat.values()[Math.floorMod(settings().chatTimeFormat().ordinal()+direction,ModSettings.ChatTimeFormat.values().length)]);
         else if(id==18)saved=settings().durabilityThreshold(ModSettings.DurabilityThreshold.values()[Math.floorMod(settings().durabilityThreshold().ordinal()+direction,ModSettings.DurabilityThreshold.values().length)]);
+        else if(id==19)saved=settings().blockColor(VisualPalette.values()[Math.floorMod(settings().blockColor().ordinal()+direction,VisualPalette.values().length)]);
+        else if(id==20)saved=settings().blockMode(ModSettings.BlockMode.values()[Math.floorMod(settings().blockMode().ordinal()+direction,ModSettings.BlockMode.values().length)]);
+        else if(id==21)saved=settings().blockOpacity(5+Math.floorMod(settings().blockOpacity()-5+direction*5,60));
+        else if(id==22)saved=settings().blockWidth(1+Math.floorMod(settings().blockWidth()-1+direction,5));
+        else if(id==23)saved=settings().damageColor(VisualPalette.values()[Math.floorMod(settings().damageColor().ordinal()+direction,VisualPalette.values().length)]);
+        else if(id==24)saved=settings().hitOpacity(5+Math.floorMod(settings().hitOpacity()-5+direction*5,80));
+        else if(id==25)saved=settings().hitPlayersOnly(!settings().hitPlayersOnly());
+        else if(id==26)saved=settings().cameraFov(60+Math.floorMod(settings().cameraFov()-60+direction*5,55));
+        else if(id==27)saved=settings().dynamicFov(Math.floorMod(settings().dynamicFov()+direction*25,125));
         else if(id==98)saved=settings().reset(module);else return;
         status=saved?"Saved":"Could not save settings";
     }

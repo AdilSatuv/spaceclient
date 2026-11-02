@@ -18,6 +18,11 @@ public final class ModSettings {
         public final String label; public final int view;
         SnapPerspective(String label,int view){this.label=label;this.view=view;}
     }
+    public enum BlockMode {
+        OUTLINE(true,false), FILL(false,true), BOTH(true,true);
+        public final boolean outline,fill;
+        BlockMode(boolean outline,boolean fill){this.outline=outline;this.fill=fill;}
+    }
     public enum WeatherMode { CLEAR, RAIN, SNOW }
     public enum ChatTimeFormat {
         HOURS_MINUTES("24h / minutes", "HH:mm"), SECONDS("24h / seconds", "HH:mm:ss"), TWELVE_HOUR("12h / minutes", "hh:mm a");
@@ -45,7 +50,11 @@ public final class ModSettings {
     private String error = "";
     private static final class Options {
         boolean autoSprint, freeLook, zoom, crosshair, fullbright, timeChanger, noHurtCam, snaplook, weatherChanger;
-        boolean chatTimestamps, durabilityWarning;
+        boolean chatTimestamps, durabilityWarning, blockOverlay, hitColor, fovControl;
+        VisualPalette blockColor=VisualPalette.AQUA, damageColor=VisualPalette.VIOLET;
+        BlockMode blockMode=BlockMode.BOTH;
+        int blockOpacity=20,blockWidth=2,hitOpacity=55,cameraFov=90,dynamicFov=0;
+        boolean hitPlayersOnly;
         ChatTimeFormat chatTimeFormat=ChatTimeFormat.HOURS_MINUTES;
         DurabilityThreshold durabilityThreshold=DurabilityThreshold.TEN;
         int snaplookKey; // Unbound: preserve all existing user hold/toggle bindings.
@@ -64,6 +73,9 @@ public final class ModSettings {
             o.fullbright = fullbright; o.timeChanger = timeChanger; o.brightness = brightness; o.timePreset = timePreset;
             o.noHurtCam = noHurtCam;
             o.snaplook=snaplook;o.weatherChanger=weatherChanger;o.snaplookKey=snaplookKey;o.snapPerspective=snapPerspective;o.weatherMode=weatherMode;
+            o.blockOverlay=blockOverlay;o.hitColor=hitColor;o.fovControl=fovControl;
+            o.blockColor=blockColor;o.damageColor=damageColor;o.blockMode=blockMode;o.blockOpacity=blockOpacity;o.blockWidth=blockWidth;
+            o.hitOpacity=hitOpacity;o.hitPlayersOnly=hitPlayersOnly;o.cameraFov=cameraFov;o.dynamicFov=dynamicFov;
             o.chatTimestamps=chatTimestamps;o.durabilityWarning=durabilityWarning;o.chatTimeFormat=chatTimeFormat;o.durabilityThreshold=durabilityThreshold;
             o.sprintMode = sprintMode; o.freeLookKey = freeLookKey; o.zoomKey = zoomKey;
             o.zoomFactor = zoomFactor; o.zoomSmooth = zoomSmooth; o.style = style;
@@ -80,10 +92,10 @@ public final class ModSettings {
             Properties p = new Properties();
             try (InputStream in = Files.newInputStream(file)) { p.load(in); }
             String schema = p.getProperty("schemaVersion", "");
-            if (!schema.matches("[1-7]")) throw new IOException("Unsupported settings");
+            if (!schema.matches("[1-8]")) throw new IOException("Unsupported settings");
             int version = Integer.parseInt(schema);
             boolean legacy = version == 1;
-            if (p.size() != (legacy ? 3 : version == 2 ? 17 : version == 3 ? 21 : version == 4 ? 27 : version==5 ? 29 : version==6 ? 36 : 42))
+            if (p.size() != (legacy ? 3 : version == 2 ? 17 : version == 3 ? 21 : version == 4 ? 27 : version==5 ? 29 : version==6 ? 36 : version==7 ? 42 : 57))
                 throw new IOException("Unsupported settings");
             Options o = new Options();
             o.autoSprint = bool(p, "autoSprint"); o.freeLook = bool(p, "freeLook");
@@ -98,7 +110,7 @@ public final class ModSettings {
                     integer(p, "crosshairThickness", 1, 4), bool(p, "crosshairDot"), bool(p, "crosshairOutline"));
             }
             if (version >= 3) for (GameplayModule m : GameplayModule.values())
-                if (version >= 7 || (version==6 && m.ordinal()<GameplayModule.CHAT_TIMESTAMPS.ordinal()) || (version==5 && m.ordinal()<GameplayModule.SNAPLOOK.ordinal())
+                if (version >= 8 || (version==7 && m.ordinal()<GameplayModule.BLOCK_OVERLAY.ordinal()) || (version==6 && m.ordinal()<GameplayModule.CHAT_TIMESTAMPS.ordinal()) || (version==5 && m.ordinal()<GameplayModule.SNAPLOOK.ordinal())
                         || (version == 4 && m.ordinal() < GameplayModule.NO_HURT_CAM.ordinal())
                         || (version == 3 && m.ordinal() < GameplayModule.FULLBRIGHT.ordinal()))
                     o.toggleKeys[m.ordinal()] = integer(p, "toggleKey." + m.name(), 0, 255);
@@ -116,6 +128,13 @@ public final class ModSettings {
                 o.chatTimestamps=bool(p,"chatTimestamps");o.durabilityWarning=bool(p,"durabilityWarning");
                 o.chatTimeFormat=ChatTimeFormat.valueOf(p.getProperty("chatTimeFormat",""));
                 o.durabilityThreshold=DurabilityThreshold.valueOf(p.getProperty("durabilityThreshold",""));
+            }
+            if(version>=8) {
+                o.blockOverlay=bool(p,"blockOverlay");o.hitColor=bool(p,"hitColor");o.fovControl=bool(p,"fovControl");
+                o.blockColor=VisualPalette.valueOf(p.getProperty("blockColor",""));o.damageColor=VisualPalette.valueOf(p.getProperty("damageColor",""));
+                o.blockMode=BlockMode.valueOf(p.getProperty("blockMode",""));o.blockOpacity=integer(p,"blockOpacity",5,60);o.blockWidth=integer(p,"blockWidth",1,5);
+                o.hitOpacity=integer(p,"hitOpacity",5,80);o.hitPlayersOnly=bool(p,"hitPlayersOnly");
+                o.cameraFov=integer(p,"cameraFov",60,110);o.dynamicFov=integer(p,"dynamicFov",0,100);
             }
             s.value = o;
         } catch (IOException | IllegalArgumentException ex) {
@@ -143,6 +162,18 @@ public final class ModSettings {
     public boolean noHurtCam() { return value.noHurtCam; }
     public boolean snaplook(){return value.snaplook;}
     public boolean weatherChanger(){return value.weatherChanger;}
+    public boolean blockOverlay(){return value.blockOverlay;}
+    public boolean hitColor(){return value.hitColor;}
+    public boolean fovControl(){return value.fovControl;}
+    public VisualPalette blockColor(){return value.blockColor;}
+    public VisualPalette damageColor(){return value.damageColor;}
+    public BlockMode blockMode(){return value.blockMode;}
+    public int blockOpacity(){return value.blockOpacity;}
+    public int blockWidth(){return value.blockWidth;}
+    public int hitOpacity(){return value.hitOpacity;}
+    public boolean hitPlayersOnly(){return value.hitPlayersOnly;}
+    public int cameraFov(){return value.cameraFov;}
+    public int dynamicFov(){return value.dynamicFov;}
     public boolean chatTimestamps(){return value.chatTimestamps;}
     public boolean durabilityWarning(){return value.durabilityWarning;}
     public ChatTimeFormat chatTimeFormat(){return value.chatTimeFormat;}
@@ -181,6 +212,19 @@ public final class ModSettings {
     public boolean toggleNoHurtCam() { return change(o -> o.noHurtCam = !o.noHurtCam); }
     public boolean toggleSnaplook(){return change(o->o.snaplook=!o.snaplook);}
     public boolean toggleWeatherChanger(){return change(o->o.weatherChanger=!o.weatherChanger);}
+    public boolean toggleBlockOverlay(){return change(o->o.blockOverlay=!o.blockOverlay);}
+    public boolean toggleHitColor(){return change(o->o.hitColor=!o.hitColor);}
+    public boolean toggleFovControl(){return change(o->o.fovControl=!o.fovControl);}
+    public boolean blockColor(VisualPalette v){return change(o->{if(v==null)throw new IllegalArgumentException();o.blockColor=v;});}
+    public boolean damageColor(VisualPalette v){return change(o->{if(v==null)throw new IllegalArgumentException();o.damageColor=v;});}
+    public boolean blockMode(BlockMode v){return change(o->{if(v==null)throw new IllegalArgumentException();o.blockMode=v;});}
+    public boolean blockOpacity(int v){return change(o->{range(v,5,60);o.blockOpacity=v;});}
+    public boolean blockWidth(int v){return change(o->{range(v,1,5);o.blockWidth=v;});}
+    public boolean hitOpacity(int v){return change(o->{range(v,5,80);o.hitOpacity=v;});}
+    public boolean hitPlayersOnly(boolean v){return change(o->o.hitPlayersOnly=v);}
+    public boolean cameraFov(int v){return change(o->{range(v,60,110);o.cameraFov=v;});}
+    public boolean dynamicFov(int v){return change(o->{range(v,0,100);o.dynamicFov=v;});}
+    private static void range(int v,int min,int max){if(v<min||v>max)throw new IllegalArgumentException();}
     public boolean toggleChatTimestamps(){return change(o->o.chatTimestamps=!o.chatTimestamps);}
     public boolean toggleDurabilityWarning(){return change(o->o.durabilityWarning=!o.durabilityWarning);}
     public boolean chatTimeFormat(ChatTimeFormat v){return change(o->{if(v==null)throw new IllegalArgumentException();o.chatTimeFormat=v;});}
@@ -209,6 +253,9 @@ public final class ModSettings {
                 case NO_HURT_CAM: break;
                 case SNAPLOOK: o.snaplookKey=0;o.snapPerspective=SnapPerspective.FRONT;break;
                 case WEATHER_CHANGER: o.weatherMode=WeatherMode.CLEAR;break;
+                case BLOCK_OVERLAY:o.blockColor=VisualPalette.AQUA;o.blockMode=BlockMode.BOTH;o.blockOpacity=20;o.blockWidth=2;break;
+                case HIT_COLOR:o.damageColor=VisualPalette.VIOLET;o.hitOpacity=55;o.hitPlayersOnly=false;break;
+                case FOV_CONTROL:o.cameraFov=90;o.dynamicFov=0;break;
                 case CHAT_TIMESTAMPS: o.chatTimeFormat=ChatTimeFormat.HOURS_MINUTES;break;
                 case DURABILITY_WARNING: o.durabilityThreshold=DurabilityThreshold.TEN;break;
                 default: throw new IllegalArgumentException();
@@ -222,7 +269,12 @@ public final class ModSettings {
         try {
             Options o = value.copy(); mutation.accept(o);
             Properties p = new Properties();
-            p.setProperty("schemaVersion", "7");
+            p.setProperty("schemaVersion", "8");
+            p.setProperty("blockOverlay",Boolean.toString(o.blockOverlay));p.setProperty("hitColor",Boolean.toString(o.hitColor));p.setProperty("fovControl",Boolean.toString(o.fovControl));
+            p.setProperty("blockColor",o.blockColor.name());p.setProperty("damageColor",o.damageColor.name());p.setProperty("blockMode",o.blockMode.name());
+            p.setProperty("blockOpacity",Integer.toString(o.blockOpacity));p.setProperty("blockWidth",Integer.toString(o.blockWidth));
+            p.setProperty("hitOpacity",Integer.toString(o.hitOpacity));p.setProperty("hitPlayersOnly",Boolean.toString(o.hitPlayersOnly));
+            p.setProperty("cameraFov",Integer.toString(o.cameraFov));p.setProperty("dynamicFov",Integer.toString(o.dynamicFov));
             p.setProperty("chatTimestamps",Boolean.toString(o.chatTimestamps));p.setProperty("durabilityWarning",Boolean.toString(o.durabilityWarning));
             p.setProperty("chatTimeFormat",o.chatTimeFormat.name());p.setProperty("durabilityThreshold",o.durabilityThreshold.name());
             p.setProperty("snaplook",Boolean.toString(o.snaplook));p.setProperty("weatherChanger",Boolean.toString(o.weatherChanger));

@@ -14,7 +14,10 @@ public enum GameplayModule {
     SNAPLOOK("Snaplook", "Hold a key for a quick perspective view", "snaplook perspective third person взгляд вид третье лицо"),
     WEATHER_CHANGER("Weather Changer", "Choose clear skies, rain or snow", "weather changer clear rain snow погода дождь снег ясно"),
     CHAT_TIMESTAMPS("Chat Timestamps", "Show when new chat messages arrived", "chat timestamps time чат время сообщения"),
-    DURABILITY_WARNING("Durability Warning", "Warn when equipped items are nearly broken", "durability warning alert armor tool прочность предупреждение броня инструмент");
+    DURABILITY_WARNING("Durability Warning", "Warn when equipped items are nearly broken", "durability warning alert armor tool прочность предупреждение броня инструмент"),
+    BLOCK_OVERLAY("Block Overlay", "Color the outline and fill of your selected block", "block overlay outline fill rainbow блок обводка заливка радуга"),
+    HIT_COLOR("Hit Color", "Customize the damage tint of visible entities", "hit color hurt damage tint цвет урон подсветка"),
+    FOV_CONTROL("FOV Control", "Choose your view angle and dynamic FOV strength", "fov control field view sprint bow угол обзор камера лук");
     public final String title, description;
     private final String search;
     GameplayModule(String title, String description, String aliases) {
@@ -30,6 +33,7 @@ public enum GameplayModule {
             case NO_HURT_CAM: return s.noHurtCam();
             case SNAPLOOK: return s.snaplook(); case WEATHER_CHANGER: return s.weatherChanger();
             case CHAT_TIMESTAMPS: return s.chatTimestamps(); case DURABILITY_WARNING: return s.durabilityWarning();
+            case BLOCK_OVERLAY: return s.blockOverlay(); case HIT_COLOR: return s.hitColor(); case FOV_CONTROL: return s.fovControl();
             default: throw new AssertionError(this);
         }
     }
@@ -41,6 +45,7 @@ public enum GameplayModule {
             case NO_HURT_CAM: return s.toggleNoHurtCam();
             case SNAPLOOK: return s.toggleSnaplook(); case WEATHER_CHANGER: return s.toggleWeatherChanger();
             case CHAT_TIMESTAMPS: return s.toggleChatTimestamps(); case DURABILITY_WARNING: return s.toggleDurabilityWarning();
+            case BLOCK_OVERLAY: return s.toggleBlockOverlay(); case HIT_COLOR: return s.toggleHitColor(); case FOV_CONTROL: return s.toggleFovControl();
             default: throw new AssertionError(this);
         }
     }

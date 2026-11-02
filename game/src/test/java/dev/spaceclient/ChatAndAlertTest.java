@@ -50,7 +50,7 @@ public class ChatAndAlertTest {
         assertEquals(50,s.snaplookKey());assertEquals(ModSettings.SnapPerspective.BACK,s.snapPerspective());assertEquals(ModSettings.WeatherMode.SNOW,s.weatherMode());
         assertEquals(48,s.freeLookKey());assertEquals(34,s.zoomKey());assertEquals(7,s.zoomFactor());assertFalse(s.zoomSmooth());
         assertEquals(ModSettings.ChatTimeFormat.HOURS_MINUTES,s.chatTimeFormat());assertEquals(ModSettings.DurabilityThreshold.TEN,s.durabilityThreshold());
-        assertTrue(s.toggleChatTimestamps());assertEquals("7",read().getProperty("schemaVersion"));assertEquals(42,read().size());
+        assertTrue(s.toggleChatTimestamps());assertEquals("8",read().getProperty("schemaVersion"));assertEquals(57,read().size());
         s=ModSettings.open(file());assertFalse(s.isReadOnly());assertTrue(s.chatTimestamps());assertTrue(s.snaplook());assertEquals(52,s.toggleKey(GameplayModule.WEATHER_CHANGER));
     }
     @Test public void eachFormatAndThresholdPersistsAcrossIndependentToggles()throws Exception {
@@ -71,7 +71,7 @@ public class ChatAndAlertTest {
     @Test public void malformedFutureAndPartialSettingsAreReadOnlyAndOriginalBytesSurvive()throws Exception {
         ModSettings s=ModSettings.open(file());s.toggleChatTimestamps();Properties good=read();
         for(String[] change:new String[][]{{"chatTimestamps",null},{"durabilityWarning","yes"},{"chatTimeFormat","UTC"},{"durabilityThreshold","ZERO"},
-            {"toggleKey.CHAT_TIMESTAMPS",null},{"toggleKey.DURABILITY_WARNING","256"},{"schemaVersion","8"},{"schemaVersion","07"},{"unknown","keep"}}){
+            {"toggleKey.CHAT_TIMESTAMPS",null},{"toggleKey.DURABILITY_WARNING","256"},{"schemaVersion","9"},{"schemaVersion","07"},{"unknown","keep"}}){
             Properties p=new Properties();p.putAll(good);if(change[1]==null)p.remove(change[0]);else p.setProperty(change[0],change[1]);write(p);byte[] bytes=Files.readAllBytes(file());
             ModSettings r=ModSettings.open(file());assertTrue(change[0],r.isReadOnly());assertFalse(r.toggleChatTimestamps());assertFalse(r.toggleDurabilityWarning());assertArrayEquals(bytes,Files.readAllBytes(file()));}
     }

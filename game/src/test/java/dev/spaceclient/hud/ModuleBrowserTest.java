@@ -9,8 +9,16 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class ModuleBrowserTest {
+    @Test public void newVisualModsHaveSearchAliasesSectionsAndFavorites()throws Exception {
+        assertEquals(GameplayModule.BLOCK_OVERLAY,HudSection.VISUALS.catalog("заливка").get(0).game);
+        assertEquals(GameplayModule.HIT_COLOR,HudSection.COMBAT.catalog("hit color").get(0).game);
+        assertEquals(GameplayModule.FOV_CONTROL,HudSection.PLAYER.catalog("fov control").get(0).game);
+        assertTrue(HudSection.MISC.catalog("block overlay").isEmpty());assertTrue(HudSection.WORLD.catalog("hit color").isEmpty());
+        ModuleBrowserSettings s=ModuleBrowserSettings.open(Files.createTempDirectory("space-style-favs").resolve("browser"));
+        for(GameplayModule m:new GameplayModule[]{GameplayModule.BLOCK_OVERLAY,GameplayModule.HIT_COLOR,GameplayModule.FOV_CONTROL})assertTrue(s.toggleFavorite("game."+m.name()));
+    }
     @Test public void newUtilityModsAreSearchableInAppropriateSectionsAndCanBeFavorited() throws Exception {
-        assertEquals(34,HudSection.HOME.catalog("").size());
+        assertEquals(37,HudSection.HOME.catalog("").size());
         assertEquals(GameplayModule.CHAT_TIMESTAMPS,HudSection.MISC.catalog("чат").get(0).game);
         assertEquals(GameplayModule.DURABILITY_WARNING,HudSection.PLAYER.catalog("прочность").get(0).game);
         assertTrue(HudSection.VISUALS.catalog("timestamps").isEmpty());assertTrue(HudSection.WORLD.catalog("durability warning").isEmpty());
