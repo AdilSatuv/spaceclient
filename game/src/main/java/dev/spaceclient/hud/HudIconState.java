@@ -36,6 +36,9 @@ final class HudIconState implements AutoCloseable {
         GlStateManager.colorMaterial(materialFace,materialMode);GlStateManager.shadeModel(shade);
         if(depth)GlStateManager.enableDepthTest();else GlStateManager.disableDepthTest();GlStateManager.depthMask(depthMask);GlStateManager.depthFunc(depthFunc);
         if(blend)GlStateManager.enableBlend();else GlStateManager.disableBlend();GlStateManager.blendFuncSeparate(src,dst,srcAlpha,dstAlpha);
+        // Vanilla's blendFunc changes both GL pairs but only caches the RGB pair.
+        // Reapply the recorded values even when the cache skipped the alpha restore.
+        GL14.glBlendFuncSeparate(src,dst,srcAlpha,dstAlpha);
         if(alpha)GlStateManager.enableAlphaTest();else GlStateManager.disableAlphaTest();GlStateManager.alphaFunc(alphaFunc,alphaRef);
         if(cull)GlStateManager.enableCull();else GlStateManager.disableCull();GlStateManager.cullFace(cullFace);
         if(rescale)GlStateManager.enableRescaleNormal();else GlStateManager.disableRescaleNormal();

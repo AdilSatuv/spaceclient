@@ -9,6 +9,7 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL14;
 
 /** Uses the game's own item renderer and effect atlas, with original card geometry. */
 public final class EquipmentHudRenderer {
@@ -76,5 +77,6 @@ public final class EquipmentHudRenderer {
     private static void textState() {
         GlStateManager.disableLighting();GlStateManager.disableDepthTest();GlStateManager.enableTexture();GlStateManager.enableAlphaTest();
         GlStateManager.alphaFunc(GL11.GL_GREATER,.1f);GlStateManager.enableBlend();GlStateManager.blendFuncSeparate(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA,GL11.GL_ONE,GL11.GL_ZERO);GlStateManager.color(1,1,1,1);
+        GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA,GL11.GL_ONE,GL11.GL_ZERO);
     }
 }
