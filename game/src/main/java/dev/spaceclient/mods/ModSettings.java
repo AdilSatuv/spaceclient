@@ -8,68 +8,127 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Properties;
+import java.util.function.Consumer;
 
-/** Settings are deliberately separate from HUD profiles: these change gameplay controls. */
+/** Gameplay settings remain independent of HUD profiles. Writes commit atomically. */
 public final class ModSettings {
+    public enum SprintMode { AUTO, TOGGLE }
     private final Path file;
-    private boolean autoSprint, freeLook, readOnly;
+    private Options value = new Options();
+    private boolean readOnly;
     private String error = "";
-
-    private ModSettings(Path file) { this.file = file; }
-
-    public static ModSettings open(Path file) {
-        ModSettings settings = new ModSettings(file);
-        try {
-            if (!Files.exists(file)) return settings;
-            if (Files.size(file) > 4096) throw new IOException("File too large");
-            Properties values = new Properties();
-            try (InputStream input = Files.newInputStream(file)) { values.load(input); }
-            if (!"1".equals(values.getProperty("schemaVersion")) || values.size() != 3
-                    || !values.containsKey("autoSprint") || !values.containsKey("freeLook"))
-                throw new IOException("Unsupported settings");
-            settings.autoSprint = parseBoolean(values.getProperty("autoSprint"));
-            settings.freeLook = parseBoolean(values.getProperty("freeLook"));
-        } catch (IOException | IllegalArgumentException ex) {
-            settings.autoSprint = false;
-            settings.freeLook = false;
-            settings.readOnly = true;
-            settings.error = "Mod settings unreadable; original kept (read-only).";
+    private static final class Options {
+        boolean autoSprint, freeLook, zoom, crosshair;
+        SprintMode sprintMode = SprintMode.AUTO;
+        int freeLookKey = 47, zoomKey = 46, zoomFactor = 4; // LWJGL V / C.
+        boolean zoomSmooth = true;
+        CrosshairStyle style = CrosshairStyle.defaults();
+        Options copy() {
+            Options o = new Options();
+            o.autoSprint = autoSprint; o.freeLook = freeLook; o.zoom = zoom; o.crosshair = crosshair;
+            o.sprintMode = sprintMode; o.freeLookKey = freeLookKey; o.zoomKey = zoomKey;
+            o.zoomFactor = zoomFactor; o.zoomSmooth = zoomSmooth; o.style = style;
+            return o;
         }
-        return settings;
     }
-
-    private static boolean parseBoolean(String value) throws IOException {
-        if ("true".equals(value)) return true;
-        if ("false".equals(value)) return false;
-        throw new IOException("Invalid boolean");
+    private ModSettings(Path file) { this.file = file; }
+    public static ModSettings open(Path file) {
+        ModSettings s = new ModSettings(file);
+        try {
+            if (!Files.exists(file)) return s;
+            if (Files.size(file) > 4096) throw new IOException("File too large");
+            Properties p = new Properties();
+            try (InputStream in = Files.newInputStream(file)) { p.load(in); }
+            boolean legacy = "1".equals(p.getProperty("schemaVersion"));
+            if ((!legacy && !"2".equals(p.getProperty("schemaVersion"))) || p.size() != (legacy ? 3 : 17))
+                throw new IOException("Unsupported settings");
+            Options o = new Options();
+            o.autoSprint = bool(p, "autoSprint"); o.freeLook = bool(p, "freeLook");
+            if (!legacy) {
+                o.zoom = bool(p, "zoom"); o.crosshair = bool(p, "crosshair");
+                o.sprintMode = SprintMode.valueOf(p.getProperty("sprintMode", ""));
+                o.freeLookKey = integer(p, "freeLookKey", 0, 255); o.zoomKey = integer(p, "zoomKey", 0, 255);
+                o.zoomFactor = integer(p, "zoomFactor", 2, 8); o.zoomSmooth = bool(p, "zoomSmooth");
+                o.style = new CrosshairStyle(CrosshairStyle.Shape.valueOf(p.getProperty("crosshairShape", "")),
+                    CrosshairStyle.Color.valueOf(p.getProperty("crosshairColor", "")),
+                    integer(p, "crosshairSize", 2, 12), integer(p, "crosshairGap", 0, 8),
+                    integer(p, "crosshairThickness", 1, 4), bool(p, "crosshairDot"), bool(p, "crosshairOutline"));
+            }
+            s.value = o;
+        } catch (IOException | IllegalArgumentException ex) {
+            s.readOnly = true;
+            s.error = "Mod settings unreadable; original kept (read-only).";
+        }
+        return s;
     }
-    public boolean autoSprint() { return autoSprint; }
-    public boolean freeLook() { return freeLook; }
+    private static boolean bool(Properties p, String key) throws IOException {
+        String v = p.getProperty(key);
+        if (!"true".equals(v) && !"false".equals(v)) throw new IOException("Invalid boolean");
+        return Boolean.parseBoolean(v);
+    }
+    private static int integer(Properties p, String key, int min, int max) {
+        int v = Integer.parseInt(p.getProperty(key, ""));
+        if (v < min || v > max) throw new IllegalArgumentException("Out of range");
+        return v;
+    }
+    public boolean autoSprint() { return value.autoSprint; }
+    public boolean freeLook() { return value.freeLook; }
+    public boolean zoom() { return value.zoom; }
+    public boolean crosshair() { return value.crosshair; }
+    public SprintMode sprintMode() { return value.sprintMode; }
+    public int freeLookKey() { return value.freeLookKey; }
+    public int zoomKey() { return value.zoomKey; }
+    public int zoomFactor() { return value.zoomFactor; }
+    public boolean zoomSmooth() { return value.zoomSmooth; }
+    public CrosshairStyle crosshairStyle() { return value.style; }
     public boolean isReadOnly() { return readOnly; }
     public String error() { return error; }
-    public boolean toggleAutoSprint() { return save(!autoSprint, freeLook); }
-    public boolean toggleFreeLook() { return save(autoSprint, !freeLook); }
-
-    private boolean save(boolean sprint, boolean look) {
+    public boolean toggleAutoSprint() { return change(o -> o.autoSprint = !o.autoSprint); }
+    public boolean toggleFreeLook() { return change(o -> o.freeLook = !o.freeLook); }
+    public boolean toggleZoom() { return change(o -> o.zoom = !o.zoom); }
+    public boolean toggleCrosshair() { return change(o -> o.crosshair = !o.crosshair); }
+    public boolean sprintMode(SprintMode v) { return change(o -> { if (v == null) throw new IllegalArgumentException(); o.sprintMode = v; }); }
+    public boolean freeLookKey(int v) { return change(o -> { checkKey(v); o.freeLookKey = v; }); }
+    public boolean zoomKey(int v) { return change(o -> { checkKey(v); o.zoomKey = v; }); }
+    public boolean zoomFactor(int v) { return change(o -> { if (v < 2 || v > 8) throw new IllegalArgumentException(); o.zoomFactor = v; }); }
+    public boolean zoomSmooth(boolean v) { return change(o -> o.zoomSmooth = v); }
+    public boolean crosshairStyle(CrosshairStyle v) { return change(o -> { if (v == null) throw new IllegalArgumentException(); o.style = v; }); }
+    public boolean reset(GameplayModule module) {
+        return change(o -> {
+            switch (module) {
+                case TOGGLE_SPRINT: o.sprintMode = SprintMode.AUTO; break;
+                case FREE_LOOK: o.freeLookKey = 47; break;
+                case ZOOM: o.zoomKey = 46; o.zoomFactor = 4; o.zoomSmooth = true; break;
+                case CROSSHAIR: o.style = CrosshairStyle.defaults(); break;
+                default: throw new IllegalArgumentException();
+            }
+        });
+    }
+    private static void checkKey(int v) { if (v < 0 || v > 255) throw new IllegalArgumentException(); }
+    private boolean change(Consumer<Options> mutation) {
         if (readOnly) return false;
         Path tmp = null;
         try {
+            Options o = value.copy(); mutation.accept(o);
+            Properties p = new Properties();
+            p.setProperty("schemaVersion", "2");
+            p.setProperty("autoSprint", Boolean.toString(o.autoSprint)); p.setProperty("freeLook", Boolean.toString(o.freeLook));
+            p.setProperty("zoom", Boolean.toString(o.zoom)); p.setProperty("crosshair", Boolean.toString(o.crosshair));
+            p.setProperty("sprintMode", o.sprintMode.name());
+            p.setProperty("freeLookKey", Integer.toString(o.freeLookKey)); p.setProperty("zoomKey", Integer.toString(o.zoomKey));
+            p.setProperty("zoomFactor", Integer.toString(o.zoomFactor)); p.setProperty("zoomSmooth", Boolean.toString(o.zoomSmooth));
+            p.setProperty("crosshairShape", o.style.shape.name()); p.setProperty("crosshairColor", o.style.color.name());
+            p.setProperty("crosshairSize", Integer.toString(o.style.size)); p.setProperty("crosshairGap", Integer.toString(o.style.gap));
+            p.setProperty("crosshairThickness", Integer.toString(o.style.thickness));
+            p.setProperty("crosshairDot", Boolean.toString(o.style.dot)); p.setProperty("crosshairOutline", Boolean.toString(o.style.outline));
             Files.createDirectories(file.toAbsolutePath().getParent());
             tmp = Files.createTempFile(file.toAbsolutePath().getParent(), "space-mods-", ".tmp");
-            Properties values = new Properties();
-            values.setProperty("schemaVersion", "1");
-            values.setProperty("autoSprint", Boolean.toString(sprint));
-            values.setProperty("freeLook", Boolean.toString(look));
-            try (OutputStream output = Files.newOutputStream(tmp)) { values.store(output, "Space Client controls"); }
+            try (OutputStream out = Files.newOutputStream(tmp)) { p.store(out, "Space Client controls"); }
             try { Files.move(tmp, file, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE); }
             catch (AtomicMoveNotSupportedException ex) { Files.move(tmp, file, StandardCopyOption.REPLACE_EXISTING); }
-            autoSprint = sprint; freeLook = look; error = "";
+            value = o; error = "";
             return true;
-        } catch (IOException ex) {
-            error = "Could not save; change reverted.";
-            return false;
-        } finally {
-            if (tmp != null) try { Files.deleteIfExists(tmp); } catch (IOException ignored) { }
-        }
+        } catch (IOException | IllegalArgumentException ex) { error = "Could not save; change reverted."; return false; }
+        finally { if (tmp != null) try { Files.deleteIfExists(tmp); } catch (IOException ignored) { } }
     }
 }

@@ -11,6 +11,14 @@ public final class HudMetrics {
     private static final DateTimeFormatter CLOCK_12 = DateTimeFormatter.ofPattern("hh:mm:ss a", Locale.ROOT);
     private static final DateTimeFormatter CLOCK_12_MINUTES = DateTimeFormatter.ofPattern("hh:mm a", Locale.ROOT);
     private HudMetrics() { }
+    public static String memory(long used, long maximum) {
+        if (used < 0 || maximum <= 0 || used > maximum) return "RAM --";
+        return "RAM " + used / 1048576 + " / " + maximum / 1048576 + " MB";
+    }
+    public static String playtime(long seconds) {
+        seconds = Math.max(0, seconds);
+        return String.format(Locale.ROOT, "Session %d:%02d:%02d", seconds / 3600, seconds / 60 % 60, seconds % 60);
+    }
 
     public static String clock(LocalTime time) {
         return time == null ? "--:--:--" : CLOCK.format(time);

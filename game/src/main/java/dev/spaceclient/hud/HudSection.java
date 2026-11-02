@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
+import dev.spaceclient.mods.GameplayModule;
 
 /** Navigation filters existing HUD modules; Settings opens the native options screen. */
 enum HudSection {
@@ -11,9 +12,9 @@ enum HudSection {
     COMBAT("Combat", "Combat-related HUD indicators", EnumSet.of(HudModule.CPS, HudModule.KEYSTROKES, HudModule.HEALTH, HudModule.ARMOR, HudModule.POTION_EFFECTS)),
     VISUALS("Visuals", "Visual information on your HUD", EnumSet.of(HudModule.FPS, HudModule.COORDINATES, HudModule.COMPASS, HudModule.CLOCK, HudModule.POTION_EFFECTS)),
     HUD("HUD", "Customize your in-game overlay", EnumSet.allOf(HudModule.class)),
-    PLAYER("Player", "Player HUD indicators", EnumSet.of(HudModule.KEYSTROKES, HudModule.SPEED, HudModule.HEALTH, HudModule.HUNGER, HudModule.ARMOR, HudModule.POTION_EFFECTS)),
+    PLAYER("Player", "Player HUD indicators", EnumSet.of(HudModule.KEYSTROKES, HudModule.SPEED, HudModule.HEALTH, HudModule.HUNGER, HudModule.ARMOR, HudModule.POTION_EFFECTS, HudModule.ITEM_COUNTER)),
     WORLD("World", "World position and direction", EnumSet.of(HudModule.COORDINATES, HudModule.COMPASS)),
-    MISC("Misc", "Other HUD indicators", EnumSet.of(HudModule.FPS, HudModule.CPS, HudModule.CLOCK)),
+    MISC("Misc", "Other HUD indicators", EnumSet.of(HudModule.FPS, HudModule.CPS, HudModule.CLOCK, HudModule.MEMORY, HudModule.PLAYTIME)),
     SETTINGS("Settings", "Minecraft settings", EnumSet.noneOf(HudModule.class));
 
     final String label, description;
@@ -25,5 +26,17 @@ enum HudSection {
         List<HudModule> result = new ArrayList<HudModule>();
         for (HudModule module : HudModule.search(query)) if (included.contains(module)) result.add(module);
         return Collections.unmodifiableList(result);
+    }
+    List<CatalogModule> catalog(String query) {
+        List<CatalogModule> result = new ArrayList<CatalogModule>();
+        for (GameplayModule module : GameplayModule.values()) if (includes(module) && module.matches(query)) result.add(CatalogModule.game(module));
+        for (HudModule module : search(query)) result.add(CatalogModule.hud(module));
+        return Collections.unmodifiableList(result);
+    }
+    private boolean includes(GameplayModule module) {
+        if (this == HOME) return true;
+        if (this == PLAYER) return module == GameplayModule.TOGGLE_SPRINT || module == GameplayModule.FREE_LOOK;
+        if (this == VISUALS) return module != GameplayModule.TOGGLE_SPRINT;
+        return this == COMBAT && module == GameplayModule.CROSSHAIR;
     }
 }

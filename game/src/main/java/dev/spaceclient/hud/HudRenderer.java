@@ -45,6 +45,11 @@ public final class HudRenderer {
                 ? HudVitals.hunger(null) : HudVitals.hunger(client.player.getHungerManager().getFoodLevel());
             case ARMOR: return ArmorHud.text(client);
             case POTION_EFFECTS: return PotionHud.text(client);
+            case MEMORY:
+                Runtime vm = Runtime.getRuntime();
+                return HudMetrics.memory(vm.totalMemory() - vm.freeMemory(), vm.maxMemory());
+            case PLAYTIME: return HudMetrics.playtime(SpaceClient.session.seconds());
+            case ITEM_COUNTER: return ItemCounterHud.text(client);
             default: throw new AssertionError(module);
         }
     }

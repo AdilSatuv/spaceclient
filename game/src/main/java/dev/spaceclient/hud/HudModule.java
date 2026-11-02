@@ -18,7 +18,10 @@ public enum HudModule {
     HEALTH("health", "Health", "Current and maximum health", "hp hearts здоровье жизни сердца"),
     HUNGER("hunger", "Hunger", "Current food level", "food hunger сытость голод еда"),
     ARMOR("armor", "Armor", "Armor and held item durability", "armor status durability equipment броня прочность экипировка"),
-    POTION_EFFECTS("effects", "Potion Effects", "Active potion effects", "potion status effects effects зелья эффекты");
+    POTION_EFFECTS("effects", "Potion Effects", "Active potion effects", "potion status effects effects зелья эффекты"),
+    MEMORY("memory", "Memory", "Java memory used and maximum", "memory ram память озу"),
+    PLAYTIME("playtime", "Playtime", "Time in this world, excluding pauses", "session time timer время сессия"),
+    ITEM_COUNTER("itemcounter", "Item Counter", "Held item total in your main inventory", "item count inventory предметы счетчик счётчик");
 
     private final String id;
     private final String title;
@@ -26,7 +29,7 @@ public enum HudModule {
     private final String searchText;
     private static final HudModule[] BROWSER_ORDER = {
         FPS, COORDINATES, KEYSTROKES, CPS, COMPASS, ARMOR,
-        CLOCK, SPEED, HEALTH, HUNGER, POTION_EFFECTS
+        CLOCK, SPEED, HEALTH, HUNGER, POTION_EFFECTS, MEMORY, PLAYTIME, ITEM_COUNTER
     };
 
     HudModule(String id, String title, String description, String aliases) {
@@ -64,6 +67,9 @@ public enum HudModule {
             case HUNGER: return config.active().hunger;
             case ARMOR: return config.active().armor;
             case POTION_EFFECTS: return config.active().effects;
+            case MEMORY: return config.active().memory;
+            case PLAYTIME: return config.active().playtime;
+            case ITEM_COUNTER: return config.active().itemCounter;
             default: throw new AssertionError(this);
         }
     }
@@ -81,6 +87,9 @@ public enum HudModule {
             case HUNGER: config.active().hunger = enabled; break;
             case ARMOR: config.active().armor = enabled; break;
             case POTION_EFFECTS: config.active().effects = enabled; break;
+            case MEMORY: config.active().memory = enabled; break;
+            case PLAYTIME: config.active().playtime = enabled; break;
+            case ITEM_COUNTER: config.active().itemCounter = enabled; break;
             default: throw new AssertionError(this);
         }
     }

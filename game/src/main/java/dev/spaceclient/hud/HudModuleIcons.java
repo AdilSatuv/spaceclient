@@ -5,6 +5,30 @@ import org.lwjgl.opengl.GL11;
 /** Original line icons in a 22-unit grid; state and the current GUI transform are restored. */
 final class HudModuleIcons {
     private HudModuleIcons() { }
+    static void draw(CatalogModule module, int x, int y, int size) {
+        if (module.hud != null) { draw(module.hud, x, y, size); return; }
+        GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT | GL11.GL_CURRENT_BIT | GL11.GL_LINE_BIT);
+        GL11.glPushMatrix();
+        try {
+            GL11.glTranslatef(x,y,0); GL11.glScalef(size/22f,size/22f,1);
+            GL11.glDisable(GL11.GL_TEXTURE_2D); GL11.glDisable(GL11.GL_DEPTH_TEST);
+            GL11.glEnable(GL11.GL_BLEND); GL11.glEnable(GL11.GL_LINE_SMOOTH);
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA); GL11.glLineWidth(1.3f);
+            GL11.glColor4f(.94f,.94f,.94f,1);
+            switch (module.game) {
+                case TOGGLE_SPRINT:
+                    circle(14,3,2); path(false,3,8,8,7,12,10,16,12,21,12);
+                    path(false,12,10,9,15,3,20); path(false,9,15,15,17,16,22); break;
+                case FREE_LOOK:
+                    path(true,1,11,5,6,9,4,13,4,17,6,21,11,17,16,13,18,9,18,5,16); circle(11,11,3); break;
+                case ZOOM:
+                    circle(9,9,7);path(false,14,14,21,21);path(false,5,9,13,9);path(false,9,5,9,13);break;
+                case CROSSHAIR:
+                    circle(11,11,7);path(false,11,0,11,6);path(false,11,16,11,22);
+                    path(false,0,11,6,11);path(false,16,11,22,11);break;
+            }
+        } finally { GL11.glPopMatrix(); GL11.glPopAttrib(); }
+    }
     static void drawSection(HudSection section, int x, int y, int size, boolean selected) {
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT | GL11.GL_CURRENT_BIT | GL11.GL_LINE_BIT);
         GL11.glPushMatrix();
@@ -67,8 +91,13 @@ final class HudModuleIcons {
                     circle(11, 11, 10); path(true, 6,16, 9,8, 16,5, 13,13); path(false, 9,8, 13,13); break;
                 case ARMOR:
                     path(true, 2,5, 6,3, 8,5, 14,5, 16,3, 20,5, 18,10, 16,9, 16,19, 14,20, 8,20, 6,19, 6,9, 4,10); break;
-                case CLOCK:
+                case CLOCK: case PLAYTIME:
                     circle(11, 11, 9); path(false, 11,5, 11,11, 15,14); break;
+                case MEMORY:
+                    rect(4,4,18,18);rect(8,8,14,14);
+                    for(int i=6;i<=16;i+=5){path(false,0,i,4,i);path(false,18,i,22,i);path(false,i,0,i,4);path(false,i,18,i,22);}break;
+                case ITEM_COUNTER:
+                    rect(3,3,19,19);path(false,3,8,19,8);path(false,8,8,8,19);path(false,14,8,14,19);break;
                 case HEALTH:
                     path(true, 11,20, 2,11, 2,7, 4,4, 7,4, 11,7, 15,4, 18,4, 20,7, 20,11); break;
                 case HUNGER:

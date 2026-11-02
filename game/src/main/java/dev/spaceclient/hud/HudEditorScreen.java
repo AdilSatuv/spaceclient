@@ -18,6 +18,7 @@ public final class HudEditorScreen extends Screen {
     private HudPlacement draft;
     private boolean dragging, capturedRepeat, previousRepeat;
     private boolean profilesTab;
+    private boolean grid;
     private double grabX, grabY;
     private TextFieldWidget name;
     private int lastMouseX, lastMouseY;
@@ -84,6 +85,10 @@ public final class HudEditorScreen extends Screen {
             return;
         }
         lastMouseX = mouseX; lastMouseY = mouseY;
+        if (grid) {
+            for(int gx=0;gx<width;gx+=8) fill(gx,0,gx+1,height,0x153D4149);
+            for(int gy=0;gy<height;gy+=8) fill(0,gy,width,gy+1,0x153D4149);
+        }
         for (HudModule module : HudModule.values()) if (module != selected) drawModule(module);
         drawModule(selected);
         int y = barY(), x = panelX(), w = panelWidth(), h = panelHeight();
@@ -114,7 +119,6 @@ public final class HudEditorScreen extends Screen {
             if (hovered) hoverHint = action.hint;
         }
         if (sidebar()) {
-            SpaceUiFont.draw(client, "L/P: tabs", x + 8, y + 182, MUTED);
             if (profilesTab) {
                 SpaceUiFont.draw(client, "Name", x + 8, y + 114, MUTED);
                 box(nameBoxX(), nameBoxY(), 90, 20, name.isFocused(), false, !settings().isReadOnly(), false);
@@ -130,13 +134,11 @@ public final class HudEditorScreen extends Screen {
             SpaceUiFont.draw(client, "Name", x + 6, y + 60, MUTED);
             box(nameBoxX(), nameBoxY(), 90, 20, name.isFocused(), false, !settings().isReadOnly(), false);
             name.x = nameBoxX() + 2; name.y = nameBoxY() + 6; name.render();
-            SpaceUiFont.draw(client, "L/P: tabs", x + 180, y + 60, MUTED);
         } else {
             SpaceUiFont.draw(client, "MOVE", x + 6, y + 36, MUTED);
             SpaceUiFont.draw(client, "SCALE", x + 132, y + 36, MUTED);
             SpaceUiFont.draw(client, String.format(Locale.ROOT, "%.1fx", placement().scale), x + 190, y + 36, ACCENT);
             SpaceUiFont.draw(client, "EDGE", x + 6, y + 60, MUTED);
-            SpaceUiFont.draw(client, "L/P: tabs", x + 207, y + 60, MUTED);
         }
         String message = confirmation.message();
         if (message.isEmpty()) message = settings().getError();
@@ -186,6 +188,7 @@ public final class HudEditorScreen extends Screen {
             actions.add(new Action(15, ">", x + 120, y + 31, 20, true, "Next module (Tab / PgDn)"));
             actions.add(new Action(50, "LAYOUT", x + 8, y + 54, 65, true, "Layout controls (L)"));
             actions.add(new Action(51, "PROFILES", x + 77, y + 54, 70, true, "Profile and import/export controls (P)"));
+            actions.add(new Action(52, grid ? "Grid: On (G)" : "Grid: Off (G)", x + 8, y + 174, 138, true, "8-unit grid and snapping; Shift+drag for fine placement"));
             if (profilesTab) {
                 actions.add(new Action(10, "1: " + settings().getConfig().profile(0).name, x + 8, y + 82, 65, editable, "Select HUD profile 1 (key 1)"));
                 actions.add(new Action(11, "2: " + settings().getConfig().profile(1).name, x + 77, y + 82, 70, editable, "Select HUD profile 2 (key 2)"));
@@ -212,6 +215,7 @@ public final class HudEditorScreen extends Screen {
         actions.add(new Action(12, selected.getTitle(), x + 130, y + 6, 68, true, "Next module (Tab / PgDn)"));
         actions.add(new Action(15, ">", x + 200, y + 6, 18, true, "Next module (Tab / PgDn)"));
         actions.add(new Action(13, "Done", x + w - 60, y + 6, 54, true, "Return to modules (Esc); changes save automatically"));
+        actions.add(new Action(52, grid ? "Grid: On (G)" : "Grid: Off (G)", x + 198, y + 54, 102, true, "8-unit grid and snapping; Shift+drag for fine placement"));
         if (profilesTab) {
             actions.add(new Action(10, "1: " + settings().getConfig().profile(0).name, x + 6, y + 30, 70, editable, "Select HUD profile 1 (key 1)"));
             actions.add(new Action(11, "2: " + settings().getConfig().profile(1).name, x + 80, y + 30, 70, editable, "Select HUD profile 2 (key 2)"));
@@ -244,9 +248,7 @@ public final class HudEditorScreen extends Screen {
         SpaceUiFont.draw(client, text, centerX - SpaceUiFont.width(text) / 2f, y, color);
     }
     private void rounded(int x, int y, int w, int h, int color) {
-        fill(x + 2, y, x + w - 2, y + h, color);
-        fill(x, y + 2, x + w, y + h - 2, color);
-        fill(x + 1, y + 1, x + w - 1, y + h - 1, color);
+        UiShapes.rounded(x,y,w,h,4,color);
     }
     @Override protected void mouseClicked(int x, int y, int button) {
         if (button != 0 || !roomy() || client.player == null || dragging) return;
@@ -281,11 +283,19 @@ public final class HudEditorScreen extends Screen {
         grabX = x - b.x; grabY = y - b.y;
         draft = profile().placement(module);
         dragging = true;
-        status = "Drag to move; edges snap within 6 GUI units";
+        status = "Drag: align  |  Shift: fine placement  |  G: grid";
     }
     @Override protected void mouseDragged(int x, int y, int button, long elapsed) {
-        if (button == 0 && dragging) draft = placement().at(x - grabX, y - grabY,
-            width, height, HudRenderer.textWidth(client, label(selected)), 10);
+        if (button == 0 && dragging) {
+            double px=x-grabX,py=y-grabY;
+            if(!hasShiftDown()) {
+                List<HudPlacement.Bounds> neighbours=new ArrayList<HudPlacement.Bounds>();
+                for(HudModule m:HudModule.values())if(m!=selected&&m.isEnabled(settings().getConfig()))neighbours.add(bounds(m));
+                HudPlacement.Bounds b=bounds(selected);
+                double[] p=HudAlignment.snap(px,py,b.width,b.height,width,height,neighbours,grid);px=p[0];py=p[1];
+            }
+            draft=placement().at(px,py,width,height,HudRenderer.textWidth(client,label(selected)),10,!hasShiftDown());
+        }
     }
     @Override protected void mouseReleased(int x, int y, int button) {
         if (button == 0 && dragging) {
@@ -336,6 +346,7 @@ public final class HudEditorScreen extends Screen {
             if (!dragging) activate(key == Keyboard.KEY_L ? 50 : 51);
             return;
         }
+        if(key==Keyboard.KEY_G&&!Keyboard.isRepeatEvent()){activate(52);return;}
         if (settings().isReadOnly() || dragging) return;
         if (key == Keyboard.KEY_LEFT) nudge(-1, 0);
         else if (key == Keyboard.KEY_RIGHT) nudge(1, 0);
@@ -357,6 +368,7 @@ public final class HudEditorScreen extends Screen {
     }
     private void nudge(int dx, int dy) {
         HudPlacement.Bounds b = bounds(selected);
+        if(hasShiftDown()){dx*=10;dy*=10;}
         draft = placement().at(b.x + dx, b.y + dy, width, height, HudRenderer.textWidth(client, label(selected)), 10, false);
     }
     private void scale(double delta) {
@@ -386,6 +398,7 @@ public final class HudEditorScreen extends Screen {
         if (!commitDraft() || !finishName()) return;
         if (id != 45 && id != 47) cancelConfirmation();
         if (id == 13) { client.setScreen(parent); return; }
+        if (id == 52) { grid=!grid;status=grid?"Grid on; Shift+drag bypasses snapping":"Grid off; nearby widgets still align";return; }
         if (id == 50 || id == 51) { profilesTab = id == 51; status = ""; return; }
         if (id == 12 || id == 14 || id == 15) { selectModule(id == 14 ? -1 : 1); return; }
         if (settings().isReadOnly()) return;

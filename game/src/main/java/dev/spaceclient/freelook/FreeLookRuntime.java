@@ -1,8 +1,8 @@
 package dev.spaceclient.freelook;
 
 import dev.spaceclient.SpaceClient;
+import dev.spaceclient.mods.ModuleKeys;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.KeyBinding;
 import net.minecraft.entity.player.ClientPlayerEntity;
 import org.lwjgl.input.Keyboard;
 
@@ -15,17 +15,13 @@ public final class FreeLookRuntime {
 
     /** Preserve every existing vanilla or mod key binding; never steal its input. */
     public static boolean keyConflicts(MinecraftClient c) {
-        if (c == null || c.options == null || c.options.allKeys == null) return true;
-        for (KeyBinding binding : c.options.allKeys) {
-            if (binding != null && binding.getCode() == Keyboard.KEY_V) return true;
-        }
-        return false;
+        return SpaceClient.mods == null || ModuleKeys.conflicts(c, SpaceClient.mods.freeLookKey());
     }
     public static boolean eligible(MinecraftClient c) {
         return c != null && SpaceClient.mods != null && SpaceClient.mods.freeLook()
             && c.options != null && c.player != null && c.getCameraEntity() == c.player
             && c.currentScreen == null && c.focused && Keyboard.isCreated()
-            && !keyConflicts(c) && Keyboard.isKeyDown(Keyboard.KEY_V);
+            && ModuleKeys.held(c, SpaceClient.mods.freeLookKey());
     }
     public static void update(MinecraftClient c, boolean held) {
         if (c == null || c.options == null) return;

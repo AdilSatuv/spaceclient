@@ -3,6 +3,7 @@ package dev.spaceclient.mixin;
 
 import dev.spaceclient.freelook.FreeLookState;
 import dev.spaceclient.freelook.FreeLookRuntime;
+import dev.spaceclient.mods.ZoomRuntime;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.entity.Entity;
@@ -33,7 +34,7 @@ public abstract class FreeLookRendererMixin {
     @Redirect(method = "render(FJ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/ClientPlayerEntity;increaseTransforms(FF)V"))
     private void spaceclient$turnCamera(ClientPlayerEntity player, float dx, float dy) {
         if (spaceclient$freeLook.active()) spaceclient$freeLook.turn(dx, dy);
-        else player.increaseTransforms(dx, dy);
+        else player.increaseTransforms(dx * ZoomRuntime.sensitivity(), dy * ZoomRuntime.sensitivity());
     }
 
     @Redirect(method = "transformCamera(F)V", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/Entity;yaw:F"))

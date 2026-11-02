@@ -1,36 +1,33 @@
 package dev.spaceclient.hud;
 
-import org.lwjgl.opengl.GL11;
-
-/** Antialiased pill and circular thumb. Input hitboxes are managed by the containing card. */
-final class HudSwitch {
+/** Smooth pill and thumb; each screen owns animation state, while hitboxes stay fixed. */
+public final class HudSwitch {
     private HudSwitch() { }
-    static void draw(int x, int y, boolean enabled) {
-        GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT | GL11.GL_CURRENT_BIT | GL11.GL_POLYGON_BIT);
-        try {
-            GL11.glDisable(GL11.GL_TEXTURE_2D);
-            GL11.glDisable(GL11.GL_DEPTH_TEST);
-            GL11.glDisable(GL11.GL_ALPHA_TEST);
-            GL11.glEnable(GL11.GL_BLEND);
-            GL11.glEnable(GL11.GL_POLYGON_SMOOTH);
-            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            if (enabled) GL11.glColor4f(.82f, .67f, .44f, 1);
-            else GL11.glColor4f(.23f, .24f, .26f, 1);
-            pill(x + 2, y + 1, 24, 12);
-            if (enabled) GL11.glColor4f(.96f, .95f, .92f, 1);
-            else GL11.glColor4f(.59f, .60f, .62f, 1);
-            pill(enabled ? x + 15 : x + 4, y + 2, 10, 10);
-        } finally { GL11.glPopAttrib(); }
+    public static void draw(int x, int y, boolean enabled) { draw(x,y,enabled ? 1 : 0); }
+    public static void draw(int x, int y, float amount) {
+        float t = Math.max(0,Math.min(1,amount));
+        UiShapes.rounded(x+2,y+1,24,12,6,mix(0xFF3A3C40,0xFFD7AF6A,t));
+        UiShapes.rounded(x+4+11*t,y+3,10,10,5,0x40000000);
+        UiShapes.rounded(x+4+11*t,y+2,10,10,5,mix(0xFF979A9E,0xFFF4F1EA,t));
     }
-    private static void pill(float x, float y, float width, float height) {
-        float radius = height / 2f;
-        GL11.glBegin(GL11.GL_TRIANGLE_FAN);
-        GL11.glVertex2f(x + width / 2f, y + radius);
-        for (int i = 0; i <= 48; i++) {
-            double angle = Math.PI * 2 * i / 48;
-            float centerX = Math.cos(angle) >= 0 ? x + width - radius : x + radius;
-            GL11.glVertex2d(centerX + radius * Math.cos(angle), y + radius + radius * Math.sin(angle));
+    private static int mix(int a, int b, float t) {
+        int r=0xFF000000;
+        for(int shift=0;shift<=16;shift+=8) r |= Math.round(((a>>shift)&255)*(1-t)+((b>>shift)&255)*t)<<shift;
+        return r;
+    }
+    public static final class Motion {
+        private float amount;
+        private long previous;
+        public Motion(boolean enabled) { amount=enabled ? 1 : 0; }
+        public float sample(boolean enabled,long nanos) {
+            float target=enabled ? 1 : 0;
+            if(previous!=0) {
+                double dt=Math.max(0,Math.min(.1,(nanos-previous)/1_000_000_000.0));
+                amount+=(target-amount)*(1-Math.exp(-dt*24));
+                if(Math.abs(target-amount)<.001)amount=target;
+            }
+            previous=nanos;
+            return amount;
         }
-        GL11.glEnd();
     }
 }

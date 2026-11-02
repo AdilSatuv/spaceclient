@@ -16,11 +16,13 @@ public final class HudModuleSettingsScreen extends Screen {
     private int left, top, panelWidth, focus;
     private int tab; // 0: layout, 1: appearance, 2: module content
     private String status = "";
+    private final HudSwitch.Motion toggleMotion;
 
     public HudModuleSettingsScreen(Screen parent, HudModule module) {
         if (module == null) throw new IllegalArgumentException("Module is required");
         this.parent = parent;
         this.module = module;
+        toggleMotion = new HudSwitch.Motion(module.isEnabled(SpaceClient.hud.getConfig()));
     }
     private HudSettings settings() { return SpaceClient.hud; }
     private HudPlacement placement() { return settings().getConfig().active().placement(module); }
@@ -94,7 +96,8 @@ public final class HudModuleSettingsScreen extends Screen {
             boolean activeTab = action.id == (tab == 0 ? 7 : tab == 1 ? 12 : 13);
             box(action.x, action.y, action.w, 22, selected, hovered, action.enabled, primary, activeTab);
             int color = !action.enabled ? 0x77756F : primary ? 0x17130D : activeTab ? ACCENT : TEXT;
-            center(SpaceUiFont.trimToWidth(action.label, action.w - 6), action.x + action.w / 2, action.y + 5, color);
+            if(action.id==0)HudSwitch.draw(action.x+(action.w-28)/2,action.y+4,toggleMotion.sample(module.isEnabled(settings().getConfig()),System.nanoTime()));
+            else center(SpaceUiFont.trimToWidth(action.label, action.w - 6), action.x + action.w / 2, action.y + 5, color);
         }
         String notice = settings().getError();
         if (notice.isEmpty() && settings().isReadOnly()) notice = settings().getNotice();
@@ -271,9 +274,7 @@ public final class HudModuleSettingsScreen extends Screen {
         if (activeTab) fill(x + 4, y + h - 2, x + w - 4, y + h - 1, 0xFFD7AF6A);
     }
     private void rounded(int x, int y, int w, int h, int color) {
-        fill(x + 2, y, x + w - 2, y + h, color);
-        fill(x, y + 2, x + w, y + h - 2, color);
-        fill(x + 1, y + 1, x + w - 1, y + h - 1, color);
+        UiShapes.rounded(x,y,w,h,4,color);
     }
     private static final class Action {
         final int id, x, y, w;

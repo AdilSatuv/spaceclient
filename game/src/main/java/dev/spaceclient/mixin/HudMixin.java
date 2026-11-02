@@ -6,6 +6,7 @@ import dev.spaceclient.hud.HudModulesScreen;
 import dev.spaceclient.hud.HudEditorScreen;
 import dev.spaceclient.hud.HudModuleSettingsScreen;
 import dev.spaceclient.hud.HudRenderer;
+import dev.spaceclient.mods.GameModuleSettingsScreen;
 import net.minecraft.client.util.Window;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.InGameHud;
@@ -22,7 +23,7 @@ public abstract class HudMixin {
         HudConfig config = SpaceClient.hud.getConfig();
         if (!config.active().enabled || client.player == null || client.options.hudHidden || client.options.debugEnabled
                 || client.currentScreen instanceof HudModulesScreen || client.currentScreen instanceof HudEditorScreen
-                || client.currentScreen instanceof HudModuleSettingsScreen) return;
+                || client.currentScreen instanceof HudModuleSettingsScreen || client.currentScreen instanceof GameModuleSettingsScreen) return;
         Window window = new Window(client);
         HudRenderer.render(client, config, window.getWidth(), window.getHeight());
     }

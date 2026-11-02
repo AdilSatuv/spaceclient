@@ -4,6 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import dev.spaceclient.hud.HudSettings;
 import dev.spaceclient.mods.ModSettings;
+import dev.spaceclient.hud.SessionTimer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,6 +13,7 @@ public final class SpaceClient implements ClientModInitializer {
     public static HudSettings hud;
     public static ModSettings mods;
     public static final ClickCounter clicks = new ClickCounter();
+    public static final SessionTimer session = new SessionTimer();
     @Override
     public void onInitializeClient() {
         hud = HudSettings.open(FabricLoader.getInstance().getConfigDir().resolve("spaceclient-hud.properties"));
