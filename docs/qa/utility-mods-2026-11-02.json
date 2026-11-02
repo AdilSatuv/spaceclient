@@ -1,0 +1,144 @@
+{
+  "date": "2026-11-02",
+  "implementationCommit": "5e7d1f5",
+  "bundle": {
+    "schemaVersion": 1,
+    "channel": "development",
+    "modVersion": "0.1.0",
+    "minecraftVersion": "1.8.9",
+    "loaderVersion": "0.18.3",
+    "gameSourceTree": "11a7e09356c26bd48759d248e4f98b5bfc617291",
+    "size": 943597,
+    "sha256": "577d0bebbc0903da889f402c047b72e86fe98127ca2e0898ad757111a5b03f15"
+  },
+  "featureReferences": [
+    {
+      "url": "https://www.lunarclient.com/news/lunar-client-monthly-recap-april-2026",
+      "accessed": "2026-11-02"
+    },
+    {
+      "url": "https://www.lunarclient.com/news/patch-notes-23",
+      "accessed": "2026-11-02"
+    }
+  ],
+  "checks": {
+    "javaTests": 195,
+    "launcherTests": 112,
+    "typecheck": true,
+    "prettier": true,
+    "gameBuild": true,
+    "launcherBuild": true,
+    "sourceStampVerified": true,
+    "gitDiffCheck": true,
+    "exactRequiredMixins": 14
+  },
+  "codebaseMemory": {
+    "project": "spaceclient-mods-menus",
+    "rootVerified": true,
+    "graphNavigationUsed": true,
+    "indexedAt": "2026-11-02T17:04:17Z",
+    "mode": "fast",
+    "inventoryDrawInboundTraceResolved": true,
+    "caller": "HudRenderer.drawModule",
+    "flaggedSourcesVerifiedFromWorkingTree": true,
+    "partialFiles": [
+      "apps/launcher/src/renderer/style.css",
+      "game/build.gradle",
+      "game/gradlew"
+    ],
+    "caveat": "Coverage remains metadata_changed. Sources verified. Docs, ignored artifacts and some tests are excluded by design."
+  },
+  "native": {
+    "exitCode": 0,
+    "resolution": [
+      1280,
+      720
+    ],
+    "checks": {
+      "hiddenCanvas": true,
+      "nativeSearchAndCardSwitches": true,
+      "inventory5of27And7of36": true,
+      "hotbarAndOverlayControls": true,
+      "liveInventoryUpdate": true,
+      "emptyGrid": true,
+      "inventoryGlStateAndCacheRestored": true,
+      "itemCountsDamageAndGlintUnchanged": true,
+      "editorHeightAnchorsDragClamp": true,
+      "profilesAndSettingsPersistence": true,
+      "noHurtToggleAndKeyCapture": true,
+      "hurtMatrixSuppressed": true,
+      "deathMatrixPreserved": true,
+      "idleMatrixUnchanged": true,
+      "explicitClientSamples": true,
+      "physicalDamageTested": false,
+      "physicalInputTested": false,
+      "userWorldOpened": false
+    },
+    "eightCapturesVisuallyInspected": true,
+    "noObservedFatalMixinOrTextureErrors": true
+  },
+  "installation": {
+    "sha256": "577d0bebbc0903da889f402c047b72e86fe98127ca2e0898ad757111a5b03f15",
+    "gameSourceTree": "11a7e09356c26bd48759d248e4f98b5bfc617291",
+    "preflight": true,
+    "settingsAndWorldMetadataPreserved": true,
+    "checkedFiles": 5
+  },
+  "screenshots": [
+    {
+      "file": "outputs/utility-mods-2026-11-02/43-inventory-module-search.png",
+      "sha256": "7a9c9db48e38faaccf3a4254cd2f58c9f065a0bcace8f391c1d04ffb0f15a8fb",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/utility-mods-2026-11-02/44-inventory-content-settings.png",
+      "sha256": "d9f290b0560e95857a63c6b83f2b28c21a8bfc6f943d37b457c4f44a9f8c781b",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/utility-mods-2026-11-02/45-no-hurt-cam-settings.png",
+      "sha256": "586e80adf5d71a99466bf2a3c01b6a91aec45169e76fa03faa4ed156cbe6a539",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/utility-mods-2026-11-02/46-inventory-editor.png",
+      "sha256": "79875625818c15a145dc4e47e939f45ea2c3bbc48e43cf69a96a387948659b0c",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/utility-mods-2026-11-02/47-inventory-hud.png",
+      "sha256": "9ba27320fb4b7b84d466116d478dd498866ff3dcec2c7acedc581ffc721cdf46",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/utility-mods-2026-11-02/48-inventory-without-overlays.png",
+      "sha256": "18280679c98bba0ce17b0f1bdc9051a3689ac8b2fc1d00e0d70e37d2871c25e6",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/utility-mods-2026-11-02/49-inventory-empty.png",
+      "sha256": "a8a741827132a1e269cd244a4d5410a437730ef7c4c6ddbdae50ea49b9807124",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/utility-mods-2026-11-02/50-inventory-native-state.png",
+      "sha256": "519e9bbd8e677c2db7ca8f4181ba4dfaec08dbda791d8393cc8c1635cbfc8f4b",
+      "width": 1280,
+      "height": 720
+    }
+  ],
+  "limitations": [
+    "Explicit client inventory and hurt/health/death samples in the QA world. Native hurt method tested through an invoker; real damage and physical input were not exercised.",
+    "Inventory reads only own main storage and optional hotbar; no armor or open-container data.",
+    "Only the QA-created world opened. No multiplayer, spectator-switching, shader/resource-pack matrix or performance measurements.",
+    "Own code and line icons. Native Minecraft items use the existing game resources; no competitor code or assets copied.",
+    "User game remained closed after installation. Inventory and No Hurt Cam are opt-in; the gameplay toggle key is unbound by default."
+  ]
+}

@@ -1,5 +1,11 @@
 # Передача работы между чатами Space Client
 
+## Inventory HUD и No Hurt Cam · 2 ноября 2026
+
+Добавлены ещё два opt-in модуля: Inventory HUD (27 слотов, опционально хотбар + native counts/durability overlays) и No Hurt Cam (качание урона собственной живой камеры, death path сохраняется). Теперь 23 HUD / 7 игровых, 30 карточек. HUD17/export12, mods5; реальные fixtures HUD16/export11/mods4 из предыдущего JAR `952b258`. [Описание](UTILITY-MODS-2026-11-02.md), [QA](qa/utility-mods-2026-11-02.json).
+
+195 Java / 112 launcher tests, TypeScript, Prettier и сборки прошли. Native QA с заданными клиентскими samples проверяет search/cards/settings, Inventory 5/27→7/36, hotbar/overlays, изменение/пустоту, GL snapshot/cache и неизменность предметов, anchors/height/drag clamp, профили и сохранение. Вызовы настоящего hurt renderer через invoker подтверждают подавление hurt matrix, сохранение death и idle; physical damage/input не проверялись. Восемь кадров 1280×720 осмотрены, exitCode=0; multiplayer/spectator/shader/resource-pack матрица не приняты. При закрытой пользовательской игре установлен JAR `577d0bebbc0903da889f402c047b72e86fe98127ca2e0898ad757111a5b03f15`; preflight и сохранность options/config/level.dat подтверждены. Игру не запускали. Codebase Memory текущего root обновлён; trace InventoryHud.draw → HudRenderer.drawModule, coverage limits отмечены. Всё локально, main не менялся. Crosshair всё ещё следующий отдельный срез.
+
 ## Fullbright и Time Changer · 2 ноября 2026
 
 По запросу популярных модов других клиентов, после проверки официальных руководств Badlion, добавлены собственные Fullbright (Soft/Bright/Full) и Time Changer (Day/Sunset/Night/Sunrise). Теперь 6 игровых модулей + 22 HUD, обе новые карточки на первой Home / в Visuals, Time Changer также в World. Новые модули opt-in, клавиши по умолчанию unbound. Fullbright переопределяет только gamma-read lightmap, Time Changer — только угол клиентского Overworld. Options.gamma, options.txt, настоящее время мира и серверное небо не меняются. Mods schema4 поддерживает 1–3, реальный fixture schema3; HUD16/export11 без изменений. [Описание](VISUAL-MODS-2026-11-02.md), [QA](qa/visual-mods-2026-11-02.json).

@@ -16,6 +16,7 @@
 - [Day Counter и Light Level](docs/WORLD-MODULES-2026-11-02.md) — дни мира и световые каналы.
 - [Experience и Arrow Counter](docs/PLAYER-STATS-MODULES-2026-11-02.md) — полоса опыта и стрелы в инвентаре.
 - [Fullbright и Time Changer](docs/VISUAL-MODS-2026-11-02.md) — визуальная яркость и выбор времени неба.
+- [Inventory HUD и No Hurt Cam](docs/UTILITY-MODS-2026-11-02.md) — предметы поверх игры и стабильная камера при уроне.
 - [Распределение работы между тремя чатами](docs/PARALLEL-WORK-2026-11-02.md) — области, рабочие копии и индексы Codebase Memory.
 - [ТЗ и этапы](docs/SPEC.md) — границы MVP, архитектура и критерии приёмки.
 - [Рабочий процесс](docs/DEVELOPMENT.md) — инструменты, проверки, коммиты и пуш.
