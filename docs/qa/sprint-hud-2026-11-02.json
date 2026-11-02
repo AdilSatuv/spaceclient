@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-02",
+  "sourceCommit": "170f32c",
+  "installation": {
+    "sha256": "564f21ae99d1866550d82ea6ccd12f2e7b24fdd5a69702a18fc999adb1449968",
+    "gameSourceTree": "2f61b7ccbcce373b91eae1ca5f7e33bf22a1a407",
+    "userDataUnchangedDuringInstall": true
+  },
+  "javaTests": 138,
+  "javaFailures": 0,
+  "launcherTests": 112,
+  "launcherFailures": 0,
+  "nativePreview": {
+    "file": "space-togglesprint-hud-preview.png",
+    "width": 1280,
+    "height": 720,
+    "sha256": "9c6e685b717723cd74774b1bca1b1367cd1118d52ee1169e870b03b58e75385d",
+    "method": "Raw framebuffer capture from a disposable Minecraft QA screen using the actual HudRenderer and SprintStatus formatter with four explicit sample states.",
+    "sampleStatesOnly": true,
+    "worldOpened": false,
+    "exitCode": 0
+  },
+  "states": [
+    "ToggleSprint: OFF | Disabled",
+    "ToggleSprint: OFF",
+    "ToggleSprint: ON | Ready",
+    "ToggleSprint: ON | Sprinting"
+  ],
+  "limits": [
+    "Live world movement and keyboard transitions were not visually verified.",
+    "Sample screen validates component rendering, not physical sprinting."
+  ]
+}
