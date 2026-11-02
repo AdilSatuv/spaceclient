@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const os = require('node:os');
 const path = require('node:path');
+const { createHash } = require('node:crypto');
 const file = {
   relativePath: 'libraries/test-natives-windows.jar',
   size: 10,
@@ -271,4 +272,201 @@ test('shutdown cancels metadata preparation before releasing its job lock', asyn
   await service.shutdown();
   assert.equal(service.status('alpha').phase, 'cancelled');
   assert.equal(service.running, false);
+});
+
+test('shutdown permanently closes installation admission even when no job was active', async (t) => {
+  const { root, service } = await fixture(t);
+  await service.shutdown();
+  assert.throws(() => service.start('alpha'), /завершает работу/);
+  assert.equal(service.running, false);
+  assert.equal(service.status('alpha').phase, 'idle');
+  assert.deepEqual(await fs.readdir(root), []);
+});
+
+test('shutdown blocks a new repair after the cancelled job releases its reservation', async (t) => {
+  let began;
+  const started = new Promise((resolve) => {
+    began = resolve;
+  });
+  let prepareCalls = 0;
+  const { root, service } = await fixture(t, {
+    prepare: async (_root, { signal }) => {
+      prepareCalls++;
+      began();
+      await new Promise((_resolve, reject) =>
+        signal.addEventListener('abort', () => reject(signal.reason), { once: true }),
+      );
+    },
+  });
+  service.start('alpha');
+  await started;
+  const closing = service.shutdown();
+  assert.throws(() => service.start('beta'), /завершает работу/);
+  await closing;
+  assert.throws(() => service.start('alpha'), /завершает работу/);
+  assert.equal(prepareCalls, 1);
+  assert.equal(service.running, false);
+  assert.equal(service.status('alpha').phase, 'cancelled');
+  await assert.rejects(fs.stat(path.join(root, 'alpha/base-installation.json')), {
+    code: 'ENOENT',
+  });
+});
+
+test('low disk guidance states the actual plan requirement and preserves the previous receipt', async (t) => {
+  let bulkCalls = 0;
+  const { root, service } = await fixture(t, {
+    prepare: async () => ({ ...structuredClone(plan), totalBytes: 512 * 1024 * 1024 + 1 }),
+    availableBytes: async () => 400 * 1024 * 1024,
+    download: async () => {
+      bulkCalls++;
+    },
+  });
+  await fs.mkdir(path.join(root, 'alpha'));
+  const receipt = path.join(root, 'alpha/base-installation.json');
+  await fs.writeFile(receipt, 'previous receipt');
+  service.start('alpha');
+  await service.settled();
+  assert.equal(service.status('alpha').phase, 'error');
+  assert.match(service.status('alpha').message, /673 МиБ/);
+  assert.match(service.status('alpha').message, /повторите/);
+  assert.equal(bulkCalls, 0);
+  assert.equal(await fs.readFile(receipt, 'utf8'), 'previous receipt');
+});
+
+test('filesystem failures explain a safe recovery action, preserve receipt and permit retry', async (t) => {
+  for (const [stage, code, cause, action] of [
+    ['prepare', 'ENOSPC', /места|квота/, /Освободите/],
+    ['download', 'EDQUOT', /места|квота/, /Освободите/],
+    ['download', 'EACCES', /доступа/, /разрешение записи/],
+    ['extract', 'EPERM', /доступа/, /разрешение записи/],
+    ['extract', 'EBUSY', /занят/, /Закройте программы/],
+    ['extract', 'ETXTBSY', /занят/, /Закройте программы/],
+  ]) {
+    let fail = true;
+    const { root, service } = await fixture(t, {
+      [stage]: async (target) => {
+        if (fail)
+          throw Object.assign(new Error('SECRET-token C:/private/user --accessToken SECRET'), {
+            code,
+            cause: new Error('SECRET-nested'),
+          });
+        return stage === 'prepare'
+          ? structuredClone(plan)
+          : {
+              directory: path.join(target, 'natives/run-retry'),
+              files: [],
+              totalBytes: 0,
+            };
+      },
+    });
+    await fs.mkdir(path.join(root, 'alpha'));
+    const receipt = path.join(root, 'alpha/base-installation.json');
+    await fs.writeFile(receipt, 'previous receipt');
+    service.start('alpha');
+    await service.settled();
+    const status = service.status('alpha');
+    assert.equal(status.phase, 'error');
+    assert.match(status.message, cause, code);
+    assert.match(status.message, action, code);
+    assert.match(status.message, /повторите/, code);
+    assert.doesNotMatch(JSON.stringify(status), /SECRET|private|accessToken/);
+    assert.equal(await fs.readFile(receipt, 'utf8'), 'previous receipt');
+    assert.equal(service.running, false);
+    fail = false;
+    service.start('alpha');
+    await service.settled();
+    assert.equal(service.status('alpha').phase, 'prepared');
+    assert.equal(JSON.parse(await fs.readFile(receipt, 'utf8')).launchReady, false);
+  }
+});
+
+test('ordinary repair cancellation can resume a partial while preserving verified files and the old receipt', async (t) => {
+  const { downloadPlan } = await import('../src/main/download-queue.ts');
+  const cached = Buffer.from('verified cached library');
+  const missing = Buffer.from('library requiring repair');
+  const files = [cached, missing].map((bytes, index) => {
+    const sha1 = createHash('sha1').update(bytes).digest('hex');
+    return {
+      relativePath: `libraries/library-${index}.jar`,
+      size: bytes.length,
+      sha1,
+      url: `https://piston-data.mojang.com/v1/objects/${sha1}/library.jar`,
+    };
+  });
+  let cancelOnce = true;
+  let cancelling;
+  const requests = [];
+  const { root, service } = await fixture(t, {
+    prepare: async () => ({
+      ...structuredClone(plan),
+      files,
+      natives: [],
+      totalBytes: cached.length + missing.length,
+    }),
+    download: async (target, input, options) =>
+      downloadPlan(target, input, {
+        ...options,
+        concurrency: 1,
+        retries: 0,
+        fetcher: async (url, { headers }) => {
+          requests.push({ url, range: headers.Range });
+          assert.equal(url, files[1].url, 'the verified cache must not be downloaded again');
+          if (headers.Range) {
+            assert.equal(headers.Range, 'bytes=7-');
+            return new Response(missing.subarray(7), {
+              status: 206,
+              headers: { 'Content-Range': `bytes 7-${missing.length - 1}/${missing.length}` },
+            });
+          }
+          let sent = false;
+          return new Response(
+            new ReadableStream({
+              pull(stream) {
+                if (sent) stream.close();
+                else {
+                  sent = true;
+                  stream.enqueue(missing.subarray(0, 7));
+                }
+              },
+            }),
+          );
+        },
+        onProgress: (status) => {
+          options.onProgress(status);
+          if (cancelOnce && status.receivedBytes >= cached.length + 7) {
+            cancelOnce = false;
+            cancelling = service.cancel('alpha');
+          }
+        },
+      }),
+  });
+  const instance = path.join(root, 'alpha');
+  await fs.mkdir(path.join(instance, 'libraries'), { recursive: true });
+  const cachedPath = path.join(instance, files[0].relativePath);
+  const repairedPath = path.join(instance, files[1].relativePath);
+  const receipt = path.join(instance, 'base-installation.json');
+  await fs.writeFile(cachedPath, cached);
+  const cachedStat = await fs.stat(cachedPath);
+  await fs.writeFile(repairedPath, 'corrupt existing file');
+  await fs.writeFile(receipt, 'previous receipt');
+  service.start('alpha');
+  await service.settled();
+  await cancelling;
+  assert.equal(service.status('alpha').phase, 'cancelled');
+  assert.equal(service.running, false);
+  assert.equal(await fs.readFile(receipt, 'utf8'), 'previous receipt');
+  assert.deepEqual(await fs.readFile(repairedPath + '.part'), missing.subarray(0, 7));
+  assert.equal(await fs.readFile(repairedPath, 'utf8'), 'corrupt existing file');
+  service.start('alpha');
+  await service.settled();
+  assert.equal(service.status('alpha').phase, 'prepared');
+  assert.equal(service.status('alpha').completedFiles, 2);
+  assert.equal(requests.length, 2);
+  assert.equal(requests[0].range, undefined);
+  assert.equal(requests[1].range, 'bytes=7-');
+  assert.deepEqual(await fs.readFile(cachedPath), cached);
+  assert.equal((await fs.stat(cachedPath)).mtimeMs, cachedStat.mtimeMs);
+  assert.deepEqual(await fs.readFile(repairedPath), missing);
+  await assert.rejects(fs.stat(repairedPath + '.part'), { code: 'ENOENT' });
+  assert.equal(JSON.parse(await fs.readFile(receipt, 'utf8')).launchReady, false);
 });
