@@ -29,6 +29,8 @@ const expectedMixins = [
   'TitleMenuMixin',
   'ZoomRendererMixin',
   'CrosshairMixin',
+  'FullbrightMixin',
+  'TimeChangerMixin',
 ];
 const required = [
   'fabric.mod.json',
@@ -48,7 +50,11 @@ const required = [
   'dev/spaceclient/mixin/TitleMenuMixin.class',
   'dev/spaceclient/mixin/ZoomRendererMixin.class',
   'dev/spaceclient/mixin/CrosshairMixin.class',
+  'dev/spaceclient/mixin/FullbrightMixin.class',
+  'dev/spaceclient/mixin/TimeChangerMixin.class',
   'dev/spaceclient/mods/ModSettings.class',
+  'dev/spaceclient/mods/ModSettings$Brightness.class',
+  'dev/spaceclient/mods/ModSettings$TimePreset.class',
   'dev/spaceclient/mods/ModSettings$Options.class',
   'dev/spaceclient/mods/ModSettings$SprintMode.class',
   'dev/spaceclient/mods/GameplayModule.class',

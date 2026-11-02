@@ -31,6 +31,8 @@ function entries() {
       'TitleMenuMixin',
       'ZoomRendererMixin',
       'CrosshairMixin',
+      'FullbrightMixin',
+      'TimeChangerMixin',
     ],
   };
   return [
@@ -55,7 +57,11 @@ function entries() {
       'mixin/TitleMenuMixin',
       'mixin/ZoomRendererMixin',
       'mixin/CrosshairMixin',
+      'mixin/FullbrightMixin',
+      'mixin/TimeChangerMixin',
       'mods/ModSettings',
+      'mods/ModSettings$Brightness',
+      'mods/ModSettings$TimePreset',
       'mods/ModSettings$Options',
       'mods/ModSettings$SprintMode',
       'mods/GameplayModule',
@@ -151,6 +157,8 @@ test('bundled game metadata is bound to the committed source tree and returned w
 test('gameplay modules and their settings cannot disappear from an otherwise valid bundle', async (t) => {
   for (const name of [
     'mods/ModSettings',
+    'mods/ModSettings$Brightness',
+    'mods/ModSettings$TimePreset',
     'mods/GameplayModule',
     'mods/ModuleShortcuts',
     'mods/GameModuleSettingsScreen',
@@ -237,6 +245,10 @@ test('all pinned mixin classes and the exact mixin set are required', async (t) 
     'MenuButtonMixin',
     'MenuScreenMixin',
     'TitleMenuMixin',
+    'ZoomRendererMixin',
+    'CrosshairMixin',
+    'FullbrightMixin',
+    'TimeChangerMixin',
   ];
   for (const name of pinned) {
     const candidate = await fixture(t, (value) =>

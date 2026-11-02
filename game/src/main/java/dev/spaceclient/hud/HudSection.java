@@ -37,6 +37,7 @@ enum HudSection {
         if (this == HOME) return true;
         if (this == PLAYER) return module == GameplayModule.TOGGLE_SPRINT || module == GameplayModule.FREE_LOOK;
         if (this == VISUALS) return module != GameplayModule.TOGGLE_SPRINT;
+        if (this == WORLD) return module == GameplayModule.TIME_CHANGER;
         return this == COMBAT && module == GameplayModule.CROSSHAIR;
     }
 }

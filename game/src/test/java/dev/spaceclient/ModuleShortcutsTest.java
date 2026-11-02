@@ -26,7 +26,7 @@ public class ModuleShortcutsTest {
             ByteArrayOutputStream out=new ByteArrayOutputStream();byte[] b=new byte[4096];int n;while((n=in.read(b))!=-1)out.write(b,0,n);old=out.toByteArray();
         }Files.write(file,old);ModSettings s=ModSettings.open(file);
         assertFalse(s.isReadOnly());assertArrayEquals(old,Files.readAllBytes(file));
-        for(GameplayModule m:GameplayModule.values()){assertTrue(m.enabled(s));assertEquals(0,s.toggleKey(m));}
+        for(GameplayModule m:GameplayModule.values()){assertEquals(m.ordinal()<GameplayModule.FULLBRIGHT.ordinal(),m.enabled(s));assertEquals(0,s.toggleKey(m));}
         assertTrue(s.toggleKey(GameplayModule.CROSSHAIR,35));s=ModSettings.open(file);
         assertEquals(35,s.toggleKey(GameplayModule.CROSSHAIR));assertEquals(7,s.zoomFactor());assertFalse(s.zoomSmooth());
         assertEquals(48,s.freeLookKey());assertEquals(34,s.zoomKey());assertEquals(ModSettings.SprintMode.TOGGLE,s.sprintMode());

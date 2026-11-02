@@ -42,6 +42,12 @@ final class HudModuleIcons {
                 case CROSSHAIR:
                     circle(11,11,7);path(false,11,0,11,6);path(false,11,16,11,22);
                     path(false,0,11,6,11);path(false,16,11,22,11);break;
+                case FULLBRIGHT:
+                    circle(11,11,5);path(false,11,0,11,3);path(false,11,19,11,22);
+                    path(false,0,11,3,11);path(false,19,11,22,11);
+                    path(false,3,3,5,5);path(false,17,17,19,19);path(false,3,19,5,17);path(false,17,5,19,3);break;
+                case TIME_CHANGER:
+                    circle(11,11,9);path(false,11,5,11,11,16,11);path(false,11,0,11,2);break;
             }
         } finally { GL11.glPopMatrix(); GL11.glPopAttrib(); }
     }

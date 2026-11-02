@@ -7,7 +7,9 @@ public enum GameplayModule {
     TOGGLE_SPRINT("ToggleSprint", "AutoSprint or press-to-toggle sprint", "autosprint toggle sprint бег спринт"),
     FREE_LOOK("FreeLook", "Look around without turning your player", "freelook camera свободная камера обзор"),
     ZOOM("Zoom", "Hold a key for smooth camera zoom", "zoom приближение зум"),
-    CROSSHAIR("Crosshair", "Customize shape, size, gap and color", "crosshair aim прицел");
+    CROSSHAIR("Crosshair", "Customize shape, size, gap and color", "crosshair aim прицел"),
+    FULLBRIGHT("Fullbright", "Brighten dark areas on your screen", "fullbright brightness gamma яркость свет гамма"),
+    TIME_CHANGER("Time Changer", "Choose the sky's time of day", "time changer day night sunset sunrise время день ночь закат рассвет");
     public final String title, description;
     private final String search;
     GameplayModule(String title, String description, String aliases) {
@@ -19,6 +21,7 @@ public enum GameplayModule {
         switch (this) {
             case TOGGLE_SPRINT: return s.autoSprint(); case FREE_LOOK: return s.freeLook();
             case ZOOM: return s.zoom(); case CROSSHAIR: return s.crosshair();
+            case FULLBRIGHT: return s.fullbright(); case TIME_CHANGER: return s.timeChanger();
             default: throw new AssertionError(this);
         }
     }
@@ -26,6 +29,7 @@ public enum GameplayModule {
         switch (this) {
             case TOGGLE_SPRINT: return s.toggleAutoSprint(); case FREE_LOOK: return s.toggleFreeLook();
             case ZOOM: return s.toggleZoom(); case CROSSHAIR: return s.toggleCrosshair();
+            case FULLBRIGHT: return s.toggleFullbright(); case TIME_CHANGER: return s.toggleTimeChanger();
             default: throw new AssertionError(this);
         }
     }

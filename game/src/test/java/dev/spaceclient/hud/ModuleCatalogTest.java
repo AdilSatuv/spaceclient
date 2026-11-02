@@ -33,4 +33,11 @@ public class ModuleCatalogTest {
         for(int i=1;i<40;i++)m.sample(true,1_020_000_000L+i*10_000_000L);
         assertEquals(1,m.sample(true,2_000_000_000L),.001);
     }
+    @Test public void visualModsHaveHomeCardsAndLocalizedSearchInTheirCategories() {
+        List<CatalogModule> home=HudSection.HOME.catalog("");
+        assertEquals(GameplayModule.FULLBRIGHT,home.get(4).game);assertEquals(GameplayModule.TIME_CHANGER,home.get(5).game);
+        assertEquals(GameplayModule.FULLBRIGHT,HudSection.VISUALS.catalog("яркость").get(0).game);
+        assertEquals(GameplayModule.TIME_CHANGER,HudSection.WORLD.catalog("закат").get(0).game);
+        assertTrue(HudSection.PLAYER.catalog("fullbright").isEmpty());
+    }
 }

@@ -78,6 +78,8 @@ public final class GameModuleSettingsScreen extends Screen {
         }finally{GlStateManager.popMatrix();}
     }
     private String hint(){
+        if(module==GameplayModule.FULLBRIGHT)return "Brightens rendering; your saved Minecraft brightness stays unchanged.";
+        if(module==GameplayModule.TIME_CHANGER)return "Overworld sky only; world time and Day Counter stay live.";
         if(module==GameplayModule.FREE_LOOK)return ModuleKeys.conflicts(client,settings().freeLookKey())?"Key unavailable: choose an unused key":"Hold "+ModuleKeys.label(settings().freeLookKey())+" to look around. Release to restore your view.";
         if(module==GameplayModule.ZOOM)return ModuleKeys.conflicts(client,settings().zoomKey())?"Key unavailable: choose an unused key":"Hold "+ModuleKeys.label(settings().zoomKey())+" to zoom. FOV restores on release.";
         return settings().sprintMode()==ModSettings.SprintMode.AUTO?"Auto: sprint while moving forward; vanilla restrictions apply.":"Toggle: press "+ModuleKeys.label(client.options.sprintKey.getCode())+" to switch sprint on or off.";
@@ -91,7 +93,9 @@ public final class GameModuleSettingsScreen extends Screen {
         else if(module==GameplayModule.ZOOM){
             row(a,2,"Hold key",capturing&&!capturingToggle?"Press key...":ModuleKeys.label(settings().zoomKey()));
             row(a,3,"Magnification",settings().zoomFactor()+"x");row(a,4,"Smooth zoom",settings().zoomSmooth()?"On":"Off");
-        }else{
+        }else if(module==GameplayModule.FULLBRIGHT)row(a,13,"Intensity",label(settings().brightness().name()));
+        else if(module==GameplayModule.TIME_CHANGER)row(a,14,"Sky time",label(settings().timePreset().name()));
+        else{
             CrosshairStyle s=settings().crosshairStyle();
             row(a,5,"Shape",label(s.shape.name()));row(a,6,"Color",label(s.color.name()));row(a,7,"Size",Integer.toString(s.size));
             row(a,8,"Gap",Integer.toString(s.gap));row(a,9,"Thickness",Integer.toString(s.thickness));
@@ -142,6 +146,8 @@ public final class GameModuleSettingsScreen extends Screen {
         else if(id==9)saved=settings().crosshairStyle(s.withThickness(1+Math.floorMod(s.thickness-1+direction,4)));
         else if(id==10)saved=settings().crosshairStyle(s.withDot(!s.dot));
         else if(id==11)saved=settings().crosshairStyle(s.withOutline(!s.outline));
+        else if(id==13)saved=settings().brightness(ModSettings.Brightness.values()[Math.floorMod(settings().brightness().ordinal()+direction,ModSettings.Brightness.values().length)]);
+        else if(id==14)saved=settings().timePreset(ModSettings.TimePreset.values()[Math.floorMod(settings().timePreset().ordinal()+direction,ModSettings.TimePreset.values().length)]);
         else if(id==98)saved=settings().reset(module);else return;
         status=saved?"Saved":"Could not save settings";
     }
