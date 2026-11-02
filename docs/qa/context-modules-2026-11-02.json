@@ -1,0 +1,51 @@
+{
+  "date": "2026-11-02",
+  "sourceCommit": "78546a6",
+  "installation": {
+    "sha256": "03fe0ed66cf1361a60aeb815c34c015100a8a66c51c52ac2e9a95fff62f5be7e",
+    "gameSourceTree": "f46f94d0b9af2fed7f4b31961f69137d104680a6",
+    "userDataUnchangedDuringInstall": true
+  },
+  "javaTests": 144,
+  "javaFailures": 0,
+  "launcherTests": 112,
+  "launcherFailures": 0,
+  "nativeWorldChecks": {
+    "singleplayerPing": true,
+    "flatWorldBiomePlains": true,
+    "selectedLocalPack": true,
+    "userWorldOpened": false,
+    "hiddenCanvas": true
+  },
+  "keystrokesContentTogglesChecked": true,
+  "nativeExitCode": 0,
+  "captures": [
+    {
+      "file": "space-context-hud-world.png",
+      "width": 1280,
+      "height": 720,
+      "sha256": "ea6f92d7d5b8732406b3222d7adc7488bd230248c97bc8d800f7b862e45655d9"
+    },
+    {
+      "file": "space-keystrokes-content.png",
+      "width": 1280,
+      "height": 720,
+      "sha256": "392a71f0762ce8c12ba5af4bf2a78d069f7982336fddece21c7eac28db48052c"
+    }
+  ],
+  "method": "Separate QA instance; new disposable flat world Space Context QA, seed 12345, own empty Space QA Pack. Minecraft rendered into an invisible AWT canvas, with mouse-focus acquisition disabled by the disposable QA addon. No OS input injected. Raw framebuffer captures.",
+  "conditions": {
+    "resolution": [
+      1280,
+      720
+    ],
+    "guiScale": "Auto",
+    "maxFps": 60,
+    "userWorldsUsed": false
+  },
+  "limits": [
+    "Multiplayer server latency not tested on a live server.",
+    "Physical keyboard/mouse transitions were not tested; label layout and settings were verified.",
+    "No FPS or frame-time performance comparison."
+  ]
+}
