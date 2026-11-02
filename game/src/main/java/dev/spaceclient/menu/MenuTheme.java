@@ -169,8 +169,19 @@ public final class MenuTheme extends DrawableHelper {
             fill(x + width - 13, y + height / 2 - 1, x + width - 12, y + height / 2 + 2, color);
             return;
         }
-        String label = SpaceUiFont.trimToWidth(button.message, Math.max(1, width - 16));
-        SpaceUiFont.draw(client, label, x + (width - SpaceUiFont.width(label)) / 2f,
-            y + (height - SpaceUiFont.height()) / 2f, !button.active ? 0xFF888A91 : primary ? 0xFF211C15 : TEXT);
+        // Native world-list actions have narrow hitboxes. Fit translated labels before truncating.
+        int available = Math.max(1, width - 8);
+        float scale = Math.min(1f, Math.max(.75f, available / (float) Math.max(1, SpaceUiFont.width(button.message))));
+        int limit = (int) (available / scale);
+        String label = button.message;
+        if (SpaceUiFont.width(label) > limit)
+            label = SpaceUiFont.trimToWidth(label, Math.max(1, limit - SpaceUiFont.width("…"))) + "…";
+        GlStateManager.pushMatrix();
+        try {
+            GlStateManager.scale(scale, scale, 1);
+            SpaceUiFont.draw(client, label, (x + (width - SpaceUiFont.width(label) * scale) / 2f) / scale,
+                (y + (height - SpaceUiFont.height() * scale) / 2f) / scale,
+                !button.active ? 0xFF888A91 : primary ? 0xFF211C15 : TEXT);
+        } finally { GlStateManager.popMatrix(); }
     }
 }

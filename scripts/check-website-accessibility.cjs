@@ -139,7 +139,11 @@ async function checkWebsiteAccessibility({
       await page.keyboard.press('Enter');
       await page.waitForSelector('dialog[open]');
       const sequence = [];
-      for (let i = 0; i < 6; i++) {
+      const controlCount = await page.$$eval(
+        'dialog button, dialog a[href]',
+        (controls) => controls.filter((control) => control.getClientRects().length > 0).length,
+      );
+      for (let i = 0; i < controlCount; i++) {
         const focus = await page.evaluate(() => {
           const active = document.activeElement;
           const dialog = document.querySelector('dialog');
