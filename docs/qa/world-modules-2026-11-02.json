@@ -1,0 +1,90 @@
+{
+  "date": "2026-11-02",
+  "implementationCommit": "81c467f",
+  "bundle": {
+    "schemaVersion": 1,
+    "channel": "development",
+    "modVersion": "0.1.0",
+    "minecraftVersion": "1.8.9",
+    "loaderVersion": "0.18.3",
+    "gameSourceTree": "e7c6230e51ace44c972d39e9f34a9cddf2c77e3d",
+    "size": 927888,
+    "sha256": "0559f4316919e6c7fb990dd87c07fa0996a1885e557cbd584b4256641adca7c0"
+  },
+  "checks": {
+    "javaTests": 172,
+    "launcherTests": 112,
+    "typecheck": true,
+    "prettier": true,
+    "gameBuild": true,
+    "launcherBuild": true,
+    "sourceStampVerified": true,
+    "gitDiffCheck": true
+  },
+  "codebaseMemory": {
+    "project": "spaceclient-mods-menus",
+    "rootVerified": true,
+    "graphNavigationUsed": true,
+    "freshSourceReadAfterCoverageMetadataChanged": true,
+    "mode": "fast",
+    "partialFiles": [
+      "apps/launcher/src/renderer/style.css",
+      "game/build.gradle",
+      "game/gradlew"
+    ],
+    "caveat": "Best-effort coverage; docs, ignored artifacts and some tests are excluded by design."
+  },
+  "native": {
+    "exitCode": 0,
+    "resolution": [
+      1280,
+      720
+    ],
+    "checks": {
+      "hiddenCanvas": true,
+      "worldCategoryCardSwitches": true,
+      "dayThreeAt48000Ticks": true,
+      "openSkyLight15Block0": true,
+      "unloadedPositionUnavailable": true,
+      "editorAnchors": true,
+      "profilesAndAppearancePersistence": true,
+      "physicalInputTested": false,
+      "userWorldOpened": false
+    },
+    "threeCapturesVisuallyInspected": true,
+    "noObservedFatalMixinOrTextureErrors": true
+  },
+  "installation": {
+    "sha256": "0559f4316919e6c7fb990dd87c07fa0996a1885e557cbd584b4256641adca7c0",
+    "gameSourceTree": "e7c6230e51ace44c972d39e9f34a9cddf2c77e3d",
+    "preflight": true,
+    "settingsAndWorldMetadataPreserved": true,
+    "checkedFiles": 5
+  },
+  "screenshots": [
+    {
+      "file": "outputs/world-modules-2026-11-02/28-world-module-menu.png",
+      "sha256": "208389f8760b68f8157081301b8a4a5eeb28a68938ff92dda9f5cc4ff52b5c1e",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/world-modules-2026-11-02/29-world-light-editor.png",
+      "sha256": "a940476196dba77a96fcc0e23df8404c2c67ef7ec4b717e42fcf23c85fa3fc00",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/world-modules-2026-11-02/30-world-days-light-hud.png",
+      "sha256": "476098a76f68833879b1cff05a8303a5510252206d2d963b779f02cbd36ca6f4",
+      "width": 1280,
+      "height": 720
+    }
+  ],
+  "limitations": [
+    "Physical input was not exercised. Screen methods were invoked without OS input in a hidden Canvas.",
+    "Sky and block values are native light channels at player feet, not measured display brightness or a mob-spawn prediction.",
+    "The native lighting check covers open sky and an unloaded-position guard in one overworld QA instance; other dimensions and weather were not visually tested.",
+    "Only QA-created world opened. No multiplayer or performance measurements. User game remained closed after installation."
+  ]
+}
