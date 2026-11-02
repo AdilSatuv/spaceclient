@@ -1,0 +1,134 @@
+{
+  "date": "2026-11-02",
+  "sourceCommit": "3a945b50d8200cd85d3e98914eeea4267f758d41",
+  "gameSourceTree": "8992cee9ba148d207899b5ba8be82b034b0e592a",
+  "jarSha256": "0b7eea8eb3410fb9806ed7049262ae8a458489db2e97fcb231c57b20c9b9f997",
+  "javaTests": 134,
+  "javaFailures": 0,
+  "launcherTests": 112,
+  "launcherFailures": 0,
+  "nativeCaptureExitCode": 0,
+  "spaceInitialized": true,
+  "cardChecks": {
+    "fourSwitchesToggleAndRestore": true,
+    "fourSettingsCardsOpen": true,
+    "savesOpened": false
+  },
+  "captures": [
+    {
+      "file": "outputs\\native-menus-2026-11-02\\1672x941\\01-modules.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "8c6fab3a5236fe389d03576630be0698ecbc1156fc65940bb4d326e6e59664e8"
+    },
+    {
+      "file": "outputs\\native-menus-2026-11-02\\1672x941\\02-hud.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "561694738d1c3973ac46621fde8ded4a87f3baeb4419a4f18e51478290b2f762"
+    },
+    {
+      "file": "outputs\\native-menus-2026-11-02\\1672x941\\03-freelook.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "981d9a4301df326d11fcdab917e2206fcd3f488bee2b15313f82f860077053cb"
+    },
+    {
+      "file": "outputs\\native-menus-2026-11-02\\1672x941\\04-togglesprint.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "73aa796864d103131657b983e7e107229cdee9c01d10524fbd34bdd42de8c813"
+    },
+    {
+      "file": "outputs\\native-menus-2026-11-02\\1672x941\\05-zoom.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "c359f89a159a96d46a3aff84572b08eda7f73c2638d1128c3de9da1ea46b082e"
+    },
+    {
+      "file": "outputs\\native-menus-2026-11-02\\1672x941\\06-crosshair.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "ea589dd42a39ebf464a1e9ab6bf94e9226a7209e7782b84daadd7707c25723c8"
+    },
+    {
+      "file": "outputs\\native-menus-2026-11-02\\1280x720\\01-modules.png",
+      "width": 1280,
+      "height": 720,
+      "sha256": "6d59f342d0817153d67fb50ab9bfe477d715bdc9a8702fc79bd63179d5285810"
+    },
+    {
+      "file": "outputs\\native-menus-2026-11-02\\1280x720\\02-hud.png",
+      "width": 1280,
+      "height": 720,
+      "sha256": "9cac2834a2a03be193cb4347f2ba990cf407aaae805176dde0003aaaddccf9e2"
+    },
+    {
+      "file": "outputs\\native-menus-2026-11-02\\1280x720\\03-freelook.png",
+      "width": 1280,
+      "height": 720,
+      "sha256": "e39c0c6f798e5164da85435873e5e75febfe32c32e4a1678ce7eb8c882403595"
+    },
+    {
+      "file": "outputs\\native-menus-2026-11-02\\1280x720\\04-togglesprint.png",
+      "width": 1280,
+      "height": 720,
+      "sha256": "ab0fb9d38b6af3d90bbbb4c1cc07397c378fe54711ddb45168dd4705dc83cb8b"
+    },
+    {
+      "file": "outputs\\native-menus-2026-11-02\\1280x720\\05-zoom.png",
+      "width": 1280,
+      "height": 720,
+      "sha256": "d3e220351763c83e77576f26bca352b19329806405c831398d9d6c51446fa06f"
+    },
+    {
+      "file": "outputs\\native-menus-2026-11-02\\1280x720\\06-crosshair.png",
+      "width": 1280,
+      "height": 720,
+      "sha256": "1abfabfac75370543fa1d46457194c05b35cadb6363d4bf1b43838cf01e71848"
+    }
+  ],
+  "qaSources": [
+    {
+      "file": ".reports\\menu-qa\\src\\dev\\spaceclient\\qa\\CaptureInit.java",
+      "sha256": "657ae45d227a8e1c25ed282af1ca74c291e82f7b5a86ec67c282e733c7ea96c6"
+    },
+    {
+      "file": ".reports\\menu-qa\\src\\dev\\spaceclient\\qa\\CaptureMixin.java",
+      "sha256": "d8c25f2deb3e52606e13419c7d4e244b05d70168fd8dfbcbc0154d986337d0b5"
+    },
+    {
+      "file": ".reports\\menu-qa\\src\\dev\\spaceclient\\qa\\ScreenAccess.java",
+      "sha256": "4b50f30a5f5204dd1bee465c4d3ccc1c68f3164c8d167894e716bac22f6a701e"
+    },
+    {
+      "file": ".reports\\menu-qa\\resources\\fabric.mod.json",
+      "sha256": "16da65748c2f7c8304b1708095390fc383d5e89de39d030aba1c1d98efa6a6b1"
+    },
+    {
+      "file": ".reports\\menu-qa\\resources\\space-menu-qa.mixins.json",
+      "sha256": "7fe1607291a39b28d565ba5230d012a33daaabc04f1aa5f8182f22647987ff34"
+    }
+  ],
+  "method": "Disposable remapped QA mod loaded through fixed fabric.addMods in a separate instance after normal preflight; no OS input or user world opened. Images are raw framebuffer captures from Minecraft. Production bundle and launcher validation unchanged.",
+  "visuallyInspected": [
+    "1672x941: all 6 screens",
+    "1280x720: Modules and Crosshair"
+  ],
+  "limits": [
+    "Capture instance has no world open, so the background is dark.",
+    "Camera, physical-key behaviour, sprint movement and live HUD data were not validated in a world.",
+    "FPS and frame-time overhead were not measured.",
+    "Favourites and per-module toggle hotkeys remain future work."
+  ],
+  "primaryInstallation": {
+    "sha256": "0b7eea8eb3410fb9806ed7049262ae8a458489db2e97fcb231c57b20c9b9f997",
+    "gameSourceTree": "8992cee9ba148d207899b5ba8be82b034b0e592a",
+    "userDataUnchangedDuringInstall": true
+  },
+  "normalGameStartup": {
+    "initialized": true,
+    "phase": "running",
+    "mixinOrFatalErrorObserved": false
+  }
+}
