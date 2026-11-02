@@ -11,6 +11,7 @@
 - [HUD конкурентов и кандидаты модулей](docs/HUD-COMPETITOR-RESEARCH.md) — приоритеты для 1.8.9 и ограничения.
 - [Ping, Biome, Pack Display и Keystrokes](docs/CONTEXT-MODULES-2026-11-02.md) — новые HUD-модули, назначенные клавиши и границы проверки.
 - [Улучшения меню и настроек модулей](docs/MODULE-IMPROVEMENTS-2026-11-02.md) — избранное, фильтры, горячие клавиши и форматы HUD.
+- [Блок Keystrokes и компактный ToggleSprint](docs/WIDGET-LAYOUTS-2026-11-02.md) — раскладки, предпросмотр и редактор.
 - [ТЗ и этапы](docs/SPEC.md) — границы MVP, архитектура и критерии приёмки.
 - [Рабочий процесс](docs/DEVELOPMENT.md) — инструменты, проверки, коммиты и пуш.
 - [Установка инструментов](docs/TOOLCHAIN.md) — локальный JDK и команды Gradle.

@@ -1,0 +1,103 @@
+{
+  "date": "2026-11-02",
+  "implementationCommits": [
+    "a338057",
+    "73635dc",
+    "96825f9"
+  ],
+  "bundle": {
+    "schemaVersion": 1,
+    "channel": "development",
+    "modVersion": "0.1.0",
+    "minecraftVersion": "1.8.9",
+    "loaderVersion": "0.18.3",
+    "gameSourceTree": "64177675149030aeb7d6e321ec339a09f04fb263",
+    "size": 910837,
+    "sha256": "a1d331e77f70fe289b5214502cbdd119d14c5eaa857f36aee11c981ea55d7517"
+  },
+  "checks": {
+    "javaTests": 160,
+    "launcherTests": 112,
+    "typecheck": true,
+    "prettier": true,
+    "gameBuild": true,
+    "launcherBuild": true,
+    "sourceStampVerified": true,
+    "gitDiffCheck": true
+  },
+  "native": {
+    "exitCode": 0,
+    "resolution": [
+      1280,
+      720
+    ],
+    "checks": {
+      "hiddenCanvas": true,
+      "contentPointerAndConditionalRows": true,
+      "nativeBindingName": true,
+      "editorHeightAnchorNudgeDragClamp": true,
+      "compactActualReadyStatus": true,
+      "independentProfilesAndPersistence": true,
+      "pressedStatesAreRendererSamples": true,
+      "physicalInputTested": false,
+      "userWorldOpened": false
+    },
+    "hiddenWidgetDoesNotInterceptPointer": true,
+    "toolbarAndBlockBorderVisuallySeparate": true,
+    "fiveCapturesVisuallyInspected": true,
+    "noObservedFatalMixinOrTextureErrors": true
+  },
+  "installation": {
+    "sha256": "a1d331e77f70fe289b5214502cbdd119d14c5eaa857f36aee11c981ea55d7517",
+    "gameSourceTree": "64177675149030aeb7d6e321ec339a09f04fb263",
+    "preflight": true,
+    "settingsAndWorldMetadataPreserved": true,
+    "checkedFiles": 5
+  },
+  "screenshots": [
+    {
+      "file": "outputs/widget-layouts-2026-11-02/17-keystrokes-block-content.png",
+      "sha256": "210a17a56f9595e944427bcfe8b8d2ee7d7f46976c24f33f61fc02456d487d7a",
+      "width": 1280,
+      "height": 720,
+      "explicitRendererSample": false
+    },
+    {
+      "file": "outputs/widget-layouts-2026-11-02/18-keystrokes-editor.png",
+      "sha256": "b70d28b08409b3cd196fe1da685e990672acf349978a1315dc061b9d0425e946",
+      "width": 1280,
+      "height": 720,
+      "explicitRendererSample": false
+    },
+    {
+      "file": "outputs/widget-layouts-2026-11-02/19-compact-sprint-content.png",
+      "sha256": "da9f39e638e4d7f660d62a1a03211eaf0331c5a5e35ea88220e9b471ef73bfd1",
+      "width": 1280,
+      "height": 720,
+      "explicitRendererSample": false
+    },
+    {
+      "file": "outputs/widget-layouts-2026-11-02/20-block-keystrokes-world.png",
+      "sha256": "e32d7923c79d2576123a53aa82876e3e5bd059734c623c069f1a52f5d5270474",
+      "width": 1280,
+      "height": 720,
+      "explicitRendererSample": false
+    },
+    {
+      "file": "outputs/widget-layouts-2026-11-02/21-keystrokes-pressed-samples.png",
+      "sha256": "13cf38f196eb0d4c2dd6b519812117c1b4c7b6f664f9cac91563f7d222541ee9",
+      "width": 1280,
+      "height": 720,
+      "explicitRendererSample": true
+    }
+  ],
+  "limitations": [
+    "Native tests used a hidden Canvas with no OS input injected. Physical keyboard and mouse behavior was not manually exercised.",
+    "The pressed key screenshot renders explicit sample states, not physical gameplay input.",
+    "ON / READY was verified from real module/player state in the QA world. RUN is covered by formatting/state tests; no moving sprint acceptance was performed in this slice.",
+    "Existing HUD placements are preserved. Choosing Block may require rearranging other widgets through Edit layout.",
+    "No performance or multiplayer measurement performed. Only a QA-created world opened.",
+    "User game was closed for installation and was not launched by this update."
+  ],
+  "qaHarnessNote": "An initial disposable harness run failed to resolve an inherited Screen field. Explicit superclass references fixed the harness; final native runs passed."
+}
