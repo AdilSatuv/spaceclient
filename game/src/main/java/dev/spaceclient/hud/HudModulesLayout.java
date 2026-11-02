@@ -5,6 +5,7 @@ final class HudModulesLayout {
     final int left, top, panelWidth, panelHeight, contentLeft, contentWidth, cardWidth, cardHeight;
     final boolean sidebar;
     final int pageSize, searchWidth, searchTop, cardsTop, sidebarWidth, profileLeft, profileTop, profileWidth;
+    final int filterLeft, filterWidth = 51;
 
     HudModulesLayout(int width, int height) {
         panelWidth = Math.max(0, Math.min(600, width - 24));
@@ -17,7 +18,8 @@ final class HudModulesLayout {
         contentWidth = Math.max(0, left + panelWidth - 12 - contentLeft);
         cardWidth = Math.max(0, (contentWidth - 8) / 2);
         profileWidth = 74;
-        searchWidth = Math.max(0, sidebar ? contentWidth : contentWidth - 92 - 8);
+        searchWidth = Math.max(0, contentWidth - 166);
+        filterLeft = contentLeft + searchWidth + 7;
         profileLeft = sidebar ? contentLeft + contentWidth - 164 : contentLeft + searchWidth + 8;
         profileTop = sidebar ? top + 20 : top + 44;
         searchTop = panelHeight >= 300 ? 67 : 44;

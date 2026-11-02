@@ -29,8 +29,9 @@ public final class HudModuleSettingsScreen extends Screen {
     private HudAppearance appearance() { return settings().getConfig().active().appearance(module); }
     private HudContentSettings content() { return settings().getConfig().active().content(); }
     private boolean hasContentSettings() {
-        return module == HudModule.COORDINATES || module == HudModule.CLOCK || module == HudModule.FPS || module == HudModule.CPS || module == HudModule.KEYSTROKES;
+        return module == HudModule.COORDINATES || module == HudModule.CLOCK || module == HudModule.FPS || module == HudModule.CPS || module == HudModule.KEYSTROKES || contextModule();
     }
+    private boolean contextModule() { return module == HudModule.PING || module == HudModule.BIOME || module == HudModule.PACK_DISPLAY; }
     private boolean roomy() { return width >= 320 && height >= 240; }
 
     @Override public void init() {
@@ -60,7 +61,13 @@ public final class HudModuleSettingsScreen extends Screen {
         drawPreview();
         fill(left + 14, top + 61, left + panelWidth - 14, top + 62, BORDER);
         if (tab == 2) {
-            if (module == HudModule.KEYSTROKES) {
+            if (contextModule()) {
+                SpaceUiFont.draw(client,"Show label",left+16,top+73,TEXT);
+                if (module == HudModule.PACK_DISPLAY) {
+                    SpaceUiFont.draw(client,"Visible pack names",left+16,top+101,TEXT);
+                    SpaceUiFont.draw(client,"Remaining packs shown as +N",left+16,top+129,MUTED);
+                } else SpaceUiFont.draw(client,"Off shows only the value",left+16,top+101,MUTED);
+            } else if (module == HudModule.KEYSTROKES) {
                 SpaceUiFont.draw(client,"Jump key",left+16,top+73,TEXT);
                 SpaceUiFont.draw(client,"Attack / use keys",left+16,top+101,TEXT);
                 SpaceUiFont.draw(client,"Uses your current key bindings",left+16,top+129,MUTED);
@@ -130,7 +137,11 @@ public final class HudModuleSettingsScreen extends Screen {
         }
         if (tab == 2 && hasContentSettings()) {
             HudContentSettings c = content();
-            if (module == HudModule.KEYSTROKES) {
+            if (contextModule()) {
+                boolean label = module == HudModule.PING ? c.pingLabel : module == HudModule.BIOME ? c.biomeLabel : c.packLabel;
+                actions.add(new Action(22,label?"ON":"OFF",right-98,top+67,98,editable));
+                if (module == HudModule.PACK_DISPLAY) actions.add(new Action(23,c.packNames+"  >",right-98,top+95,98,editable));
+            } else if (module == HudModule.KEYSTROKES) {
                 actions.add(new Action(20,c.keystrokesJump?"ON":"OFF",right-98,top+67,98,editable));
                 actions.add(new Action(21,c.keystrokesMouse?"ON":"OFF",right-98,top+95,98,editable));
             } else if (module == HudModule.COORDINATES) {
@@ -195,7 +206,10 @@ public final class HudModuleSettingsScreen extends Screen {
         if (id == 5) { client.setScreen(new HudEditorScreen(this, module)); return; }
         if (settings().isReadOnly()) return;
         boolean saved;
-        if (id == 20) saved = settings().content(content().withKeystrokesJump(!content().keystrokesJump));
+        if (id == 22) saved = settings().content(module == HudModule.PING ? content().withPingLabel(!content().pingLabel)
+            : module == HudModule.BIOME ? content().withBiomeLabel(!content().biomeLabel) : content().withPackLabel(!content().packLabel));
+        else if (id == 23) saved = settings().content(content().withPackNames(content().packNames % 3 + 1));
+        else if (id == 20) saved = settings().content(content().withKeystrokesJump(!content().keystrokesJump));
         else if (id == 21) saved = settings().content(content().withKeystrokesMouse(!content().keystrokesMouse));
         else if (id == 18) saved = settings().content(content().withFpsLabel(!content().fpsLabel));
         else if (id == 19) {
@@ -217,6 +231,9 @@ public final class HudModuleSettingsScreen extends Screen {
             else if (module == HudModule.FPS) c = c.withFpsLabel(true);
             else if (module == HudModule.CPS) c = c.withCpsMode(HudContentSettings.CpsMode.BOTH);
             else if (module == HudModule.KEYSTROKES) c = c.withKeystrokesJump(true).withKeystrokesMouse(true);
+            else if (module == HudModule.PING) c = c.withPingLabel(true);
+            else if (module == HudModule.BIOME) c = c.withBiomeLabel(true);
+            else if (module == HudModule.PACK_DISPLAY) c = c.withPackLabel(true).withPackNames(2);
             saved = settings().content(c);
         } else if (id == 8) {
             HudAppearance a = appearance();

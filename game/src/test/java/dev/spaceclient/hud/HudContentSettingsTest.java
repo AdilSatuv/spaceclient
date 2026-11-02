@@ -81,7 +81,7 @@ public class HudContentSettingsTest {
         assertEquals(HudContentSettings.ClockFormat.H24, saved.profile(1).content().clockFormat);
         Path exported = dir.getRoot().toPath().resolve("export.properties");
         HudConfig.exportProfile(exported, saved.profile(0));
-        assertEquals("6", read(exported).getProperty("schemaVersion"));
+        assertEquals("7", read(exported).getProperty("schemaVersion"));
         assertCustom(HudConfig.importProfile(exported).content());
     }
     @Test public void resettingOneModuleContentKeepsTheOtherModuleSettings() throws Exception {
@@ -119,7 +119,7 @@ public class HudContentSettingsTest {
         assertDefault(settings.getConfig().profile(1).content());
         assertEquals(HudAppearance.Color.AQUA, settings.getConfig().profile(0).appearance(HudModule.FPS).color);
         assertTrue(settings.content(custom()));
-        assertEquals("11", read(file()).getProperty("schemaVersion"));
+        assertEquals("12", read(file()).getProperty("schemaVersion"));
         assertCustom(HudConfig.load(file()).profile(0).content());
     }
     @Test public void versionTwoProfileImportKeepsAppearanceAndDefaultsNewSettings() throws Exception {
@@ -149,7 +149,7 @@ public class HudContentSettingsTest {
             Properties bad = new Properties(); bad.putAll(complete); bad.setProperty("profile.0." + entry[0], entry[1]); write(file(), bad);
             try { HudConfig.load(file()); fail("Invalid " + entry[0]); } catch (HudConfig.InvalidConfigException expected) { }
         }
-        byte[] future = "schemaVersion=12\nkeep=true\n".getBytes(java.nio.charset.StandardCharsets.ISO_8859_1);
+        byte[] future = "schemaVersion=13\nkeep=true\n".getBytes(java.nio.charset.StandardCharsets.ISO_8859_1);
         Files.write(file(), future); HudSettings readOnly = HudSettings.open(file());
         assertTrue(readOnly.isReadOnly()); assertFalse(readOnly.content(custom())); assertArrayEquals(future, Files.readAllBytes(file()));
     }

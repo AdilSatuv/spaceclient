@@ -10,6 +10,7 @@ import dev.spaceclient.mods.GameModuleSettingsScreen;
 import java.util.HashMap;
 import java.util.Map;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 
 /** Minecraft adapter: drawing and input only; persistence lives in HudSettings. */
 public final class HudModulesScreen extends Screen {
@@ -23,6 +24,7 @@ public final class HudModulesScreen extends Screen {
     private TextFieldWidget search;
     private String query = "";
     private HudSection section = HudSection.HOME;
+    private ModuleFilter filter = ModuleFilter.ALL;
     private List<CatalogModule> modules = section.catalog("");
     private final Map<String, HudSwitch.Motion> switches = new HashMap<String, HudSwitch.Motion>();
     private int focus = -1;
@@ -35,6 +37,9 @@ public final class HudModulesScreen extends Screen {
     private boolean capturedRepeatEvents;
 
     @Override public void init() {
+        int previousCard = focus >= 2 && focus < modules.size() + 2 ? focus - 2 : -1;
+        refresh();
+        if (previousCard >= 0) focus = modules.isEmpty() ? 0 : Math.min(previousCard, modules.size() - 1) + 2;
         if (!capturedRepeatEvents) {
             previousRepeatEvents = Keyboard.areRepeatEventsEnabled();
             capturedRepeatEvents = true;
@@ -104,6 +109,12 @@ public final class HudModulesScreen extends Screen {
         search.render();
         if (query.isEmpty() && !search.isFocused())
             SpaceUiFont.draw(client, "Search modules...", contentLeft + 30, top + layout.searchTop + 6, MUTED);
+        for (ModuleFilter item : ModuleFilter.values()) {
+            int x = layout.filterLeft + item.ordinal() * 53, y = top + layout.searchTop;
+            box(x, y, layout.filterWidth, 23, focus == filterControl(item), hovered(mouseX, mouseY, x, y, layout.filterWidth, 23));
+            if (item == filter) fill(x + 5, y + 21, x + layout.filterWidth - 5, y + 22, 0xFFD7AF6A);
+            centerText(item.label, x + layout.filterWidth / 2, y + 6, item == filter ? ACCENT : MUTED);
+        }
 
         boolean readOnly = SpaceClient.hud.isReadOnly();
         box(layout.profileLeft, layout.profileTop, layout.profileWidth, 23, focus == 1,
@@ -126,28 +137,31 @@ public final class HudModulesScreen extends Screen {
             SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(module.getTitle(), titleWidth), x + textInset, y + 8 + insetY, TEXT);
             stateBadge(module.id(), x + cardWidth - 36, y + 6 + insetY, enabled);
             drawDescription(module, x + textInset, y + 23 + insetY, Math.max(1, cardWidth - textInset - 8), cardHeight);
-            if (cardHeight >= 44 && cardWidth >= 145)
+            if (cardHeight >= 44 && cardWidth >= 145) {
+                HudModuleIcons.star(x + cardWidth - 34, y + cardHeight - 17, SpaceClient.browser.favorite(module.id()));
                 SpaceUiFont.draw(client, ">", x + cardWidth - 13, y + cardHeight - 16, MUTED);
+            }
         }
         if (modules.isEmpty()) {
             centerText("No modules found", contentLeft + contentWidth / 2, top + 110, TEXT);
-            centerText("Clear the search to show modules.", contentLeft + contentWidth / 2, top + 125, MUTED);
+            centerText(filter == ModuleFilter.FAVORITES ? "Star a card or press F to add favorites." : "Try All or clear the search.", contentLeft + contentWidth / 2, top + 125, MUTED);
         }
 
         String status = SpaceClient.hud.getError();
         if (status.isEmpty()) status = SpaceClient.mods.error();
+        if (status.isEmpty()) status = SpaceClient.browser.error();
         if (status.isEmpty()) status = SpaceClient.hud.getNotice();
         if (status.isEmpty() && !SpaceClient.hud.getConfig().active().enabled) status = "HUD hidden; enable HUD";
         if (status.isEmpty() && readOnly) status = "Settings are read-only";
         if (status.isEmpty()) {
             for (int i = HudModulePages.first(page, modules.size(), layout.pageSize); i < HudModulePages.end(page, modules.size(), layout.pageSize); i++) {
                 if (hovered(mouseX, mouseY, cardX(i), cardY(i), cardWidth, cardHeight)) {
-                    status = "Click: settings  |  ON/OFF: toggle";
+                    status = "Click: settings  |  Switch: toggle  |  F: favorite";
                     break;
                 }
             }
         }
-        if (status.isEmpty()) status = section.description;
+        if (status.isEmpty()) status = modules.size() + " modules  /  " + section.description;
         SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(status, contentWidth - 90), contentLeft + 2, top + 46,
             readOnly || !SpaceClient.hud.getError().isEmpty() ? ACCENT : MUTED);
 
@@ -163,7 +177,7 @@ public final class HudModulesScreen extends Screen {
         int doneX = contentLeft + contentWidth - 68;
         box(doneX, footerY, 68, 20, focus == modules.size() + 3, hovered(mouseX, mouseY, doneX, footerY, 68, 20));
         centerText("Done / Esc", doneX + 34, footerY + 6, TEXT);
-        if (contentWidth >= 360) SpaceUiFont.draw(client, "Enter: settings  |  Space: toggle", contentLeft + 96, footerY + 6, MUTED);
+        if (contentWidth >= 360) SpaceUiFont.draw(client, "Enter: settings  |  Space: toggle  |  F: star", contentLeft + 96, footerY + 6, MUTED);
     }
 
     private void drawSidebar(int mouseX, int mouseY) {
@@ -191,7 +205,7 @@ public final class HudModulesScreen extends Screen {
         section = next;
         query = "";
         search.setText(query);
-        modules = section.catalog(query);
+        refresh();
         page = 0;
         focus = sectionControlStart() + next.ordinal();
         updateFocus();
@@ -227,10 +241,13 @@ public final class HudModulesScreen extends Screen {
             } else {
                 search.keyPressed(character, key);
                 query = search.getText();
-                modules = section.catalog(query);
+                refresh();
                 page = HudModulePages.clamp(page, modules.size(), layout.pageSize);
             }
             return;
+        }
+        if (key == Keyboard.KEY_F && focus >= 2 && focus < modules.size() + 2 && !Keyboard.isRepeatEvent()) {
+            favorite(focus - 2); return;
         }
         if (key == Keyboard.KEY_UP || key == Keyboard.KEY_DOWN) {
             focus = Math.floorMod(focus + (key == Keyboard.KEY_UP ? -1 : 1), controlCount());
@@ -245,6 +262,11 @@ public final class HudModulesScreen extends Screen {
         if (button != 0 || !roomy()) return;
         x = viewport.toUi(x);
         y = viewport.toUi(y);
+        for (ModuleFilter item : ModuleFilter.values()) {
+            if (hovered(x, y, layout.filterLeft + item.ordinal() * 53, top + layout.searchTop, layout.filterWidth, 23)) {
+                selectFilter(item); return;
+            }
+        }
         if (sidebar) {
             for (HudSection item : HudSection.values()) {
                 if (hovered(x, y, left + 7, sectionY(item), layout.sidebarWidth - 14, 25)) {
@@ -276,6 +298,9 @@ public final class HudModulesScreen extends Screen {
             for (int i = HudModulePages.first(page, modules.size(), layout.pageSize); i < HudModulePages.end(page, modules.size(), layout.pageSize); i++) {
                 if (hovered(x, y, cardX(i), cardY(i), cardWidth, cardHeight)) {
                     focus = i + 2; updateFocus();
+                    if (cardHeight >= 44 && cardWidth >= 145 && hovered(x, y, cardX(i) + cardWidth - 39, cardY(i) + cardHeight - 24, 22, 22)) {
+                        favorite(i); return;
+                    }
                     activate(focus, isToggleHit(x, y, cardX(i), cardY(i), cardWidth, cardHeight)); return;
                 }
             }
@@ -291,6 +316,8 @@ public final class HudModulesScreen extends Screen {
         else if (control == modules.size() + 3) client.setScreen(null);
         else if (hasPages() && control == previousControl()) changePage(-1);
         else if (hasPages() && control == nextControl()) changePage(1);
+        else if (control >= filterControl(ModuleFilter.ALL) && control <= filterControl(ModuleFilter.FAVORITES))
+            selectFilter(ModuleFilter.values()[control - filterControl(ModuleFilter.ALL)]);
         else if (sidebar && control >= sectionControlStart() && control < sectionControlStart() + HudSection.values().length)
             selectSection(HudSection.values()[control - sectionControlStart()]);
         else if (control >= 2 && control < modules.size() + 2) {
@@ -298,6 +325,9 @@ public final class HudModulesScreen extends Screen {
             if (toggleModule) {
                 if (module.hud != null) { if (!SpaceClient.hud.isReadOnly()) SpaceClient.hud.toggle(module.hud); }
                 else module.game.toggle(SpaceClient.mods);
+                int previousCard = control - 2;
+                refresh(); focus = modules.isEmpty() ? filterControl(filter) : Math.min(previousCard, modules.size() - 1) + 2;
+                updateFocus();
             } else if (module.hud != null) client.setScreen(new HudModuleSettingsScreen(this, module.hud));
             else client.setScreen(new GameModuleSettingsScreen(this, module.game));
         }
@@ -306,7 +336,27 @@ public final class HudModulesScreen extends Screen {
     private boolean hasPages() { return HudModulePages.count(modules.size(), layout.pageSize) > 1; }
     private int previousControl() { return modules.size() + 4; }
     private int nextControl() { return modules.size() + 5; }
-    private int controlCount() { return sectionControlStart() + (sidebar ? HudSection.values().length : 0); }
+    private int filterControl(ModuleFilter item) { return sectionControlStart() + (sidebar ? HudSection.values().length : 0) + item.ordinal(); }
+    private int controlCount() { return filterControl(ModuleFilter.FAVORITES) + 1; }
+    private void refresh() {
+        modules = filter.apply(section.catalog(query), SpaceClient.hud.getConfig(), SpaceClient.mods, SpaceClient.browser);
+        if (layout != null) page = HudModulePages.clamp(page, modules.size(), layout.pageSize);
+    }
+    private void selectFilter(ModuleFilter next) {
+        filter = next; refresh(); page = 0; focus = filterControl(next); updateFocus();
+    }
+    private void favorite(int index) {
+        SpaceClient.browser.toggleFavorite(modules.get(index).id());
+        refresh(); focus = modules.isEmpty() ? filterControl(filter) : Math.min(index, modules.size() - 1) + 2; updateFocus();
+    }
+    @Override public void handleMouse() {
+        super.handleMouse();
+        int wheel = Mouse.getEventDWheel();
+        if (wheel != 0 && roomy() && hasPages()) {
+            changePage(wheel > 0 ? -1 : 1);
+            focus = HudModulePages.first(page, modules.size(), layout.pageSize) + 2; updateFocus();
+        }
+    }
     private void changePage(int delta) { page = HudModulePages.move(page, delta, modules.size(), layout.pageSize); }
     private void updateFocus() {
         search.setFocused(focus == 0);

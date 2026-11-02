@@ -23,11 +23,13 @@ public final class ModSettings {
         int freeLookKey = 47, zoomKey = 46, zoomFactor = 4; // LWJGL V / C.
         boolean zoomSmooth = true;
         CrosshairStyle style = CrosshairStyle.defaults();
+        int[] toggleKeys = new int[GameplayModule.values().length];
         Options copy() {
             Options o = new Options();
             o.autoSprint = autoSprint; o.freeLook = freeLook; o.zoom = zoom; o.crosshair = crosshair;
             o.sprintMode = sprintMode; o.freeLookKey = freeLookKey; o.zoomKey = zoomKey;
             o.zoomFactor = zoomFactor; o.zoomSmooth = zoomSmooth; o.style = style;
+            o.toggleKeys = toggleKeys.clone();
             return o;
         }
     }
@@ -40,7 +42,8 @@ public final class ModSettings {
             Properties p = new Properties();
             try (InputStream in = Files.newInputStream(file)) { p.load(in); }
             boolean legacy = "1".equals(p.getProperty("schemaVersion"));
-            if ((!legacy && !"2".equals(p.getProperty("schemaVersion"))) || p.size() != (legacy ? 3 : 17))
+            boolean current = "3".equals(p.getProperty("schemaVersion"));
+            if ((!legacy && !current && !"2".equals(p.getProperty("schemaVersion"))) || p.size() != (legacy ? 3 : current ? 21 : 17))
                 throw new IOException("Unsupported settings");
             Options o = new Options();
             o.autoSprint = bool(p, "autoSprint"); o.freeLook = bool(p, "freeLook");
@@ -54,6 +57,8 @@ public final class ModSettings {
                     integer(p, "crosshairSize", 2, 12), integer(p, "crosshairGap", 0, 8),
                     integer(p, "crosshairThickness", 1, 4), bool(p, "crosshairDot"), bool(p, "crosshairOutline"));
             }
+            if (current) for (GameplayModule m : GameplayModule.values())
+                o.toggleKeys[m.ordinal()] = integer(p, "toggleKey." + m.name(), 0, 255);
             s.value = o;
         } catch (IOException | IllegalArgumentException ex) {
             s.readOnly = true;
@@ -81,6 +86,10 @@ public final class ModSettings {
     public int zoomFactor() { return value.zoomFactor; }
     public boolean zoomSmooth() { return value.zoomSmooth; }
     public CrosshairStyle crosshairStyle() { return value.style; }
+    public int toggleKey(GameplayModule module) { return value.toggleKeys[module.ordinal()]; }
+    public boolean toggleKey(GameplayModule module, int key) {
+        return change(o -> { checkKey(key); o.toggleKeys[module.ordinal()] = key; });
+    }
     public boolean isReadOnly() { return readOnly; }
     public String error() { return error; }
     public boolean toggleAutoSprint() { return change(o -> o.autoSprint = !o.autoSprint); }
@@ -95,6 +104,7 @@ public final class ModSettings {
     public boolean crosshairStyle(CrosshairStyle v) { return change(o -> { if (v == null) throw new IllegalArgumentException(); o.style = v; }); }
     public boolean reset(GameplayModule module) {
         return change(o -> {
+            o.toggleKeys[module.ordinal()] = 0;
             switch (module) {
                 case TOGGLE_SPRINT: o.sprintMode = SprintMode.AUTO; break;
                 case FREE_LOOK: o.freeLookKey = 47; break;
@@ -111,7 +121,8 @@ public final class ModSettings {
         try {
             Options o = value.copy(); mutation.accept(o);
             Properties p = new Properties();
-            p.setProperty("schemaVersion", "2");
+            p.setProperty("schemaVersion", "3");
+            for (GameplayModule m : GameplayModule.values()) p.setProperty("toggleKey." + m.name(), Integer.toString(o.toggleKeys[m.ordinal()]));
             p.setProperty("autoSprint", Boolean.toString(o.autoSprint)); p.setProperty("freeLook", Boolean.toString(o.freeLook));
             p.setProperty("zoom", Boolean.toString(o.zoom)); p.setProperty("crosshair", Boolean.toString(o.crosshair));
             p.setProperty("sprintMode", o.sprintMode.name());

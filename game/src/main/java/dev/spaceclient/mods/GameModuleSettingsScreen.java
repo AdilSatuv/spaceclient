@@ -21,13 +21,14 @@ public final class GameModuleSettingsScreen extends Screen {
     private HudViewport viewport;
     private int left,top,panelWidth,focus;
     private boolean capturing;
+    private boolean capturingToggle;
     private String status="";
     public GameModuleSettingsScreen(Screen parent,GameplayModule module) {
         this.parent=parent;this.module=module;motion=new HudSwitch.Motion(module.enabled(SpaceClient.mods));
     }
     @Override public void init() {
         viewport=new HudViewport(width,height);panelWidth=Math.min(500,viewport.width-24);
-        left=(viewport.width-panelWidth)/2;top=(viewport.height-320)/2;SpaceClient.clicks.clear();
+        left=(viewport.width-panelWidth)/2;top=(viewport.height-354)/2;SpaceClient.clicks.clear();
     }
     @Override public boolean shouldPauseGame(){return true;}
     @Override public void removed(){SpaceUiFont.release();SpaceClient.clicks.clear();}
@@ -40,9 +41,9 @@ public final class GameModuleSettingsScreen extends Screen {
         GlStateManager.pushMatrix();
         try{
             GlStateManager.scale(viewport.scale,viewport.scale,1);
-            UiShapes.rounded(left+2,top+3,panelWidth,320,6,0x90000000);
-            UiShapes.rounded(left,top,panelWidth,320,6,0xFF3A3B3E);
-            UiShapes.rounded(left+1,top+1,panelWidth-2,318,5,0xFF101114);
+            UiShapes.rounded(left+2,top+3,panelWidth,354,6,0x90000000);
+            UiShapes.rounded(left,top,panelWidth,354,6,0xFF3A3B3E);
+            UiShapes.rounded(left+1,top+1,panelWidth-2,352,5,0xFF101114);
             SpaceUiFont.draw(client,"SPACE / MODULE",left+20,top+16,ACCENT);
             GlStateManager.pushMatrix();
             GlStateManager.scale(1.8f,1.8f,1);
@@ -60,19 +61,20 @@ public final class GameModuleSettingsScreen extends Screen {
             }
             String hint=hint();
             if(module==GameplayModule.CROSSHAIR){
-                UiShapes.rounded(left+20,top+232,panelWidth-40,35,5,0xFF242A30);
-                SpaceUiFont.draw(client,"Live preview",left+32,top+245,MUTED);
+                UiShapes.rounded(left+20,top+266,panelWidth-40,35,5,0xFF242A30);
+                SpaceUiFont.draw(client,"Live preview",left+32,top+279,MUTED);
                 float fit=Math.min(1,14/settings().crosshairStyle().extent());
-                GlStateManager.pushMatrix();GlStateManager.translate(left+panelWidth-75,top+249,0);GlStateManager.scale(fit,fit,1);
+                GlStateManager.pushMatrix();GlStateManager.translate(left+panelWidth-75,top+283,0);GlStateManager.scale(fit,fit,1);
                 CrosshairRenderer.draw(0,0,settings().crosshairStyle());GlStateManager.popMatrix();
             }else{
-                SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(hint,panelWidth-40),left+20,top+158,MUTED);
-                SpaceUiFont.draw(client,"Settings save automatically",left+20,top+179,MUTED);
+                SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(hint,panelWidth-40),left+20,top+192,MUTED);
+                SpaceUiFont.draw(client,"Toggle key enables or disables this module",left+20,top+213,MUTED);
+                SpaceUiFont.draw(client,"Settings save automatically",left+20,top+234,MUTED);
             }
             String notice=settings().error();
             if(notice.isEmpty())notice=capturing?"Press a key / Esc: cancel / Backspace: unbind":status;
             if(notice.isEmpty())notice="Tab: select  |  Enter: change  |  Left / Right: adjust";
-            SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(notice,panelWidth-40),left+20,top+277,notice.equals(settings().error())&&!notice.isEmpty()?ACCENT:MUTED);
+            SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(notice,panelWidth-40),left+20,top+311,notice.equals(settings().error())&&!notice.isEmpty()?ACCENT:MUTED);
         }finally{GlStateManager.popMatrix();}
     }
     private String hint(){
@@ -83,10 +85,11 @@ public final class GameModuleSettingsScreen extends Screen {
     private List<Action> controls(){
         List<Action>a=new ArrayList<Action>();
         row(a,0,"Enabled","");
+        row(a,12,"Toggle key",capturing&&capturingToggle?"Press key...":ModuleKeys.label(settings().toggleKey(module)));
         if(module==GameplayModule.TOGGLE_SPRINT)row(a,1,"Mode",settings().sprintMode()==ModSettings.SprintMode.AUTO?"Auto":"Toggle");
-        else if(module==GameplayModule.FREE_LOOK)row(a,2,"Hold key",capturing?"Press key...":ModuleKeys.label(settings().freeLookKey()));
+        else if(module==GameplayModule.FREE_LOOK)row(a,2,"Hold key",capturing&&!capturingToggle?"Press key...":ModuleKeys.label(settings().freeLookKey()));
         else if(module==GameplayModule.ZOOM){
-            row(a,2,"Hold key",capturing?"Press key...":ModuleKeys.label(settings().zoomKey()));
+            row(a,2,"Hold key",capturing&&!capturingToggle?"Press key...":ModuleKeys.label(settings().zoomKey()));
             row(a,3,"Magnification",settings().zoomFactor()+"x");row(a,4,"Smooth zoom",settings().zoomSmooth()?"On":"Off");
         }else{
             CrosshairStyle s=settings().crosshairStyle();
@@ -94,8 +97,8 @@ public final class GameModuleSettingsScreen extends Screen {
             row(a,8,"Gap",Integer.toString(s.gap));row(a,9,"Thickness",Integer.toString(s.thickness));
             row(a,10,"Center dot",s.dot?"On":"Off");row(a,11,"Outline",s.outline?"On":"Off");
         }
-        a.add(new Action(98,"Reset settings","",left+20,top+288,128));
-        a.add(new Action(99,"Back","Esc",left+panelWidth-116,top+288,96));
+        a.add(new Action(98,"Reset settings","",left+20,top+322,128));
+        a.add(new Action(99,"Back","Esc",left+panelWidth-116,top+322,96));
         return a;
     }
     private void row(List<Action>a,int id,String label,String value){
@@ -109,8 +112,10 @@ public final class GameModuleSettingsScreen extends Screen {
             if(key==Keyboard.KEY_ESCAPE){capturing=false;return;}
             int code=key==Keyboard.KEY_BACK?0:key;
             int other=module==GameplayModule.FREE_LOOK?settings().zoomKey():settings().freeLookKey();
-            if(code!=0&&(ModuleKeys.conflicts(client,code)||code==other)){status="Key already used; choose another key";capturing=false;return;}
-            boolean saved=module==GameplayModule.FREE_LOOK?settings().freeLookKey(code):settings().zoomKey(code);
+            boolean conflict = capturingToggle ? ModuleKeys.toggleConflicts(client,module,code)
+                : ModuleKeys.conflicts(client,code)||code==other||ModuleKeys.usedByToggle(settings(),null,code);
+            if(code!=0&&conflict){status="Key already used; choose another key";capturing=false;return;}
+            boolean saved=capturingToggle?settings().toggleKey(module,code):module==GameplayModule.FREE_LOOK?settings().freeLookKey(code):settings().zoomKey(code);
             capturing=false;status=saved?"Key saved":"Could not save key";return;
         }
         if(key==Keyboard.KEY_ESCAPE){client.setScreen(parent);return;}
@@ -124,7 +129,7 @@ public final class GameModuleSettingsScreen extends Screen {
     }
     private void activate(int id,int direction){
         if(id==99){client.setScreen(parent);return;}if(settings().isReadOnly())return;
-        if(id==2){capturing=true;status="";return;}
+        if(id==2||id==12){capturing=true;capturingToggle=id==12;status="";return;}
         CrosshairStyle s=settings().crosshairStyle();boolean saved;
         if(id==0)saved=module.toggle(settings());
         else if(id==1)saved=settings().sprintMode(settings().sprintMode()==ModSettings.SprintMode.AUTO?ModSettings.SprintMode.TOGGLE:ModSettings.SprintMode.AUTO);

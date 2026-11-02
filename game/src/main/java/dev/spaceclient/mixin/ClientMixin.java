@@ -7,6 +7,9 @@ import dev.spaceclient.hud.HudEditorScreen;
 import dev.spaceclient.hud.HudModuleSettingsScreen;
 import dev.spaceclient.mods.GameModuleSettingsScreen;
 import dev.spaceclient.mods.ModSettings;
+import dev.spaceclient.mods.GameplayModule;
+import dev.spaceclient.mods.ModuleKeys;
+import dev.spaceclient.mods.ModuleShortcuts;
 import dev.spaceclient.mods.SprintRuntime;
 import dev.spaceclient.mods.ZoomRuntime;
 import net.minecraft.client.MinecraftClient;
@@ -22,6 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ClientMixin {
     @Unique private final KeyPressGate spaceclient$menuPress = new KeyPressGate();
     @Unique private final KeyPressGate spaceclient$sprintPress = new KeyPressGate();
+    @Unique private final ModuleShortcuts spaceclient$shortcuts = new ModuleShortcuts();
     @Unique private Object spaceclient$sprintOwner;
 
     @Inject(method = "tick()V", at = @At("HEAD"))
@@ -54,6 +58,16 @@ public abstract class ClientMixin {
         if (!Keyboard.getEventKeyState() || Keyboard.isRepeatEvent() || client.currentScreen != null
                 || client.player == null || !client.focused) return;
         if (Keyboard.getEventKey() == Keyboard.KEY_F8) SpaceClient.toggleHud();
+        if (SpaceClient.mods != null) {
+            GameplayModule changed = spaceclient$shortcuts.onKey(SpaceClient.mods, Keyboard.getEventKey(), Keyboard.getEventNanoseconds(),
+                true, false, true, m -> !ModuleKeys.toggleConflicts(client, m, Keyboard.getEventKey()));
+            if (changed != null) {
+                if (changed == GameplayModule.TOGGLE_SPRINT && !SpaceClient.mods.autoSprint()) {
+                    SprintRuntime.state.reset(); client.player.setSprinting(false);
+                }
+                return;
+            }
+        }
         if (SpaceClient.mods != null && SpaceClient.mods.autoSprint()
                 && SpaceClient.mods.sprintMode() == ModSettings.SprintMode.TOGGLE
                 && Keyboard.getEventKey() == client.options.sprintKey.getCode()

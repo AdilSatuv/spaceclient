@@ -5,6 +5,22 @@ import org.lwjgl.opengl.GL11;
 /** Original line icons in a 22-unit grid; state and the current GUI transform are restored. */
 final class HudModuleIcons {
     private HudModuleIcons() { }
+    static void star(int x, int y, boolean selected) {
+        GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT | GL11.GL_CURRENT_BIT | GL11.GL_LINE_BIT);
+        try {
+            GL11.glDisable(GL11.GL_TEXTURE_2D); GL11.glDisable(GL11.GL_DEPTH_TEST);
+            GL11.glEnable(GL11.GL_BLEND); GL11.glEnable(GL11.GL_LINE_SMOOTH);
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA); GL11.glLineWidth(1.2f);
+            if (selected) GL11.glColor4f(.84f,.69f,.42f,1); else GL11.glColor4f(.50f,.51f,.53f,1);
+            GL11.glBegin(selected ? GL11.GL_TRIANGLE_FAN : GL11.GL_LINE_LOOP);
+            if (selected) GL11.glVertex2f(x+5,y+5);
+            for (int i=0;i<(selected?11:10);i++) {
+                double angle=-Math.PI/2+(i%10)*Math.PI/5; double r=i%2==0?5:2.2;
+                GL11.glVertex2d(x+5+Math.cos(angle)*r,y+5+Math.sin(angle)*r);
+            }
+            GL11.glEnd();
+        } finally { GL11.glPopAttrib(); }
+    }
     static void draw(CatalogModule module, int x, int y, int size) {
         if (module.hud != null) { draw(module.hud, x, y, size); return; }
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT | GL11.GL_CURRENT_BIT | GL11.GL_LINE_BIT);

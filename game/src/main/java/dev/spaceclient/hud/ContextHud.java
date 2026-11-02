@@ -12,24 +12,33 @@ import net.minecraft.world.biome.Biome;
 public final class ContextHud {
     private ContextHud() { }
     public static String ping(MinecraftClient c) {
-        if(c==null||c.player==null||c.world==null)return ContextLabels.ping(false,null);
-        if(c.isInSingleplayer())return ContextLabels.ping(true,null);
+        return ping(c,HudContentSettings.defaults());
+    }
+    public static String ping(MinecraftClient c, HudContentSettings content) {
+        if(c==null||c.player==null||c.world==null)return ContextLabels.ping(false,null,content.pingLabel);
+        if(c.isInSingleplayer())return ContextLabels.ping(true,null,content.pingLabel);
         PlayerListEntry entry=c.getNetworkHandler()==null?null:c.getNetworkHandler().getPlayerListEntry(c.player.getUuid());
-        return ContextLabels.ping(false,entry==null?null:entry.getLatency());
+        return ContextLabels.ping(false,entry==null?null:entry.getLatency(),content.pingLabel);
     }
     public static String biome(MinecraftClient c) {
-        if(c==null||c.player==null||c.world==null)return ContextLabels.biome(null);
+        return biome(c,HudContentSettings.defaults());
+    }
+    public static String biome(MinecraftClient c, HudContentSettings content) {
+        if(c==null||c.player==null||c.world==null)return ContextLabels.biome(null,content.biomeLabel);
         // Legacy biomes are columns; keep the loading check valid above/below build height too.
         BlockPos pos=new BlockPos(c.player.x,0,c.player.z);
-        if(!c.world.isLoaded(pos,false))return ContextLabels.biome(null);
+        if(!c.world.isLoaded(pos,false))return ContextLabels.biome(null,content.biomeLabel);
         Biome biome=c.world.getBiome(pos);
-        return ContextLabels.biome(biome==null?null:biome.name);
+        return ContextLabels.biome(biome==null?null:biome.name,content.biomeLabel);
     }
     public static String packs(MinecraftClient c) {
-        if(c==null||c.getResourcePackLoader()==null)return "Pack: --";
+        return packs(c,HudContentSettings.defaults());
+    }
+    public static String packs(MinecraftClient c, HudContentSettings content) {
+        if(c==null||c.getResourcePackLoader()==null)return content.packLabel ? "Pack: --" : "--";
         ResourcePackLoader loader=c.getResourcePackLoader();
         List<String> names=new ArrayList<String>();
         for(ResourcePackLoader.Entry entry:loader.getSelectedResourcePacks())if(entry!=null)names.add(entry.getName());
-        return ContextLabels.packs(names,loader.getServerContainer()!=null);
+        return ContextLabels.packs(names,loader.getServerContainer()!=null,content.packLabel,content.packNames);
     }
 }

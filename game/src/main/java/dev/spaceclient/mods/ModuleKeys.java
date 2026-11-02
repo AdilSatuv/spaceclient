@@ -7,6 +7,16 @@ import org.lwjgl.input.Keyboard;
 
 public final class ModuleKeys {
     private ModuleKeys() { }
+    public static boolean toggleConflicts(MinecraftClient c, GameplayModule module, int key) {
+        if (conflicts(c, key)) return true;
+        if (key == SpaceClient.mods.freeLookKey() || key == SpaceClient.mods.zoomKey()) return true;
+        return usedByToggle(SpaceClient.mods, module, key);
+    }
+    public static boolean usedByToggle(ModSettings settings, GameplayModule except, int key) {
+        if (key == 0) return false;
+        for (GameplayModule m : GameplayModule.values()) if (m != except && settings.toggleKey(m) == key) return true;
+        return false;
+    }
     public static boolean conflicts(MinecraftClient c, int key) {
         if (key == 0 || key == Keyboard.KEY_ESCAPE || key == Keyboard.KEY_RSHIFT
                 || (key >= Keyboard.KEY_F1 && key <= Keyboard.KEY_F10) || key == Keyboard.KEY_F11 || key == Keyboard.KEY_F12) return true;
@@ -15,7 +25,8 @@ public final class ModuleKeys {
         return SpaceClient.mods != null && key == SpaceClient.mods.freeLookKey() && key == SpaceClient.mods.zoomKey();
     }
     public static boolean held(MinecraftClient c, int key) {
-        return key > 0 && key < Keyboard.KEYBOARD_SIZE && Keyboard.isCreated() && !conflicts(c, key) && Keyboard.isKeyDown(key);
+        return key > 0 && key < Keyboard.KEYBOARD_SIZE && Keyboard.isCreated() && !conflicts(c, key)
+            && !usedByToggle(SpaceClient.mods, null, key) && Keyboard.isKeyDown(key);
     }
     public static String label(int key) {
         if (key == 0) return "Unbound";

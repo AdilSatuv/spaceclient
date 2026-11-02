@@ -49,9 +49,9 @@ public final class HudRenderer {
                 return HudMetrics.memory(vm.totalMemory() - vm.freeMemory(), vm.maxMemory());
             case PLAYTIME: return HudMetrics.playtime(SpaceClient.session.seconds());
             case ITEM_COUNTER: return ItemCounterHud.text(client);
-            case PING: return ContextHud.ping(client);
-            case BIOME: return ContextHud.biome(client);
-            case PACK_DISPLAY: return ContextHud.packs(client);
+            case PING: return ContextHud.ping(client,content);
+            case BIOME: return ContextHud.biome(client,content);
+            case PACK_DISPLAY: return ContextHud.packs(client,content);
             case SPRINT_STATUS:
                 if (client.player == null) return "ToggleSprint: --";
                 boolean enabled = SpaceClient.mods != null && SpaceClient.mods.autoSprint();

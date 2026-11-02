@@ -7,21 +7,31 @@ import java.util.List;
 public final class ContextLabels {
     private ContextLabels() { }
     public static String ping(boolean singleplayer, Integer latency) {
-        if (singleplayer) return "Ping: Singleplayer";
-        return latency == null || latency < 0 ? "Ping: --" : "Ping: " + latency + " ms";
+        return ping(singleplayer, latency, true);
+    }
+    public static String ping(boolean singleplayer, Integer latency, boolean label) {
+        return (label ? "Ping: " : "") + (singleplayer ? "Singleplayer" : latency == null || latency < 0 ? "--" : latency + " ms");
     }
     public static String biome(String name) {
+        return biome(name, true);
+    }
+    public static String biome(String name, boolean label) {
         String value=clean(name,32);
-        return "Biome: " + (value.isEmpty()?"--":value);
+        return (label ? "Biome: " : "") + (value.isEmpty()?"--":value);
     }
     public static String packs(List<String> names, boolean serverPack) {
+        return packs(names,serverPack,true,2);
+    }
+    public static String packs(List<String> names, boolean serverPack, boolean label, int maxNames) {
+        if (maxNames < 1 || maxNames > 3) throw new IllegalArgumentException("Invalid pack count");
         List<String> labels=new ArrayList<String>();
         if(serverPack)labels.add("Server");
         if(names!=null)for(String name:names){String value=clean(name,24);if(!value.isEmpty())labels.add(value);}
-        if(labels.isEmpty())return "Pack: Default";
-        String text=(labels.size()==1?"Pack: ":"Packs: ")+labels.get(0);
-        if(labels.size()>1)text+=", "+labels.get(1);
-        if(labels.size()>2)text+=" +"+(labels.size()-2);
+        if(labels.isEmpty())return label ? "Pack: Default" : "Default";
+        String text=label ? (labels.size()==1?"Pack: ":"Packs: ") : "";
+        int shown=Math.min(maxNames,labels.size());
+        for(int i=0;i<shown;i++)text+=(i>0?", ":"")+labels.get(i);
+        if(labels.size()>shown)text+=" +"+(labels.size()-shown);
         return text;
     }
     static String clean(String name,int limit) {

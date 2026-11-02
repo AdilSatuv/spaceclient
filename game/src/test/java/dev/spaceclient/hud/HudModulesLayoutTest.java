@@ -16,7 +16,8 @@ public class HudModulesLayoutTest {
             assertTrue(l.cardY(0) + l.cardHeight + 6 <= l.cardY(2));
             assertTrue(l.cardY(l.pageSize - 2) + l.cardHeight <= l.footerY() - 4);
             if (l.sidebar) {
-                assertEquals(l.contentWidth, l.searchWidth);
+                assertTrue(l.contentLeft + l.searchWidth + 7 <= l.filterLeft);
+                assertTrue(l.filterLeft + 2*53 + l.filterWidth <= l.contentLeft + l.contentWidth);
                 assertTrue(l.profileLeft >= l.contentLeft);
                 assertTrue(l.profileLeft + l.profileWidth + 8 <= l.contentLeft + l.contentWidth - 82);
                 assertEquals(l.top + 20, l.profileTop);
