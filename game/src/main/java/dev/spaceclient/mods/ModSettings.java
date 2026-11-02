@@ -13,6 +13,12 @@ import java.util.function.Consumer;
 /** Gameplay settings remain independent of HUD profiles. Writes commit atomically. */
 public final class ModSettings {
     public enum SprintMode { AUTO, TOGGLE }
+    public enum SnapPerspective {
+        FIRST("First person",0), BACK("Behind",1), FRONT("Front",2);
+        public final String label; public final int view;
+        SnapPerspective(String label,int view){this.label=label;this.view=view;}
+    }
+    public enum WeatherMode { CLEAR, RAIN, SNOW }
     public enum Brightness {
         SOFT(4), BRIGHT(8), FULL(16);
         public final float gamma;
@@ -28,7 +34,10 @@ public final class ModSettings {
     private boolean readOnly;
     private String error = "";
     private static final class Options {
-        boolean autoSprint, freeLook, zoom, crosshair, fullbright, timeChanger, noHurtCam;
+        boolean autoSprint, freeLook, zoom, crosshair, fullbright, timeChanger, noHurtCam, snaplook, weatherChanger;
+        int snaplookKey; // Unbound: preserve all existing user hold/toggle bindings.
+        SnapPerspective snapPerspective=SnapPerspective.FRONT;
+        WeatherMode weatherMode=WeatherMode.CLEAR;
         Brightness brightness = Brightness.FULL;
         TimePreset timePreset = TimePreset.DAY;
         SprintMode sprintMode = SprintMode.AUTO;
@@ -41,6 +50,7 @@ public final class ModSettings {
             o.autoSprint = autoSprint; o.freeLook = freeLook; o.zoom = zoom; o.crosshair = crosshair;
             o.fullbright = fullbright; o.timeChanger = timeChanger; o.brightness = brightness; o.timePreset = timePreset;
             o.noHurtCam = noHurtCam;
+            o.snaplook=snaplook;o.weatherChanger=weatherChanger;o.snaplookKey=snaplookKey;o.snapPerspective=snapPerspective;o.weatherMode=weatherMode;
             o.sprintMode = sprintMode; o.freeLookKey = freeLookKey; o.zoomKey = zoomKey;
             o.zoomFactor = zoomFactor; o.zoomSmooth = zoomSmooth; o.style = style;
             o.toggleKeys = toggleKeys.clone();
@@ -56,10 +66,10 @@ public final class ModSettings {
             Properties p = new Properties();
             try (InputStream in = Files.newInputStream(file)) { p.load(in); }
             String schema = p.getProperty("schemaVersion", "");
-            if (!schema.matches("[1-5]")) throw new IOException("Unsupported settings");
+            if (!schema.matches("[1-6]")) throw new IOException("Unsupported settings");
             int version = Integer.parseInt(schema);
             boolean legacy = version == 1;
-            if (p.size() != (legacy ? 3 : version == 2 ? 17 : version == 3 ? 21 : version == 4 ? 27 : 29))
+            if (p.size() != (legacy ? 3 : version == 2 ? 17 : version == 3 ? 21 : version == 4 ? 27 : version==5 ? 29 : 36))
                 throw new IOException("Unsupported settings");
             Options o = new Options();
             o.autoSprint = bool(p, "autoSprint"); o.freeLook = bool(p, "freeLook");
@@ -74,7 +84,8 @@ public final class ModSettings {
                     integer(p, "crosshairThickness", 1, 4), bool(p, "crosshairDot"), bool(p, "crosshairOutline"));
             }
             if (version >= 3) for (GameplayModule m : GameplayModule.values())
-                if (version >= 5 || (version == 4 && m.ordinal() < GameplayModule.NO_HURT_CAM.ordinal())
+                if (version >= 6 || (version==5 && m.ordinal()<GameplayModule.SNAPLOOK.ordinal())
+                        || (version == 4 && m.ordinal() < GameplayModule.NO_HURT_CAM.ordinal())
                         || (version == 3 && m.ordinal() < GameplayModule.FULLBRIGHT.ordinal()))
                     o.toggleKeys[m.ordinal()] = integer(p, "toggleKey." + m.name(), 0, 255);
             if (version >= 4) {
@@ -83,6 +94,10 @@ public final class ModSettings {
                 o.timePreset = TimePreset.valueOf(p.getProperty("timePreset", ""));
             }
             if (version >= 5) o.noHurtCam = bool(p, "noHurtCam");
+            if(version>=6) {
+                o.snaplook=bool(p,"snaplook");o.weatherChanger=bool(p,"weatherChanger");o.snaplookKey=integer(p,"snaplookKey",0,255);
+                o.snapPerspective=SnapPerspective.valueOf(p.getProperty("snapPerspective",""));o.weatherMode=WeatherMode.valueOf(p.getProperty("weatherMode",""));
+            }
             s.value = o;
         } catch (IOException | IllegalArgumentException ex) {
             s.readOnly = true;
@@ -107,6 +122,17 @@ public final class ModSettings {
     public boolean fullbright() { return value.fullbright; }
     public boolean timeChanger() { return value.timeChanger; }
     public boolean noHurtCam() { return value.noHurtCam; }
+    public boolean snaplook(){return value.snaplook;}
+    public boolean weatherChanger(){return value.weatherChanger;}
+    public int snaplookKey(){return value.snaplookKey;}
+    public SnapPerspective snapPerspective(){return value.snapPerspective;}
+    public WeatherMode weatherMode(){return value.weatherMode;}
+    public int holdKey(GameplayModule m) {
+        switch(m){case FREE_LOOK:return freeLookKey();case ZOOM:return zoomKey();case SNAPLOOK:return snaplookKey();default:throw new IllegalArgumentException("Not a hold module");}
+    }
+    public boolean holdKey(GameplayModule m,int key) {
+        switch(m){case FREE_LOOK:return freeLookKey(key);case ZOOM:return zoomKey(key);case SNAPLOOK:return snaplookKey(key);default:throw new IllegalArgumentException("Not a hold module");}
+    }
     public Brightness brightness() { return value.brightness; }
     public TimePreset timePreset() { return value.timePreset; }
     /** Overrides the lightmap read only; never assigns to GameOptions.gamma. */
@@ -130,6 +156,11 @@ public final class ModSettings {
     public boolean toggleFullbright() { return change(o -> o.fullbright = !o.fullbright); }
     public boolean toggleTimeChanger() { return change(o -> o.timeChanger = !o.timeChanger); }
     public boolean toggleNoHurtCam() { return change(o -> o.noHurtCam = !o.noHurtCam); }
+    public boolean toggleSnaplook(){return change(o->o.snaplook=!o.snaplook);}
+    public boolean toggleWeatherChanger(){return change(o->o.weatherChanger=!o.weatherChanger);}
+    public boolean snaplookKey(int v){return change(o->{checkKey(v);o.snaplookKey=v;});}
+    public boolean snapPerspective(SnapPerspective v){return change(o->{if(v==null)throw new IllegalArgumentException();o.snapPerspective=v;});}
+    public boolean weatherMode(WeatherMode v){return change(o->{if(v==null)throw new IllegalArgumentException();o.weatherMode=v;});}
     public boolean brightness(Brightness v) { return change(o -> { if(v==null)throw new IllegalArgumentException(); o.brightness=v; }); }
     public boolean timePreset(TimePreset v) { return change(o -> { if(v==null)throw new IllegalArgumentException(); o.timePreset=v; }); }
     public boolean sprintMode(SprintMode v) { return change(o -> { if (v == null) throw new IllegalArgumentException(); o.sprintMode = v; }); }
@@ -149,6 +180,8 @@ public final class ModSettings {
                 case FULLBRIGHT: o.brightness = Brightness.FULL; break;
                 case TIME_CHANGER: o.timePreset = TimePreset.DAY; break;
                 case NO_HURT_CAM: break;
+                case SNAPLOOK: o.snaplookKey=0;o.snapPerspective=SnapPerspective.FRONT;break;
+                case WEATHER_CHANGER: o.weatherMode=WeatherMode.CLEAR;break;
                 default: throw new IllegalArgumentException();
             }
         });
@@ -160,7 +193,9 @@ public final class ModSettings {
         try {
             Options o = value.copy(); mutation.accept(o);
             Properties p = new Properties();
-            p.setProperty("schemaVersion", "5");
+            p.setProperty("schemaVersion", "6");
+            p.setProperty("snaplook",Boolean.toString(o.snaplook));p.setProperty("weatherChanger",Boolean.toString(o.weatherChanger));
+            p.setProperty("snaplookKey",Integer.toString(o.snaplookKey));p.setProperty("snapPerspective",o.snapPerspective.name());p.setProperty("weatherMode",o.weatherMode.name());
             p.setProperty("noHurtCam", Boolean.toString(o.noHurtCam));
             p.setProperty("fullbright", Boolean.toString(o.fullbright)); p.setProperty("timeChanger", Boolean.toString(o.timeChanger));
             p.setProperty("brightness", o.brightness.name()); p.setProperty("timePreset", o.timePreset.name());

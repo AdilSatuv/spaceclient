@@ -4,6 +4,7 @@ package dev.spaceclient.mixin;
 import dev.spaceclient.freelook.FreeLookState;
 import dev.spaceclient.freelook.FreeLookRuntime;
 import dev.spaceclient.mods.ZoomRuntime;
+import dev.spaceclient.mods.SnaplookRuntime;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.entity.Entity;
@@ -29,7 +30,10 @@ public abstract class FreeLookRendererMixin {
         MinecraftClient c = MinecraftClient.getInstance();
         FreeLookRuntime.update(c, FreeLookRuntime.eligible(c));
         spaceclient$player = FreeLookRuntime.owner;
+        SnaplookRuntime.begin(c);
     }
+    @Inject(method = "render(FJ)V", at = @At("RETURN"))
+    private void spaceclient$restoreSnaplook(float delta,long time,CallbackInfo callback) { SnaplookRuntime.end(); }
 
     @Redirect(method = "render(FJ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/ClientPlayerEntity;increaseTransforms(FF)V"))
     private void spaceclient$turnCamera(ClientPlayerEntity player, float dx, float dy) {

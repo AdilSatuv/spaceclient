@@ -12,6 +12,7 @@ import dev.spaceclient.mods.ModuleKeys;
 import dev.spaceclient.mods.ModuleShortcuts;
 import dev.spaceclient.mods.SprintRuntime;
 import dev.spaceclient.mods.ZoomRuntime;
+import dev.spaceclient.mods.SnaplookRuntime;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -30,6 +31,7 @@ public abstract class ClientMixin {
 
     @Inject(method = "tick()V", at = @At("HEAD"))
     private void spaceclient$tick(CallbackInfo callback) {
+        SnaplookRuntime.end();
         MinecraftClient client = MinecraftClient.getInstance();
         SpaceClient.session.update(System.nanoTime(), client.player != null && client.world != null, client.isPaused());
         if (client.currentScreen != null || client.player == null || !client.focused) SpaceClient.clicks.clear();

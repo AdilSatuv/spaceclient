@@ -23,7 +23,8 @@ public abstract class FullbrightMixin {
         ModSettings s = SpaceClient.mods;
         if (s == null) return;
         int state = (s.fullbright() ? s.brightness().ordinal() + 1 : 0)
-            + 4 * (s.timeChanger() ? s.timePreset().ordinal() + 1 : 0);
+            + 4 * (s.timeChanger() ? s.timePreset().ordinal() + 1 : 0)
+            + 20 * (s.weatherChanger() ? s.weatherMode().ordinal() + 1 : 0);
         if (state != spaceclient$visualState) {
             lightmapDirty = true;
             spaceclient$visualState = state;

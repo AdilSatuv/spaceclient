@@ -35,9 +35,9 @@ enum HudSection {
     }
     private boolean includes(GameplayModule module) {
         if (this == HOME) return true;
-        if (this == PLAYER) return module == GameplayModule.TOGGLE_SPRINT || module == GameplayModule.FREE_LOOK;
+        if (this == PLAYER) return module == GameplayModule.TOGGLE_SPRINT || module == GameplayModule.FREE_LOOK || module == GameplayModule.SNAPLOOK;
         if (this == VISUALS) return module != GameplayModule.TOGGLE_SPRINT;
-        if (this == WORLD) return module == GameplayModule.TIME_CHANGER;
+        if (this == WORLD) return module == GameplayModule.TIME_CHANGER || module == GameplayModule.WEATHER_CHANGER;
         return this == COMBAT && (module == GameplayModule.CROSSHAIR || module == GameplayModule.NO_HURT_CAM);
     }
 }

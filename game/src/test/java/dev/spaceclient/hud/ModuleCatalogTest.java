@@ -39,6 +39,8 @@ public class ModuleCatalogTest {
         assertEquals(GameplayModule.FULLBRIGHT,HudSection.VISUALS.catalog("яркость").get(0).game);
         assertEquals(GameplayModule.TIME_CHANGER,HudSection.WORLD.catalog("закат").get(0).game);
         assertEquals(GameplayModule.NO_HURT_CAM,HudSection.COMBAT.catalog("качание").get(0).game);
+        assertEquals(GameplayModule.SNAPLOOK,HudSection.PLAYER.catalog("третье лицо").get(0).game);
+        assertEquals(GameplayModule.WEATHER_CHANGER,HudSection.WORLD.catalog("дождь").get(0).game);
         assertTrue(HudSection.PLAYER.catalog("fullbright").isEmpty());
     }
 }

@@ -78,6 +78,12 @@ public final class GameModuleSettingsScreen extends Screen {
         }finally{GlStateManager.popMatrix();}
     }
     private String hint(){
+        if(module==GameplayModule.SNAPLOOK) {
+            int key=settings().snaplookKey();
+            return key==0?"Choose a hold key to use Snaplook.":ModuleKeys.conflicts(client,key)||ModuleKeys.usedByToggle(settings(),null,key)
+                ?"Hold key unavailable: choose an unused key":"Hold "+ModuleKeys.label(key)+" for this view. Release to return.";
+        }
+        if(module==GameplayModule.WEATHER_CHANGER)return "Overworld display only; server weather stays unchanged.";
         if(module==GameplayModule.NO_HURT_CAM)return "Keeps the camera steady on damage; death view stays enabled.";
         if(module==GameplayModule.FULLBRIGHT)return "Brightens rendering; your saved Minecraft brightness stays unchanged.";
         if(module==GameplayModule.TIME_CHANGER)return "Overworld sky only; world time and Day Counter stay live.";
@@ -91,6 +97,11 @@ public final class GameModuleSettingsScreen extends Screen {
         row(a,12,"Toggle key",capturing&&capturingToggle?"Press key...":ModuleKeys.label(settings().toggleKey(module)));
         if(module==GameplayModule.TOGGLE_SPRINT)row(a,1,"Mode",settings().sprintMode()==ModSettings.SprintMode.AUTO?"Auto":"Toggle");
         else if(module==GameplayModule.FREE_LOOK)row(a,2,"Hold key",capturing&&!capturingToggle?"Press key...":ModuleKeys.label(settings().freeLookKey()));
+        else if(module==GameplayModule.SNAPLOOK){
+            row(a,2,"Hold key",capturing&&!capturingToggle?"Press key...":ModuleKeys.label(settings().snaplookKey()));
+            row(a,15,"Perspective",settings().snapPerspective().label);
+        }
+        else if(module==GameplayModule.WEATHER_CHANGER)row(a,16,"Weather",label(settings().weatherMode().name()));
         else if(module==GameplayModule.ZOOM){
             row(a,2,"Hold key",capturing&&!capturingToggle?"Press key...":ModuleKeys.label(settings().zoomKey()));
             row(a,3,"Magnification",settings().zoomFactor()+"x");row(a,4,"Smooth zoom",settings().zoomSmooth()?"On":"Off");
@@ -116,11 +127,10 @@ public final class GameModuleSettingsScreen extends Screen {
             if(Keyboard.isRepeatEvent())return;
             if(key==Keyboard.KEY_ESCAPE){capturing=false;return;}
             int code=key==Keyboard.KEY_BACK?0:key;
-            int other=module==GameplayModule.FREE_LOOK?settings().zoomKey():settings().freeLookKey();
             boolean conflict = capturingToggle ? ModuleKeys.toggleConflicts(client,module,code)
-                : ModuleKeys.conflicts(client,code)||code==other||ModuleKeys.usedByToggle(settings(),null,code);
+                : ModuleKeys.conflicts(client,code)||ModuleKeys.usedByHold(settings(),module,code)||ModuleKeys.usedByToggle(settings(),null,code);
             if(code!=0&&conflict){status="Key already used; choose another key";capturing=false;return;}
-            boolean saved=capturingToggle?settings().toggleKey(module,code):module==GameplayModule.FREE_LOOK?settings().freeLookKey(code):settings().zoomKey(code);
+            boolean saved=capturingToggle?settings().toggleKey(module,code):settings().holdKey(module,code);
             capturing=false;status=saved?"Key saved":"Could not save key";return;
         }
         if(key==Keyboard.KEY_ESCAPE){client.setScreen(parent);return;}
@@ -149,6 +159,8 @@ public final class GameModuleSettingsScreen extends Screen {
         else if(id==11)saved=settings().crosshairStyle(s.withOutline(!s.outline));
         else if(id==13)saved=settings().brightness(ModSettings.Brightness.values()[Math.floorMod(settings().brightness().ordinal()+direction,ModSettings.Brightness.values().length)]);
         else if(id==14)saved=settings().timePreset(ModSettings.TimePreset.values()[Math.floorMod(settings().timePreset().ordinal()+direction,ModSettings.TimePreset.values().length)]);
+        else if(id==15)saved=settings().snapPerspective(ModSettings.SnapPerspective.values()[Math.floorMod(settings().snapPerspective().ordinal()+direction,ModSettings.SnapPerspective.values().length)]);
+        else if(id==16)saved=settings().weatherMode(ModSettings.WeatherMode.values()[Math.floorMod(settings().weatherMode().ordinal()+direction,ModSettings.WeatherMode.values().length)]);
         else if(id==98)saved=settings().reset(module);else return;
         status=saved?"Saved":"Could not save settings";
     }

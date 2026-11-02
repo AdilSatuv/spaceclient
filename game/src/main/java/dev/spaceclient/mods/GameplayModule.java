@@ -10,7 +10,9 @@ public enum GameplayModule {
     CROSSHAIR("Crosshair", "Customize shape, size, gap and color", "crosshair aim прицел"),
     FULLBRIGHT("Fullbright", "Brighten dark areas on your screen", "fullbright brightness gamma яркость свет гамма"),
     TIME_CHANGER("Time Changer", "Choose the sky's time of day", "time changer day night sunset sunrise время день ночь закат рассвет"),
-    NO_HURT_CAM("No Hurt Cam", "Keep your camera steady when hurt", "no hurt cam damage shake tilt тряска камера урон качание");
+    NO_HURT_CAM("No Hurt Cam", "Keep your camera steady when hurt", "no hurt cam damage shake tilt тряска камера урон качание"),
+    SNAPLOOK("Snaplook", "Hold a key for a quick perspective view", "snaplook perspective third person взгляд вид третье лицо"),
+    WEATHER_CHANGER("Weather Changer", "Choose clear skies, rain or snow", "weather changer clear rain snow погода дождь снег ясно");
     public final String title, description;
     private final String search;
     GameplayModule(String title, String description, String aliases) {
@@ -24,6 +26,7 @@ public enum GameplayModule {
             case ZOOM: return s.zoom(); case CROSSHAIR: return s.crosshair();
             case FULLBRIGHT: return s.fullbright(); case TIME_CHANGER: return s.timeChanger();
             case NO_HURT_CAM: return s.noHurtCam();
+            case SNAPLOOK: return s.snaplook(); case WEATHER_CHANGER: return s.weatherChanger();
             default: throw new AssertionError(this);
         }
     }
@@ -33,6 +36,7 @@ public enum GameplayModule {
             case ZOOM: return s.toggleZoom(); case CROSSHAIR: return s.toggleCrosshair();
             case FULLBRIGHT: return s.toggleFullbright(); case TIME_CHANGER: return s.toggleTimeChanger();
             case NO_HURT_CAM: return s.toggleNoHurtCam();
+            case SNAPLOOK: return s.toggleSnaplook(); case WEATHER_CHANGER: return s.toggleWeatherChanger();
             default: throw new AssertionError(this);
         }
     }
