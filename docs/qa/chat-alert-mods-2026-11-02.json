@@ -1,0 +1,160 @@
+{
+  "date": "2026-11-02",
+  "implementationCommit": "0c2c0f5",
+  "bundle": {
+    "schemaVersion": 1,
+    "channel": "development",
+    "modVersion": "0.1.0",
+    "minecraftVersion": "1.8.9",
+    "loaderVersion": "0.18.3",
+    "gameSourceTree": "bda2f98fdc19e2d4aeb35f593a38dc8fdf463b43",
+    "size": 963805,
+    "sha256": "36c16c01f4595463ae79d7ebf6e0dfd97997e5c38aea34fc8b3f9cfe004c755e"
+  },
+  "modules": {
+    "gameplay": 11,
+    "hud": 23,
+    "catalog": 34,
+    "newOptIn": [
+      "CHAT_TIMESTAMPS",
+      "DURABILITY_WARNING"
+    ],
+    "newToggleKeysUnboundByDefault": true,
+    "modsSchema": 7,
+    "modsFields": 42,
+    "unchangedHudSchema": 17,
+    "unchangedProfileExport": 12
+  },
+  "featureReferences": [
+    {
+      "url": "https://www.badlion.net/wiki/chat",
+      "accessed": "2026-11-02",
+      "scope": "Public chat timestamp options; original Space implementation."
+    }
+  ],
+  "checks": {
+    "javaTests": 216,
+    "launcherTests": 112,
+    "typecheck": true,
+    "prettier": true,
+    "gameBuild": true,
+    "strictLauncherBuild": true,
+    "sourceStampVerified": true,
+    "gitDiffCheck": true,
+    "exactRequiredMixins": 17,
+    "newClassesJava8": true
+  },
+  "legacyFixture": {
+    "file": "game/src/test/resources/hud-legacy/mods-schema6-bb5739c.properties",
+    "sha256": "49b346c32ac6b82d423cbb7ba5a680a4b9f06477eadf347cee796a90375a732d",
+    "generatedByPreviousJarBeforeSourceChanges": true
+  },
+  "codebaseMemory": {
+    "project": "spaceclient-mods-menus",
+    "rootVerified": true,
+    "graphNavigationUsed": true,
+    "indexedAt": "2026-11-02T17:49:06Z",
+    "mode": "fast",
+    "nodes": 7556,
+    "edges": 18493,
+    "skipped": 0,
+    "chatDecoratorInboundTraceResolved": true,
+    "caller": "ChatTimestampMixin.spaceclient$timestamp",
+    "partialFiles": [
+      "apps/launcher/src/renderer/style.css",
+      "game/build.gradle",
+      "game/gradlew"
+    ],
+    "caveat": "Coverage remains metadata_changed; changed source files read from disk. Docs and ignored QA artifacts excluded by design."
+  },
+  "native": {
+    "exitCode": 0,
+    "resolution": [
+      1280,
+      720
+    ],
+    "checks": {
+      "hiddenCanvas": true,
+      "nativeSearchCardsSettingsAndKeys": true,
+      "threeTimeFormats": true,
+      "threeThresholdControls": true,
+      "nativeAddMessageAndIdReplacement": true,
+      "stylesClickHoverAndSourcePreserved": true,
+      "rewrapPreservesTimes": true,
+      "oldAndDisabledMessagesUntouched": true,
+      "heldAndArmorWarnings": true,
+      "exactThresholdAndHealthyRelease": true,
+      "unselectedAndUnbreakableIgnored": true,
+      "hiddenDebugGuiMasterAndDeadGuards": true,
+      "warningGlStateAndCache": true,
+      "sampleItemNbtPreserved": true,
+      "settingsAndOptionsPreserved": true,
+      "physicalInputTested": false,
+      "multiplayerTested": false,
+      "userWorldOpened": false
+    },
+    "additionalAssertions": {
+      "unicodeChatContentPreserved": true,
+      "nativeSlashAndReservedShiftRejected": true
+    },
+    "sixFinalCapturesVisuallyInspected": true,
+    "noObservedFatalMixinOrTextureErrorsInFinalRun": true,
+    "qaScenarioCorrections": [
+      "The first key-capture assertion chose native slash; corrected the QA scenario to assert rejection, then capture a free key.",
+      "A rewrap assertion expected an ID-tagged temporary line to survive vanilla reset; tested ID replacement and ordinary ID-0 rewrap separately.",
+      "A rerun after a failed UTF-8 QA-source edit was stopped before completion. Later corrected only the QA Unicode sample and captured another full successful run. Production unchanged. Only own test Java processes were stopped."
+    ]
+  },
+  "installation": {
+    "sha256": "36c16c01f4595463ae79d7ebf6e0dfd97997e5c38aea34fc8b3f9cfe004c755e",
+    "gameSourceTree": "bda2f98fdc19e2d4aeb35f593a38dc8fdf463b43",
+    "preflight": true,
+    "settingsAndWorldMetadataPreserved": true,
+    "checkedFiles": 5
+  },
+  "screenshots": [
+    {
+      "file": "outputs/chat-alert-mods-2026-11-02/60-chat-timestamps-settings.png",
+      "sha256": "4c865dd35832f11926fb2a69a3a8d35d250c8da26e8c36c6cb2654529fb22781",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/chat-alert-mods-2026-11-02/61-durability-warning-settings.png",
+      "sha256": "271d47661a366f254a7eb90cb70da994b6ea3fc9fa7a7d577d614369ba70ad13",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/chat-alert-mods-2026-11-02/62-chat-and-durability-warning.png",
+      "sha256": "ec614448ba337556625497735ebaf1665161d7ab0d0a1cd6b37f872b2ab78e23",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/chat-alert-mods-2026-11-02/63-armor-warning.png",
+      "sha256": "8cce00c7d96fa5d7ea38b514bb58f37e9473cc585808c1445ddfa4853c4af90f",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/chat-alert-mods-2026-11-02/64-custom-threshold-warning.png",
+      "sha256": "c2797ece7814a6bafda1f2254ab06e840515f56b1dd58e50f439ee8a91edd7b7",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/chat-alert-mods-2026-11-02/65-warning-cleared.png",
+      "sha256": "5053d4e44747ba88e8e6086eb191007189a286f9e1a249a3e8366e884403f997",
+      "width": 1280,
+      "height": 720
+    }
+  ],
+  "limitations": [
+    "Direct ChatHud calls and client-side item samples in the isolated QA world; no physical input or network multiplayer packets exercised.",
+    "Fixed warning location; most critical equipped stack displayed, no sounds or chat alerts.",
+    "No resource-pack/shader matrix or performance measurement.",
+    "Only the QA-created world opened; user game remained closed after installation.",
+    "Native local chat log receives decorated timestamps. No competitor code/assets copied."
+  ]
+}

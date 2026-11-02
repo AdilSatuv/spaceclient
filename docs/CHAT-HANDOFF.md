@@ -1,5 +1,11 @@
 # Передача работы между чатами Space Client
 
+## Chat Timestamps и Durability Warning · 2 ноября 2026
+
+Два новых opt-in модуля: локальное время новых chat messages (24h/minutes, 24h/seconds, 12h/minutes; копии сохраняют native click/hover/style) и тихое live-предупреждение о прочности надетой брони/выбранной руки (5/10/20%, худшая относительная прочность, пропуск Unbreakable). 11 игровых + 23 HUD = 34 карточки. Новые Toggle key unbound. Mods schema7/42 поля, реальный schema6 fixture из предыдущего JAR; HUD17/export12/browser1 без изменений. [Описание](CHAT-AND-ALERT-MODS-2026-11-02.md), [QA](qa/chat-alert-mods-2026-11-02.json).
+
+216 Java + 112 launcher tests, TypeScript, Prettier, game/strict launcher builds прошли. Native QA проверяет cards/search/settings/key capture/conflict, форматы/пороги, actual ChatHud addMessage/ID replacement, перенос без новых timestamps, старые/disabled строки, Unicode, click/hover/style и неизменность источника. Warning: held/armor, точные пороги, healthy release, unselected/Unbreakable, GUI/F1/F3/master/dead guards, NBT и GL state/cache. Шесть кадров 1280×720 осмотрены; exitCode=0. Исправлялся disposable QA (занятые клавиши, ожидания native reset для ID-строк, кодировка образца); product code после source commit не менялся. Физический input, multiplayer, resource-pack/shader matrix и performance не приняты. JAR `36c16c01f4595463ae79d7ebf6e0dfd97997e5c38aea34fc8b3f9cfe004c755e` установлен при закрытой пользовательской игре; preflight, options/config/level.dat сохранены. Игру не запускали. Codebase Memory обновлён, inbound trace разрешён, skipped=0, partial parse/metadata_changed оговорены. Всё локально, main не менялся.
+
 ## Snaplook и Weather Changer · 2 ноября 2026
 
 Добавлены opt-in Snaplook (Hold key, First/Behind/Front, возврат после кадра) и Weather Changer (Clear/Rain/Snow только клиентский Overworld, реальные weather-поля/сервер не записываются). Теперь 9 игровых + 23 HUD = 32 карточки. Hold/Toggle Snaplook и Toggle Weather по умолчанию unbound; обобщены конфликты трёх Hold-модулей, новые defaults не блокируют старые назначения. Mods schema6 / 36 полей, реальный schema5 fixture; HUD17/export12 без изменений. [Описание](ENVIRONMENT-MODS-2026-11-02.md), [QA](qa/environment-mods-2026-11-02.json).
