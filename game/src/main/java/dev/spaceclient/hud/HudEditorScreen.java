@@ -89,7 +89,7 @@ public final class HudEditorScreen extends Screen {
             for(int gx=0;gx<width;gx+=8) fill(gx,0,gx+1,height,0x153D4149);
             for(int gy=0;gy<height;gy+=8) fill(0,gy,width,gy+1,0x153D4149);
         }
-        for (HudModule module : HudModule.values()) if (module != selected) drawModule(module);
+        for (HudModule module : HudModule.values()) if (module != selected && module.isEnabled(settings().getConfig())) drawModule(module);
         drawModule(selected);
         int y = barY(), x = panelX(), w = panelWidth(), h = panelHeight();
         rounded(x + 2, y + 3, w, h, 0x88000000);
@@ -272,7 +272,7 @@ public final class HudEditorScreen extends Screen {
         if (settings().isReadOnly()) return;
         if (bounds(selected).contains(x, y)) { beginDrag(selected, x, y); return; }
         HudModule[] modules = HudModule.values();
-        for (int i = modules.length - 1; i >= 0; i--) if (bounds(modules[i]).contains(x, y)) {
+        for (int i = modules.length - 1; i >= 0; i--) if (modules[i].isEnabled(settings().getConfig()) && bounds(modules[i]).contains(x, y)) {
             beginDrag(modules[i], x, y); return;
         }
     }

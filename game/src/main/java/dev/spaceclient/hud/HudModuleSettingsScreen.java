@@ -34,7 +34,10 @@ public final class HudModuleSettingsScreen extends Screen {
         return module == HudModule.COORDINATES || module == HudModule.CLOCK || module == HudModule.FPS || module == HudModule.CPS || module == HudModule.KEYSTROKES || module == HudModule.SPRINT_STATUS || contextModule();
     }
     private boolean contextModule() { return module == HudModule.PING || module == HudModule.BIOME || module == HudModule.PACK_DISPLAY; }
-    private int previewExtra() { return module == HudModule.KEYSTROKES && content().keyLayout == HudContentSettings.KeyLayout.BLOCK ? 70 : 0; }
+    private int previewExtra() {
+        if(module == HudModule.KEYSTROKES && content().keyLayout == HudContentSettings.KeyLayout.BLOCK)return 70;
+        return module == HudModule.SPRINT_STATUS && content().sprintDisplay == HudContentSettings.SprintDisplay.COMPACT ? 4 : 0;
+    }
     private int panelHeight() { return 224 + previewExtra(); }
     private boolean roomy() { return width >= 320 && height >= 240; }
 
