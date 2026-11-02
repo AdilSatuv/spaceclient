@@ -8,6 +8,16 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class HudPlacementTest {
+    @Test public void toolbarUsesAvailableSpaceBesideTallKeystrokesBounds() {
+        for(int height:new int[]{240,360,540})for(int keyHeight:new int[]{38,58,78})for(double scale:new double[]{.5,1,1.5})
+            for(int y=0;y<height;y++) {
+                HudPlacement.Bounds b=new HudPlacement(Horizontal.LEFT,Vertical.TOP,8,y,scale).resolve(427,height,58,keyHeight);
+                int panel=HudEditorLayout.toolbarY(height,b);
+                assertTrue(panel>=0&&panel+HudEditorLayout.HEIGHT<=height);
+                if(b.y>=HudEditorLayout.HEIGHT+2||height-b.y-b.height>=HudEditorLayout.HEIGHT+2)
+                    assertTrue(b.y+b.height+2<=panel||panel+HudEditorLayout.HEIGHT<=b.y-2);
+            }
+    }
     @Test public void floatingInspectorFitsAndKeepsItsControlRowsVisible() {
         for (int width : new int[] {320, 321, 360, 427, 640, 960}) {
             int panelWidth = HudEditorLayout.panelWidth(width);

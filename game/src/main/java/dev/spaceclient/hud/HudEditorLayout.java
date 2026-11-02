@@ -11,6 +11,14 @@ public final class HudEditorLayout {
     }
     public static int panelX(int screenWidth) { return (screenWidth - panelWidth(screenWidth)) / 2; }
     public static int toolbarY(int height, HudPlacement.Bounds selected) {
+        int bottom=height-HEIGHT-8;
+        if(selected.y+selected.height+2<=bottom)return bottom;
+        if(selected.y-2>=8+HEIGHT)return 8;
+        // A taller widget may leave enough room with a smaller screen-edge margin.
+        int below=(int)Math.ceil(selected.y+selected.height+2);
+        if(below+HEIGHT<=height)return below;
+        int above=(int)Math.floor(selected.y-2-HEIGHT);
+        if(above>=0)return above;
         return selected.y + selected.height / 2 > height / 2.0 ? 8 : height - HEIGHT - 8;
     }
     /** Wider screens use a side inspector when it can fit completely outside the selected bounds. */
