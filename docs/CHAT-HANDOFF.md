@@ -1,5 +1,11 @@
 # Передача работы между чатами Space Client
 
+## Snaplook и Weather Changer · 2 ноября 2026
+
+Добавлены opt-in Snaplook (Hold key, First/Behind/Front, возврат после кадра) и Weather Changer (Clear/Rain/Snow только клиентский Overworld, реальные weather-поля/сервер не записываются). Теперь 9 игровых + 23 HUD = 32 карточки. Hold/Toggle Snaplook и Toggle Weather по умолчанию unbound; обобщены конфликты трёх Hold-модулей, новые defaults не блокируют старые назначения. Mods schema6 / 36 полей, реальный schema5 fixture; HUD17/export12 без изменений. [Описание](ENVIRONMENT-MODS-2026-11-02.md), [QA](qa/environment-mods-2026-11-02.json).
+
+206 Java / 112 launcher tests, TypeScript, Prettier, сборки прошли. Native QA: cards/search/key conflict/capture, Perspective/Weather controls, rain/snow textures в Plains, сырые weather-поля/сервер и natural restore; front/back render со simulated input ports без ОС-фокуса, post-render perspective restore, GUI/unfocused/disabled/FreeLook guard, сохранение ручного вида, options/angles и settings persistence. Девять кадров 1280×720 осмотрены, финальный exitCode=0. Начальный observer считывал состояние до окончания frame; исправлен только QA observer, production не менялся. Physical keys, полноценный совместный input с FreeLook, multiplayer и прочая матрица не приняты. При закрытой пользовательской игре установлен JAR `bb035c1c90e60fadafa17dfe2c06d81f29184a432e42490e89df73604183163b`, preflight/options/config/level.dat проверены; игру не запускали. Codebase Memory обновлён, trace разрешён; один старый fixture пропущен индексом по timeout, исходники/fixture проверены напрямую. Всё локально, main не менялся.
+
 ## Inventory HUD и No Hurt Cam · 2 ноября 2026
 
 Добавлены ещё два opt-in модуля: Inventory HUD (27 слотов, опционально хотбар + native counts/durability overlays) и No Hurt Cam (качание урона собственной живой камеры, death path сохраняется). Теперь 23 HUD / 7 игровых, 30 карточек. HUD17/export12, mods5; реальные fixtures HUD16/export11/mods4 из предыдущего JAR `952b258`. [Описание](UTILITY-MODS-2026-11-02.md), [QA](qa/utility-mods-2026-11-02.json).

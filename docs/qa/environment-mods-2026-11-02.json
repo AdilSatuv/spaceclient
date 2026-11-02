@@ -1,0 +1,161 @@
+{
+  "date": "2026-11-02",
+  "implementationCommit": "bb5739c",
+  "bundle": {
+    "schemaVersion": 1,
+    "channel": "development",
+    "modVersion": "0.1.0",
+    "minecraftVersion": "1.8.9",
+    "loaderVersion": "0.18.3",
+    "gameSourceTree": "4ac41e020f9c50320bede63abd75749b9ba21043",
+    "size": 953667,
+    "sha256": "bb035c1c90e60fadafa17dfe2c06d81f29184a432e42490e89df73604183163b"
+  },
+  "featureReferences": [
+    {
+      "url": "https://www.lunarclient.com/news/free-look-mod-vs-snap-look-mod",
+      "accessed": "2026-11-02"
+    },
+    {
+      "url": "https://www.badlion.net/forum/thread/291938",
+      "accessed": "2026-11-02"
+    }
+  ],
+  "checks": {
+    "javaTests": 206,
+    "launcherTests": 112,
+    "typecheck": true,
+    "prettier": true,
+    "gameBuild": true,
+    "launcherBuild": true,
+    "sourceStampVerified": true,
+    "gitDiffCheck": true,
+    "exactRequiredMixins": 16
+  },
+  "codebaseMemory": {
+    "project": "spaceclient-mods-menus",
+    "rootVerified": true,
+    "graphNavigationUsed": true,
+    "indexedAt": "2026-11-02T17:32:47Z",
+    "mode": "fast",
+    "snaplookBeginInboundTraceResolved": true,
+    "caller": "FreeLookRendererMixin.spaceclient$updateCamera",
+    "flaggedSourcesVerifiedFromWorkingTree": true,
+    "partialFiles": [
+      "apps/launcher/src/renderer/style.css",
+      "game/build.gradle",
+      "game/gradlew"
+    ],
+    "skippedFiles": [
+      {
+        "path": "game/src/test/resources/hud-legacy/schema12-57e1593.properties",
+        "reason": "parse timeout"
+      }
+    ],
+    "caveat": "Coverage remains metadata_changed. Source and skipped fixture read from disk; fixture remains in passed tests. Docs, ignored artifacts and some tests excluded by design."
+  },
+  "native": {
+    "exitCode": 0,
+    "resolution": [
+      1280,
+      720
+    ],
+    "checks": {
+      "hiddenCanvas": true,
+      "nativeSearchCardsAndSettings": true,
+      "holdToggleKeyCaptureAndConflictChecks": true,
+      "clearRainSnowControls": true,
+      "nativeRainAndSnowTextures": true,
+      "rawWeatherFieldsAndServerUnchanged": true,
+      "naturalWeatherRestored": true,
+      "frontBackNativeCameraFrames": true,
+      "perspectiveRestoredAfterEachFrame": true,
+      "manualPerspectivePreserved": true,
+      "guiAndUnfocusedRelease": true,
+      "freeLookPriorityGuard": true,
+      "optionsBytesAndPlayerAnglesUnchanged": true,
+      "settingsPersistence": true,
+      "inputPortsSimulatedWithoutOsFocus": true,
+      "physicalInputTested": false,
+      "userWorldOpened": false
+    },
+    "additionalAssertions": {
+      "threePerspectiveControlValues": true,
+      "disabledSnaplookGuard": true
+    },
+    "nineCapturesVisuallyInspected": true,
+    "noObservedFatalMixinOrTextureErrorsInFinalRun": true,
+    "initialQaObserverFailure": "Observer originally read perspective before all render RETURN callbacks completed. Corrected disposable observer to record immediately after GameRenderer.render in MinecraftClient.runGameLoop; production unchanged. Only its crashed QA process was terminated. Later complete runs exited 0."
+  },
+  "installation": {
+    "sha256": "bb035c1c90e60fadafa17dfe2c06d81f29184a432e42490e89df73604183163b",
+    "gameSourceTree": "4ac41e020f9c50320bede63abd75749b9ba21043",
+    "preflight": true,
+    "settingsAndWorldMetadataPreserved": true,
+    "checkedFiles": 5
+  },
+  "screenshots": [
+    {
+      "file": "outputs/environment-mods-2026-11-02/51-snaplook-settings.png",
+      "sha256": "7fd49a9f5d2747a42bafd29eb4b5e95e67261447bbd5e56889eecced7647a538",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/environment-mods-2026-11-02/52-weather-changer-settings.png",
+      "sha256": "bdaa62b03736af7848e5d8b8f9f327bacfb797ccb25275c24e9b8ad757f6c0e1",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/environment-mods-2026-11-02/53-weather-clear.png",
+      "sha256": "ac6ba618ad416079d98bf260cfd898907f3c4393ffe3b2fcafc8f4be070b1597",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/environment-mods-2026-11-02/54-weather-rain.png",
+      "sha256": "278b72c0fb780ae4276e7495126c51a47f10d60d75c8384d9b572cfbdd9aa449",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/environment-mods-2026-11-02/55-weather-snow.png",
+      "sha256": "cfd7f68abc6a38cd5f43609eb66e403a552cc875f9b3b21e06026fa3f4f6c11a",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/environment-mods-2026-11-02/56-snaplook-front.png",
+      "sha256": "93371d34c58fdc4af9247747a9c4fbbe56f7d54c00ce5a3a51a32313773d79ae",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/environment-mods-2026-11-02/57-snaplook-behind.png",
+      "sha256": "a899736a362e67cd658af20cc7b95b567661949a9391cbea4fa5bf091ef26156",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/environment-mods-2026-11-02/58-snaplook-released.png",
+      "sha256": "cf85dd8feadf90852bd33a90b2ec92a16fa611e58c8869e365e8979b584f4d6c",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/environment-mods-2026-11-02/59-snaplook-gui-release.png",
+      "sha256": "95d18ddae52aeea500b74ac249c5a2640ea1c171738c67a271f1e347137c0cf3",
+      "width": 1280,
+      "height": 720
+    }
+  ],
+  "limitations": [
+    "Snaplook input ports were sampled by a disposable QA-only mixin without changing OS focus or keyboard state. Physical input and complete combined Freelook/Snaplook key sequences were not exercised.",
+    "Native front/back and release frames were captured; manual base-perspective changes and context/disabled/FreeLook guards were checked. First-person target covered by UI/state tests.",
+    "Weather visual/native texture checks cover one Plains overworld QA instance, not the full biome/dimension matrix. Lightning entities are not overridden. Rain sounds were not evaluated by listening.",
+    "Only the QA-created world opened. No multiplayer, shader/resource-pack matrix or performance measurements.",
+    "Own code and line icons, native Minecraft precipitation textures. No competitor code/assets copied.",
+    "User game remained closed after installation. New modules are opt-in and unbound by default."
+  ]
+}
