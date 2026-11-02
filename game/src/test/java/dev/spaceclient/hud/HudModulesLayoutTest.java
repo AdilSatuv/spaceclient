@@ -55,7 +55,7 @@ public class HudModulesLayoutTest {
             assertEquals(result.size(), new java.util.HashSet<HudModule>(result).size());
             assertTrue(result.containsAll(section.search("fps")));
         }
-        assertEquals(java.util.Arrays.asList(HudModule.COORDINATES, HudModule.COMPASS), HudSection.WORLD.search(""));
+        assertEquals(java.util.Arrays.asList(HudModule.COORDINATES, HudModule.COMPASS, HudModule.BIOME), HudSection.WORLD.search(""));
         assertEquals(java.util.Collections.singletonList(HudModule.COORDINATES), HudSection.WORLD.search("xyz"));
         assertTrue(HudSection.COMBAT.search("xyz").isEmpty());
         assertEquals(HudModule.search(""), HudSection.HUD.search(""));

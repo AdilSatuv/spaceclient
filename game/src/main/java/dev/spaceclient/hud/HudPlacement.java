@@ -18,6 +18,8 @@ public final class HudPlacement {
         return Double.isFinite(value) && value >= min && value <= max;
     }
     public static HudPlacement defaults(HudModule module) {
+        if(module==HudModule.PING||module==HudModule.BIOME||module==HudModule.PACK_DISPLAY)
+            return new HudPlacement(Horizontal.RIGHT,Vertical.TOP,8,20+(module.ordinal()-HudModule.PING.ordinal())*12,1);
         return new HudPlacement(Horizontal.LEFT, Vertical.TOP, 8, 20 + module.ordinal() * 12, 1);
     }
     public Bounds resolve(int screenWidth, int screenHeight, int textWidth, int textHeight) {

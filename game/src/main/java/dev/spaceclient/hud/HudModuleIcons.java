@@ -77,6 +77,14 @@ final class HudModuleIcons {
             GL11.glLineWidth(1.3f);
             GL11.glColor4f(.94f, .94f, .94f, 1);
             switch (module) {
+                case PING:
+                    path(false,1,7,5,4,11,2,17,4,21,7);path(false,5,11,8,9,14,9,17,11);
+                    path(false,9,15,11,14,13,15);circle(11,19,1);break;
+                case BIOME:
+                    path(true,3,19,3,11,6,5,12,2,20,2,20,10,17,16,11,19);
+                    path(false,3,19,15,7);path(false,8,14,8,8);path(false,12,10,18,10);break;
+                case PACK_DISPLAY:
+                    path(true,1,7,11,2,21,7,11,12);path(false,1,12,11,17,21,12);path(false,1,17,11,22,21,17);break;
                 case SPRINT_STATUS:
                     circle(14,3,2); path(false,3,8,8,7,12,10,16,12,21,12);
                     path(false,12,10,9,15,3,20); path(false,9,15,15,17,16,22); break;

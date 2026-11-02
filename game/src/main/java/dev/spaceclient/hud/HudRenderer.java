@@ -5,6 +5,8 @@ import dev.spaceclient.HudConfig;
 import dev.spaceclient.SpaceClient;
 import dev.spaceclient.mods.SprintRuntime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.KeyBinding;
@@ -30,13 +32,9 @@ public final class HudRenderer {
             case FPS: return HudMetrics.fps(MinecraftClient.getCurrentFps(), content.fpsLabel);
             case COORDINATES: return client.player == null ? "XYZ --" : HudMetrics.coordinates(
                 client.player.x, client.player.y, client.player.z, content.coordinatesPrecision);
-            case KEYSTROKES: return KeystrokesHud.text(
-                bindingName(client.options.forwardKey), client.options.forwardKey.isPressed(),
-                bindingName(client.options.leftKey), client.options.leftKey.isPressed(),
-                bindingName(client.options.backKey), client.options.backKey.isPressed(),
-                bindingName(client.options.rightKey), client.options.rightKey.isPressed());
+            case KEYSTROKES: return KeystrokesHud.text(keys(client,content));
             case CPS: return HudMetrics.cps(SpaceClient.clicks.getLeftCps(), SpaceClient.clicks.getRightCps(), content.cpsMode);
-            case COMPASS: return "Compass " + Compass.direction(client.player.yaw);
+            case COMPASS: return client.player == null ? "Compass --" : "Compass " + Compass.direction(client.player.yaw);
             case CLOCK: return "Time " + HudMetrics.clock(LocalTime.now(), content.clockFormat, content.clockSeconds);
             case SPEED: return client.player == null ? "Speed --" : HudMetrics.speed(
                 client.player.x, client.player.z, client.player.prevX, client.player.prevZ, client.isPaused());
@@ -51,6 +49,9 @@ public final class HudRenderer {
                 return HudMetrics.memory(vm.totalMemory() - vm.freeMemory(), vm.maxMemory());
             case PLAYTIME: return HudMetrics.playtime(SpaceClient.session.seconds());
             case ITEM_COUNTER: return ItemCounterHud.text(client);
+            case PING: return ContextHud.ping(client);
+            case BIOME: return ContextHud.biome(client);
+            case PACK_DISPLAY: return ContextHud.packs(client);
             case SPRINT_STATUS:
                 if (client.player == null) return "ToggleSprint: --";
                 boolean enabled = SpaceClient.mods != null && SpaceClient.mods.autoSprint();
@@ -61,7 +62,19 @@ public final class HudRenderer {
     }
     private static String bindingName(KeyBinding binding) {
         int code = binding.getCode();
+        if(code>=-100&&code<0)return "M"+(code+101);
         return code == 0 ? "Unbound" : GameOptions.getFormattedNameForKeyCode(code);
+    }
+    private static KeystrokesHud.Key[] keys(MinecraftClient client,HudContentSettings content) {
+        List<KeyBinding> bindings=new ArrayList<KeyBinding>();
+        GameOptions o=client.options;
+        bindings.add(o.forwardKey);bindings.add(o.leftKey);bindings.add(o.backKey);bindings.add(o.rightKey);
+        if(content.keystrokesJump)bindings.add(o.jumpKey);
+        if(content.keystrokesMouse){bindings.add(o.attackKey);bindings.add(o.useKey);}
+        boolean active=client.player!=null&&client.focused&&client.currentScreen==null;
+        KeystrokesHud.Key[] result=new KeystrokesHud.Key[bindings.size()];
+        for(int i=0;i<result.length;i++){KeyBinding b=bindings.get(i);result[i]=new KeystrokesHud.Key(bindingName(b),active&&b.isPressed());}
+        return result;
     }
 
     public static int textWidth(MinecraftClient client, String text) {
@@ -69,6 +82,34 @@ public final class HudRenderer {
     }
     public static HudPlacement.Bounds bounds(MinecraftClient client, String text, HudPlacement placement, int width, int height) {
         return placement.resolve(width, height, textWidth(client, text), 10);
+    }
+    public static int moduleWidth(MinecraftClient client,HudModule module,String text) {
+        if(module!=HudModule.KEYSTROKES)return textWidth(client,text);
+        int width=2;
+        for(KeystrokesHud.Key key:keys(client,SpaceClient.hud.getConfig().active().content()))
+            width+=KeystrokesHud.cellWidth(key,client.textRenderer::getStringWidth);
+        return width;
+    }
+    public static HudPlacement.Bounds bounds(MinecraftClient client,HudModule module,String text,HudPlacement placement,int width,int height) {
+        return placement.resolve(width,height,moduleWidth(client,module,text),10);
+    }
+    public static void drawModule(MinecraftClient client,HudModule module,String text,HudPlacement.Bounds bounds,HudAppearance appearance,int color) {
+        if(module!=HudModule.KEYSTROKES){draw(client,text,bounds,appearance,color);return;}
+        drawKeys(client,keys(client,SpaceClient.hud.getConfig().active().content()),bounds,appearance,color);
+    }
+    public static void drawKeys(MinecraftClient client,KeystrokesHud.Key[] keys,HudPlacement.Bounds bounds,HudAppearance appearance,int color) {
+        GlStateManager.pushMatrix();
+        try {
+            GlStateManager.translate(bounds.x,bounds.y,0);GlStateManager.scale(bounds.scale,bounds.scale,1);
+            int total=2;for(KeystrokesHud.Key key:keys)total+=KeystrokesHud.cellWidth(key,client.textRenderer::getStringWidth);
+            int alpha=backdropAlpha(appearance);if(alpha!=0)backdrop(0,0,total,10,alpha);
+            int x=1;
+            for(KeystrokesHud.Key key:keys){
+                int cell=KeystrokesHud.cellWidth(key,client.textRenderer::getStringWidth);
+                String label=key.text();
+                client.textRenderer.draw(label,x+(cell-client.textRenderer.getStringWidth(label))/2f,0,color,appearance.shadow);x+=cell;
+            }
+        }finally{GlStateManager.popMatrix();}
     }
     /** Resolve AUTO against the module so legacy profiles retain their original colors. */
     static int color(HudModule module, HudAppearance appearance) {
@@ -107,7 +148,7 @@ public final class HudRenderer {
         for (HudModule module : HudModule.values()) if (module.isEnabled(config)) {
             String text = text(client, module, config.active().content());
             HudAppearance appearance = config.active().appearance(module);
-            draw(client, text, bounds(client, text, config.active().placement(module), width, height),
+            drawModule(client, module, text, bounds(client, module, text, config.active().placement(module), width, height),
                 appearance, color(module, appearance));
         }
     }

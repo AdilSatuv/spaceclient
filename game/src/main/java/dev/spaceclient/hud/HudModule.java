@@ -22,7 +22,10 @@ public enum HudModule {
     MEMORY("memory", "Memory", "Java memory used and maximum", "memory ram память озу"),
     PLAYTIME("playtime", "Playtime", "Time in this world, excluding pauses", "session time timer время сессия"),
     ITEM_COUNTER("itemcounter", "Item Counter", "Held item total in your main inventory", "item count inventory предметы счетчик счётчик"),
-    SPRINT_STATUS("sprintstatus", "ToggleSprint HUD", "Sprint toggle and current running state", "autosprint togglesprint sprint status бег спринт статус");
+    SPRINT_STATUS("sprintstatus", "ToggleSprint HUD", "Sprint toggle and current running state", "autosprint togglesprint sprint status бег спринт статус"),
+    PING("ping", "Ping", "Server-reported latency in milliseconds", "ping latency network пинг задержка сеть"),
+    BIOME("biome", "Biome", "The biome at your current position", "biome world биом мир"),
+    PACK_DISPLAY("packs", "Pack Display", "Selected resource packs and server pack", "pack resource textures ресурспак текстуры пак");
 
     private final String id;
     private final String title;
@@ -30,7 +33,8 @@ public enum HudModule {
     private final String searchText;
     private static final HudModule[] BROWSER_ORDER = {
         FPS, COORDINATES, KEYSTROKES, CPS, COMPASS, ARMOR,
-        CLOCK, SPEED, HEALTH, HUNGER, POTION_EFFECTS, MEMORY, PLAYTIME, ITEM_COUNTER, SPRINT_STATUS
+        CLOCK, SPEED, HEALTH, HUNGER, POTION_EFFECTS, MEMORY, PLAYTIME, ITEM_COUNTER, SPRINT_STATUS,
+        PING, BIOME, PACK_DISPLAY
     };
 
     HudModule(String id, String title, String description, String aliases) {
@@ -72,6 +76,9 @@ public enum HudModule {
             case PLAYTIME: return config.active().playtime;
             case ITEM_COUNTER: return config.active().itemCounter;
             case SPRINT_STATUS: return config.active().sprintStatus;
+            case PING: return config.active().ping;
+            case BIOME: return config.active().biome;
+            case PACK_DISPLAY: return config.active().packs;
             default: throw new AssertionError(this);
         }
     }
@@ -93,6 +100,9 @@ public enum HudModule {
             case PLAYTIME: config.active().playtime = enabled; break;
             case ITEM_COUNTER: config.active().itemCounter = enabled; break;
             case SPRINT_STATUS: config.active().sprintStatus = enabled; break;
+            case PING: config.active().ping = enabled; break;
+            case BIOME: config.active().biome = enabled; break;
+            case PACK_DISPLAY: config.active().packs = enabled; break;
             default: throw new AssertionError(this);
         }
     }

@@ -29,7 +29,7 @@ public final class HudModuleSettingsScreen extends Screen {
     private HudAppearance appearance() { return settings().getConfig().active().appearance(module); }
     private HudContentSettings content() { return settings().getConfig().active().content(); }
     private boolean hasContentSettings() {
-        return module == HudModule.COORDINATES || module == HudModule.CLOCK || module == HudModule.FPS || module == HudModule.CPS;
+        return module == HudModule.COORDINATES || module == HudModule.CLOCK || module == HudModule.FPS || module == HudModule.CPS || module == HudModule.KEYSTROKES;
     }
     private boolean roomy() { return width >= 320 && height >= 240; }
 
@@ -60,7 +60,11 @@ public final class HudModuleSettingsScreen extends Screen {
         drawPreview();
         fill(left + 14, top + 61, left + panelWidth - 14, top + 62, BORDER);
         if (tab == 2) {
-            if (module == HudModule.COORDINATES) {
+            if (module == HudModule.KEYSTROKES) {
+                SpaceUiFont.draw(client,"Jump key",left+16,top+73,TEXT);
+                SpaceUiFont.draw(client,"Attack / use keys",left+16,top+101,TEXT);
+                SpaceUiFont.draw(client,"Uses your current key bindings",left+16,top+129,MUTED);
+            } else if (module == HudModule.COORDINATES) {
                 SpaceUiFont.draw(client, "Decimal places", left + 16, top + 73, TEXT);
                 SpaceUiFont.draw(client, "0 rounds to a whole number", left + 16, top + 101, MUTED);
             } else if (module == HudModule.FPS) {
@@ -126,7 +130,10 @@ public final class HudModuleSettingsScreen extends Screen {
         }
         if (tab == 2 && hasContentSettings()) {
             HudContentSettings c = content();
-            if (module == HudModule.COORDINATES) {
+            if (module == HudModule.KEYSTROKES) {
+                actions.add(new Action(20,c.keystrokesJump?"ON":"OFF",right-98,top+67,98,editable));
+                actions.add(new Action(21,c.keystrokesMouse?"ON":"OFF",right-98,top+95,98,editable));
+            } else if (module == HudModule.COORDINATES) {
                 actions.add(new Action(14, Integer.toString(c.coordinatesPrecision) + "  >", right - 98, top + 67, 98, editable));
             } else if (module == HudModule.FPS) {
                 actions.add(new Action(18, c.fpsLabel ? "ON" : "OFF", right - 98, top + 67, 98, editable));
@@ -188,7 +195,9 @@ public final class HudModuleSettingsScreen extends Screen {
         if (id == 5) { client.setScreen(new HudEditorScreen(this, module)); return; }
         if (settings().isReadOnly()) return;
         boolean saved;
-        if (id == 18) saved = settings().content(content().withFpsLabel(!content().fpsLabel));
+        if (id == 20) saved = settings().content(content().withKeystrokesJump(!content().keystrokesJump));
+        else if (id == 21) saved = settings().content(content().withKeystrokesMouse(!content().keystrokesMouse));
+        else if (id == 18) saved = settings().content(content().withFpsLabel(!content().fpsLabel));
         else if (id == 19) {
             HudContentSettings c = content();
             HudContentSettings.CpsMode[] values = HudContentSettings.CpsMode.values();
@@ -207,6 +216,7 @@ public final class HudModuleSettingsScreen extends Screen {
             else if (module == HudModule.CLOCK) c = c.withClockFormat(HudContentSettings.ClockFormat.H24).withClockSeconds(true);
             else if (module == HudModule.FPS) c = c.withFpsLabel(true);
             else if (module == HudModule.CPS) c = c.withCpsMode(HudContentSettings.CpsMode.BOTH);
+            else if (module == HudModule.KEYSTROKES) c = c.withKeystrokesJump(true).withKeystrokesMouse(true);
             saved = settings().content(c);
         } else if (id == 8) {
             HudAppearance a = appearance();
@@ -228,7 +238,7 @@ public final class HudModuleSettingsScreen extends Screen {
             int next = (p.horizontal.ordinal() * 2 + p.vertical.ordinal() + 1) % 4;
             String text = HudRenderer.text(client, module);
             saved = settings().place(module, p.anchored(HudPlacement.Horizontal.values()[next / 2],
-                HudPlacement.Vertical.values()[next % 2], width, height, HudRenderer.textWidth(client, text), 10));
+                HudPlacement.Vertical.values()[next % 2], width, height, HudRenderer.moduleWidth(client, module, text), 10));
         } else if (id == 4) saved = settings().reset(module);
         else return;
         status = saved ? "Saved to the active profile" : settings().getError();

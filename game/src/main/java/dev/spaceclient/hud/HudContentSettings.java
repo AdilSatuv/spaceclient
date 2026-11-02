@@ -9,12 +9,17 @@ public final class HudContentSettings {
     public final boolean clockSeconds;
     public final boolean fpsLabel;
     public final CpsMode cpsMode;
+    public final boolean keystrokesJump, keystrokesMouse;
 
     public HudContentSettings(int coordinatesPrecision, ClockFormat clockFormat, boolean clockSeconds) {
         this(coordinatesPrecision, clockFormat, clockSeconds, true, CpsMode.BOTH);
     }
     public HudContentSettings(int coordinatesPrecision, ClockFormat clockFormat, boolean clockSeconds,
                               boolean fpsLabel, CpsMode cpsMode) {
+        this(coordinatesPrecision,clockFormat,clockSeconds,fpsLabel,cpsMode,true,true);
+    }
+    public HudContentSettings(int coordinatesPrecision, ClockFormat clockFormat, boolean clockSeconds,
+                              boolean fpsLabel, CpsMode cpsMode, boolean keystrokesJump, boolean keystrokesMouse) {
         if (coordinatesPrecision < 0 || coordinatesPrecision > 2 || clockFormat == null || cpsMode == null)
             throw new IllegalArgumentException("Invalid HUD content settings");
         this.coordinatesPrecision = coordinatesPrecision;
@@ -22,21 +27,28 @@ public final class HudContentSettings {
         this.clockSeconds = clockSeconds;
         this.fpsLabel = fpsLabel;
         this.cpsMode = cpsMode;
+        this.keystrokesJump = keystrokesJump; this.keystrokesMouse = keystrokesMouse;
     }
     public static HudContentSettings defaults() { return new HudContentSettings(1, ClockFormat.H24, true); }
     public HudContentSettings withCoordinatesPrecision(int value) {
-        return new HudContentSettings(value, clockFormat, clockSeconds, fpsLabel, cpsMode);
+        return new HudContentSettings(value, clockFormat, clockSeconds, fpsLabel, cpsMode, keystrokesJump, keystrokesMouse);
     }
     public HudContentSettings withClockFormat(ClockFormat value) {
-        return new HudContentSettings(coordinatesPrecision, value, clockSeconds, fpsLabel, cpsMode);
+        return new HudContentSettings(coordinatesPrecision, value, clockSeconds, fpsLabel, cpsMode, keystrokesJump, keystrokesMouse);
     }
     public HudContentSettings withClockSeconds(boolean value) {
-        return new HudContentSettings(coordinatesPrecision, clockFormat, value, fpsLabel, cpsMode);
+        return new HudContentSettings(coordinatesPrecision, clockFormat, value, fpsLabel, cpsMode, keystrokesJump, keystrokesMouse);
     }
     public HudContentSettings withFpsLabel(boolean value) {
-        return new HudContentSettings(coordinatesPrecision, clockFormat, clockSeconds, value, cpsMode);
+        return new HudContentSettings(coordinatesPrecision, clockFormat, clockSeconds, value, cpsMode, keystrokesJump, keystrokesMouse);
     }
     public HudContentSettings withCpsMode(CpsMode value) {
-        return new HudContentSettings(coordinatesPrecision, clockFormat, clockSeconds, fpsLabel, value);
+        return new HudContentSettings(coordinatesPrecision, clockFormat, clockSeconds, fpsLabel, value, keystrokesJump, keystrokesMouse);
+    }
+    public HudContentSettings withKeystrokesJump(boolean value) {
+        return new HudContentSettings(coordinatesPrecision,clockFormat,clockSeconds,fpsLabel,cpsMode,value,keystrokesMouse);
+    }
+    public HudContentSettings withKeystrokesMouse(boolean value) {
+        return new HudContentSettings(coordinatesPrecision,clockFormat,clockSeconds,fpsLabel,cpsMode,keystrokesJump,value);
     }
 }
