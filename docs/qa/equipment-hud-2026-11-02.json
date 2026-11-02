@@ -1,0 +1,110 @@
+{
+  "date": "2026-11-02",
+  "implementationCommits": [
+    "ce3094e",
+    "e5767f7",
+    "1683729"
+  ],
+  "bundle": {
+    "schemaVersion": 1,
+    "channel": "development",
+    "modVersion": "0.1.0",
+    "minecraftVersion": "1.8.9",
+    "loaderVersion": "0.18.3",
+    "gameSourceTree": "9bbd0de084a345e438b7723c5a3ba6bb9c0f4b0d",
+    "size": 925063,
+    "sha256": "091f8577c48741fc46a7c12aa34ad00ae4a8df1c659024b105e975515a39c757"
+  },
+  "checks": {
+    "javaTests": 167,
+    "launcherTests": 112,
+    "typecheck": true,
+    "prettier": true,
+    "gameBuild": true,
+    "launcherBuild": true,
+    "sourceStampVerified": true,
+    "gitDiffCheck": true
+  },
+  "native": {
+    "exitCode": 0,
+    "resolution": [
+      1280,
+      720
+    ],
+    "checks": {
+      "hiddenCanvas": true,
+      "nativeItemAndEffectIcons": true,
+      "damagedAndEnchantedItems": true,
+      "contentPointerSettings": true,
+      "remainingDurabilityAndHandToggle": true,
+      "sortedEffectsOverflowAndTimers": true,
+      "armorEditorHeightAndAnchors": true,
+      "profilesAndPersistence": true,
+      "emptyStates": true,
+      "glStateAndCacheProbe": true,
+      "qaAssignedEquipmentAndEffects": true,
+      "physicalInputTested": false,
+      "userWorldOpened": false
+    },
+    "sixCapturesVisuallyInspected": true,
+    "maxFiveEffectCardsAndPermanentTimerInspected": true,
+    "noObservedFatalMixinOrTextureErrors": true
+  },
+  "installation": {
+    "sha256": "091f8577c48741fc46a7c12aa34ad00ae4a8df1c659024b105e975515a39c757",
+    "gameSourceTree": "9bbd0de084a345e438b7723c5a3ba6bb9c0f4b0d",
+    "preflight": true,
+    "settingsAndWorldMetadataPreserved": true,
+    "checkedFiles": 5
+  },
+  "screenshots": [
+    {
+      "file": "outputs/equipment-hud-2026-11-02/22-armor-content.png",
+      "sha256": "ff95074987e97e2fd28fc8415e2157d1031ef4856dc15653af23986b5651f710",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/equipment-hud-2026-11-02/23-effects-content.png",
+      "sha256": "0b7115a6c78cd9d4c0319289b237c943aa3f005a599afc09d220d4b316a2f760",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/equipment-hud-2026-11-02/24-equipment-editor.png",
+      "sha256": "76d12ea8e99eb7758498395e8d1688ddd7a8a77e2c340da7abfe0751429d1fad",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/equipment-hud-2026-11-02/25-equipment-hud-world.png",
+      "sha256": "01f7509f7b641f74202e3277ff7d1c7d3b6c9df891dfa6f18725124683b2f0f9",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/equipment-hud-2026-11-02/26-equipment-gl-state.png",
+      "sha256": "b73144146535f97a658476b84704fd1cc135053178bd037b0ebd294f5f6e25af",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/equipment-hud-2026-11-02/27-empty-equipment-world.png",
+      "sha256": "447c29fcc2673a3d9e4d6f4a8d196bb85f0168ed63e807009cf65684fefd22bd",
+      "width": 1280,
+      "height": 720
+    }
+  ],
+  "limitations": [
+    "Equipment and six effects were assigned explicitly in the isolated QA client. This is native rendering and adapter validation, not an acceptance of obtaining items or effects through normal survival gameplay.",
+    "Physical keyboard and mouse input were not exercised. Screen methods were invoked without OS input.",
+    "Captures and native GL checks used the default textures in one hidden 1280x720 Canvas; a full resource-pack, graphics-driver or shader compatibility matrix was not performed.",
+    "No performance or multiplayer measurement performed. Only a QA-created world opened.",
+    "Existing HUD placements and text styles are preserved. Icon layouts are opt-in and may require arranging widgets through Edit layout.",
+    "User game was closed for installation and was not launched by this update."
+  ],
+  "nativeFindings": [
+    "Native item rendering left alpha blend factors changed despite a cached GlStateManager restore. A forced GL alpha-factor restore now keeps GL and the cache consistent; the final before/after native snapshot matches.",
+    "The disposable harness originally used a server-only effect clear method on a client entity. Removing the assigned client effects individually corrected the empty-state check."
+  ]
+}
