@@ -1,0 +1,136 @@
+{
+  "date": "2026-11-02",
+  "implementationCommit": "952b258",
+  "bundle": {
+    "schemaVersion": 1,
+    "channel": "development",
+    "modVersion": "0.1.0",
+    "minecraftVersion": "1.8.9",
+    "loaderVersion": "0.18.3",
+    "gameSourceTree": "75a8d1c3bd04f57a244bc6fe715ef82f2de94357",
+    "size": 937987,
+    "sha256": "84d90162782f08f9602b2e0464c4e4b9e09928bf90bda0778f931520d8567ae6"
+  },
+  "featureReferences": [
+    {
+      "url": "https://www.badlion.net/wiki/fullbright",
+      "accessed": "2026-11-02"
+    },
+    {
+      "url": "https://www.badlion.net/wiki/time-changer",
+      "accessed": "2026-11-02"
+    }
+  ],
+  "checks": {
+    "javaTests": 185,
+    "launcherTests": 112,
+    "typecheck": true,
+    "prettier": true,
+    "gameBuild": true,
+    "launcherBuild": true,
+    "sourceStampVerified": true,
+    "gitDiffCheck": true,
+    "exactRequiredMixins": 13
+  },
+  "codebaseMemory": {
+    "project": "spaceclient-mods-menus",
+    "rootVerified": true,
+    "graphNavigationUsed": true,
+    "indexedAt": "2026-11-02T16:31:22Z",
+    "mode": "fast",
+    "newMixinClassesFound": true,
+    "renderGammaInboundTraceResolved": false,
+    "flaggedSourcesVerifiedFromWorkingTree": true,
+    "partialFiles": [
+      "apps/launcher/src/renderer/style.css",
+      "game/build.gradle",
+      "game/gradlew"
+    ],
+    "caveat": "Coverage remains metadata_changed. Inbound call via SpaceClient.mods was not resolved. Source and native behavior checked. Docs, ignored artifacts and some tests are excluded by design."
+  },
+  "native": {
+    "exitCode": 0,
+    "resolution": [
+      1280,
+      720
+    ],
+    "checks": {
+      "hiddenCanvas": true,
+      "homeCardSwitchesAndSettings": true,
+      "threeIntensityControls": true,
+      "fourPresetControls": true,
+      "toggleKeyCaptureAndPersistence": true,
+      "pausedLightmapRefresh": true,
+      "gammaFieldAndOptionsUnchanged": true,
+      "clientTimeAndDayCounterUnchanged": true,
+      "serverSkyUnchanged": true,
+      "vanillaSkyRestored": true,
+      "nightLightmapRgbSum": 42,
+      "fullbrightRgbSum": 765,
+      "restoredRgbSum": 42,
+      "physicalInputTested": false,
+      "userWorldOpened": false
+    },
+    "sevenCapturesVisuallyInspected": true,
+    "noObservedFatalMixinOrTextureErrors": true
+  },
+  "installation": {
+    "sha256": "84d90162782f08f9602b2e0464c4e4b9e09928bf90bda0778f931520d8567ae6",
+    "gameSourceTree": "75a8d1c3bd04f57a244bc6fe715ef82f2de94357",
+    "preflight": true,
+    "settingsAndWorldMetadataPreserved": true,
+    "checkedFiles": 5
+  },
+  "screenshots": [
+    {
+      "file": "outputs/visual-mods-2026-11-02/36-visual-mods-home.png",
+      "sha256": "926fb9c301dfe12abbaea418df63cecc64299e640383f37a7d44e119d6990150",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/visual-mods-2026-11-02/37-fullbright-settings.png",
+      "sha256": "4fa40d8703e342882c1d7212a11a7aae874c8bf6aec5bac69640670942dfd7af",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/visual-mods-2026-11-02/38-time-changer-settings.png",
+      "sha256": "5e06665cf46227d62c5e9deb896c6a5d811c13b47c2787921cb42e92e1ce6259",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/visual-mods-2026-11-02/39-time-changer-day.png",
+      "sha256": "c7074cbe5d70695946abe8fd74f66e0cc377ecd4e4d8518b6e4fc48cc58813aa",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/visual-mods-2026-11-02/40-time-changer-night.png",
+      "sha256": "0f00b115bc4156496f09c6742d4672d76fd5753fe0fccf80235a93570941a244",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/visual-mods-2026-11-02/41-fullbright-night.png",
+      "sha256": "c484a48d0458c07ef1f9cb889a2993f33dbed277e5ac11911a758a213b95cdfb",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/visual-mods-2026-11-02/42-fullbright-off-restored.png",
+      "sha256": "743e4b586807f266f6384f67293857f8916580743f5b44f6e2b6b169a6467508",
+      "width": 1280,
+      "height": 720
+    }
+  ],
+  "limitations": [
+    "Time Changer implements four fixed sky presets in the client Overworld, not the competitor cycle-speed feature.",
+    "Only the QA-created overworld opened. Other dimensions, multiplayer and shader/resource-pack matrix were not exercised.",
+    "Screen methods were invoked without OS input in a hidden Canvas. Native key capture was checked; physical key events were not tested.",
+    "The RGB sums refer to the first native lightmap texel, not a performance measurement.",
+    "Own source and original icons. No competitor code or assets copied. Reference pages do not establish popularity rankings.",
+    "User game remained closed after installation. New visual modules are opt-in and unbound by default."
+  ]
+}

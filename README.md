@@ -15,6 +15,7 @@
 - [Armor HUD и карточки эффектов](docs/EQUIPMENT-HUD-2026-11-02.md) — иконки, прочность, таймеры и игровые проверки.
 - [Day Counter и Light Level](docs/WORLD-MODULES-2026-11-02.md) — дни мира и световые каналы.
 - [Experience и Arrow Counter](docs/PLAYER-STATS-MODULES-2026-11-02.md) — полоса опыта и стрелы в инвентаре.
+- [Fullbright и Time Changer](docs/VISUAL-MODS-2026-11-02.md) — визуальная яркость и выбор времени неба.
 - [Распределение работы между тремя чатами](docs/PARALLEL-WORK-2026-11-02.md) — области, рабочие копии и индексы Codebase Memory.
 - [ТЗ и этапы](docs/SPEC.md) — границы MVP, архитектура и критерии приёмки.
 - [Рабочий процесс](docs/DEVELOPMENT.md) — инструменты, проверки, коммиты и пуш.

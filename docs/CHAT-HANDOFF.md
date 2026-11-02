@@ -1,5 +1,11 @@
 # Передача работы между чатами Space Client
 
+## Fullbright и Time Changer · 2 ноября 2026
+
+По запросу популярных модов других клиентов, после проверки официальных руководств Badlion, добавлены собственные Fullbright (Soft/Bright/Full) и Time Changer (Day/Sunset/Night/Sunrise). Теперь 6 игровых модулей + 22 HUD, обе новые карточки на первой Home / в Visuals, Time Changer также в World. Новые модули opt-in, клавиши по умолчанию unbound. Fullbright переопределяет только gamma-read lightmap, Time Changer — только угол клиентского Overworld. Options.gamma, options.txt, настоящее время мира и серверное небо не меняются. Mods schema4 поддерживает 1–3, реальный fixture schema3; HUD16/export11 без изменений. [Описание](VISUAL-MODS-2026-11-02.md), [QA](qa/visual-mods-2026-11-02.json).
+
+185 Java / 112 launcher tests, TypeScript, Prettier и сборки прошли. Native QA: карточки/настройки, 3 intensity / 4 preset, захват и сохранение K/L экранными методами, обновление lightmap на паузе, off/on/off RGB42/765/42, неизменность gamma/options/client clock/Day Counter/server sky, возврат vanilla sky. Семь кадров 1280×720 осмотрены, exitCode=0. Физический ввод, multiplayer, другие измерения и shader/resource-pack матрица не приняты. При закрытой пользовательской игре установлен JAR `84d90162782f08f9602b2e0464c4e4b9e09928bf90bda0778f931520d8567ae6`; preflight и сохранность options/config/level.dat подтверждены. Пользовательскую игру не запускали. Codebase Memory текущего root обновлён; trace вызова через SpaceClient.mods не разрешился, исходники и native проверены. Изменения локальные; main не менялся. Crosshair всё ещё следующий отдельный срез.
+
 ## Experience и Arrow Counter · 2 ноября 2026
 
 По просьбе добавить ещё модов приоритет переключён с планируемого расширения Crosshair на Experience и Arrow Counter. Теперь 22 HUD-виджета / четыре игровых модуля; новые доступны в Player, стрелы также в Combat, по умолчанию выключены. Experience — уровень/процент и полоса, стрелы — весь основной инвентарь независимо от предмета в руке. HUD schema16/exportv11, реальные fixtures schema15/exportv10 из предыдущего JAR. [Описание](PLAYER-STATS-MODULES-2026-11-02.md), [QA](qa/player-stats-modules-2026-11-02.json).
