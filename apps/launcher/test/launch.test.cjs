@@ -13,11 +13,11 @@ const profile = {
   javaPath: 'C:\\Runtime with spaces\\bin\\java.exe',
 };
 const signal = () => new AbortController().signal;
-async function service(overrides = {}) {
+async function service(overrides = {}, rootForProfile = async (id) => '/instances/' + id) {
   const { LaunchService } = await import('../src/main/launch.ts');
   const calls = [];
   const children = [];
-  const value = new LaunchService(async (id) => '/instances/' + id, null, {
+  const value = new LaunchService(rootForProfile, null, {
     prepare: async (root, p, name) => ({
       executable: p.javaPath,
       args: ['--username', name],
@@ -148,6 +148,62 @@ test('shutdown cancels preflight before spawn and never starts an unvalidated ni
   await value.shutdown();
   assert.equal(calls, 0);
   assert.equal(value.running, false);
+});
+test('shutdown during profile lookup keeps the reservation until lookup settles and skips preflight', async () => {
+  let releaseRoot;
+  let prepareCalls = 0;
+  let spawnCalls = 0;
+  const root = new Promise((resolve) => {
+    releaseRoot = resolve;
+  });
+  const { value, tick } = await service(
+    {
+      prepare: async () => {
+        prepareCalls++;
+      },
+      spawn: () => {
+        spawnCalls++;
+      },
+    },
+    () => root,
+  );
+  value.start(profile, 'SpaceTester');
+  let closed = false;
+  const closing = value.shutdown().then(() => {
+    closed = true;
+  });
+  await tick();
+  assert.equal(value.running, true);
+  assert.equal(closed, false);
+  releaseRoot('/instances/default');
+  await closing;
+  assert.equal(prepareCalls, 0, 'a cancelled launch must not start Java validation');
+  assert.equal(spawnCalls, 0);
+  assert.equal(value.running, false);
+  assert.equal(value.status('default').phase, 'error');
+  assert.match(value.status('default').message, /отменён/);
+});
+test('an already cancelled local preflight never invokes runtime or touches installation validation', async () => {
+  const { prepareLocalLaunch } = await import('../src/main/launch-plan.ts');
+  const controller = new AbortController();
+  controller.abort();
+  const calls = [];
+  await assert.rejects(
+    prepareLocalLaunch('/unused', profile, 'SpaceTester', {}, controller.signal, {
+      runtime: async () => {
+        calls.push('runtime');
+        return { usable: true };
+      },
+      version: async () => {
+        calls.push('version');
+      },
+      space: async () => {
+        calls.push('space');
+      },
+    }),
+    { name: 'AbortError' },
+  );
+  assert.deepEqual(calls, []);
 });
 async function installation(t) {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'space-local-plan-'));

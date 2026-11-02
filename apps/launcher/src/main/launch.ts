@@ -69,6 +69,7 @@ export class LaunchService {
   private async perform(id: string, profile: Profile, name: string, job: Job) {
     try {
       const root = await this.rootForProfile(id);
+      job.controller.signal.throwIfAborted();
       const plan = await this.dependencies.prepare(
         root,
         profile,

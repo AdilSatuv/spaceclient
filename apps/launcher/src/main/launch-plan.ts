@@ -55,6 +55,7 @@ export async function prepareLocalLaunch(
   signal: AbortSignal,
   dependencies: ValidationDependencies = validation,
 ): Promise<LaunchPlan> {
+  signal.throwIfAborted();
   const localName = nickname(name);
   editProfile({ id: profile.id, name: profile.name, memoryMb: profile.memoryMb }, 16384);
   if (!pin)
