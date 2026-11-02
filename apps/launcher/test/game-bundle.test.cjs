@@ -95,6 +95,7 @@ function entries() {
       'hud/UiShapes',
       'hud/CatalogModule',
       'hud/SessionTimer',
+      'hud/SprintStatus',
       'hud/ItemCounterHud',
       'hud/HudAlignment',
       'hud/HudModuleSettingsScreen',
@@ -132,6 +133,7 @@ test('gameplay modules and their settings cannot disappear from an otherwise val
     'freelook/FreeLookRuntime',
     'hud/CatalogModule',
     'hud/SessionTimer',
+    'hud/SprintStatus',
     'hud/ItemCounterHud',
   ]) {
     const { source, inspectSpaceJar } = await fixture(t, (value) =>

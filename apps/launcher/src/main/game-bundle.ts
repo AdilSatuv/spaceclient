@@ -88,6 +88,7 @@ const required = [
   'dev/spaceclient/hud/UiShapes.class',
   'dev/spaceclient/hud/CatalogModule.class',
   'dev/spaceclient/hud/SessionTimer.class',
+  'dev/spaceclient/hud/SprintStatus.class',
   'dev/spaceclient/hud/ItemCounterHud.class',
   'dev/spaceclient/hud/HudAlignment.class',
   'dev/spaceclient/hud/HudModuleSettingsScreen.class',

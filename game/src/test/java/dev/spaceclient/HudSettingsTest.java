@@ -80,7 +80,7 @@ public class HudSettingsTest {
     }
 
     @Test public void futureSchemaIsNeverOverwrittenOrRenamed() throws Exception {
-        write("schemaVersion=10\ncustomFutureField=keep-me\n");
+        write("schemaVersion=11\ncustomFutureField=keep-me\n");
         byte[] original = Files.readAllBytes(file());
         HudSettings settings = HudSettings.open(file());
         assertTrue(settings.isReadOnly());
@@ -120,7 +120,7 @@ public class HudSettingsTest {
     }
 
     @Test public void moduleSearchSupportsAliasesWhitespaceAndEmptyResults() {
-        assertEquals(14, HudModule.search("  ").size());
+        assertEquals(15, HudModule.search("  ").size());
         assertEquals(HudModule.CPS, HudModule.search(" МЫШЬ ").get(0));
         assertEquals(HudModule.COORDINATES, HudModule.search("xyz").get(0));
         assertEquals(HudModule.KEYSTROKES, HudModule.search("WASD").get(0));

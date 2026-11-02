@@ -44,20 +44,20 @@ public final class HudConfig {
         Properties properties = readProperties(file);
         String schema = properties.getProperty("schemaVersion", "1");
         if (!schema.matches("[1-9][0-9]*")) throw new InvalidConfigException("Invalid HUD schema version");
-        if (!schema.matches("[1-9]")) throw new UnsupportedSchemaException();
-        if (!schema.equals("9")) config.migrationSourceVersion = Integer.parseInt(schema);
+        if (!schema.matches("[1-9]|10")) throw new UnsupportedSchemaException();
+        int version = Integer.parseInt(schema);
+        if (version != 10) config.migrationSourceVersion = version;
         if (schema.equals("1")) {
-            config.profiles[0] = readProfile(properties, "", "Profile 1", false, false, false);
+            config.profiles[0] = readProfile(properties, "", "Profile 1", version);
             config.profiles[1] = config.profiles[0].copy();
             config.profiles[1].name = "Profile 2";
         } else {
             try { config.select(Integer.parseInt(properties.getProperty("activeProfile", "0"))); }
             catch (IllegalArgumentException exception) { throw new InvalidConfigException("Invalid active HUD profile", exception); }
             for (int i = 0; i < config.profiles.length; i++)
-                config.profiles[i] = readProfile(properties, "profile." + i + ".", "Profile " + (i + 1),
-                    Integer.parseInt(schema) >= 7, Integer.parseInt(schema) >= 8, schema.equals("9"));
+                config.profiles[i] = readProfile(properties, "profile." + i + ".", "Profile " + (i + 1), version);
         }
-        if (Integer.parseInt(schema) >= 7) {
+        if (version >= 7) {
             // Modern schemas are written as complete snapshots; missing keys must not
             // silently reset layout or flags on a subsequent save.
             Properties required = new Properties();
@@ -67,8 +67,10 @@ public final class HudConfig {
                 writeProfile(required, "profile." + i + ".", config.profiles[i]);
             if (schema.equals("7")) for (int i = 0; i < config.profiles.length; i++)
                 removeContentFields(required, "profile." + i + ".");
-            if (!schema.equals("9")) for (int i = 0; i < config.profiles.length; i++)
+            if (version < 9) for (int i = 0; i < config.profiles.length; i++)
                 removeExtendedFields(required, "profile." + i + ".");
+            if (version < 10) for (int i = 0; i < config.profiles.length; i++)
+                removeSprintFields(required, "profile." + i + ".");
             if (!properties.stringPropertyNames().containsAll(required.stringPropertyNames()))
                 throw new InvalidConfigException("Incomplete HUD schema " + schema + " configuration");
         }
@@ -91,8 +93,9 @@ public final class HudConfig {
         return properties;
     }
 
-    private static HudProfile readProfile(Properties properties, String prefix, String defaultName, boolean appearanceFields, boolean contentFields, boolean extendedFields) throws IOException {
+    private static HudProfile readProfile(Properties properties, String prefix, String defaultName, int version) throws IOException {
         try {
+            boolean appearanceFields = version >= 7, contentFields = version >= 8, extendedFields = version >= 9;
             HudProfile profile = new HudProfile(properties.getProperty(prefix + "name", defaultName));
             profile.enabled = readBoolean(properties, prefix + "enabled");
             profile.fps = readBoolean(properties, prefix + "fps");
@@ -109,6 +112,7 @@ public final class HudConfig {
             profile.memory = extendedFields && readBoolean(properties, prefix + "memory", false);
             profile.playtime = extendedFields && readBoolean(properties, prefix + "playtime", false);
             profile.itemCounter = extendedFields && readBoolean(properties, prefix + "itemcounter", false);
+            profile.sprintStatus = version < 10 || readBoolean(properties, prefix + "sprintstatus", true);
             for (HudModule module : HudModule.values()) {
                 HudPlacement defaults = HudPlacement.defaults(module);
                 String key = prefix + "layout." + module.getId() + ".";
@@ -118,7 +122,8 @@ public final class HudConfig {
                     Double.parseDouble(properties.getProperty(key + "x", Double.toString(defaults.x))),
                     Double.parseDouble(properties.getProperty(key + "y", Double.toString(defaults.y))),
                     Double.parseDouble(properties.getProperty(key + "scale", "1.0"))));
-                if (appearanceFields && (extendedFields || module.ordinal() < HudModule.MEMORY.ordinal())) {
+                if (appearanceFields && (extendedFields || module.ordinal() < HudModule.MEMORY.ordinal())
+                        && (version >= 10 || module != HudModule.SPRINT_STATUS)) {
                     String appearanceKey = prefix + "appearance." + module.getId() + ".";
                     String color = properties.getProperty(appearanceKey + "color");
                     String backdrop = properties.getProperty(appearanceKey + "backdrop");
@@ -173,6 +178,7 @@ public final class HudConfig {
         properties.setProperty(prefix + "memory", Boolean.toString(profile.memory));
         properties.setProperty(prefix + "playtime", Boolean.toString(profile.playtime));
         properties.setProperty(prefix + "itemcounter", Boolean.toString(profile.itemCounter));
+        properties.setProperty(prefix + "sprintstatus", Boolean.toString(profile.sprintStatus));
         HudContentSettings content = profile.content();
         properties.setProperty(prefix + "content.coordinates.precision", Integer.toString(content.coordinatesPrecision));
         properties.setProperty(prefix + "content.clock.format", content.clockFormat.name());
@@ -197,7 +203,7 @@ public final class HudConfig {
 
     public void save(Path file) throws IOException {
         Properties properties = new Properties();
-        properties.setProperty("schemaVersion", "9");
+        properties.setProperty("schemaVersion", "10");
         properties.setProperty("activeProfile", Integer.toString(activeProfile));
         for (int i = 0; i < profiles.length; i++) writeProfile(properties, "profile." + i + ".", profiles[i]);
         writeAtomic(file, properties);
@@ -206,7 +212,7 @@ public final class HudConfig {
     public static void exportProfile(Path file, HudProfile profile) throws IOException {
         Properties properties = new Properties();
         properties.setProperty("format", "spaceclient-hud-profile");
-        properties.setProperty("schemaVersion", "4");
+        properties.setProperty("schemaVersion", "5");
         writeProfile(properties, "", profile);
         writeAtomic(file, properties);
     }
@@ -215,15 +221,16 @@ public final class HudConfig {
         Properties properties = readProperties(file);
         String version = properties.getProperty("schemaVersion");
         if (!"spaceclient-hud-profile".equals(properties.getProperty("format"))
-                || (!"1".equals(version) && !"2".equals(version) && !"3".equals(version) && !"4".equals(version)))
+                || version == null || !version.matches("[1-5]"))
             throw new InvalidConfigException("Unsupported HUD profile export");
-        HudProfile profile = readProfile(properties, "", "Imported", !"1".equals(version), "3".equals(version) || "4".equals(version), "4".equals(version));
+        HudProfile profile = readProfile(properties, "", "Imported", Integer.parseInt(version) + 5);
         Properties expected = new Properties();
         expected.setProperty("format", "spaceclient-hud-profile");
         expected.setProperty("schemaVersion", version);
         writeProfile(expected, "", profile);
-        if (!"3".equals(version) && !"4".equals(version)) removeContentFields(expected, "");
-        if (!"4".equals(version)) removeExtendedFields(expected, "");
+        if (Integer.parseInt(version) < 3) removeContentFields(expected, "");
+        if (Integer.parseInt(version) < 4) removeExtendedFields(expected, "");
+        if (Integer.parseInt(version) < 5) removeSprintFields(expected, "");
         if (!"1".equals(version)) {
             if (!properties.stringPropertyNames().equals(expected.stringPropertyNames()))
                 throw new InvalidConfigException("Incomplete or unknown HUD profile fields");
@@ -270,6 +277,13 @@ public final class HudConfig {
             for (String field : new String[] {"color", "backdrop", "shadow"})
                 properties.remove(prefix + "appearance." + module + "." + field);
         }
+    }
+    private static void removeSprintFields(Properties properties, String prefix) {
+        properties.remove(prefix + "sprintstatus");
+        for (String field : new String[] {"horizontal", "vertical", "x", "y", "scale"})
+            properties.remove(prefix + "layout.sprintstatus." + field);
+        for (String field : new String[] {"color", "backdrop", "shadow"})
+            properties.remove(prefix + "appearance.sprintstatus." + field);
     }
 
     private static void removeAppearanceFields(Properties properties, String module) {

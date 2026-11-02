@@ -77,6 +77,9 @@ final class HudModuleIcons {
             GL11.glLineWidth(1.3f);
             GL11.glColor4f(.94f, .94f, .94f, 1);
             switch (module) {
+                case SPRINT_STATUS:
+                    circle(14,3,2); path(false,3,8,8,7,12,10,16,12,21,12);
+                    path(false,12,10,9,15,3,20); path(false,9,15,15,17,16,22); break;
                 case FPS: case SPEED:
                     rect(1, 13, 5, 21); rect(8, 8, 12, 21); rect(15, 2, 19, 21); break;
                 case COORDINATES:

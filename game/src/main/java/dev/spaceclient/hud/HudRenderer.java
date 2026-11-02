@@ -3,6 +3,7 @@ package dev.spaceclient.hud;
 import com.mojang.blaze3d.platform.GlStateManager;
 import dev.spaceclient.HudConfig;
 import dev.spaceclient.SpaceClient;
+import dev.spaceclient.mods.SprintRuntime;
 import java.time.LocalTime;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
@@ -50,6 +51,11 @@ public final class HudRenderer {
                 return HudMetrics.memory(vm.totalMemory() - vm.freeMemory(), vm.maxMemory());
             case PLAYTIME: return HudMetrics.playtime(SpaceClient.session.seconds());
             case ITEM_COUNTER: return ItemCounterHud.text(client);
+            case SPRINT_STATUS:
+                if (client.player == null) return "ToggleSprint: --";
+                boolean enabled = SpaceClient.mods != null && SpaceClient.mods.autoSprint();
+                return SprintStatus.text(enabled, enabled && SprintRuntime.state.requested(true, SpaceClient.mods.sprintMode()),
+                    client.player.isSprinting());
             default: throw new AssertionError(module);
         }
     }

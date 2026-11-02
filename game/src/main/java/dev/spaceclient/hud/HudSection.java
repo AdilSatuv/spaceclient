@@ -12,7 +12,7 @@ enum HudSection {
     COMBAT("Combat", "Combat-related HUD indicators", EnumSet.of(HudModule.CPS, HudModule.KEYSTROKES, HudModule.HEALTH, HudModule.ARMOR, HudModule.POTION_EFFECTS)),
     VISUALS("Visuals", "Visual information on your HUD", EnumSet.of(HudModule.FPS, HudModule.COORDINATES, HudModule.COMPASS, HudModule.CLOCK, HudModule.POTION_EFFECTS)),
     HUD("HUD", "Customize your in-game overlay", EnumSet.allOf(HudModule.class)),
-    PLAYER("Player", "Player HUD indicators", EnumSet.of(HudModule.KEYSTROKES, HudModule.SPEED, HudModule.HEALTH, HudModule.HUNGER, HudModule.ARMOR, HudModule.POTION_EFFECTS, HudModule.ITEM_COUNTER)),
+    PLAYER("Player", "Player HUD indicators", EnumSet.of(HudModule.KEYSTROKES, HudModule.SPEED, HudModule.HEALTH, HudModule.HUNGER, HudModule.ARMOR, HudModule.POTION_EFFECTS, HudModule.ITEM_COUNTER, HudModule.SPRINT_STATUS)),
     WORLD("World", "World position and direction", EnumSet.of(HudModule.COORDINATES, HudModule.COMPASS)),
     MISC("Misc", "Other HUD indicators", EnumSet.of(HudModule.FPS, HudModule.CPS, HudModule.CLOCK, HudModule.MEMORY, HudModule.PLAYTIME)),
     SETTINGS("Settings", "Minecraft settings", EnumSet.noneOf(HudModule.class));

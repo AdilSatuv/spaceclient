@@ -21,7 +21,8 @@ public enum HudModule {
     POTION_EFFECTS("effects", "Potion Effects", "Active potion effects", "potion status effects effects зелья эффекты"),
     MEMORY("memory", "Memory", "Java memory used and maximum", "memory ram память озу"),
     PLAYTIME("playtime", "Playtime", "Time in this world, excluding pauses", "session time timer время сессия"),
-    ITEM_COUNTER("itemcounter", "Item Counter", "Held item total in your main inventory", "item count inventory предметы счетчик счётчик");
+    ITEM_COUNTER("itemcounter", "Item Counter", "Held item total in your main inventory", "item count inventory предметы счетчик счётчик"),
+    SPRINT_STATUS("sprintstatus", "ToggleSprint HUD", "Sprint toggle and current running state", "autosprint togglesprint sprint status бег спринт статус");
 
     private final String id;
     private final String title;
@@ -29,7 +30,7 @@ public enum HudModule {
     private final String searchText;
     private static final HudModule[] BROWSER_ORDER = {
         FPS, COORDINATES, KEYSTROKES, CPS, COMPASS, ARMOR,
-        CLOCK, SPEED, HEALTH, HUNGER, POTION_EFFECTS, MEMORY, PLAYTIME, ITEM_COUNTER
+        CLOCK, SPEED, HEALTH, HUNGER, POTION_EFFECTS, MEMORY, PLAYTIME, ITEM_COUNTER, SPRINT_STATUS
     };
 
     HudModule(String id, String title, String description, String aliases) {
@@ -70,6 +71,7 @@ public enum HudModule {
             case MEMORY: return config.active().memory;
             case PLAYTIME: return config.active().playtime;
             case ITEM_COUNTER: return config.active().itemCounter;
+            case SPRINT_STATUS: return config.active().sprintStatus;
             default: throw new AssertionError(this);
         }
     }
@@ -90,6 +92,7 @@ public enum HudModule {
             case MEMORY: config.active().memory = enabled; break;
             case PLAYTIME: config.active().playtime = enabled; break;
             case ITEM_COUNTER: config.active().itemCounter = enabled; break;
+            case SPRINT_STATUS: config.active().sprintStatus = enabled; break;
             default: throw new AssertionError(this);
         }
     }
