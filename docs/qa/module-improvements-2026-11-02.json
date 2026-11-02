@@ -1,0 +1,109 @@
+{
+  "date": "2026-11-02",
+  "implementationCommits": [
+    "f2fb019",
+    "9dd3725",
+    "57e1593"
+  ],
+  "bundle": {
+    "schemaVersion": 1,
+    "channel": "development",
+    "modVersion": "0.1.0",
+    "minecraftVersion": "1.8.9",
+    "loaderVersion": "0.18.3",
+    "gameSourceTree": "1b764a0dbd8f778575e2dac563b4e2a92912258c",
+    "size": 903454,
+    "sha256": "13dd07779b9669565253690546f475beb9062e1ac7b8ed57f4c6aa09bdbe166b"
+  },
+  "checks": {
+    "javaTests": 152,
+    "launcherTests": 112,
+    "typecheck": true,
+    "gameBuild": true,
+    "launcherBuild": true,
+    "sourceStampVerified": true,
+    "gitDiffCheck": true
+  },
+  "native": {
+    "exitCode": 0,
+    "resolution": [
+      1280,
+      720
+    ],
+    "canvasHidden": true,
+    "checks": {
+      "hiddenCanvas": true,
+      "starPointerAndPersistence": true,
+      "filtersPointerAndKeyboard": true,
+      "pageKeys": true,
+      "shortcutCaptureAndConflictChecks": true,
+      "shortcutCoreDispatchAndDeduplication": true,
+      "nativeContextContentAndHudFormatting": true,
+      "osInputInjected": false,
+      "physicalKeyboardTested": false,
+      "userWorldOpened": false
+    },
+    "filledStarsVisuallyInspected": true,
+    "contextSettingsScaledPointerVerified": true,
+    "crosshairRingPreviewAndWorldVisuallyInspected": true,
+    "noObservedFatalMixinOrTextureErrors": true
+  },
+  "installation": {
+    "sha256": "13dd07779b9669565253690546f475beb9062e1ac7b8ed57f4c6aa09bdbe166b",
+    "gameSourceTree": "1b764a0dbd8f778575e2dac563b4e2a92912258c",
+    "preflight": true,
+    "settingsAndWorldMetadataPreserved": true,
+    "checkedFiles": 5
+  },
+  "screenshots": [
+    {
+      "file": "outputs/module-improvements-2026-11-02/10-module-browser.png",
+      "sha256": "1d877e38ed641be151bde29d2a353d4c65659abc3db118ae68a49d137fdfc194",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/module-improvements-2026-11-02/11-module-favorites.png",
+      "sha256": "054435b09a31787637a862f02dbed34039252b0bd9117cba3df9ed0010e06df2",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/module-improvements-2026-11-02/12-enabled-modules.png",
+      "sha256": "f0de059122c81b31d791908d293bccfdfcb2c8e221fd9f59e4505354055070a5",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/module-improvements-2026-11-02/13-zoom-shortcut.png",
+      "sha256": "752677405c391d79a6cfad08de04f380feeaf5931187129c6c13c512fd638532",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/module-improvements-2026-11-02/14-crosshair-settings.png",
+      "sha256": "ab92f72c2ff7328d02694f6dfbef697f9b1723dea20487e785b681c9f2009866",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/module-improvements-2026-11-02/15-pack-content.png",
+      "sha256": "e701c8720fed814f7b89d755d319c7c868efafa884081890e9dd2d6b4e738473",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/module-improvements-2026-11-02/16-compact-context-hud.png",
+      "sha256": "c71d0f1e9a4afb2fdc3498847d1e55b87aeda7c82747c8cb73e3b3a7f1cd8e90",
+      "width": 1280,
+      "height": 720
+    }
+  ],
+  "limitations": [
+    "Mouse wheel navigation wired to native Mouse event; physical wheel was not exercised. Page navigation was verified through native PageUp/PageDown methods.",
+    "Shortcut dispatcher, capture and conflict rejection were exercised without OS keyboard events; physical key end-to-end behavior was not manually tested.",
+    "Crosshair Ring rendering checked in preview and world; no new full matrix for other shapes, cameras or multiplayer.",
+    "No multiplayer ping or performance benchmark performed.",
+    "Only QA-created world opened; user game was closed during installation and was not launched by this update."
+  ]
+}
