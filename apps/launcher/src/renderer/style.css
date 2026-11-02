@@ -447,7 +447,6 @@ h1 {
 .launch-hero {
   position: relative;
   isolation: isolate;
-  min-height: 194px;
   overflow: hidden;
   border: 1px solid #d09d8044;
   border-radius: 10px;
@@ -460,7 +459,7 @@ h1 {
   pointer-events: none;
 }
 .hero-content {
-  padding: 23px 26px;
+  padding: 18px 22px;
   position: relative;
   width: 72%;
 }
@@ -470,11 +469,11 @@ h1 {
     monospace;
   letter-spacing: 1.2px;
   color: var(--copper);
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 }
 .hero-content h2 {
   font:
-    800 clamp(30px, 3.35vw, 46px)/1.04 'Arial Black',
+    800 clamp(26px, 2.5vw, 34px)/1.04 'Arial Black',
     'Segoe UI',
     sans-serif;
   text-transform: uppercase;
@@ -499,6 +498,52 @@ h1 {
     9px Consolas,
     monospace;
   letter-spacing: 1.4px;
+}
+.launch-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 12px 22px;
+  list-style: none;
+  border-top: 1px solid var(--border);
+  background: var(--card);
+}
+.launch-steps li {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  min-width: 0;
+}
+.step-number {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  border: 1px solid var(--input);
+  border-radius: 50%;
+  color: var(--muted-foreground);
+  font:
+    10px Consolas,
+    monospace;
+}
+.launch-steps [data-complete='true'] .step-number {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+.launch-steps strong,
+.launch-steps li > div > span {
+  display: block;
+  overflow-wrap: anywhere;
+}
+.launch-steps strong {
+  font-size: 12px;
+  font-weight: 600;
+}
+.launch-steps li > div > span {
+  color: var(--muted-foreground);
+  font-size: 11px;
 }
 .eclipse-scene {
   position: absolute;
@@ -1134,14 +1179,14 @@ progress::-webkit-progress-value {
     padding: 18px 20px 0;
   }
   .launch-hero {
-    min-height: 174px;
+    min-height: 0;
   }
   .hero-content {
     padding: 20px 22px;
     width: 78%;
   }
   .hero-content h2 {
-    font-size: 36px;
+    font-size: 30px;
   }
   .hero-kicker {
     font-size: 8px;
@@ -1166,7 +1211,7 @@ progress::-webkit-progress-value {
 }
 @media (max-width: 850px) {
   .app-shell {
-    grid-template-columns: 68px minmax(0, 1fr);
+    grid-template-columns: 84px minmax(0, 1fr);
   }
   .sidebar {
     padding: 24px 9px 16px;
@@ -1177,19 +1222,26 @@ progress::-webkit-progress-value {
   }
   .brand-copy,
   .nav-caption,
-  .nav-text,
   .account-copy,
   .build-caption {
     display: none;
   }
   .nav-item {
-    padding: 0;
+    position: relative;
+    padding: 8px 0;
     justify-content: center;
-    height: 46px;
+    flex-direction: column;
+    gap: 5px;
+    height: 62px;
+  }
+  .nav-text {
+    font-size: 10px;
   }
   .nav-item .draft-dot {
     position: absolute;
-    margin: 0 0 22px 24px;
+    margin: 0;
+    top: 7px;
+    right: 7px;
   }
   .account-summary {
     justify-content: center;
@@ -1232,6 +1284,15 @@ progress::-webkit-progress-value {
   .hero-content h2 {
     font-size: clamp(26px, 5.7vw, 36px);
     letter-spacing: -1px;
+  }
+  .launch-steps {
+    padding: 12px 16px;
+    gap: 10px;
+  }
+  .launch-steps li {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
   }
   .hero-kicker {
     max-width: 220px;

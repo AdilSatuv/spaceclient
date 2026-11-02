@@ -243,6 +243,11 @@ try {
   });
   const noNickname = await availability();
   assert.match(noNickname, /ник/i, 'An absent nickname must be explained.');
+  assert.equal(await page.$$eval('.launch-steps li', (steps) => steps.length), 3);
+  assert.match(
+    await page.$eval('.launch-steps li:first-child', (step) => step.textContent),
+    /Введите и сохраните/,
+  );
   await page.setViewport({ width: 1000, height: 680 });
   assert.equal(
     await page.$eval('#launch-availability', (element) => {
@@ -278,6 +283,17 @@ try {
   const unsavedNickname = await availability();
   assert.match(unsavedNickname, /сохран/i, 'An unsaved nickname must be explained.');
   assert.equal(await page.$eval('.launch-button', (button) => button.disabled), true);
+  assert.equal(await page.$eval('.installation-actions button', (button) => button.disabled), true);
+  assert.match(
+    await page.$eval('#files-availability', (hint) => hint.textContent),
+    /сохраните ник/i,
+  );
+  assert.equal(
+    await page.$eval('.installation-actions button', (button) =>
+      button.getAttribute('aria-describedby'),
+    ),
+    'files-availability',
+  );
   await page.keyboard.press('Tab');
   assert.equal(
     await page.evaluate(() => document.activeElement.textContent.trim()),
@@ -296,6 +312,10 @@ try {
   await page.waitForSelector('#local-nickname');
   assert.equal(await page.$eval('#local-nickname', (input) => input.value), 'SpaceTester');
   await page.waitForFunction(() => !document.querySelector('.launch-button').disabled);
+  assert.equal(
+    await page.$eval('.launch-steps li:first-child', (step) => step.dataset.complete),
+    'true',
+  );
   await page.focus('#local-nickname');
   await page.keyboard.press('Tab');
   assert.equal(
@@ -306,6 +326,10 @@ try {
   await page.keyboard.press('Enter');
   await page.waitForFunction(() =>
     document.querySelector('.local-launch').textContent.includes('Выберите Java'),
+  );
+  assert.match(
+    await page.$eval('.launch-steps li:last-child', (step) => step.textContent),
+    /Ошибка/,
   );
   const launchStatus = await axNode('#launch-status');
   assert.equal(launchStatus.ignored, false);
@@ -369,7 +393,7 @@ try {
   ]) {
     await page.setViewport(viewport);
     for (const [view, slug] of [
-      ['Обзор', 'home'],
+      ['Играть', 'home'],
       ['Профили', 'profiles'],
       ['Настройки', 'settings'],
     ]) {
@@ -388,6 +412,17 @@ try {
         { document: false, main: false },
         slug + ' has horizontal overflow at ' + viewport.width,
       );
+      assert.equal(
+        await page.$eval('.nav-item[aria-current]', (button) => button.textContent.trim()),
+        view,
+      );
+      if (viewport.width <= 600) {
+        assert.equal(
+          await page.$eval('.nav-text', (label) => getComputedStyle(label).display !== 'none'),
+          true,
+          'Compact navigation must retain visible labels.',
+        );
+      }
       if (slug === 'home' && viewport.width >= 1000) {
         const controls = await page.evaluate(() =>
           ['.launch-button', '.installation-actions button', '#launch-availability'].map(
@@ -458,7 +493,7 @@ try {
     'Four viewport sizes across three views have no horizontal scroll; long profile names wrap; reduced motion disables transitions.',
   );
   await page.setViewport({ width: 1180, height: 760 });
-  await route('Обзор');
+  await route('Играть');
   const colors = await page.evaluate(() => {
     const css = getComputedStyle(document.documentElement);
     return Object.fromEntries(

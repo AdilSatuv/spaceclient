@@ -13,7 +13,7 @@ public class MenuTest {
         for (int width : new int[] {320, 427, 640, 960}) {
             MenuLayout layout = new MenuLayout(width, 240, 6);
             assertTrue(layout.left >= 12);
-            assertTrue(layout.width >= 160);
+            assertTrue(layout.width >= 180);
             assertTrue(layout.left + layout.width + 12 <= width * .67);
         }
     }
@@ -63,7 +63,8 @@ public class MenuTest {
                     assertTrue(l.panelTop + 31 + 14 < l.top);
                     assertTrue(l.top + (count - 1) * l.step + l.buttonHeight <= l.panelBottom);
                     assertTrue(l.panelBottom <= h - 16);
-                    assertTrue(l.step >= 22);
+                    // Leave room for a two-pixel focus frame on each side of a row.
+                    assertTrue(l.step - l.buttonHeight >= 4);
                 }
     }
     @Test public void traversalWrapsAndSkipsUnavailableActionsInBothDirections() {

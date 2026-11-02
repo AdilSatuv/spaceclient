@@ -42,7 +42,11 @@ export default async function Features({
     : [];
   return (
     <div className="container page-content">
-      <PageIntro label="ТВОЙ ИНСТРУМЕНТАРИЙ" title="Твой интерфейс. Твои правила.">
+      <PageIntro
+        section="Возможности"
+        label="ТВОЙ ИНСТРУМЕНТАРИЙ"
+        title="Твой интерфейс. Твои правила."
+      >
         От базового HUD до будущих профилей. Каждая возможность — со своим реальным статусом.
       </PageIntro>
       <FilterForm key={`${q}|${category}|${status}`} action="/features">
@@ -79,6 +83,7 @@ export default async function Features({
           <div className="filter-results">
             <p className="result-count" role="status">
               Найдено: {items.length}
+              {q && <> · По запросу «{q}»</>}
             </p>
             {(q || category || status) && (
               <Link className="filter-reset" href="/features">
@@ -108,9 +113,9 @@ export default async function Features({
           ) : (
             <div className="empty-state">
               <h2>Ничего не найдено</h2>
-              <p>Попробуйте другой запрос или уберите ограничения.</p>
-              <Link className="text-link" href="/features">
-                Сбросить фильтры →
+              <p>Измените запрос или сбросьте категорию и статус, чтобы увидеть весь каталог.</p>
+              <Link className="button secondary" href="/features">
+                Сбросить фильтры
               </Link>
             </div>
           )}

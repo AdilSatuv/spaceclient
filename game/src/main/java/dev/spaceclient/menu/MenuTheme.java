@@ -149,7 +149,14 @@ public final class MenuTheme extends DrawableHelper {
         rounded(x + 1, y + 1, width - 2, height - 2, 2,
             !button.active ? 0xFF18191C : primary ? (highlight ? 0xFFF0D5A6 : GOLD)
                 : highlight ? 0xFF302B23 : 0xFF222429);
-        if (focused && button.active) fill(x + 3, y + 3, x + 5, y + height - 3, primary ? 0xFF211C15 : GOLD);
+        if (focused && button.active) {
+            // A separate outer frame distinguishes keyboard focus from pointer hover.
+            int ring = 0xFFF1F0EC;
+            fill(x - 2, y - 2, x + width + 2, y - 1, ring);
+            fill(x - 2, y + height + 1, x + width + 2, y + height + 2, ring);
+            fill(x - 2, y - 1, x - 1, y + height + 1, ring);
+            fill(x + width + 1, y - 1, x + width + 2, y + height + 1, ring);
+        }
         if (client.currentScreen instanceof TitleScreen && width >= 180) {
             int color = !button.active ? 0xFF888A91 : primary ? 0xFF211C15 : TEXT;
             rounded(x + 9, y + (height - 18) / 2, 22, 18, 3, primary ? 0x30211C15 : 0xFF17191E);
