@@ -1,5 +1,15 @@
 # Передача работы между чатами Space Client
 
+## Управление и закрытый TCP: исправлен disconnect · 3 ноября 2026
+
+0253e6b добавляет QueuedPlayPacketMixin на NetworkThreadUtils$1.run: только queued ClientPlayNetworkHandler с закрытым ClientConnection пропускается, живой login/play и server handlers сохраняются. Baseline реального TCP reconnect на прежнем bundle cf3ae55 дал28 FATAL tasks/NPE world=null; после guard итоговый прогон0 ERROR/FATAL и2 discarded tasks (один специально поставлен в main-thread очередь перед disconnect). Теперь36 точных production mixins; строгий bundle/class omission fixture обновлён, Java8 и pin сохранены. [Отчёт](INPUT-NETWORK-2026-11-03.md), [QA](qa/input-network-2026-11-03.json).
+
+В e7972f4 добавлен повторяемый hidden QA scripts/qa/input-network (README с командами). Own cached runtime, невидимый Canvas1280×720, bind только127.0.0.1:0, два последовательных host/world A/B и отдельный TCP client, без LAN multicast/OS input/пользовательских миров. Финальный run62fd0c66-f850-4395-937a-4004486b0ed8:224 native handler calls,29 toggle routes,26 HUD text/width samples,6 held FreeLook samples, native Zoom FOV/FreeLook attack guard, server sprint +HUD, exactly2+1 accepted macro messages, hurt/combo/reach/death chime1, reconnect/cooldown reset, server/waypoint isolation. Все3 процесса exit0,9 кадров просмотрены contact sheet +2 полноразмерно. До исправления timing QA нуждался в bounded wait серверного наблюдения; перемещение Java packages потребовало rerun compilation. Не считать discarded diagnostic runs финальной приёмкой.
+
+Fresh272Java +135launcher pass, launcher types, game иstrict launcher build pass. Остальные63 workspace/API ранее прошли интеграцию, здесь не перезапускались. Установлен при закрытой игре SHA6396bb788dd40891688f2a528aef762df6a273ab4d9d7a67c868998d5c6cf03f, game tree1172b80ffdcbbbc552095ca99592cf3cb7e4e001,1078594bytes; preflight и6 preserved files pass. Игру не запускали для пользователя. Manual question pending: попросили V/C hold/release, menu иAlt+Tab, ToggleSprint Toggle. Ответа пока нет, physical input/полную55-module multiplayer matrix не объявлять принятыми. Не просить повторно тот же вопрос без нового контекста.
+
+Codebase Memory refreshed2026-11-03T03:17:45Z:9285nodes/24631edges, skipped0, production guard найден. Metadata_changed сохраняется, CSS/Gradle/wrapper partial; scripts исключён index scope, QA sources прочитаны напрямую. Работа local-only, без push/main/public release. Не начинать auth/hosting автоматически.
+
 ## Приоритет 1 завершён: единая версия · 3 ноября 2026
 
 Локально объединены core c7e87fc → merge4cec6a8, UX774c79e → merge69efdbd, settings023c878 → mergeb872c85. Дополнительный d9c4137 требует все шесть новых shared-settings/WaypointEdit class-файлов (включая SettingRow$Kind) в строгом bundle; omission fixtures проверены. Никакого push/main/public release. Другие рабочие копии не менялись. [Итог и следующий этап](INTEGRATION-2026-11-03.md), [QA JSON](qa/integration-2026-11-03.json).

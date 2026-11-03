@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-03",
+  "fixCommit": "0253e6b",
+  "qaHarnessCommit": "e7972f4",
+  "branch": "space-minecraft-menus",
+  "bundle": {
+    "schemaVersion": 1,
+    "channel": "development",
+    "modVersion": "0.1.0",
+    "minecraftVersion": "1.8.9",
+    "loaderVersion": "0.18.3",
+    "gameSourceTree": "1172b80ffdcbbbc552095ca99592cf3cb7e4e001",
+    "size": 1078594,
+    "sha256": "6396bb788dd40891688f2a528aef762df6a273ab4d9d7a67c868998d5c6cf03f"
+  },
+  "scope": {
+    "gameplayShortcutRoutes": 29,
+    "hudTextAndWidthSamplesOnNetworkWorld": 26,
+    "nativeHandlerInvocations": 224,
+    "physicalInputAccepted": false,
+    "full55ModuleMultiplayerQualification": false
+  },
+  "regression": {
+    "beforeBundleSha256": "cf3ae55afd9311370e02a2eaa167a2d038d5c62bb31c8dad6abca29dca536eb2",
+    "baselineReport": ".reports/input-network-qa/run-20a61e70-cea9-4363-9704-d6fd29938508/client-baseline.log",
+    "beforeFatalTasks": 28,
+    "finalDiscardedClosedPlayTasks": 2,
+    "afterErrorOrFatalLines": 0,
+    "scheduledEntityStatusRegression": true,
+    "healthyLoginChatMovementAndEntityPacketsStillDelivered": true,
+    "productionMixins": 36
+  },
+  "native": {
+    "ok": true,
+    "keyboardHandlerInvocations": 224,
+    "gameplayShortcuts": 29,
+    "hudNetworkSamples": 26,
+    "freelookHoldSamples": 6,
+    "nativeDeathChimes": 1,
+    "hostAMacros": 2,
+    "hostBMacros": 1,
+    "reconnect": true,
+    "serverChange": true,
+    "osInputInjected": false,
+    "physicalInputTested": false,
+    "run": ".reports/input-network-qa/run-62fd0c66-f850-4395-937a-4004486b0ed8",
+    "size": [
+      1280,
+      720
+    ],
+    "loopbackOnly": true,
+    "serverHostsSequential": true,
+    "realTcpConnections": true,
+    "newHostWorlds": [
+      "space-host-A-20261103",
+      "space-host-B-20261103"
+    ],
+    "logs": {
+      "client.log": {
+        "errorOrFatalLines": 0,
+        "sha256": "c2a4fda0a8b6dbdfb3aff66dfea2781d013933635c142cd2d8c3de0fd443b7fa"
+      },
+      "host-A.log": {
+        "errorOrFatalLines": 0,
+        "sha256": "74b095b12aeb450943463bc8edd17f7e08078e8668a7cee4c63ff394bf0648f5"
+      },
+      "host-B.log": {
+        "errorOrFatalLines": 0,
+        "sha256": "672104ffb5b6af7897e2bda7e86c5790f176fc3b2acf046dcef8fd17cacd5642"
+      }
+    },
+    "allThreeProcessesExitedZero": true,
+    "captures": 9,
+    "allCapturesReviewedInContactSheet": true,
+    "fullSizeReviewed": [
+      "tcp-world-hud",
+      "sprint-running-server-confirmed"
+    ],
+    "verified": [
+      "held/release FreeLook and unchanged body aim",
+      "FreeLook camera restore on menu and virtual focus loss",
+      "FreeLook blocks attack through native doAttack hook",
+      "Zoom native world projection divided by four",
+      "Zoom/FreeLook precedence and reset on menu/focus loss",
+      "RightShift duplicate dispatch open/close",
+      "all29 module toggles: menu/repeat/release/duplicate guards",
+      "ToggleSprint: native movement, remote server state and actual HUD status",
+      "Auto Text: exactly one remote receipt, repeat/release/cooldown/menu/focus guards",
+      "real server hurt packet -> Combo/Reach; death packet -> exactly one sound cue",
+      "reconnect resets transient input and macro cooldown but keeps server waypoint context",
+      "change host/world resets combat/input state and isolates waypoints while preserving module options"
+    ]
+  },
+  "tests": {
+    "freshJava": {
+      "tests": 272,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "freshLauncher": {
+      "tests": 135,
+      "failed": 0
+    },
+    "launcherTypesPassed": true,
+    "strictLauncherBuildPassed": true,
+    "gameBuildPassed": true,
+    "changedFilesPrettierPassed": true,
+    "other63WorkspaceApiTests": "passed during preceding integration; unchanged and not rerun"
+  },
+  "installed": {
+    "sha256": "6396bb788dd40891688f2a528aef762df6a273ab4d9d7a67c868998d5c6cf03f",
+    "gameSourceTree": "1172b80ffdcbbbc552095ca99592cf3cb7e4e001",
+    "preflight": true,
+    "settingsAndWorldMetadataPreserved": true,
+    "checkedFiles": 6
+  },
+  "codebaseMemory": {
+    "project": "spaceclient-mods-menus",
+    "indexedAt": "2026-11-03T03:17:45Z",
+    "nodes": 9285,
+    "edges": 24631,
+    "skipped": 0,
+    "partial": [
+      "apps/launcher/src/renderer/style.css",
+      "game/build.gradle",
+      "game/gradlew"
+    ],
+    "productionExactPathFreshness": "metadata_changed",
+    "qaScriptsScope": "scripts excluded by index; sources read directly",
+    "noClaimOfCompleteGraphCoverage": true
+  },
+  "manualCheck": {
+    "status": "awaiting_user_response",
+    "requested": [
+      "real V/C hold and release",
+      "menu during hold",
+      "Alt+Tab during hold",
+      "ToggleSprint Toggle mode"
+    ],
+    "automatedVirtualFocusIsNotPhysicalFocus": true
+  },
+  "remaining": [
+    "physical mouse look and interaction delivery",
+    "public authenticated servers and anticheat",
+    "latency/loss/long sessions",
+    "feature-specific multiplayer qualification for the other modules",
+    "shader/resource-pack/performance matrices"
+  ],
+  "visibleAppsOpened": false,
+  "osInputInjected": false,
+  "userWorldOpened": false,
+  "publicListenerOpened": false,
+  "pushed": false
+}
