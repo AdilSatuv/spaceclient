@@ -20,9 +20,8 @@ public final class ModsScreen extends Screen {
     @Override public boolean shouldPauseGame() { return true; }
     @Override public void removed() { SpaceClient.clicks.clear(); }
     @Override public void render(int mouseX, int mouseY, float delta) {
-        fillGradient(0, 0, width, height, 0xEC03060D, 0xF5090D16);
-        fill(left, top, left + panelWidth, top + 178, 0xFF10141D);
-        fill(left, top, left + panelWidth, top + 2, 0xFFF2B56B);
+        dev.spaceclient.menu.MenuBackdrop.render(client,width,height);
+        dev.spaceclient.menu.MenuTheme.panel(left,top,panelWidth,178);
         textRenderer.drawWithShadow(textRenderer.trimToWidth("SPACE CLIENT / MODS", panelWidth - 24), left + 12, top + 12, 0xF4EDE3);
         textRenderer.drawWithShadow(textRenderer.trimToWidth("Optional controls - changes save automatically", panelWidth - 24), left + 12, top + 27, 0xB6B7C4);
         card(0, "AutoSprint", "Sprint while moving forward", SpaceClient.mods.autoSprint());
@@ -30,11 +29,13 @@ public final class ModsScreen extends Screen {
         String error = SpaceClient.mods.error();
         textRenderer.drawWithShadow(textRenderer.trimToWidth(error.isEmpty() ? "Tab: select  |  Space: toggle  |  Esc: back" : error,
             panelWidth - 24), left + 12, top + 145, error.isEmpty() ? 0xB6B7C4 : 0xF2B56B);
-        textRenderer.drawWithShadow("Done", left + 12, top + 163, focus == 2 ? 0xF2B56B : 0xF4EDE3);
+        dev.spaceclient.menu.MenuTheme.control(left+12,top+158,panelWidth-24,20,focus==2,
+            mouseX>=left+12&&mouseX<left+panelWidth-12&&mouseY>=top+158&&mouseY<top+178,true,false,false);
+        textRenderer.drawWithShadow("Done", left + 20, top + 164, 0xF4EDE3);
     }
     private void card(int index, String title, String description, boolean enabled) {
         int y = top + 44 + index * 47;
-        fill(left + 12, y, left + panelWidth - 12, y + 39, focus == index ? 0xFF343039 : 0xFF191E28);
+        dev.spaceclient.menu.MenuTheme.card(left+12,y,panelWidth-24,39,focus==index,false,enabled);
         textRenderer.drawWithShadow(textRenderer.trimToWidth(title, panelWidth - 80), left + 20, y + 6, 0xF4EDE3);
         String state = enabled ? "ON" : "OFF";
         textRenderer.drawWithShadow(state, left + panelWidth - 20 - textRenderer.getStringWidth(state), y + 6, enabled ? 0xF2B56B : 0xB6B7C4);

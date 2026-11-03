@@ -4,6 +4,8 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import dev.spaceclient.SpaceClient;
 import dev.spaceclient.menu.MenuStrings;
 import dev.spaceclient.menu.UiTranslations;
+import dev.spaceclient.menu.MenuTheme;
+import dev.spaceclient.menu.MenuBackdrop;
 import dev.spaceclient.hud.HudSwitch;
 import dev.spaceclient.hud.HudViewport;
 import dev.spaceclient.hud.SpaceUiFont;
@@ -24,6 +26,7 @@ public abstract class ModuleSettingsScreen extends Screen {
     protected SettingsLayout layout;
     private int focus, offset;
     private int dragging=-1, dragValue;
+    private int pointerX, pointerY;
     private final Map<Integer,HudSwitch.Motion> motions=new HashMap<>();
 
     protected ModuleSettingsScreen(Screen parent) { this.parent=parent; }
@@ -78,16 +81,15 @@ public abstract class ModuleSettingsScreen extends Screen {
     private boolean enabled(SettingRow row) { return row.enabled&&(!readOnly()||navigation(row.id)); }
 
     @Override public void render(int mx,int my,float delta) {
-        fillGradient(0,0,width,height,0xD0070709,0xE50A0B0E);
+        MenuBackdrop.render(client,width,height);
         if(!roomy()) { SpaceUiFont.draw(client,ui("settings.resize"),12,20,TEXT); return; }
         mx=viewport.toUi(mx); my=viewport.toUi(my);
+        pointerX=mx; pointerY=my;
         GlStateManager.pushMatrix();
         try {
             GlStateManager.scale(viewport.scale,viewport.scale,1);
             int x=layout.left,y=layout.top,w=layout.width,h=layout.height;
-            UiShapes.rounded(x+2,y+3,w,h,6,0x90000000);
-            UiShapes.rounded(x,y,w,h,6,0xFF3A3B3E);
-            UiShapes.rounded(x+1,y+1,w-2,h-2,5,0xFF101114);
+            MenuTheme.panel(x,y,w,h);
             SpaceUiFont.draw(client,ui("settings.heading"),x+16,y+12,ACCENT);
             SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(title(),w-170),x+16,y+31,TEXT);
             String label=ui(readOnly()?"settings.readonly":"settings.autosave");
@@ -142,12 +144,11 @@ public abstract class ModuleSettingsScreen extends Screen {
     private void drawRow(SettingRow a,int y,boolean selected,int mx,int my) {
         int x=layout.left+14,w=layout.width-28,cx=layout.controlX(),cw=190;
         boolean active=enabled(a),hover=mx>=cx&&mx<cx+cw&&my>=y&&my<y+40;
-        UiShapes.rounded(x,y,w,40,4,selected?0xFFD7AF6A:0xFF34363B);
-        UiShapes.rounded(x+1,y+1,w-2,38,3,selected?0xFF25231F:0xFF191B20);
+        MenuTheme.card(x,y,w,40,selected,false,false);
         int labelWidth=cx-x-20;
         SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(UiTranslations.text(client,a.title),labelWidth),x+10,y+6,active?TEXT:MUTED);
         SpaceUiFont.draw(client,shortText(UiTranslations.text(client,a.detail),labelWidth),x+10,y+23,MUTED);
-        UiShapes.rounded(cx,y+4,cw,32,4,!active?0xFF1A1B1E:hover?0xFF353029:0xFF24262B);
+        MenuTheme.control(cx,y+4,cw,32,false,hover,active,false,false);
         int color=active?ACCENT:MUTED;
         if(!active) {
             center(ui(readOnly()?"settings.locked":"settings.unavailable"),cx+cw/2,y+14,MUTED);
@@ -162,10 +163,7 @@ public abstract class ModuleSettingsScreen extends Screen {
             SpaceUiFont.draw(client,"+",cx+cw-16,y+14,active&&v<a.range.max?TEXT:MUTED);
             center(a.format.apply(v),cx+cw/2,y+8,color);
             int tx=layout.trackX(),tw=layout.trackWidth();
-            UiShapes.rounded(tx,y+28,tw,2,1,0xFF66676A);
-            int filled=(int)Math.round(tw*a.range.fraction(v));
-            if(filled>0)UiShapes.rounded(tx,y+28,filled,2,1,0xFFD7AF6A);
-            UiShapes.rounded(tx+filled-2,y+26,5,6,2,active?0xFFF2EEE7:0xFFB3B0AA);
+            MenuTheme.slider(tx,y+28,tw,(float)a.range.fraction(v),active);
         } else {
             if(a.kind==SettingRow.Kind.CHOICE) {
                 SpaceUiFont.draw(client,"<",cx+9,y+14,color);
@@ -191,8 +189,7 @@ public abstract class ModuleSettingsScreen extends Screen {
     }
     protected void center(String text,int x,int y,int color) { SpaceUiFont.draw(client,text,x-SpaceUiFont.width(text)/2f,y,color); }
     private void button(int x,int y,int w,int h,String text,boolean selected,boolean current,boolean enabled) {
-        UiShapes.rounded(x,y,w,h,4,selected?0xFFD7AF6A:0xFF55565B);
-        UiShapes.rounded(x+1,y+1,w-2,h-2,3,current?0xFF3A3122:0xFF24262B);
+        MenuTheme.control(x,y,w,h,selected,pointerX>=x&&pointerX<x+w&&pointerY>=y&&pointerY<y+h,enabled,false,current);
         center(SpaceUiFont.trimToWidth(text,w-12),x+w/2,y+5,enabled?(current?ACCENT:TEXT):MUTED);
     }
     @Override protected void keyPressed(char c,int key) {

@@ -92,7 +92,7 @@ public final class HudEditorScreen extends Screen {
     }
     @Override public void render(int mouseX, int mouseY, float delta) {
         // Keep the game visible while lifting the inspector above it.
-        fillGradient(0, 0, width, height, 0x5006080A, 0x8006080A);
+        dev.spaceclient.menu.MenuBackdrop.editorOverlay(width,height);
         if (client.player == null || !roomy()) {
             centerText(UiTranslations.text(client,"Resize the window to edit HUD"), width / 2, height / 2 - 12, TEXT);
             centerText(UiTranslations.text(client,"Esc - back"), width / 2, height / 2 + 4, MUTED);
@@ -106,9 +106,7 @@ public final class HudEditorScreen extends Screen {
         for (HudModule module : HudModule.values()) if (module != selected && (module.isEnabled(settings().getConfig())||selection.contains(module))) drawModule(module);
         drawModule(selected);
         int y = barY(), x = panelX(), w = panelWidth(), h = panelHeight();
-        rounded(x + 2, y + 3, w, h, 0x88000000);
-        rounded(x, y, w, h, BORDER);
-        rounded(x + 1, y + 1, w - 2, h - 2, PANEL);
+        dev.spaceclient.menu.MenuTheme.panel(x,y,w,h);
         if (sidebar()) {
             SpaceUiFont.draw(client, UiTranslations.text(client,"HUD EDITOR"), x + 8, y + 10, TEXT);
             fill(x + 8, y + 27, x + w - 8, y + 28, BORDER);
@@ -254,12 +252,7 @@ public final class HudEditorScreen extends Screen {
         return actions;
     }
     private void box(int x, int y, int w, int h, boolean focused, boolean hovered, boolean enabled, boolean primary) {
-        int edge = focused ? 0xFFD7AF6A : hovered ? 0xFF71695C : BORDER;
-        int inside = !enabled ? 0xFF1A1B1E : primary ? (hovered ? 0xFFE6C78F : 0xFFD7AF6A)
-            : focused ? 0xFF373027 : hovered ? 0xFF30302F : SURFACE;
-        rounded(x, y, w, h, primary ? inside : edge);
-        if (!primary) rounded(x + 1, y + 1, w - 2, h - 2, inside);
-        if (focused && !primary) fill(x + 4, y + h - 2, x + w - 4, y + h - 1, 0xFFD7AF6A);
+        dev.spaceclient.menu.MenuTheme.control(x,y,w,h,focused,hovered,enabled,primary,focused);
     }
     private void centerText(String text, int centerX, int y, int color) {
         SpaceUiFont.draw(client, text, centerX - SpaceUiFont.width(text) / 2f, y, color);

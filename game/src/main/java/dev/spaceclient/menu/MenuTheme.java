@@ -1,6 +1,7 @@
 package dev.spaceclient.menu;
 
 import dev.spaceclient.hud.SpaceUiFont;
+import dev.spaceclient.hud.UiShapes;
 import dev.spaceclient.BuildIdentity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
@@ -50,24 +51,33 @@ public final class MenuTheme extends DrawableHelper {
             || screen instanceof net.minecraft.client.gui.screen.SuperflatPresetScreen
             || screen instanceof net.minecraft.client.gui.screen.CustomizeWorldScreen
             || screen instanceof net.minecraft.client.gui.screen.CustomizedWorldPresetsScreen
-            || screen instanceof net.minecraft.client.gui.screen.ConfirmScreen;
+            || screen instanceof net.minecraft.client.gui.screen.ConfirmScreen
+            || screen instanceof net.minecraft.client.gui.screen.AchievementsScreen
+            || screen instanceof net.minecraft.client.gui.screen.StatsScreen
+            || screen instanceof net.minecraft.client.gui.screen.DemoScreen
+            || screen instanceof net.minecraft.client.gui.screen.FatalErrorScreen
+            || screen instanceof net.minecraft.client.gui.screen.StreamScreen
+            || screen instanceof net.minecraft.client.gui.screen.StreamIngestScreen
+            || screen instanceof net.minecraft.client.gui.screen.StreamUtilitiesScreen
+            || screen instanceof net.minecraft.client.gui.screen.TwitchErrorScreen;
     }
     public static boolean standard(ButtonWidget button) {
         return button.getClass() == ButtonWidget.class || button.getClass() == OptionButtonWidget.class;
     }
     public static boolean themedButton(ButtonWidget button, Screen screen) {
-        // This vanilla subclass changes only its click sound; its rendering is inherited.
-        return standard(button) || (screen instanceof SettingsScreen && button.id == 8675309);
+        // Subclass drag callbacks are still invoked by MenuButtonMixin before painting.
+        return standard(button) || applies(screen);
     }
     public static void background(int width, int height, boolean inWorld) {
-        DRAW.fillGradient(0, 0, width, height, inWorld ? 0xD5101114 : 0xFF191B20,
-            inWorld ? 0xEE090A0D : 0xFF090A0D);
+        DRAW.fillGradient(0, 0, width, height, inWorld ? 0xC5091423 : 0xFF111D2E,
+            inWorld ? 0xE8070C15 : 0xFF070C15);
         fill(0, 0, width, 1, 0xFF6F6250);
     }
     public static void panel(int x, int y, int width, int height) {
-        rounded(x, y, width, height, 4, 0x7041434A);
-        rounded(x + 1, y + 1, width - 2, height - 2, 3, 0xED101114);
-        fill(x + 16, y, x + width - 16, y + 1, GOLD);
+        UiShapes.rounded(x + 2, y + 4, width, height, 8, 0x70000000);
+        UiShapes.rounded(x, y, width, height, 8, 0xFF455164);
+        UiShapes.rounded(x + 1, y + 1, width - 2, height - 2, 7, 0xEC111A28);
+        fill(x + 12, y + 1, x + Math.min(width - 12, 62), y + 2, GOLD);
     }
     private static void rounded(int x, int y, int w, int h, int r, int color) {
         fill(x + r, y, x + w - r, y + h, color);
@@ -80,7 +90,7 @@ public final class MenuTheme extends DrawableHelper {
     }
     public static void sectionSurface(int width, int height) {
         if (width < 240 || height < 220) return;
-        rounded(12, 28, width - 24, height - 40, 4, 0xE8101114);
+        rounded(12, 28, width - 24, height - 40, 4, 0xB8111A28);
         fill(24, 28, width - 24, 29, 0xFF6F6250);
     }
     public static void sectionHeader(MinecraftClient client, Screen screen, int width, int height) {
@@ -160,21 +170,9 @@ public final class MenuTheme extends DrawableHelper {
     public static void button(MinecraftClient client, ButtonWidget button, int height,
                               boolean hovered, boolean focused) {
         int x = button.x, y = button.y, width = button.getWidth();
-        boolean highlight = button.active && (hovered || focused);
         boolean primary = client.currentScreen instanceof TitleScreen && button.active
             && (button.id == 1 || button.id == 11);
-        rounded(x, y, width, height, 3, highlight ? GOLD : 0xFF484A51);
-        rounded(x + 1, y + 1, width - 2, height - 2, 2,
-            !button.active ? 0xFF18191C : primary ? (highlight ? 0xFFF0D5A6 : GOLD)
-                : highlight ? 0xFF302B23 : 0xFF222429);
-        if (focused && button.active) {
-            // A separate outer frame distinguishes keyboard focus from pointer hover.
-            int ring = 0xFFF1F0EC;
-            fill(x - 2, y - 2, x + width + 2, y - 1, ring);
-            fill(x - 2, y + height + 1, x + width + 2, y + height + 2, ring);
-            fill(x - 2, y - 1, x - 1, y + height + 1, ring);
-            fill(x + width + 1, y - 1, x + width + 2, y + height + 1, ring);
-        }
+        control(x, y, width, height, focused, hovered, button.active, primary, false);
         if (client.currentScreen instanceof TitleScreen && width >= 180) {
             int color = !button.active ? 0xFF888A91 : primary ? 0xFF211C15 : TEXT;
             rounded(x + 9, y + (height - 18) / 2, 22, 18, 3, primary ? 0x30211C15 : 0xFF17191E);
@@ -194,12 +192,48 @@ public final class MenuTheme extends DrawableHelper {
         String label = button.message;
         if (SpaceUiFont.width(label) > limit)
             label = SpaceUiFont.trimToWidth(label, Math.max(1, limit - SpaceUiFont.width("…"))) + "…";
+        float progress = button instanceof MenuSlider ? ((MenuSlider) button).spaceclient$progress()
+            : button instanceof net.minecraft.client.gui.widget.SliderWidget ? ((net.minecraft.client.gui.widget.SliderWidget) button).getProgress() : -1;
+        if (progress >= 0) slider(x + 8, y + height - 5, width - 16, progress, button.active);
         GlStateManager.pushMatrix();
         try {
             GlStateManager.scale(scale, scale, 1);
             SpaceUiFont.draw(client, label, (x + (width - SpaceUiFont.width(label) * scale) / 2f) / scale,
-                (y + (height - SpaceUiFont.height() * scale) / 2f) / scale,
+                (progress >= 0 ? y + 2 : y + (height - SpaceUiFont.height() * scale) / 2f) / scale,
                 !button.active ? 0xFF888A91 : primary ? 0xFF211C15 : TEXT);
         } finally { GlStateManager.popMatrix(); }
+    }
+    public static void control(int x, int y, int width, int height, boolean focused, boolean hovered,
+                               boolean enabled, boolean primary, boolean selected) {
+        int edge = !enabled ? 0xFF354151 : focused ? GOLD : hovered ? 0xFF9D8D70 : 0xFF4A586C;
+        UiShapes.rounded(x, y + 2, width, height, 5, 0x50000000);
+        UiShapes.rounded(x, y, width, height, 5, edge);
+        UiShapes.rounded(x + 1, y + 1, width - 2, height - 2, 4,
+            !enabled ? 0xFF18202B : primary ? (hovered || focused ? 0xFFF0D5A6 : GOLD)
+                : selected || focused ? 0xFF354052 : hovered ? 0xFF2B394C : 0xFF202D40);
+        if (enabled && height > 8 && width > 12)
+            fill(x + 5, y + 1, x + width - 5, y + 2, primary ? 0x80FFFFFF : 0x305D789B);
+        if (selected && enabled) fill(x + 1, y + 5, x + 3, y + height - 5, GOLD);
+        if (focused && enabled) {
+            fill(x + 4, y - 2, x + width - 4, y - 1, TEXT);
+            fill(x + 4, y + height + 1, x + width - 4, y + height + 2, TEXT);
+        }
+    }
+    public static void card(int x, int y, int width, int height, boolean focused, boolean hovered, boolean selected) {
+        control(x, y, width, height, focused, hovered, true, false, selected);
+    }
+    public static void slider(int x, int y, int width, float progress, boolean enabled) {
+        int offset = Math.round(Math.max(0, Math.min(1, progress)) * Math.max(0, width));
+        UiShapes.rounded(x, y, width, 2, 1, 0xFF5B6B81);
+        if (offset > 0) UiShapes.rounded(x, y, offset, 2, 1, enabled ? GOLD : MUTED);
+        UiShapes.rounded(x + offset - 2, y - 2, 5, 6, 2, enabled ? TEXT : MUTED);
+    }
+    public static void lock(int x, int y, boolean locked, boolean active) {
+        int ink = active ? GOLD : MUTED;
+        rounded(x + 6, y + 9, 8, 6, 1, ink);
+        fill(x + 6, y + 5, x + 7, y + 10, ink);
+        fill(x + 7, y + 4, x + 12, y + 5, ink);
+        fill(x + 12, y + 5, x + 13, y + (locked ? 10 : 7), ink);
+        fill(x + 9, y + 11, x + 10, y + 13, 0xFF111A28);
     }
 }

@@ -3,6 +3,8 @@ package dev.spaceclient.hud;
 import dev.spaceclient.SpaceClient;
 import dev.spaceclient.menu.MenuStrings;
 import dev.spaceclient.menu.UiTranslations;
+import dev.spaceclient.menu.MenuBackdrop;
+import dev.spaceclient.menu.MenuTheme;
 import java.util.Locale;
 import com.mojang.blaze3d.platform.GlStateManager;
 import java.util.List;
@@ -79,7 +81,7 @@ public final class HudModulesScreen extends Screen {
     @Override public boolean shouldPauseGame() { return true; }
 
     @Override public void render(int mouseX, int mouseY, float tickDelta) {
-        fillGradient(0, 0, width, height, 0x85070709, 0xA70A0B0E);
+        MenuBackdrop.render(client, width, height);
         if (!roomy()) {
             centerText(ui("catalog.resize"), width / 2, height / 2 - 12, TEXT);
             centerText(ui("catalog.close"), width / 2, height / 2 + 4, MUTED);
@@ -92,10 +94,7 @@ public final class HudModulesScreen extends Screen {
         } finally { GlStateManager.popMatrix(); }
     }
     private void renderPanel(int mouseX, int mouseY) {
-        // A restrained shell leaves the world visible around the edges.
-        rounded(left + 2, top + 3, panelWidth, panelHeight, 0x90000000);
-        rounded(left, top, panelWidth, panelHeight, BORDER);
-        rounded(left + 1, top + 1, panelWidth - 2, panelHeight - 2, 0xFF101114);
+        MenuTheme.panel(left, top, panelWidth, panelHeight);
         if (sidebar) drawSidebar(mouseX, mouseY);
 
         GlStateManager.pushMatrix();
@@ -136,9 +135,12 @@ public final class HudModulesScreen extends Screen {
                 hovered(mouseX, mouseY, x, y, cardWidth, cardHeight), enabled);
             if(layout.list) {
                 HudModuleIcons.draw(module,x+8,y+6,16);
-                SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(module.getTitle(),122),x+32,y+3,TEXT);
+                String state = ui(enabled?"on":"off");
+                int stateWidth = SpaceUiFont.width(state);
+                int titleWidth = Math.max(16, Math.min(122, cardWidth - 134 - stateWidth));
+                SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(module.getTitle(),titleWidth),x+32,y+3,TEXT);
                 SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(UiTranslations.text(client,module.getDescription()),cardWidth-148),x+32,y+16,MUTED);
-                SpaceUiFont.draw(client,ui(enabled?"on":"off"),x+cardWidth-110,y+3,enabled?ACCENT:MUTED);
+                SpaceUiFont.draw(client,state,x+cardWidth-94-stateWidth,y+3,enabled?ACCENT:MUTED);
                 HudModuleIcons.star(x+cardWidth-86,y+9,SpaceClient.browser.favorite(module.id()));
                 stateBadge(module.id(),x+cardWidth-61,y+7,enabled);
                 SpaceUiFont.draw(client,">",x+cardWidth-14,y+8,MUTED);
@@ -209,8 +211,7 @@ public final class HudModulesScreen extends Screen {
             boolean selected = item == section;
             boolean focused = focus == sectionControlStart() + item.ordinal();
             boolean over = hovered(mouseX, mouseY, x, y, w, 25);
-            if (selected || focused || over) rounded(x, y, w, 25, focused ? 0xFF3C352B : 0xFF252321);
-            if (selected || focused) fill(x, y + 3, x + 2, y + 22, 0xFFD7AF6A);
+            MenuTheme.control(x, y, w, 25, focused, over, true, false, selected);
             if(layout.sidebarWidth>=100) {
                 HudModuleIcons.drawSection(item, left + 17, y + 6, 13, selected);
                 SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(sectionLabel(item),w-34),left+39,y+7,selected?TEXT:MUTED);
@@ -408,8 +409,7 @@ public final class HudModulesScreen extends Screen {
     }
 
     private void primaryButton(int x, int y, int w, int h, boolean focused, boolean hovered) {
-        rounded(x, y, w, h, focused ? 0xFFF8E5C3 : 0xFFD7AF6A);
-        rounded(x + 1, y + 1, w - 2, h - 2, hovered || focused ? 0xFFEACB92 : 0xFFD7AF6A);
+        MenuTheme.control(x, y, w, h, focused, hovered, true, true, false);
     }
     private void drawDescription(CatalogModule module, int x, int y, int width, int height) {
         if (height < 48) {
@@ -433,13 +433,10 @@ public final class HudModulesScreen extends Screen {
         } finally { GlStateManager.popMatrix(); }
     }
     private void box(int x, int y, int w, int h, boolean focused, boolean hovered) {
-        rounded(x, y, w, h, focused ? 0xFFD7AF6A : BORDER);
-        rounded(x + 1, y + 1, w - 2, h - 2, focused || hovered ? CARD_FOCUS : CARD);
+        MenuTheme.control(x, y, w, h, focused, hovered, true, false, false);
     }
     private void card(int x, int y, int w, int h, boolean focused, boolean hovered, boolean enabled) {
-        rounded(x, y, w, h, focused ? 0xFFD7AF6A : BORDER);
-        rounded(x + 1, y + 1, w - 2, h - 2, focused || hovered ? CARD_FOCUS : enabled ? CARD_ENABLED : CARD);
-        if (focused) fill(x + 4, y + h - 2, x + w - 4, y + h - 1, 0xFFD7AF6A);
+        MenuTheme.card(x, y, w, h, focused, hovered, enabled);
     }
     private void searchIcon(int x, int y) {
         int c = 0xFFB3B0AA;

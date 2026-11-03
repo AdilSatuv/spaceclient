@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MenuButtonMixin implements MenuButtonSize {
     @Shadow protected int height;
     @Shadow protected boolean hovered;
+    @Shadow protected abstract void mouseDragged(MinecraftClient client, int mouseX, int mouseY);
     @Override public void spaceclient$setHeight(int value) { height = value; }
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     private void spaceclient$render(MinecraftClient client, int mouseX, int mouseY, CallbackInfo ci) {
@@ -25,6 +26,9 @@ public abstract class MenuButtonMixin implements MenuButtonSize {
                 && mouseX < button.x + button.getWidth() && mouseY < button.y + height;
             boolean focused = client.currentScreen instanceof MenuFocus
                 && ((MenuFocus) client.currentScreen).spaceclient$isFocused(button);
+            // Native sliders update their option/volume and label in this callback.
+            // Paint over its legacy handle only after those side effects have run.
+            mouseDragged(client, mouseX, mouseY);
             MenuTheme.button(client, button, height, hovered, focused);
         }
         ci.cancel();
