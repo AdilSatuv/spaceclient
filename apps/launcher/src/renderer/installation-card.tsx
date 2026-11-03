@@ -18,6 +18,9 @@ export function InstallationCard({
   launch: LaunchStatus | null;
 }) {
   const { current, running, prepared, error, acting, start, cancel, reload } = installation;
+  const retryingStatus = Boolean(error);
+  const preparationLocked = !retryingStatus && Boolean(lockReason);
+  const actionDisabled = acting || preparationLocked || (!current && !retryingStatus);
   return (
     <Card className="installation-card" aria-label="Подготовка файлов игры">
       <CardHeader>
@@ -98,9 +101,9 @@ export function InstallationCard({
           ) : (
             <Button
               variant="outline"
-              disabled={acting || !!lockReason || (!current && !error)}
-              onClick={error ? reload : start}
-              aria-describedby={lockReason ? 'files-availability' : undefined}
+              disabled={actionDisabled}
+              onClick={retryingStatus ? reload : start}
+              aria-describedby={preparationLocked ? 'files-availability' : undefined}
             >
               {prepared ? <RefreshCw aria-hidden="true" /> : <ArrowDownToLine aria-hidden="true" />}
               {error
@@ -113,7 +116,7 @@ export function InstallationCard({
             </Button>
           )}
         </div>
-        {!running && lockReason && (
+        {!running && preparationLocked && (
           <p id="files-availability" className="inline-hint">
             {lockReason}
           </p>

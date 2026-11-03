@@ -5,16 +5,10 @@ import { join, dirname } from 'node:path';
 import { crc32 } from 'node:zlib';
 import { fromBufferPromise } from 'yauzl';
 import { installationTarget } from './downloads.ts';
+import type { SpaceBuildIdentity } from '../shared/build-identity.ts';
 
-export type SpaceBundleManifest = {
+export type SpaceBundleManifest = SpaceBuildIdentity & {
   schemaVersion: 1;
-  channel: 'development';
-  modVersion: '0.1.0';
-  minecraftVersion: '1.8.9';
-  loaderVersion: '0.18.3';
-  gameSourceTree: string;
-  size: number;
-  sha256: string;
 };
 export type InstalledSpace = SpaceBundleManifest & { relativePath: 'mods/space-client.jar' };
 const expectedMixins = [

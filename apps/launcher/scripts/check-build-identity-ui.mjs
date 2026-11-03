@@ -309,11 +309,19 @@ try {
       .textContent.includes('Подготовлены'),
   );
   assert.match(await text(), /ещё не проверен/);
-  await state({ statusError: true });
+  await state({ statusError: true, launch: { ...launch, phase: 'running' } });
   await page.waitForFunction(() =>
     document
       .querySelector('.installation-actions button')
       .textContent.includes('Повторить проверку состояния'),
+  );
+  await page.waitForFunction(
+    () => document.querySelector('#launch-status').dataset.phase === 'running',
+  );
+  assert.equal(
+    await page.$eval('.installation-actions button', (element) => element.disabled),
+    false,
+    'Reading status must remain available while the game locks file preparation.',
   );
   await capture('12-status-error-retry', '.installation-card');
   await state({ statusError: false });
@@ -323,9 +331,14 @@ try {
       .querySelector('.installation-actions button')
       .textContent.includes('Проверить и восстановить'),
   );
+  assert.equal(
+    await page.$eval('.installation-actions button', (element) => element.disabled),
+    true,
+    'Recovery must retain the preparation lock while the game is running.',
+  );
   assert.doesNotMatch(await page.$eval('body', (element) => element.textContent), /SECRET/);
   report.checks.push(
-    'Preparation errors announce recovery and retry; status read failure retries status instead of beginning installation; raw exception stays redacted.',
+    'Preparation errors announce recovery and retry; status read retries remain available during gameplay without unlocking installation; raw exception stays redacted.',
   );
 
   await state({ installation: { ...idle, bundledBuild: null } });
