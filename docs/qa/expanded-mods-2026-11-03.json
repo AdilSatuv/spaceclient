@@ -234,8 +234,8 @@
     "thinking": "xhigh",
     "separateLocalCopy": true,
     "base": "2b2c0c1",
-    "scope": "Improve settings of existing 21 gameplay and 23 HUD modules; separate UI commits, no user runtime installation. New eleven modules remain in the mods chat.",
-    "statusAtLastObservation": "active; first local UI commit 2499583, preparing its own native QA; not integrated here",
+    "scope": "Initially 21 gameplay +23 HUD. Follow-up delivered with current local source branch and final scope all 55 settings, preserving new schemas/runtime/actions/WaypointsScreen; no user runtime installation.",
+    "statusAtLastObservation": "active; first local UI commit 2499583 and QA addon compiles; its native launch was not permitted, so no own native captures yet. Follow-up for all 55 delivered, not integrated here.",
     "codebaseMemoryProject": "spaceclient-mod-settings-20261103"
   },
   "limitations": [
