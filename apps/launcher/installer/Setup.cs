@@ -6,6 +6,17 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Runtime.Versioning;
+
+[assembly: TargetFramework(".NETFramework,Version=v4.6.2")]
+
+internal static class SetupPathPolicy {
+    internal static void Configure() {
+        // Per-process only. Never change LongPathsEnabled or any machine/user registry value.
+        AppContext.SetSwitch("Switch.System.IO.UseLegacyPathHandling", false);
+        AppContext.SetSwitch("Switch.System.IO.BlockLongPaths", false);
+    }
+}
 
 // The production executable accepts no paths or commands. The test harness is built separately.
 internal static class SafeArchive {
@@ -73,6 +84,7 @@ internal static class SafeArchive {
 #if TEST_HARNESS
 internal static class Program {
     private static int Main(string[] args) {
+        SetupPathPolicy.Configure();
         if (args.Length < 3 || args.Length > 4) return 2;
         int checks = 0, cancelAfter = args.Length == 4 ? Int32.Parse(args[3]) : -1;
         try { using (var input = File.OpenRead(args[0])) SafeArchive.Extract(input, args[1], args[2], () => cancelAfter >= 0 && checks++ >= cancelAfter); return 0; }
@@ -98,6 +110,7 @@ internal sealed class ExtractionDialog : Form {
 internal static class Program {
     [STAThread]
     private static void Main() {
+        SetupPathPolicy.Configure();
         const string title = "Space Client Setup";
         if (MessageBox.Show("Установить development-версию Space Client для текущего пользователя?\n\nФайлы Minecraft и Java не входят; development-мод Space включён. Существующие данные не удаляются.", title, MessageBoxButtons.OKCancel, MessageBoxIcon.Information) != DialogResult.OK) return;
         string staging = null;

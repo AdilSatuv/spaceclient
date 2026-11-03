@@ -68,6 +68,21 @@ assert.equal(
 assert.deepEqual(files(unicode), expected);
 for (const name of expected)
   assert.equal(await hash(join(unicode, name)), await hash(join(original, name)), name);
+const unicodeMaxPath = Math.max(...expected.map((name) => join(unicode, name).length));
+assert.ok(unicodeMaxPath < 260, 'Unicode/space fixture is intentionally below MAX_PATH.');
+const longPath = join(
+  testRoot,
+  'Long profile ' + 'x'.repeat(100),
+  'Юникод ' + 'п'.repeat(60),
+  'Space Client',
+);
+assert.ok(longPath.length > 260, 'The separate long-path fixture must actually exceed MAX_PATH.');
+const longResult = extract(join(build, 'payload.zip'), longPath);
+assert.equal(longResult.status, 0, 'Long-path extraction failed: ' + longResult.stderr);
+assert.deepEqual(files(longPath), expected);
+for (const name of expected)
+  assert.equal(await hash(join(longPath, name)), await hash(join(original, name)), name);
+const longMaxPath = Math.max(...expected.map((name) => join(longPath, name).length));
 for (const cancelAfter of [0, 6, 20]) {
   const destination = join(testRoot, 'cancel-' + cancelAfter);
   assert.notEqual(extract(join(build, 'payload.zip'), destination, { cancelAfter }).status, 0);
@@ -118,6 +133,9 @@ console.log(
       payloadHashes: 'matched',
       existingTarget: 'preserved',
       unicodeAndSpaces: 'all file hashes matched',
+      unicodeMaxPath,
+      longPath: 'all file hashes matched above MAX_PATH',
+      longMaxPath,
       cancellation: 'three stages leave no target or staging',
       corruption: 'payload SHA-256 rejected before writes',
       hostileArchives: 'rejected before writes',

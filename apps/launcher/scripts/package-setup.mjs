@@ -133,6 +133,7 @@ run('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', zipScript], 
   env: { ...process.env, SPACE_SETUP_INPUT: payload, SPACE_SETUP_ZIP: zip },
 });
 const source = join(launcher, 'installer/Setup.cs');
+const setupManifest = join(launcher, 'installer/Setup.manifest');
 const payloadHash = createHash('sha256').update(readFileSync(zip)).digest('hex');
 const digestFile = join(runDir, 'payload.sha256');
 writeFileSync(digestFile, payloadHash + '\n');
@@ -155,6 +156,7 @@ writeFileSync(
   ) + '\n',
 );
 const references = [
+  `/win32manifest:${setupManifest}`,
   '/r:System.IO.Compression.dll',
   '/r:System.IO.Compression.FileSystem.dll',
   '/r:System.Windows.Forms.dll',
