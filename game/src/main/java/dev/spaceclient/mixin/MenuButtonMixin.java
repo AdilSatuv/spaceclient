@@ -3,6 +3,7 @@ package dev.spaceclient.mixin;
 import dev.spaceclient.menu.MenuFocus;
 import dev.spaceclient.menu.MenuTheme;
 import dev.spaceclient.menu.MenuButtonSize;
+import dev.spaceclient.menu.MenuSlider;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,7 +29,16 @@ public abstract class MenuButtonMixin implements MenuButtonSize {
                 && ((MenuFocus) client.currentScreen).spaceclient$isFocused(button);
             // Native sliders update their option/volume and label in this callback.
             // Paint over its legacy handle only after those side effects have run.
-            mouseDragged(client, mouseX, mouseY);
+            if (button instanceof MenuSlider || button instanceof net.minecraft.client.gui.widget.SliderWidget) {
+                // Keep native option updates, but suppress its old rectangular handle.
+                // Restore the list's scissor too when this slider lives in a scrolling row.
+                org.lwjgl.opengl.GL11.glPushAttrib(org.lwjgl.opengl.GL11.GL_SCISSOR_BIT);
+                try {
+                    org.lwjgl.opengl.GL11.glEnable(org.lwjgl.opengl.GL11.GL_SCISSOR_TEST);
+                    org.lwjgl.opengl.GL11.glScissor(0, 0, 0, 0);
+                    mouseDragged(client, mouseX, mouseY);
+                } finally { org.lwjgl.opengl.GL11.glPopAttrib(); }
+            } else mouseDragged(client, mouseX, mouseY);
             MenuTheme.button(client, button, height, hovered, focused);
         }
         ci.cancel();
