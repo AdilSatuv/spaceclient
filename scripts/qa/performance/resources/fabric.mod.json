@@ -1,0 +1,1 @@
+{"schemaVersion":1,"id":"space_native_perf","version":"1.0.0","name":"Isolated native sampler","environment":"client","entrypoints":{"client":["dev.spaceclient.perf.PerfInit"]},"mixins":["perf.mixins.json"],"depends":{"minecraft":"1.8.9"}}

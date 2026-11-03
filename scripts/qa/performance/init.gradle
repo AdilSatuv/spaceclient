@@ -1,0 +1,26 @@
+allprojects {
+    afterEvaluate {
+        if (plugins.hasPlugin('net.fabricmc.fabric-loom-remap')) {
+            sourceSets.create('nativePerf') {
+                java.srcDir(file('../scripts/qa/performance/src'))
+                resources.srcDir(file('../scripts/qa/performance/resources'))
+                compileClasspath += sourceSets.main.compileClasspath
+            }
+            tasks.named('compileNativePerfJava') { options.compilerArgs += ['-proc:none'] }
+            def helper = tasks.register('nativePerfJar', Jar) {
+                dependsOn tasks.named('nativePerfClasses')
+                from sourceSets.nativePerf.output
+                archiveFileName.set('native-perf-dev.jar')
+                destinationDirectory.set(file('../.reports/native-perf-qa'))
+            }
+            def remapType = tasks.named('remapJar').get().getClass().superclass
+            tasks.register('remapNativePerf', remapType) {
+                dependsOn helper
+                inputFile.set(helper.flatMap { it.archiveFile })
+                archiveFileName.set('native-perf.jar')
+                destinationDirectory.set(file('../.reports/native-perf-qa'))
+                addNestedDependencies.set(false)
+            }
+        }
+    }
+}
