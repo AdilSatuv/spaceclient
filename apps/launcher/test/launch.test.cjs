@@ -13,11 +13,11 @@ const profile = {
   javaPath: 'C:\\Runtime with spaces\\bin\\java.exe',
 };
 const signal = () => new AbortController().signal;
-async function service(overrides = {}) {
+async function service(overrides = {}, rootForProfile = async (id) => '/instances/' + id) {
   const { LaunchService } = await import('../src/main/launch.ts');
   const calls = [];
   const children = [];
-  const value = new LaunchService(async (id) => '/instances/' + id, null, {
+  const value = new LaunchService(rootForProfile, null, {
     prepare: async (root, p, name) => ({
       executable: p.javaPath,
       args: ['--username', name],
@@ -111,6 +111,52 @@ test('output flooding produces bounded fixed diagnostics with no raw output, nic
   assert.equal(value.status('default').phase, 'error');
   assert.equal(value.status('default').exitCode, null);
 });
+test('split Java errors produce a safe cause and next action, retain exit code and reset on retry', async () => {
+  const { value, children, tick } = await service();
+  value.start(profile, 'SpaceTester');
+  await tick();
+  children[0].stderr.write(
+    'Exception in thread SECRET-token SpaceTester C:\\private\\java.exe\nOutOfMem',
+  );
+  children[0].stderr.write('oryError: Java heap space\n');
+  children[0].emit('close', 1, null);
+  await value.settled();
+  const failed = value.status('default');
+  assert.equal(failed.phase, 'error');
+  assert.equal(failed.exitCode, 1);
+  assert.match(failed.message, /нехватке памяти/);
+  assert.match(failed.message, /RAM/);
+  assert.ok(failed.log.includes('Java сообщила о нехватке памяти.'));
+  assert.doesNotMatch(JSON.stringify(failed), /SECRET|SpaceTester|private|java\.exe/);
+  value.start(profile, 'SpaceTester');
+  await tick();
+  children[1].emit('close', 2, null);
+  await value.settled();
+  assert.doesNotMatch(value.status('default').message, /нехватке памяти/);
+  assert.equal(value.running, false);
+});
+test('a failure signature beyond the first output block is diagnosed without exposing the block', async () => {
+  const { value, children, tick } = await service();
+  value.start(profile, 'SpaceTester');
+  await tick();
+  children[0].stderr.write('SECRET'.repeat(4000) + 'Failed to create display: C:\\private\\driver');
+  children[0].emit('close', 1, null);
+  await value.settled();
+  assert.match(value.status('default').message, /OpenGL/);
+  assert.match(value.status('default').message, /драйвер/);
+  assert.doesNotMatch(JSON.stringify(value.status('default')), /SECRET|private/);
+});
+test('diagnostic output never turns a normal process close into a failed launch', async () => {
+  const { value, children, tick } = await service();
+  value.start(profile, 'SpaceTester');
+  await tick();
+  children[0].stderr.write('Exception in thread SECRET');
+  children[0].emit('close', 0, null);
+  await value.settled();
+  assert.equal(value.status('default').phase, 'exited');
+  assert.equal(value.status('default').exitCode, 0);
+  assert.match(value.status('default').message, /Можно запустить снова/);
+});
 test('per-profile processes are independent and shutdown waits for game close without killing a world', async () => {
   const { value, children, tick } = await service();
   value.start(profile, 'SpaceTester');
@@ -148,6 +194,62 @@ test('shutdown cancels preflight before spawn and never starts an unvalidated ni
   await value.shutdown();
   assert.equal(calls, 0);
   assert.equal(value.running, false);
+});
+test('shutdown during profile lookup keeps the reservation until lookup settles and skips preflight', async () => {
+  let releaseRoot;
+  let prepareCalls = 0;
+  let spawnCalls = 0;
+  const root = new Promise((resolve) => {
+    releaseRoot = resolve;
+  });
+  const { value, tick } = await service(
+    {
+      prepare: async () => {
+        prepareCalls++;
+      },
+      spawn: () => {
+        spawnCalls++;
+      },
+    },
+    () => root,
+  );
+  value.start(profile, 'SpaceTester');
+  let closed = false;
+  const closing = value.shutdown().then(() => {
+    closed = true;
+  });
+  await tick();
+  assert.equal(value.running, true);
+  assert.equal(closed, false);
+  releaseRoot('/instances/default');
+  await closing;
+  assert.equal(prepareCalls, 0, 'a cancelled launch must not start Java validation');
+  assert.equal(spawnCalls, 0);
+  assert.equal(value.running, false);
+  assert.equal(value.status('default').phase, 'error');
+  assert.match(value.status('default').message, /отменён/);
+});
+test('an already cancelled local preflight never invokes runtime or touches installation validation', async () => {
+  const { prepareLocalLaunch } = await import('../src/main/launch-plan.ts');
+  const controller = new AbortController();
+  controller.abort();
+  const calls = [];
+  await assert.rejects(
+    prepareLocalLaunch('/unused', profile, 'SpaceTester', {}, controller.signal, {
+      runtime: async () => {
+        calls.push('runtime');
+        return { usable: true };
+      },
+      version: async () => {
+        calls.push('version');
+      },
+      space: async () => {
+        calls.push('space');
+      },
+    }),
+    { name: 'AbortError' },
+  );
+  assert.deepEqual(calls, []);
 });
 async function installation(t) {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'space-local-plan-'));
@@ -211,6 +313,24 @@ test('verified local plan owns fixed JVM/RAM/classpath/natives arguments and off
   const { offlineUuid } = await import('../src/main/launch-plan.ts');
   assert.equal(offlineUuid('Notch'), 'b50ad385829d3141a2167e7d7539ba7f');
   assert.notEqual(offlineUuid('Notch'), offlineUuid('notch'));
+});
+test('local preflight passes its cancellation signal into the runtime probe', async (t) => {
+  const f = await installation(t);
+  const controller = new AbortController();
+  let receivedSignal;
+  f.dependencies.runtime = async (_path, signal) => {
+    receivedSignal = signal;
+    return { usable: true };
+  };
+  await f.prepareLocalLaunch(
+    f.root,
+    profile,
+    'SpaceTester',
+    f.pin,
+    controller.signal,
+    f.dependencies,
+  );
+  assert.equal(receivedSignal, controller.signal);
 });
 test('changed/missing classpath bytes, extra mods, bundle mismatch, native corruption and junctions block launch', async (t) => {
   const f = await installation(t);

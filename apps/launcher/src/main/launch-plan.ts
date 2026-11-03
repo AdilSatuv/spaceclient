@@ -55,6 +55,7 @@ export async function prepareLocalLaunch(
   signal: AbortSignal,
   dependencies: ValidationDependencies = validation,
 ): Promise<LaunchPlan> {
+  signal.throwIfAborted();
   const localName = nickname(name);
   editProfile({ id: profile.id, name: profile.name, memoryMb: profile.memoryMb }, 16384);
   if (!pin)
@@ -63,7 +64,7 @@ export async function prepareLocalLaunch(
     );
   if (!profile.javaPath) throw new UserFacingError('Выберите Java 21 x64 в настройках профиля.');
   const executable = javaPath(profile.javaPath);
-  const runtime = await dependencies.runtime(executable);
+  const runtime = await dependencies.runtime(executable, signal);
   signal.throwIfAborted();
   if (!runtime.usable) throw new UserFacingError(runtime.message);
   const plan = await dependencies.version(root, signal);

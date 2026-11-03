@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-02",
+  "branch": "fix/core-launch-recovery",
+  "previousHead": "6877f280d64e7b6a79386986ffaab2f67463c962",
+  "codeCommit": "e1649e8bb5c377311d9861c405450f138b6eca8b",
+  "launcherTests": { "passed": 135, "failed": 0, "cancelled": 0, "skipped": 0 },
+  "newTests": 8,
+  "typecheck": "passed",
+  "requiredBundleBuild": "passed",
+  "formatChangedFiles": "passed",
+  "formatLauncherWithEndOfLineAuto": "passed",
+  "cancellation": {
+    "preAbortedSkipsDiskAndSpawn": true,
+    "abortedLookupSkipsSpawn": true,
+    "preflightForwardsSignal": true,
+    "manualCheckTrackedDuringShutdown": true,
+    "waitsForCloseAfterAbortCallback": true,
+    "fixedSafeMessage": true
+  },
+  "nativeProcessTest": {
+    "passed": true,
+    "diagnosticHelper": "owned hidden Node process through real execFile",
+    "independentHelperRemainedAliveAfterCancellation": true,
+    "diagnosticCloseBeforePromiseSettlement": true,
+    "cleanup": "owned child handles only",
+    "realJavaStarted": false,
+    "gameStarted": false
+  },
+  "executionPolicy": {
+    "args": ["-XshowSettings:properties", "-version"],
+    "shell": false,
+    "windowsHide": true,
+    "timeoutMs": 5000,
+    "maxBufferBytes": 65536,
+    "jvmInjectionEnvironmentStripped": true
+  },
+  "headlessElectron": {
+    "passed": true,
+    "report": ".reports/launcher-ui/run-95544080-a0d7-40c5-9727-a8661f212a4d/report.json",
+    "checkedAt": "2026-11-02T16:21:47.865Z",
+    "checks": 10,
+    "screenshots": 14,
+    "rendererErrors": 0
+  },
+  "codebaseMemory": {
+    "project": "spaceclient-core-features-20261102",
+    "root": "C:/Users/user/Documents/Codex/2026-11-02/space-client-core-features/work/spaceclient-core",
+    "indexedAt": "2026-11-02T16:21:44Z",
+    "nodes": 8858,
+    "edges": 19842,
+    "exactChangedCodePathsChecked": 7,
+    "coverage": "no_recorded_issue",
+    "freshness": "metadata_changed",
+    "sourceVerifiedDirectly": true
+  },
+  "userRuntimeModified": false,
+  "pushed": false,
+  "published": false
+}

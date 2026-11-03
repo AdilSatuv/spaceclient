@@ -163,6 +163,39 @@ test('Java picker/check guards include asynchronous work and recover after rejec
   assert.equal((await dispatch('java:check', event, 'default')).ok, true);
 });
 
+test('application shutdown aborts an active Java check and waits for its settlement before releasing running', async (t) => {
+  const { dispatch, event, dependencies, application } = await fixture(t);
+  let receivedSignal;
+  let release;
+  dependencies.inspectJava = (_path, signal) => {
+    receivedSignal = signal;
+    return new Promise((resolve) => {
+      release = resolve;
+    });
+  };
+  const checking = dispatch('java:check', event, 'default');
+  await new Promise((resolve) => setImmediate(resolve));
+  let closed = false;
+  let closing;
+  try {
+    assert.equal(application.running, true);
+    closing = application.shutdown().then(() => {
+      closed = true;
+    });
+    await new Promise((resolve) => setImmediate(resolve));
+    assert.equal(receivedSignal?.aborted, true);
+    assert.equal(closed, false);
+    assert.equal(application.running, true);
+  } finally {
+    release({ usable: false, major: null, bits: null, message: 'Cancelled' });
+    await checking;
+    await closing;
+  }
+  assert.equal(closed, true);
+  assert.equal(application.running, false);
+  assert.match((await dispatch('java:check', event, 'default')).error, /завершает работу/);
+});
+
 test('folder/installation commands use repository-owned paths and known IDs; shutdown is delegated', async (t) => {
   const { dispatch, event, root, calls, application } = await fixture(t);
   assert.deepEqual(await dispatch('profile:open', event, 'default'), { ok: true, value: null });

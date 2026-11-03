@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-02",
+  "branch": "fix/core-launch-recovery",
+  "baseCommit": "0af5658f2dc0d533e8e1a60c9587248fb2b49c26",
+  "codeCommits": [
+    "5ff589d4fa981b09426709ab29acda96e26f11c8",
+    "03f11871196de3049453e622514489845d64d6ba"
+  ],
+  "regressionsFailedBeforeFix": [
+    "shutdown during delayed profile lookup still invoked preflight",
+    "already aborted preflight still invoked runtime validation",
+    "split OutOfMemoryError did not produce a specific cause",
+    "OpenGL failure after the first 8192 output bytes was missed"
+  ],
+  "launcherTests": { "passed": 122, "failed": 0, "cancelled": 0, "skipped": 0 },
+  "typecheck": "passed",
+  "requiredGameBundleBuild": "passed",
+  "bundleSha256": "ae93cb849aede7902f8328bb717b696d292c109bac569d7d61dc7bc69fbe0635",
+  "gameSourceTree": "9bbd0de084a345e438b7723c5a3ba6bb9c0f4b0d",
+  "gameRebuilt": false,
+  "headlessElectron": {
+    "passed": true,
+    "report": ".reports/launcher-ui/run-368326cf-9f28-418d-be99-98f09ffe4c8f/report.json",
+    "checkedAt": "2026-11-02T15:45:47.717Z",
+    "checks": 10,
+    "screenshots": 14,
+    "rendererErrors": 0,
+    "realAccountUsed": false,
+    "realGameDownloadsStarted": false
+  },
+  "formatting": {
+    "changedCodeFiles": "passed",
+    "launcherWithEndOfLineAuto": "passed",
+    "defaultFullLauncher": "85 unchanged CRLF files reported"
+  },
+  "codebaseMemory": {
+    "project": "spaceclient-core-features-20261102",
+    "root": "C:/Users/user/Documents/Codex/2026-11-02/space-client-core-features/work/spaceclient-core",
+    "mode": "full",
+    "indexedAt": "2026-11-02T15:43:42Z",
+    "nodes": 8726,
+    "edges": 19657,
+    "exactPathsChecked": 5,
+    "coverage": "no_recorded_issue",
+    "freshness": "metadata_changed",
+    "gitMetadataAvailable": false,
+    "branchVerifiedWithGit": true,
+    "sourceVerifiedDirectly": true
+  },
+  "gameStarted": false,
+  "realJavaFailuresInduced": false,
+  "userRuntimeModified": false,
+  "published": false,
+  "pushed": false
+}

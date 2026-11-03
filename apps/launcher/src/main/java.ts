@@ -36,29 +36,57 @@ export function javaEnvironment(): NodeJS.ProcessEnv {
       delete environment[name];
   return environment;
 }
-export async function inspectJava(path: string | null): Promise<JavaInfo> {
+type ProbeDependencies = { stat: typeof stat; execFile: typeof execFile };
+function probeError(signal?: AbortSignal): UserFacingError {
+  return new UserFacingError(
+    signal?.aborted
+      ? 'Проверка Java отменена.'
+      : 'Java не ответила на проверку. Проверьте установку или выберите другой java.exe.',
+  );
+}
+export async function inspectJava(
+  path: string | null,
+  signal?: AbortSignal,
+  dependencies: ProbeDependencies = { stat, execFile },
+): Promise<JavaInfo> {
+  if (signal?.aborted) throw probeError(signal);
   if (!path) throw new UserFacingError('Сначала выберите файл java.exe.');
   const selected = javaPath(path);
   try {
-    if (!(await stat(selected)).isFile()) throw new Error();
+    if (!(await dependencies.stat(selected)).isFile()) throw new Error();
   } catch {
+    if (signal?.aborted) throw probeError(signal);
     throw new UserFacingError('Java не найдена по сохранённому пути. Выберите файл заново.');
   }
+  if (signal?.aborted) throw probeError(signal);
   const environment = javaEnvironment();
   return new Promise((resolve, reject) => {
-    execFile(
-      selected,
-      ['-XshowSettings:properties', '-version'],
-      { timeout: 5000, maxBuffer: 65536, windowsHide: true, shell: false, env: environment },
-      (error, stdout, stderr) => {
-        if (error)
-          reject(
-            new UserFacingError(
-              'Java не ответила на проверку. Проверьте установку или выберите другой java.exe.',
-            ),
-          );
-        else resolve(parseJava(stdout + '\n' + stderr));
-      },
-    );
+    let output: { failed: boolean; stdout: string; stderr: string } | undefined;
+    try {
+      const child = dependencies.execFile(
+        selected,
+        ['-XshowSettings:properties', '-version'],
+        {
+          signal,
+          timeout: 5000,
+          maxBuffer: 65536,
+          windowsHide: true,
+          shell: false,
+          env: environment,
+        },
+        (error, stdout, stderr) => {
+          output = { failed: !!error, stdout, stderr };
+        },
+      );
+      // execFile's abort callback can precede process close. Keep the owner reserved until close.
+      child.once('close', () => {
+        const completed = output;
+        output = undefined;
+        if (signal?.aborted || !completed || completed.failed) reject(probeError(signal));
+        else resolve(parseJava(completed.stdout + '\n' + completed.stderr));
+      });
+    } catch {
+      reject(probeError(signal));
+    }
   });
 }

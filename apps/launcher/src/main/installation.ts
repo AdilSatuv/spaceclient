@@ -32,10 +32,29 @@ const defaults: Dependencies = {
   },
 };
 
+function failureMessage(error: unknown): string {
+  if (error instanceof UserFacingError) return error.message;
+  const code = error && typeof error === 'object' && 'code' in error ? error.code : undefined;
+  switch (code) {
+    case 'ENOSPC':
+    case 'EDQUOT':
+      return 'Недостаточно свободного места или исчерпана квота диска. Освободите место и повторите подготовку.';
+    case 'EACCES':
+    case 'EPERM':
+      return 'Нет доступа к файлам инстанса. Проверьте разрешение записи в папку профиля и повторите подготовку.';
+    case 'EBUSY':
+    case 'ETXTBSY':
+      return 'Файл инстанса занят другим процессом. Закройте программы, использующие папку профиля, и повторите подготовку.';
+    default:
+      return 'Не удалось подготовить файлы.';
+  }
+}
+
 /** Main-only lifecycle. The renderer supplies a known profile ID, never URLs or paths. */
 export class InstallationService {
   private statuses = new Map<string, InstallationStatus>();
   private job: Job | null = null;
+  private closing = false;
   private dependencies: Dependencies;
   private readonly rootForProfile: (id: string) => Promise<string>;
   constructor(
@@ -67,6 +86,7 @@ export class InstallationService {
   }
   start(input: unknown): InstallationStatus {
     const id = profileId(input);
+    if (this.closing) throw new UserFacingError('Лаунчер завершает работу.');
     if (this.job)
       throw new UserFacingError(
         'Уже идёт подготовка файлов. Дождитесь её завершения или отмените.',
@@ -106,6 +126,7 @@ export class InstallationService {
     await this.job?.done;
   }
   async shutdown() {
+    this.closing = true;
     if (this.job) await this.cancel(this.job.id);
   }
   private update(id: string, change: Partial<InstallationStatus>) {
@@ -123,9 +144,10 @@ export class InstallationService {
       const totalBytes = plan.totalBytes + (space?.pin.size ?? 0);
       signal.throwIfAborted();
       // Conservative room for a full file set, native expansion and filesystem overhead.
-      if ((await this.dependencies.availableBytes(root)) < totalBytes + 160 * 1024 * 1024)
+      const requiredBytes = totalBytes + 160 * 1024 * 1024;
+      if ((await this.dependencies.availableBytes(root)) < requiredBytes)
         throw new UserFacingError(
-          'Недостаточно свободного места. Освободите не менее 320 МиБ и повторите.',
+          `Недостаточно свободного места. Для подготовки нужно не менее ${Math.ceil(requiredBytes / 1024 ** 2)} МиБ свободного места. Освободите место и повторите.`,
         );
       signal.throwIfAborted();
       this.update(job.id, {
@@ -218,9 +240,7 @@ export class InstallationService {
         phase: signal.aborted ? 'cancelled' : 'error',
         message: signal.aborted
           ? 'Подготовка отменена. При повторе используем проверенные файлы и сохранённые части.'
-          : error instanceof UserFacingError
-            ? error.message
-            : 'Не удалось подготовить файлы.',
+          : failureMessage(error),
       });
     } finally {
       if (receiptTemp) await unlink(receiptTemp).catch(() => {});
