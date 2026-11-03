@@ -32,6 +32,7 @@ public final class GameModuleSettingsScreen extends ModuleSettingsScreen {
     @Override protected boolean navigation(int id) { return id==99||id==31; }
     @Override protected String notice() {
         if(!settings().error().isEmpty())return settings().error();
+        if(module==GameplayModule.INVENTORY_BLUR&&client!=null&&!InventoryBlurRenderer.supported())return "Blur unavailable on this graphics setup; the standard background is used.";
         if(editingText)return (status.isEmpty()?"Enter: save / Esc: cancel / Ctrl+V: paste":status)+"  |  "+macroBuffer.length()+" / 100";
         if(captureId!=-1)return status.isEmpty()?"Press a key / Esc: cancel / Backspace: unbind":status;
         return status;
@@ -130,7 +131,7 @@ public final class GameModuleSettingsScreen extends ModuleSettingsScreen {
                 a.add(SettingRow.action(32,"Message hotkey",key!=0&&ModuleKeys.autoTextConflicts(client,macroSlot,key)?"Conflict: assign an unused key.":"Gameplay only; at most one message per second.",keyValue(32,key)));
                 a.add(SettingRow.text(33,"Message text","Single line; Enter saves, Esc cancels.",editingText?"Typing...":s.autoTextMessage(macroSlot).isEmpty()?"Write message":"Edit message")); break;
             case GUI:
-                a.add(SettingRow.choice(34,"Interface scale","Effective: "+new net.minecraft.client.util.Window(client).getScaleFactor()+"x; capped by window size.",s.guiScale()==0?"Auto":s.guiScale()+"x")); break;
+                a.add(SettingRow.choice(34,"Interface scale",client==null?"Scale is limited by window size.":"Effective: "+new net.minecraft.client.util.Window(client).getScaleFactor()+"x; capped by window size.",s.guiScale()==0?"Auto":s.guiScale()+"x")); break;
             case HITBOXES:
                 a.add(SettingRow.choice(35,"Box color","Visible bounds; depth and collisions stay native.",label(s.hitboxColor().name())));
                 a.add(n(36,"Line width","Stroke width in screen pixels.",s.hitboxWidth(),1,3,1," px"));
@@ -161,7 +162,7 @@ public final class GameModuleSettingsScreen extends ModuleSettingsScreen {
         boolean conflict=key!=0&&(ModuleKeys.conflicts(client,key)||ModuleKeys.usedByHold(settings(),module,key)||ModuleKeys.usedByToggle(settings(),null,key)||ModuleKeys.usedByAutoText(settings(),-1,key));
         a.add(SettingRow.action(2,"Hold key",conflict?"Conflict: assign an unused key.":key==0?"Assign a hold key to use this module.":detail,keyValue(2,key)));
     }
-    private String keyValue(int id,int key) { return captureId==id?"Press a key...":ModuleKeys.label(key); }
+    private String keyValue(int id,int key) { return captureId==id?"Press a key...":client==null?(key==0?"Unbound":"Key "+key):ModuleKeys.label(key); }
     private static String label(String s) { return s.substring(0,1)+s.substring(1).toLowerCase(Locale.ROOT).replace('_',' '); }
     @Override protected int previewHeight() {
         return module==GameplayModule.AUTO_TEXT?58:module==GameplayModule.CROSSHAIR||module==GameplayModule.BLOCK_OVERLAY||module==GameplayModule.HIT_COLOR||module==GameplayModule.FOV_CONTROL?46:0;

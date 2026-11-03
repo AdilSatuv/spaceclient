@@ -40,6 +40,18 @@ public abstract class ModuleSettingsScreen extends Screen {
     protected boolean modalKey(char character,int key) { return false; }
     protected boolean modal() { return false; }
     protected boolean navigation(int id) { return false; }
+    protected boolean repeatedInput() { return Keyboard.isRepeatEvent(); }
+    protected boolean shiftInput() { return hasShiftDown(); }
+    protected SettingRow focusedRow() {
+        int index=focus-sections().length;
+        List<SettingRow> items=rows();
+        return index>=0&&index<items.size()?items.get(index):null;
+    }
+    protected void focusRow(int id) {
+        List<SettingRow> items=rows();
+        for(int i=0;i<items.size();i++)if(items.get(i).id==id) { focus=sections().length+i;break; }
+        reveal();
+    }
     protected SettingRow[] footer() { return new SettingRow[]{SettingRow.action(98,"Reset settings","",""),SettingRow.action(99,"Back","","")}; }
 
     @Override public void init() {
@@ -55,6 +67,7 @@ public abstract class ModuleSettingsScreen extends Screen {
     private boolean roomy() { return width>=320&&height>=240; }
     private int total() { return sections().length+rows().size()+footer().length; }
     private void reveal() {
+        focus=Math.max(0,Math.min(focus,total()-1));
         int index=focus-sections().length;
         offset=layout.offset(offset,rows().size());
         if(index>=0&&index<rows().size())offset=layout.reveal(offset,index,rows().size());
@@ -100,8 +113,12 @@ public abstract class ModuleSettingsScreen extends Screen {
                 int index=focus-tabs.length;
                 if(index>=0&&index<items.size()) {
                     SettingRow row=items.get(index);
-                    message=row.detail+" / "+(row.kind==SettingRow.Kind.NUMBER?"Left / Right: adjust; Shift: larger step; Home / End: limits.":"Tab: select; Enter: change; Left / Right: previous / next.");
-                } else message="Tab / Up / Down: select   |   Enter: activate   |   Esc: back";
+                    message=row.detail+" / "+(row.kind==SettingRow.Kind.NUMBER?"Left / Right: adjust; LShift: larger step; Home / End: limits.":"Tab: select; Enter: change; Left / Right: previous / next.");
+                } else {
+                    int action=index-items.size();
+                    SettingRow[] actions=footer();
+                    message=action>=0&&action<actions.length&&!actions[action].detail.isEmpty()?actions[action].detail:"Tab / Up / Down: select   |   Enter: activate   |   Esc: back";
+                }
             }
             drawLines(message,x+16,y+h-73,w-32,2,ACCENT);
             SettingRow[] actions=footer();
@@ -169,11 +186,11 @@ public abstract class ModuleSettingsScreen extends Screen {
     @Override protected void keyPressed(char c,int key) {
         if(dragging!=-1) { if(key==Keyboard.KEY_ESCAPE)dragging=-1; return; }
         if(modalKey(c,key))return;
-        if(key==Keyboard.KEY_ESCAPE) { if(!Keyboard.isRepeatEvent())client.setScreen(parent); return; }
+        if(key==Keyboard.KEY_ESCAPE) { if(!repeatedInput())client.setScreen(parent); return; }
         if(!roomy())return;
         if(key==Keyboard.KEY_TAB||key==Keyboard.KEY_DOWN||key==Keyboard.KEY_UP) {
             status="";
-            focus=Math.floorMod(focus+(key==Keyboard.KEY_UP||(key==Keyboard.KEY_TAB&&hasShiftDown())?-1:1),total());
+            focus=Math.floorMod(focus+(key==Keyboard.KEY_UP||(key==Keyboard.KEY_TAB&&shiftInput())?-1:1),total());
             reveal(); return;
         }
         if(key==Keyboard.KEY_PRIOR||key==Keyboard.KEY_NEXT) {
@@ -188,11 +205,11 @@ public abstract class ModuleSettingsScreen extends Screen {
             if(row.kind==SettingRow.Kind.NUMBER&&enabled(row)) {
                 if(key==Keyboard.KEY_HOME||key==Keyboard.KEY_END) { setNumber(row,key==Keyboard.KEY_HOME?row.range.min:row.range.max); return; }
                 if(key==Keyboard.KEY_LEFT||key==Keyboard.KEY_RIGHT) {
-                    setNumber(row,row.range.adjust(row.number,key==Keyboard.KEY_LEFT?-1:1,hasShiftDown())); return;
+                    setNumber(row,row.range.adjust(row.number,key==Keyboard.KEY_LEFT?-1:1,shiftInput())); return;
                 }
             }
         }
-        if(!Keyboard.isRepeatEvent()&&(key==Keyboard.KEY_RETURN||key==Keyboard.KEY_NUMPADENTER||key==Keyboard.KEY_SPACE||key==Keyboard.KEY_LEFT||key==Keyboard.KEY_RIGHT))
+        if(!repeatedInput()&&(key==Keyboard.KEY_RETURN||key==Keyboard.KEY_NUMPADENTER||key==Keyboard.KEY_SPACE||key==Keyboard.KEY_LEFT||key==Keyboard.KEY_RIGHT))
             activateFocus(key==Keyboard.KEY_LEFT?-1:1);
     }
     private void setNumber(SettingRow row,int value) { if(value!=row.number)number(row.id,value); }
@@ -202,7 +219,7 @@ public abstract class ModuleSettingsScreen extends Screen {
         List<SettingRow> items=rows();
         SettingRow row=index<items.size()?items.get(index):footer()[index-items.size()];
         if(!enabled(row)) { status=readOnly()?"Read-only: the existing file is preserved.":row.detail; return; }
-        if(row.kind==SettingRow.Kind.NUMBER)setNumber(row,row.range.adjust(row.number,direction,hasShiftDown()));
+        if(row.kind==SettingRow.Kind.NUMBER)setNumber(row,row.range.adjust(row.number,direction,shiftInput()));
         else change(row.id,direction);
         reveal();
     }

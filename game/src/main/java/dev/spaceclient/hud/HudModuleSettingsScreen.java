@@ -44,14 +44,20 @@ public final class HudModuleSettingsScreen extends ModuleSettingsScreen {
     private SettingRow n(int id,String title,String detail,int value,int min,int max) {
         return SettingRow.number(id,title,detail,value,min,max,1,Integer::toString);
     }
+    private String moduleDetail() {
+        if(module==HudModule.COMBO_COUNTER)return "Client-observed hits; target change, hurt or 2s clears.";
+        if(module==HudModule.REACH_DISPLAY)return "Last client hit distance; -- after 5 seconds.";
+        if(module==HudModule.SATURATION)return "On servers, ~ marks approximate client saturation.";
+        return module.getDescription();
+    }
     @Override protected List<SettingRow> rows() {
         List<SettingRow>a=new ArrayList<>();HudContentSettings c=content();EquipmentContent e=c.equipment;
         if(tab==0) {
-            a.add(SettingRow.toggle(0,"Enabled",module.getDescription(),module.isEnabled(settings().getConfig())));
+            a.add(SettingRow.toggle(0,"Enabled",moduleDetail(),module.isEnabled(settings().getConfig())));
             a.add(SettingRow.number(1,"Scale","0.5x to 3.0x; preview fits without changing this value.",(int)Math.round(placement().scale*10),5,30,1,v->String.format(Locale.ROOT,"%.1fx",v/10.0)));
             String anchor=label(placement().vertical.name())+" / "+label(placement().horizontal.name());
             SettingRow ar=SettingRow.choice(3,"Screen anchor","Keeps the widget relative to the selected corner.",anchor);
-            a.add(client.player==null?ar.disabled("Join a world to preserve the widget's screen position."):ar);
+            a.add(client==null||client.player==null?ar.disabled("Join a world to preserve the widget's screen position."):ar);
             a.add(SettingRow.action(4,"Reset placement","Restore only this widget's scale, position and anchor.","Reset"));
         } else if(tab==1) {
             a.add(SettingRow.choice(8,"Text color","Auto uses this widget's default color.",label(appearance().color.name())));
@@ -101,7 +107,7 @@ public final class HudModuleSettingsScreen extends ModuleSettingsScreen {
         UiShapes.rounded(x,y,w,h,4,0xFF30343B);
         if(client.player==null) {
             SpaceUiFont.draw(client,"Live preview requires a world",x+12,y+10,MUTED);
-            drawLines(module.getDescription(),x+12,y+31,w-24,2,TEXT);return;
+            drawLines(moduleDetail(),x+12,y+31,w-24,2,TEXT);return;
         }
         String text=HudRenderer.text(client,module);
         int availableW=w-24,availableH=h-25;
