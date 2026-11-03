@@ -90,7 +90,7 @@ public final class MenuBackdrop extends DrawableHelper {
     public static Identifier listTexture(MinecraftClient client) {
         if (listImage == null) {
             BufferedImage pixel = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-            pixel.setRGB(0, 0, 0xFF65758F);
+            pixel.setRGB(0, 0, 0xA065758F);
             listImage = client.getTextureManager().registerDynamicTexture("space-menu-list", new NativeImageBackedTexture(pixel));
         }
         return listImage;

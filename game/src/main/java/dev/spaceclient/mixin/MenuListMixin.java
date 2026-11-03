@@ -17,6 +17,12 @@ public abstract class MenuListMixin {
         target = "Lnet/minecraft/client/texture/TextureManager;bindTexture(Lnet/minecraft/util/Identifier;)V"))
     private void spaceclient$list(TextureManager textures, Identifier original) {
         MinecraftClient client = MinecraftClient.getInstance();
-        textures.bindTexture(MenuTheme.applies(client.currentScreen) ? MenuBackdrop.listTexture(client) : original);
+        if (MenuTheme.applies(client.currentScreen)) {
+            // Native lists paint both the scrolling body and the header/footer masks.
+            // Blend the quiet texture so the shared scene survives those native passes.
+            com.mojang.blaze3d.platform.GlStateManager.enableBlend();
+            com.mojang.blaze3d.platform.GlStateManager.blendFuncSeparate(770, 771, 1, 0);
+            textures.bindTexture(MenuBackdrop.listTexture(client));
+        } else textures.bindTexture(original);
     }
 }
