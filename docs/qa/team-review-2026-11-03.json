@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-03",
+  "codeSnapshot": "710a87782f46d49fbac6a6ea04e0ec4e5dc32ec3",
+  "base": "0231800a960c6195bd528c040053607dbd2bd6ac",
+  "branch": "space-minecraft-menus",
+  "localSliceAccepted": true,
+  "publicReleaseAccepted": false,
+  "integrated": {
+    "launcher": {
+      "source": "6bdbf5e79b3bf8ddf4d6888d15818e09e1e8eb2c",
+      "merge": "91027b7"
+    },
+    "website": {
+      "source": "1df6ae46c646c885d35edcc234cdee311e3b433b",
+      "merge": "92dfde0"
+    },
+    "menu": {
+      "source": "35b7a0977fe5a1d8bf42c54c028b0a682195fb95",
+      "merge": "b207e23"
+    }
+  },
+  "coordinatorChanges": {
+    "reproducedStatusRetryFix": "d735c72",
+    "sharedIdentityType": "d735c72",
+    "catalogModelCounts": "22aee4e",
+    "requiredBuildIdentityClass": "710a877",
+    "checkoutLineEndings": "f260d5a"
+  },
+  "unitTests": {
+    "general": 40,
+    "api": 26,
+    "launcher": 138,
+    "java": 278,
+    "total": 482,
+    "finalFailures": 0
+  },
+  "checks": {
+    "typesAndTokens": true,
+    "apiBuild": true,
+    "websiteBuild": true,
+    "gameBuild": true,
+    "strictLauncherBuild": true,
+    "rawFormat": true
+  },
+  "bundle": {
+    "schemaVersion": 1,
+    "channel": "development",
+    "modVersion": "0.1.0",
+    "minecraftVersion": "1.8.9",
+    "loaderVersion": "0.18.3",
+    "gameSourceTree": "92a2bd0a8b78f1ea6dbdacc55b3370e78dfbfb64",
+    "size": 1082359,
+    "sha256": "0f439a1731ec586c5d62c763020502a05b53bef2c0fac42f354ea34fb19319af"
+  },
+  "productionMixins": 36,
+  "native": {
+    "ok": true,
+    "captures": 32,
+    "tabSteps": 845,
+    "build": "dev-92a2bd0a8b78",
+    "exitCode": 0,
+    "errorFatalLines": 0,
+    "report": ".reports/team-review/native-main.log",
+    "runtime": ".reports/menu-help-runtime",
+    "ownProfileOnly": true,
+    "physicalInput": false,
+    "reviewedMainFrames": [
+      "ru_RU-compact-title",
+      "ru_RU-compact-disabled",
+      "readonly"
+    ],
+    "agent32FramesReviewedInFourContactSheets": true
+  },
+  "launcherUi": {
+    "checks": 10,
+    "captures": 14,
+    "report": ".reports/launcher-ui/run-35407459-e210-47d1-a05c-a91d702e5d61/report.json",
+    "rendererGlobalsIsolated": true,
+    "ipcFunctions": 13
+  },
+  "identityUi": {
+    "checks": 5,
+    "captures": 15,
+    "report": ".reports/launcher-identity-ui/run-0efe540c-8be0-4605-8611-eb07f67525e3/report.json",
+    "syntheticStates": true,
+    "realUserPreflight": false,
+    "retryWhileRunningRegression": true
+  },
+  "website": {
+    "httpStates": 8,
+    "layouts": 42,
+    "flows": 31,
+    "report": ".reports/website-browser/run-5ab5d987-0963-4761-9332-d588fa601e4c/report.json"
+  },
+  "packagingComparison": {
+    "agentJarSha256": "603d038573f6aa5903a44e315bf5aded90f17a3fe6faf05ab50b6748a4bb535a",
+    "allClassBytesIdentical": true,
+    "onlyLineEndingDifferences": [
+      "assets/spaceclient/lang/en_US.lang",
+      "assets/spaceclient/lang/ru_RU.lang",
+      "spaceclient.mixins.json"
+    ],
+    "mainJarTestedNatively": true
+  },
+  "observedTestFailure": {
+    "firstFinalNpmTestFailed": true,
+    "worker": "apps/api/test/api.test.cjs",
+    "causeEstablished": false,
+    "isolatedDiagnosticPass": 2,
+    "fullApiDiagnosticPass": 26,
+    "fullStandardRepeatPass": 204,
+    "logs": [
+      ".reports/team-review/final-workspace-tests.log",
+      ".reports/team-review/api-diagnostic.log",
+      ".reports/team-review/api-parallel-diagnostic.log",
+      ".reports/team-review/final-workspace-tests-repeat.log"
+    ]
+  },
+  "codebaseMemory": {
+    "project": "spaceclient-mods-menus",
+    "nodes": 9336,
+    "edges": 24860,
+    "skipped": 0,
+    "indexedAtUtc": "2026-11-03T05:33:45Z",
+    "caveats": [
+      "metadata_changed",
+      "partial CSS/Gradle/wrapper",
+      "scripts/tests/docs exclusions; read directly"
+    ]
+  },
+  "userRuntime": {
+    "changed": false,
+    "sha256": "6396bb788dd40891688f2a528aef762df6a273ab4d9d7a67c868998d5c6cf03f",
+    "autoRestarted": false
+  },
+  "scope": {
+    "pushed": false,
+    "published": false,
+    "accountWork": false,
+    "installerWork": false,
+    "physicalAcceptanceDeferredByUser": true,
+    "individualSettingTranslationComplete": false
+  }
+}
