@@ -59,7 +59,12 @@ writeFileSync(join(existing, 'user-file.txt'), 'preserve');
 assert.notEqual(extract(join(build, 'payload.zip'), existing).status, 0);
 assert.equal(readFileSync(join(existing, 'user-file.txt'), 'utf8'), 'preserve');
 const unicode = join(testRoot, 'Профиль Windows с пробелами', 'Space Client');
-assert.equal(extract(join(build, 'payload.zip'), unicode).status, 0);
+const unicodeResult = extract(join(build, 'payload.zip'), unicode);
+assert.equal(
+  unicodeResult.status,
+  0,
+  'Unicode/profile-path extraction failed: ' + unicodeResult.stderr,
+);
 assert.deepEqual(files(unicode), expected);
 for (const name of expected)
   assert.equal(await hash(join(unicode, name)), await hash(join(original, name)), name);
@@ -80,7 +85,7 @@ assert.notEqual(
 );
 assert.equal(existsSync(join(testRoot, 'corrupt-target')), false);
 assert.equal(
-  readdirSync(testRoot).some((name) => name.startsWith('.space-extract-')),
+  readdirSync(testRoot).some((name) => name.startsWith('.sc-')),
   false,
 );
 const makeZip = `Add-Type -AssemblyName System.IO.Compression.FileSystem; $f=[IO.File]::Open($env:SPACE_ZIP,[IO.FileMode]::CreateNew); $z=[IO.Compression.ZipArchive]::new($f,[IO.Compression.ZipArchiveMode]::Create); foreach($n in ($env:SPACE_ENTRY -split '\\|')) { $e=$z.CreateEntry($n); $w=[IO.StreamWriter]::new($e.Open()); $w.Write('test'); $w.Dispose() }; $z.Dispose(); $f.Dispose()`;

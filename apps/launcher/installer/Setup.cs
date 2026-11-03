@@ -40,7 +40,9 @@ internal static class SafeArchive {
             }
             if (cancelled()) throw new OperationCanceledException();
             Directory.CreateDirectory(parent);
-            string staging = Path.Combine(parent, ".space-extract-" + Guid.NewGuid().ToString("N"));
+            // A valid destination must not fail because our temporary prefix is longer.
+            string staging = Path.Combine(parent, ".sc-" + Guid.NewGuid().ToString("N").Substring(0,12));
+            if (Directory.Exists(staging) || File.Exists(staging)) throw new IOException("Staging collision.");
             string stageRoot = Path.GetFullPath(staging) + Path.DirectorySeparatorChar;
             try {
             Directory.CreateDirectory(staging);
@@ -62,7 +64,7 @@ internal static class SafeArchive {
             Directory.Move(staging,destination);
             } finally {
                 // Only our generated sibling staging directory, never destination or user data.
-                if (Directory.Exists(staging) && Path.GetDirectoryName(Path.GetFullPath(staging)) == parent && Path.GetFileName(staging).StartsWith(".space-extract-",StringComparison.Ordinal)) Directory.Delete(staging,true);
+                if (Directory.Exists(staging) && Path.GetDirectoryName(Path.GetFullPath(staging)) == parent && Path.GetFileName(staging).StartsWith(".sc-",StringComparison.Ordinal)) Directory.Delete(staging,true);
             }
         }
     }
