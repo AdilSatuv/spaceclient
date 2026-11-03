@@ -1,0 +1,232 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-03",
+  "branch": "space-minecraft-menus",
+  "localSliceAccepted": true,
+  "publicReleaseAccepted": false,
+  "game": {
+    "schemaVersion": 1,
+    "channel": "development",
+    "modVersion": "0.1.0",
+    "minecraftVersion": "1.8.9",
+    "loaderVersion": "0.18.3",
+    "gameSourceTree": "22056fa560909dc8cfd05fe7adec7886b0404177",
+    "size": 1144767,
+    "sha256": "d7119edc32c1e87af9966280a8e540cb05f07d804d9458d2b6e964ffad4fdc30",
+    "label": "dev-22056fa56090",
+    "exactMixins": 43
+  },
+  "tests": {
+    "general": 45,
+    "api": 30,
+    "launcher": 155,
+    "java": 300,
+    "total": 530,
+    "failures": 0
+  },
+  "checks": {
+    "workspaceTypes": "pass",
+    "websiteTokens": "pass",
+    "apiBuild": "pass",
+    "nextBuild": "pass",
+    "gameBuild": "pass",
+    "strictLauncherBuild": "pass",
+    "format": "pass",
+    "website": {
+      "http": 8,
+      "layouts": 42,
+      "flows": 31,
+      "accountsWidths": [
+        1440,
+        390
+      ],
+      "pixelPreview": true
+    },
+    "launcher": {
+      "generalGroups": 10,
+      "identityGroups": 5,
+      "accountRecoveryGroups": 5,
+      "windowsEncryptedSession": true,
+      "realLoopbackApi": true,
+      "gameSpawnSimulated": true,
+      "accountWidths": [
+        1000,
+        600,
+        500
+      ]
+    },
+    "crossClient": {
+      "groups": 4,
+      "websiteToLauncherToGameParser": true,
+      "actualMinecraftSpawn": false,
+      "inMemoryVault": true
+    },
+    "nativeCosmetics": {
+      "jar": "d7119edc32c1e87af9966280a8e540cb05f07d804d9458d2b6e964ffad4fdc30",
+      "models": [
+        "classic",
+        "slim"
+      ],
+      "capturesEach": 18,
+      "keysEach": 40,
+      "exitCode": 0,
+      "glErrors": 0,
+      "compactInventory300": true
+    },
+    "inputNetwork": {
+      "ok": true,
+      "keyboardHandlerInvocations": 224,
+      "gameplayShortcuts": 29,
+      "hudNetworkSamples": 26,
+      "freelookHoldSamples": 6,
+      "nativeDeathChimes": 1,
+      "hostAMacros": 2,
+      "hostBMacros": 1,
+      "reconnect": true,
+      "serverChange": true,
+      "osInputInjected": false,
+      "physicalInputTested": false,
+      "closedPlayPacketsDiscarded": 64,
+      "unexpectedErrorFatal": 0
+    },
+    "agentUi": {
+      "captures": 42,
+      "handlerSteps": 267,
+      "expectedConnectionRefused": 1,
+      "unexpectedErrorFatal": 0,
+      "jarIsMain": false,
+      "byteIdenticalMainClasses": 222,
+      "totalClasses": 224,
+      "mainChangedCosmeticsSeparatelyNativeVerified": true
+    },
+    "setup": {
+      "native": true,
+      "filesHashMatched": 98,
+      "existingTargetPreserved": true,
+      "unicodeMaxPath": 242,
+      "longMaxPath": 396,
+      "cancelledStagesCleaned": 3,
+      "corruptedPayloadRejectedBeforeWrite": true,
+      "hostileZipRejectedBeforeWrite": true,
+      "cleanVm": false
+    }
+  },
+  "performance": {
+    "report": "docs/qa/native-hud-observations-2026-11-03.json",
+    "run": ".reports/native-perf-qa/run-89f63943-a4b7-4706-8066-b4cfc86940bf",
+    "summary": [
+      {
+        "mode": "baseline",
+        "repetitions": 3,
+        "medianFps": 763.0336317529706,
+        "medianP99IntervalMs": 2.2005,
+        "medianRssMiB": 829.88671875,
+        "medianTitleMs": 5299.337500000001
+      },
+      {
+        "mode": "off",
+        "repetitions": 3,
+        "medianFps": 755.5228151226673,
+        "medianP99IntervalMs": 2.2119,
+        "medianRssMiB": 838.73046875,
+        "medianTitleMs": 5475.976999999999
+      },
+      {
+        "mode": "typical",
+        "repetitions": 3,
+        "medianFps": 667.8838661270782,
+        "medianP99IntervalMs": 2.4265,
+        "medianRssMiB": 971.203125,
+        "medianTitleMs": 5595.641900000002
+      },
+      {
+        "mode": "heavy",
+        "repetitions": 3,
+        "medianFps": 437.21057189158904,
+        "medianP99IntervalMs": 3.3952,
+        "medianRssMiB": 967.0390625,
+        "medianTitleMs": 5475.1518
+      }
+    ],
+    "review": {
+      "acceptedAs": "short exploratory hidden render-loop observations",
+      "publicBenchmarkQualified": false,
+      "all12ActualPositionsMatched": true,
+      "all9SpaceTrialJarDigestsMatched": true,
+      "all3BaselineModsDirectoriesEmpty": true,
+      "exactHudIdsStable": true,
+      "allLogsNoErrorFatal": true,
+      "agentHeavyJobsFinishedBeforeSeries": true,
+      "control": "Fabric and identical helper, not pure vanilla",
+      "limits": [
+        "3s warmup/6s sample cannot establish JIT/GC steady state",
+        "glFinish serializes CPU/GPU; no ETW/presented FPS",
+        "post-statistics/post-JSON RAM snapshots; no attribution of RAM differences to HUD",
+        "fresh flat world and empty inventory; gameplay effects/cosmetics absent; pre-generated animals not removed",
+        "spawn-to-stdout Title marker endpoint with warm OS caches, not cold boot or visible frame",
+        "per-trial median is lower middle order statistic for even count; p95/p99 nearest rank"
+      ],
+      "discardedSeries": {
+        "run": "run-919462a0-829d-4946-9d41-62d7f5347485",
+        "reason": "actual server spawn positions differed"
+      },
+      "acceptedSmokeExcluded": "run-43f40968-2467-4ca2-83b5-1b43a8786dec"
+    },
+    "helperSha256": "da1a0c4fd681b687241346db6a0f5a75620a5fa24920de61c44c43237871353b"
+  },
+  "evidence": {
+    "workspaceTests": ".reports/team-review/wave2-workspace-tests.log",
+    "javaBuild": ".reports/team-review/wave2-frozen-game-build.log",
+    "fullBuild": ".reports/team-review/wave2-frozen-workspace-build.log",
+    "format": ".reports/team-review/wave2-final-format.log",
+    "launcherAccount": ".reports/account-recovery-ui/run-586ea3ab-925b-4d52-8d31-6d8449a3b839",
+    "launcherIdentity": ".reports/launcher-identity-ui/run-cb9cd2a5-22cf-4c5d-8cf6-acedd4c1c8c8",
+    "launcherGeneral": ".reports/launcher-ui/run-5e62a2ec-9122-4444-89d2-512ff9482ce2",
+    "websiteBrowser": ".reports/website-browser/run-6a09167d-e44b-4b91-80a6-d6744983a948",
+    "websiteAccounts": ".reports/website-accounts/run-1053de9c-66c5-4b03-9e69-49ec49479740",
+    "crossClient": ".reports/cross-client-account/run-bb2a4aec-1d1e-4c72-8261-3ba374e4a81f",
+    "setup": ".reports/launcher-setup/build-3RK4aP",
+    "classComparison": ".reports/team-review/wave2-game-class-comparison.json"
+  },
+  "preview": {
+    "website": "http://127.0.0.1:50566",
+    "account": "http://127.0.0.1:50566/account",
+    "api": "http://127.0.0.1:50565",
+    "stablePorts": true,
+    "publicDeployment": false,
+    "launcherReopened": true,
+    "userInstalledGameJarAutomaticallyUpdated": false,
+    "finalHttpChecks": {
+      "website": 200,
+      "account": 200,
+      "apiHealth": 200
+    }
+  },
+  "boundaries": {
+    "appearanceLocalToSpace": true,
+    "microsoftDeferred": true,
+    "physicalInputDeferredByUser": true,
+    "full55ModuleMultiplayerMatrix": false,
+    "cleanWindowsInstallerLifecycle": false,
+    "previousApiWorkerExit": {
+      "reproduced": false,
+      "causeKnown": false,
+      "testOnlyDiagnosticsAdded": true,
+      "retriesHidden": false
+    },
+    "codebaseMemory": {
+      "finalRefresh": "failed",
+      "exactPathCoverage": "failed",
+      "reason": "Transport closed",
+      "freshIndexClaimed": false
+    }
+  },
+  "localOnly": {
+    "pushed": false,
+    "mainChanged": false,
+    "deployed": false,
+    "userWorldsModified": false,
+    "osInputInjected": false
+  },
+  "codeSnapshot": "0ddadac19a37b723379883675c76d4c4abac397f"
+}

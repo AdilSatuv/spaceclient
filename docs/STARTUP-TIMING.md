@@ -1,5 +1,7 @@
 # Локальное наблюдение запуска — подготовительная часть SC-13
 
+3 ноября2026: новая [12-trial серия](qa/native-hud-observations-2026-11-03.json) фиксирует endpoint от Node JVM spawn до stdout-маркера первого TitleScreen render callback. Медианы Fabric5299ms, Space HUDoff5476ms/default5596ms/heavy5475ms. Warm OS caches, hidden Canvas и pipe latency: это верхняя граница такого endpoint, не cold boot, первый видимый кадр или готовый мир. Полные условия/отклонённый run/границы — [вторая волна](WAVE2-REVIEW-2026-11-03.md#производительность). Старый preflight/spawn срез ниже сохраняется отдельно.
+
 24 октября 2026: выполнены диагностический и три повторных запуска **Space** в новом QA-инстансе, каждый с новым Java-процессом. Главное меню и переход Singleplayer → Select World визуально подтверждены; четыре штатных выхода с кодом 0. Собраны точные границы preflight/spawn и **верхние границы** времени до видимого меню. Это не измерение первого готового кадра мира и не полный сравнительный startup benchmark SC-13.
 
 [Машиночитаемый отчёт, исходные hashes и наблюдения](qa/startup-2026-10-24.json). Старые девять FPS captures не изменены: их `startupMs=null` и `allStartupMeasurementsPresent=false` сохраняются.

@@ -1,0 +1,758 @@
+{
+  "ok": true,
+  "smoke": false,
+  "gameSourceTree": "22056fa560909dc8cfd05fe7adec7886b0404177",
+  "jarSha256": "d7119edc32c1e87af9966280a8e540cb05f07d804d9458d2b6e964ffad4fdc30",
+  "conditions": {
+    "baseline": "Minecraft + pinned Fabric + identical QA helper, without Space; not pure vanilla",
+    "warmupSeconds": 3,
+    "sampleSeconds": 6,
+    "resolution": "1280x720",
+    "renderDistance": 4,
+    "seed": 54321,
+    "level": "flat/creative/peaceful",
+    "view": "first person, fixed requested position/yaw, empty inventory",
+    "position": [
+      0.5,
+      4,
+      0.5,
+      0,
+      0
+    ],
+    "timeOfDay": 1000,
+    "mobSpawning": false,
+    "vsync": false,
+    "maxFramerateReturn": 260,
+    "glFinish": true,
+    "gameplayModules": "all disabled in every Space profile",
+    "wingsAndHalo": "default none",
+    "ram": "post-sample process working/private set, peak includes startup",
+    "startup": "new JVM spawn to first rendered title, warm OS caches, not cold boot",
+    "scope": "hidden Canvas observations, not ETW/presented frame qualification"
+  },
+  "summary": [
+    {
+      "mode": "baseline",
+      "repetitions": 3,
+      "medianFps": 763.0336317529706,
+      "medianP99IntervalMs": 2.2005,
+      "medianRssMiB": 829.88671875,
+      "medianTitleMs": 5299.337500000001
+    },
+    {
+      "mode": "off",
+      "repetitions": 3,
+      "medianFps": 755.5228151226673,
+      "medianP99IntervalMs": 2.2119,
+      "medianRssMiB": 838.73046875,
+      "medianTitleMs": 5475.976999999999
+    },
+    {
+      "mode": "typical",
+      "repetitions": 3,
+      "medianFps": 667.8838661270782,
+      "medianP99IntervalMs": 2.4265,
+      "medianRssMiB": 971.203125,
+      "medianTitleMs": 5595.641900000002
+    },
+    {
+      "mode": "heavy",
+      "repetitions": 3,
+      "medianFps": 437.21057189158904,
+      "medianP99IntervalMs": 3.3952,
+      "medianRssMiB": 967.0390625,
+      "medianTitleMs": 5475.1518
+    }
+  ],
+  "samples": [
+    {
+      "ok": true,
+      "mode": "baseline",
+      "spaceLoaded": false,
+      "enabledHud": [],
+      "frames": 4535,
+      "seconds": 6.0010264,
+      "loopFps": 755.7040575592202,
+      "intervalMs": {
+        "mean": 1.3232693274531466,
+        "median": 1.26,
+        "p95": 1.8359,
+        "p99": 2.3574
+      },
+      "renderWithFinishMs": {
+        "mean": 0.7912881808158769,
+        "median": 0.712,
+        "p95": 1.2024,
+        "p99": 1.4597
+      },
+      "heapUsedBytes": 361387944,
+      "heapCommittedBytes": 543162368,
+      "heapMaxBytes": 1073741824,
+      "renderer": "NVIDIA GeForce RTX 3060/PCIe/SSE2",
+      "vendor": "NVIDIA Corporation",
+      "glVersion": "4.6.0 NVIDIA 610.88",
+      "width": 1280,
+      "height": 720,
+      "maxFramerateReturn": 260,
+      "displayActive": false,
+      "position": [
+        0.5,
+        4,
+        0.5,
+        0,
+        0
+      ],
+      "gameSourceTree": "none",
+      "repetition": 0,
+      "titleFromJvmSpawnMs": 5299.337500000001,
+      "processMemoryAfterSample": {
+        "workingSetBytes": 870199296,
+        "privateBytes": 1129164800,
+        "peakWorkingSetBytes": 874381312
+      },
+      "log": ".reports\\native-perf-qa\\run-89f63943-a4b7-4706-8066-b4cfc86940bf\\0-baseline\\native.log"
+    },
+    {
+      "ok": true,
+      "mode": "off",
+      "spaceLoaded": true,
+      "enabledHud": [],
+      "frames": 4534,
+      "seconds": 6.0011424,
+      "loopFps": 755.5228151226673,
+      "intervalMs": {
+        "mean": 1.3235867666519612,
+        "median": 1.2702,
+        "p95": 1.8637,
+        "p99": 2.2119
+      },
+      "renderWithFinishMs": {
+        "mean": 0.7882436921041017,
+        "median": 0.7173,
+        "p95": 1.2041,
+        "p99": 1.3945
+      },
+      "heapUsedBytes": 399385432,
+      "heapCommittedBytes": 580911104,
+      "heapMaxBytes": 1073741824,
+      "renderer": "NVIDIA GeForce RTX 3060/PCIe/SSE2",
+      "vendor": "NVIDIA Corporation",
+      "glVersion": "4.6.0 NVIDIA 610.88",
+      "width": 1280,
+      "height": 720,
+      "maxFramerateReturn": 260,
+      "displayActive": false,
+      "position": [
+        0.5,
+        4,
+        0.5,
+        0,
+        0
+      ],
+      "gameSourceTree": "22056fa560909dc8cfd05fe7adec7886b0404177",
+      "repetition": 0,
+      "titleFromJvmSpawnMs": 5575.299200000001,
+      "processMemoryAfterSample": {
+        "workingSetBytes": 905650176,
+        "privateBytes": 1183100928,
+        "peakWorkingSetBytes": 905732096
+      },
+      "log": ".reports\\native-perf-qa\\run-89f63943-a4b7-4706-8066-b4cfc86940bf\\0-off\\native.log"
+    },
+    {
+      "ok": true,
+      "mode": "typical",
+      "spaceLoaded": true,
+      "enabledHud": [
+        "FPS",
+        "COORDINATES",
+        "KEYSTROKES",
+        "CPS",
+        "SPRINT_STATUS"
+      ],
+      "frames": 4136,
+      "seconds": 6.0012403,
+      "loopFps": 689.1908660947971,
+      "intervalMs": {
+        "mean": 1.4509768617021261,
+        "median": 1.3977,
+        "p95": 2.0084,
+        "p99": 2.3466
+      },
+      "renderWithFinishMs": {
+        "mean": 0.8976490328820115,
+        "median": 0.8358,
+        "p95": 1.3306,
+        "p99": 1.5455
+      },
+      "heapUsedBytes": 153440136,
+      "heapCommittedBytes": 312475648,
+      "heapMaxBytes": 1073741824,
+      "renderer": "NVIDIA GeForce RTX 3060/PCIe/SSE2",
+      "vendor": "NVIDIA Corporation",
+      "glVersion": "4.6.0 NVIDIA 610.88",
+      "width": 1280,
+      "height": 720,
+      "maxFramerateReturn": 260,
+      "displayActive": false,
+      "position": [
+        0.5,
+        4,
+        0.5,
+        0,
+        0
+      ],
+      "gameSourceTree": "22056fa560909dc8cfd05fe7adec7886b0404177",
+      "repetition": 0,
+      "titleFromJvmSpawnMs": 5619.175599999995,
+      "processMemoryAfterSample": {
+        "workingSetBytes": 742420480,
+        "privateBytes": 892301312,
+        "peakWorkingSetBytes": 779194368
+      },
+      "log": ".reports\\native-perf-qa\\run-89f63943-a4b7-4706-8066-b4cfc86940bf\\0-typical\\native.log"
+    },
+    {
+      "ok": true,
+      "mode": "heavy",
+      "spaceLoaded": true,
+      "enabledHud": [
+        "FPS",
+        "COORDINATES",
+        "KEYSTROKES",
+        "CPS",
+        "COMPASS",
+        "CLOCK",
+        "SPEED",
+        "HEALTH",
+        "HUNGER",
+        "ARMOR",
+        "POTION_EFFECTS",
+        "MEMORY",
+        "PLAYTIME",
+        "ITEM_COUNTER",
+        "SPRINT_STATUS",
+        "PING",
+        "BIOME",
+        "PACK_DISPLAY",
+        "DAY_COUNTER",
+        "LIGHT_LEVEL",
+        "EXPERIENCE",
+        "ARROW_COUNTER",
+        "INVENTORY",
+        "COMBO_COUNTER",
+        "REACH_DISPLAY",
+        "SATURATION"
+      ],
+      "frames": 2608,
+      "seconds": 6.0018173,
+      "loopFps": 434.53505324129077,
+      "intervalMs": {
+        "mean": 2.301310314417176,
+        "median": 2.2715,
+        "p95": 2.9966,
+        "p99": 3.5238
+      },
+      "renderWithFinishMs": {
+        "mean": 1.6499776073619596,
+        "median": 1.5848,
+        "p95": 2.2392,
+        "p99": 2.6309
+      },
+      "heapUsedBytes": 548460528,
+      "heapCommittedBytes": 579862528,
+      "heapMaxBytes": 1073741824,
+      "renderer": "NVIDIA GeForce RTX 3060/PCIe/SSE2",
+      "vendor": "NVIDIA Corporation",
+      "glVersion": "4.6.0 NVIDIA 610.88",
+      "width": 1280,
+      "height": 720,
+      "maxFramerateReturn": 260,
+      "displayActive": false,
+      "position": [
+        0.5,
+        4,
+        0.5,
+        0,
+        0
+      ],
+      "gameSourceTree": "22056fa560909dc8cfd05fe7adec7886b0404177",
+      "repetition": 0,
+      "titleFromJvmSpawnMs": 5475.1518,
+      "processMemoryAfterSample": {
+        "workingSetBytes": 1014013952,
+        "privateBytes": 1176436736,
+        "peakWorkingSetBytes": 1032409088
+      },
+      "log": ".reports\\native-perf-qa\\run-89f63943-a4b7-4706-8066-b4cfc86940bf\\0-heavy\\native.log"
+    },
+    {
+      "ok": true,
+      "mode": "heavy",
+      "spaceLoaded": true,
+      "enabledHud": [
+        "FPS",
+        "COORDINATES",
+        "KEYSTROKES",
+        "CPS",
+        "COMPASS",
+        "CLOCK",
+        "SPEED",
+        "HEALTH",
+        "HUNGER",
+        "ARMOR",
+        "POTION_EFFECTS",
+        "MEMORY",
+        "PLAYTIME",
+        "ITEM_COUNTER",
+        "SPRINT_STATUS",
+        "PING",
+        "BIOME",
+        "PACK_DISPLAY",
+        "DAY_COUNTER",
+        "LIGHT_LEVEL",
+        "EXPERIENCE",
+        "ARROW_COUNTER",
+        "INVENTORY",
+        "COMBO_COUNTER",
+        "REACH_DISPLAY",
+        "SATURATION"
+      ],
+      "frames": 2656,
+      "seconds": 6.0002864,
+      "loopFps": 442.6455377196662,
+      "intervalMs": {
+        "mean": 2.2591439759036143,
+        "median": 2.2398,
+        "p95": 2.9035,
+        "p99": 3.3889
+      },
+      "renderWithFinishMs": {
+        "mean": 1.6158099021084327,
+        "median": 1.5508,
+        "p95": 2.1731,
+        "p99": 2.5098
+      },
+      "heapUsedBytes": 562079144,
+      "heapCommittedBytes": 586153984,
+      "heapMaxBytes": 1073741824,
+      "renderer": "NVIDIA GeForce RTX 3060/PCIe/SSE2",
+      "vendor": "NVIDIA Corporation",
+      "glVersion": "4.6.0 NVIDIA 610.88",
+      "width": 1280,
+      "height": 720,
+      "maxFramerateReturn": 260,
+      "displayActive": false,
+      "position": [
+        0.5,
+        4,
+        0.5,
+        0,
+        0
+      ],
+      "gameSourceTree": "22056fa560909dc8cfd05fe7adec7886b0404177",
+      "repetition": 1,
+      "titleFromJvmSpawnMs": 5478.914600000004,
+      "processMemoryAfterSample": {
+        "workingSetBytes": 1003843584,
+        "privateBytes": 1157292032,
+        "peakWorkingSetBytes": 1031708672
+      },
+      "log": ".reports\\native-perf-qa\\run-89f63943-a4b7-4706-8066-b4cfc86940bf\\1-heavy\\native.log"
+    },
+    {
+      "ok": true,
+      "mode": "typical",
+      "spaceLoaded": true,
+      "enabledHud": [
+        "FPS",
+        "COORDINATES",
+        "KEYSTROKES",
+        "CPS",
+        "SPRINT_STATUS"
+      ],
+      "frames": 4008,
+      "seconds": 6.0010433,
+      "loopFps": 667.8838661270782,
+      "intervalMs": {
+        "mean": 1.4972662924151676,
+        "median": 1.4575,
+        "p95": 2.0555,
+        "p99": 2.4265
+      },
+      "renderWithFinishMs": {
+        "mean": 0.9347498752495039,
+        "median": 0.8753,
+        "p95": 1.3868,
+        "p99": 1.5713
+      },
+      "heapUsedBytes": 158452248,
+      "heapCommittedBytes": 610271232,
+      "heapMaxBytes": 1073741824,
+      "renderer": "NVIDIA GeForce RTX 3060/PCIe/SSE2",
+      "vendor": "NVIDIA Corporation",
+      "glVersion": "4.6.0 NVIDIA 610.88",
+      "width": 1280,
+      "height": 720,
+      "maxFramerateReturn": 260,
+      "displayActive": false,
+      "position": [
+        0.5,
+        4,
+        0.5,
+        0,
+        0
+      ],
+      "gameSourceTree": "22056fa560909dc8cfd05fe7adec7886b0404177",
+      "repetition": 1,
+      "titleFromJvmSpawnMs": 5595.641900000002,
+      "processMemoryAfterSample": {
+        "workingSetBytes": 1045573632,
+        "privateBytes": 1201643520,
+        "peakWorkingSetBytes": 1052516352
+      },
+      "log": ".reports\\native-perf-qa\\run-89f63943-a4b7-4706-8066-b4cfc86940bf\\1-typical\\native.log"
+    },
+    {
+      "ok": true,
+      "mode": "off",
+      "spaceLoaded": true,
+      "enabledHud": [],
+      "frames": 4436,
+      "seconds": 6.0007834,
+      "loopFps": 739.2368136466982,
+      "intervalMs": {
+        "mean": 1.3527464833183118,
+        "median": 1.2853,
+        "p95": 1.9441,
+        "p99": 2.439
+      },
+      "renderWithFinishMs": {
+        "mean": 0.8052088142470716,
+        "median": 0.7294,
+        "p95": 1.246,
+        "p99": 1.4907
+      },
+      "heapUsedBytes": 274983600,
+      "heapCommittedBytes": 527433728,
+      "heapMaxBytes": 1073741824,
+      "renderer": "NVIDIA GeForce RTX 3060/PCIe/SSE2",
+      "vendor": "NVIDIA Corporation",
+      "glVersion": "4.6.0 NVIDIA 610.88",
+      "width": 1280,
+      "height": 720,
+      "maxFramerateReturn": 260,
+      "displayActive": false,
+      "position": [
+        0.5,
+        4,
+        0.5,
+        0,
+        0
+      ],
+      "gameSourceTree": "22056fa560909dc8cfd05fe7adec7886b0404177",
+      "repetition": 1,
+      "titleFromJvmSpawnMs": 5475.976999999999,
+      "processMemoryAfterSample": {
+        "workingSetBytes": 879472640,
+        "privateBytes": 1096843264,
+        "peakWorkingSetBytes": 884318208
+      },
+      "log": ".reports\\native-perf-qa\\run-89f63943-a4b7-4706-8066-b4cfc86940bf\\1-off\\native.log"
+    },
+    {
+      "ok": true,
+      "mode": "baseline",
+      "spaceLoaded": false,
+      "enabledHud": [],
+      "frames": 4579,
+      "seconds": 6.0010461,
+      "loopFps": 763.0336317529706,
+      "intervalMs": {
+        "mean": 1.3105582223192869,
+        "median": 1.2579,
+        "p95": 1.8278,
+        "p99": 2.2005
+      },
+      "renderWithFinishMs": {
+        "mean": 0.7774597291985151,
+        "median": 0.7037,
+        "p95": 1.18,
+        "p99": 1.3989
+      },
+      "heapUsedBytes": 351962832,
+      "heapCommittedBytes": 591396864,
+      "heapMaxBytes": 1073741824,
+      "renderer": "NVIDIA GeForce RTX 3060/PCIe/SSE2",
+      "vendor": "NVIDIA Corporation",
+      "glVersion": "4.6.0 NVIDIA 610.88",
+      "width": 1280,
+      "height": 720,
+      "maxFramerateReturn": 260,
+      "displayActive": false,
+      "position": [
+        0.5,
+        4,
+        0.5,
+        0,
+        0
+      ],
+      "gameSourceTree": "none",
+      "repetition": 1,
+      "titleFromJvmSpawnMs": 5221.2111,
+      "processMemoryAfterSample": {
+        "workingSetBytes": 873291776,
+        "privateBytes": 1165275136,
+        "peakWorkingSetBytes": 883875840
+      },
+      "log": ".reports\\native-perf-qa\\run-89f63943-a4b7-4706-8066-b4cfc86940bf\\1-baseline\\native.log"
+    },
+    {
+      "ok": true,
+      "mode": "typical",
+      "spaceLoaded": true,
+      "enabledHud": [
+        "FPS",
+        "COORDINATES",
+        "KEYSTROKES",
+        "CPS",
+        "SPRINT_STATUS"
+      ],
+      "frames": 3943,
+      "seconds": 6.0009647,
+      "loopFps": 657.0610222053131,
+      "intervalMs": {
+        "mean": 1.5219286583819442,
+        "median": 1.4704,
+        "p95": 2.1532,
+        "p99": 2.6492
+      },
+      "renderWithFinishMs": {
+        "mean": 0.949025995434947,
+        "median": 0.8831,
+        "p95": 1.4313,
+        "p99": 1.7235
+      },
+      "heapUsedBytes": 171976120,
+      "heapCommittedBytes": 591396864,
+      "heapMaxBytes": 1073741824,
+      "renderer": "NVIDIA GeForce RTX 3060/PCIe/SSE2",
+      "vendor": "NVIDIA Corporation",
+      "glVersion": "4.6.0 NVIDIA 610.88",
+      "width": 1280,
+      "height": 720,
+      "maxFramerateReturn": 260,
+      "displayActive": false,
+      "position": [
+        0.5,
+        4,
+        0.5,
+        0,
+        0
+      ],
+      "gameSourceTree": "22056fa560909dc8cfd05fe7adec7886b0404177",
+      "repetition": 2,
+      "titleFromJvmSpawnMs": 5501.6716000000015,
+      "processMemoryAfterSample": {
+        "workingSetBytes": 1018380288,
+        "privateBytes": 1175371776,
+        "peakWorkingSetBytes": 1030774784
+      },
+      "log": ".reports\\native-perf-qa\\run-89f63943-a4b7-4706-8066-b4cfc86940bf\\2-typical\\native.log"
+    },
+    {
+      "ok": true,
+      "mode": "baseline",
+      "spaceLoaded": false,
+      "enabledHud": [],
+      "frames": 4621,
+      "seconds": 6.0003743,
+      "loopFps": 770.1186240998333,
+      "intervalMs": {
+        "mean": 1.2985012551395798,
+        "median": 1.2432,
+        "p95": 1.8084,
+        "p99": 2.132
+      },
+      "renderWithFinishMs": {
+        "mean": 0.7712932698550108,
+        "median": 0.6918,
+        "p95": 1.1762,
+        "p99": 1.3589
+      },
+      "heapUsedBytes": 373054696,
+      "heapCommittedBytes": 591396864,
+      "heapMaxBytes": 1073741824,
+      "renderer": "NVIDIA GeForce RTX 3060/PCIe/SSE2",
+      "vendor": "NVIDIA Corporation",
+      "glVersion": "4.6.0 NVIDIA 610.88",
+      "width": 1280,
+      "height": 720,
+      "maxFramerateReturn": 260,
+      "displayActive": false,
+      "position": [
+        0.5,
+        4,
+        0.5,
+        0,
+        0
+      ],
+      "gameSourceTree": "none",
+      "repetition": 2,
+      "titleFromJvmSpawnMs": 5396.840599999996,
+      "processMemoryAfterSample": {
+        "workingSetBytes": 870060032,
+        "privateBytes": 1161842688,
+        "peakWorkingSetBytes": 882774016
+      },
+      "log": ".reports\\native-perf-qa\\run-89f63943-a4b7-4706-8066-b4cfc86940bf\\2-baseline\\native.log"
+    },
+    {
+      "ok": true,
+      "mode": "heavy",
+      "spaceLoaded": true,
+      "enabledHud": [
+        "FPS",
+        "COORDINATES",
+        "KEYSTROKES",
+        "CPS",
+        "COMPASS",
+        "CLOCK",
+        "SPEED",
+        "HEALTH",
+        "HUNGER",
+        "ARMOR",
+        "POTION_EFFECTS",
+        "MEMORY",
+        "PLAYTIME",
+        "ITEM_COUNTER",
+        "SPRINT_STATUS",
+        "PING",
+        "BIOME",
+        "PACK_DISPLAY",
+        "DAY_COUNTER",
+        "LIGHT_LEVEL",
+        "EXPERIENCE",
+        "ARROW_COUNTER",
+        "INVENTORY",
+        "COMBO_COUNTER",
+        "REACH_DISPLAY",
+        "SATURATION"
+      ],
+      "frames": 2624,
+      "seconds": 6.0016847,
+      "loopFps": 437.21057189158904,
+      "intervalMs": {
+        "mean": 2.2872274009146287,
+        "median": 2.2729,
+        "p95": 2.9814,
+        "p99": 3.3952
+      },
+      "renderWithFinishMs": {
+        "mean": 1.6304862423780462,
+        "median": 1.5595,
+        "p95": 2.2163,
+        "p99": 2.5516
+      },
+      "heapUsedBytes": 543112088,
+      "heapCommittedBytes": 610271232,
+      "heapMaxBytes": 1073741824,
+      "renderer": "NVIDIA GeForce RTX 3060/PCIe/SSE2",
+      "vendor": "NVIDIA Corporation",
+      "glVersion": "4.6.0 NVIDIA 610.88",
+      "width": 1280,
+      "height": 720,
+      "maxFramerateReturn": 260,
+      "displayActive": false,
+      "position": [
+        0.5,
+        4,
+        0.5,
+        0,
+        0
+      ],
+      "gameSourceTree": "22056fa560909dc8cfd05fe7adec7886b0404177",
+      "repetition": 2,
+      "titleFromJvmSpawnMs": 5452.34599999999,
+      "processMemoryAfterSample": {
+        "workingSetBytes": 1023504384,
+        "privateBytes": 1180889088,
+        "peakWorkingSetBytes": 1051504640
+      },
+      "log": ".reports\\native-perf-qa\\run-89f63943-a4b7-4706-8066-b4cfc86940bf\\2-heavy\\native.log"
+    },
+    {
+      "ok": true,
+      "mode": "off",
+      "spaceLoaded": true,
+      "enabledHud": [],
+      "frames": 4597,
+      "seconds": 6.0007991,
+      "loopFps": 766.0646396244127,
+      "intervalMs": {
+        "mean": 1.3053728736132266,
+        "median": 1.2546,
+        "p95": 1.8036,
+        "p99": 2.1276
+      },
+      "renderWithFinishMs": {
+        "mean": 0.7794229279965225,
+        "median": 0.7075,
+        "p95": 1.1785,
+        "p99": 1.3532
+      },
+      "heapUsedBytes": 267031040,
+      "heapCommittedBytes": 512753664,
+      "heapMaxBytes": 1073741824,
+      "renderer": "NVIDIA GeForce RTX 3060/PCIe/SSE2",
+      "vendor": "NVIDIA Corporation",
+      "glVersion": "4.6.0 NVIDIA 610.88",
+      "width": 1280,
+      "height": 720,
+      "maxFramerateReturn": 260,
+      "displayActive": false,
+      "position": [
+        0.5,
+        4,
+        0.5,
+        0,
+        0
+      ],
+      "gameSourceTree": "22056fa560909dc8cfd05fe7adec7886b0404177",
+      "repetition": 2,
+      "titleFromJvmSpawnMs": 5442.313099999999,
+      "processMemoryAfterSample": {
+        "workingSetBytes": 872632320,
+        "privateBytes": 1090977792,
+        "peakWorkingSetBytes": 882089984
+      },
+      "log": ".reports\\native-perf-qa\\run-89f63943-a4b7-4706-8066-b4cfc86940bf\\2-off\\native.log"
+    }
+  ],
+  "qaHelperSha256": "da1a0c4fd681b687241346db6a0f5a75620a5fa24920de61c44c43237871353b",
+  "review": {
+    "acceptedAs": "short exploratory hidden render-loop observations",
+    "publicBenchmarkQualified": false,
+    "all12ActualPositionsMatched": true,
+    "all9SpaceTrialJarDigestsMatched": true,
+    "all3BaselineModsDirectoriesEmpty": true,
+    "exactHudIdsStable": true,
+    "allLogsNoErrorFatal": true,
+    "agentHeavyJobsFinishedBeforeSeries": true,
+    "control": "Fabric and identical helper, not pure vanilla",
+    "limits": [
+      "3s warmup/6s sample cannot establish JIT/GC steady state",
+      "glFinish serializes CPU/GPU; no ETW/presented FPS",
+      "post-statistics/post-JSON RAM snapshots; no attribution of RAM differences to HUD",
+      "fresh flat world and empty inventory; gameplay effects/cosmetics absent; pre-generated animals not removed",
+      "spawn-to-stdout Title marker endpoint with warm OS caches, not cold boot or visible frame",
+      "per-trial median is lower middle order statistic for even count; p95/p99 nearest rank"
+    ],
+    "discardedSeries": {
+      "run": "run-919462a0-829d-4946-9d41-62d7f5347485",
+      "reason": "actual server spawn positions differed"
+    },
+    "acceptedSmokeExcluded": "run-43f40968-2467-4ca2-83b5-1b43a8786dec"
+  },
+  "helperSourceReviewCommit": "0ddadac19a37b723379883675c76d4c4abac397f"
+}

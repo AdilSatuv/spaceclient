@@ -1,5 +1,7 @@
 # Измерения и совместимость — SC-13
 
+3 ноября2026: добавлены [12 новых observations](qa/native-hud-observations-2026-11-03.json) на frozen dev-22056fa56090: Fabric control/HUD off/default5/all26, по3 новых JVM, actual fixed server camera,1280×720/distance4. Это отдельная hidden render-loop методика с glFinish,3s warmup/6s sample; она не заменяет PresentMon ниже и не закрывает SC-13. Результаты/стоимость HUD, отклонённый первый run и ограничения RAM/startup — [итог второй волны](WAVE2-REVIEW-2026-11-03.md#производительность); повторение — `scripts/qa/performance/README.md`. Старые captures не переписаны.
+
 24 октября 2026: выполнены девять настоящих локальных captures (по три vanilla / Space HUD OFF / Space HUD ON), анализатор принял все записи. После первого круга был пользовательский перерыв и изменились фоновые приложения, поэтому это разведочная статическая серия. Она не устанавливает точную стоимость HUD или ускорение Space. Отдельный [startup-срез](STARTUP-TIMING.md) теперь содержит preflight/spawn и наблюдаемые верхние границы до главного меню Space. SC-13 остаётся открытой: точное время до готового игрового кадра не измерено, официальный baseline/запуск зависит от SC-10.
 
 ## Инструмент
