@@ -91,6 +91,10 @@ export default function Header() {
           id="mobile-navigation"
           ref={dialog}
           aria-labelledby="menu-title"
+          onFocusCapture={(event) => {
+            // Firefox may reveal only the text baseline during native Tab scrolling.
+            event.target.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+          }}
           onKeyDown={(event) => {
             if (event.key !== 'Tab') return;
             const controls = Array.from(

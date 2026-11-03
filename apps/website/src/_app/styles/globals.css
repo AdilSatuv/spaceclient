@@ -1230,6 +1230,7 @@ input::placeholder {
 dialog {
   width: min(100% - 32px, 430px);
   max-height: 85dvh;
+  scroll-padding-block: 8px;
   padding: 24px;
   background: var(--surface);
   color: var(--text);
