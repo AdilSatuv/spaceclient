@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-03",
+  "sourceCommit": "d9c4137",
+  "branch": "space-minecraft-menus",
+  "integrated": {
+    "core": "c7e87fc68a423bbc736afc083704bff59c8b5a6f",
+    "ux": "774c79e64f74b537cbfa8e25698f4b9adc2da109",
+    "settings": "023c8782375d5469cf035eb4e20ff335c08b4599"
+  },
+  "bundle": {
+    "schemaVersion": 1,
+    "channel": "development",
+    "modVersion": "0.1.0",
+    "minecraftVersion": "1.8.9",
+    "loaderVersion": "0.18.3",
+    "gameSourceTree": "524781b59c87eb6621c34b1f3c121c4100f697bd",
+    "size": 1077667,
+    "sha256": "cf3ae55afd9311370e02a2eaa167a2d038d5c62bb31c8dad6abca29dca536eb2"
+  },
+  "installed": {
+    "sha256": "cf3ae55afd9311370e02a2eaa167a2d038d5c62bb31c8dad6abca29dca536eb2",
+    "gameSourceTree": "524781b59c87eb6621c34b1f3c121c4100f697bd",
+    "preflight": true,
+    "settingsAndWorldMetadataPreserved": true,
+    "checkedFiles": 6
+  },
+  "unitTests": {
+    "workspace": 39,
+    "api": 24,
+    "launcher": 135,
+    "java": 272,
+    "total": 470,
+    "failures": 0,
+    "skipped": 0
+  },
+  "checks": {
+    "workspaceTypesAndWebTokens": true,
+    "strictFullBuild": true,
+    "gradleBuild": true,
+    "bundleClassOmissions": true,
+    "alreadyAbortedSignal": {
+      "alreadyAbortedSignal": true,
+      "runtimeProbeCalls": 0,
+      "versionCalls": 0,
+      "errorName": "AbortError",
+      "realProcessSpawned": false,
+      "realGameFilesRead": false
+    }
+  },
+  "native": {
+    "ok": true,
+    "gameplay": 29,
+    "hud": 26,
+    "numericControls": 56,
+    "toggles": 123,
+    "choices": 133,
+    "tabSteps": 833,
+    "captures": ".reports/native-menu-qa/instances/default/minecraft/qa-captures",
+    "exitCode": 0,
+    "hiddenCanvas": true,
+    "size": [
+      1280,
+      720
+    ],
+    "scaledHeightMinimum": 240,
+    "allCapturesReviewedInContactSheets": true,
+    "fullSizeReviewed": [
+      "game-item_size",
+      "minimum-height-crosshair",
+      "hud-tall-preview",
+      "gui-after-resize",
+      "menu-title-ru-compact",
+      "menu-options-ru-compact"
+    ],
+    "checks": [
+      "all 29 gameplay and 26 HUD screens",
+      "numeric boundaries and reload",
+      "toggle restoration and choice direction",
+      "Tab traversal and whole visible rows",
+      "slider draft release and Esc cancellation",
+      "key conflict retry and unbind",
+      "Auto Text save/cancel",
+      "future schema read-only",
+      "failed write rollback",
+      "tall HUD preview fit",
+      "waypoint name and invalid coordinate editing",
+      "waypoint deletion cancellation",
+      "HUD anchor disabled without world",
+      "enabled GUI scale 1x/2x/3x with live resize",
+      "EN and compact RU main/options rendering"
+    ],
+    "harnessCorrections": [
+      "separated mixin package from entrypoint/helper",
+      "mapped Screen invokers instead of unremapped reflection strings"
+    ],
+    "freshResult": ".reports/native-menu-qa/instances/default/minecraft/qa-settings-result.json"
+  },
+  "launcherUi": {
+    "checks": 10,
+    "screenshots": 14,
+    "allScreenshotsVisuallyReviewed": true,
+    "report": ".reports/launcher-ui/run-6c213883-d524-4aad-9d0c-4a3de52fa701/report.json"
+  },
+  "website": {
+    "httpStates": 8,
+    "browserLayouts": 42,
+    "browserFlows": 27,
+    "selectedScreenshotsReviewed": [
+      "menu-320x568",
+      "spacing-features-320",
+      "spacing-download-1440"
+    ],
+    "report": ".reports/website-browser/run-2e011504-9bd3-4b0c-a481-dcf4d0270df2/report.json"
+  },
+  "format": {
+    "rawExitCode": 1,
+    "lineEndingOnlyWarnings": 192,
+    "otherFormattingFailures": 0,
+    "massRewritePerformed": false
+  },
+  "codebaseMemory": {
+    "project": "spaceclient-mods-menus",
+    "indexedAt": "2026-11-03T02:00:41Z",
+    "nodes": 9280,
+    "edges": 24612,
+    "skipped": 0,
+    "partial": [
+      "apps/launcher/src/renderer/style.css",
+      "game/build.gradle",
+      "game/gradlew"
+    ],
+    "exactPathFreshness": "metadata_changed",
+    "graphTraceResolved": [
+      "HudModulesScreen.activate -> GameModuleSettingsScreen constructor"
+    ],
+    "unresolvedGraphCallerQueries": [
+      "prepareLocalLaunch",
+      "inspectJava"
+    ],
+    "sourceReadForIntegration": true,
+    "localArtifactIgnored": true
+  },
+  "notTested": [
+    "physical keyboard and mouse transitions",
+    "controlled multiplayer qualification",
+    "clean Windows installer upgrade/uninstall",
+    "new performance benchmark",
+    "public hosting and official online authentication"
+  ],
+  "userWorldOpened": false,
+  "visibleAppsOpened": false,
+  "osInputInjected": false,
+  "pushed": false,
+  "publiclyReleased": false
+}
