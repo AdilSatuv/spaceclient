@@ -6,6 +6,7 @@ import org.junit.*;import org.junit.rules.TemporaryFolder;
 import static org.junit.Assert.*;
 public class ExpansionModsTest {
  @Rule public TemporaryFolder dir=new TemporaryFolder();
+ @Test public void blurPreservesUniformColorsAndHigherStrengthSpreadsEnergy(){float center=1;for(int strength=1;strength<=8;strength++){float[] w=GaussianKernel.weights(strength);float sum=w[0];for(int i=1;i<w.length;i++){assertTrue(w[i]>=0&&w[i]<=w[i-1]);sum+=2*w[i];}assertEquals(1,sum,.00001);assertTrue(w[0]<center);center=w[0];}}
  private Path file(String n){return dir.getRoot().toPath().resolve(n);}
  private void fixture(String name,Path p)throws Exception{try(InputStream in=getClass().getResourceAsStream("/hud-legacy/"+name)){assertNotNull(in);Files.copy(in,p);}}
  @Test public void genuineSchemaNineKeepsOldModulesMessagesAndStylesWithoutRewriting()throws Exception{

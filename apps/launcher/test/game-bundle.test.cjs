@@ -148,6 +148,7 @@ function entries() {
       'mods/WaypointsScreen',
       'mods/WorldLabel',
       'mods/InventoryBlurRenderer',
+      'mods/GaussianKernel',
 
       'mods/ModSettings$SoundTheme',
       'mods/ModSettings$KillChime',
@@ -292,6 +293,7 @@ test('gameplay modules and their settings cannot disappear from an otherwise val
     'mods/WaypointsScreen',
     'mods/WorldLabel',
     'mods/InventoryBlurRenderer',
+    'mods/GaussianKernel',
 
     'mods/ModSettings$SoundTheme',
     'mods/ModSettings$KillChime',

@@ -141,6 +141,7 @@ const required = [
   'dev/spaceclient/mods/WaypointsScreen.class',
   'dev/spaceclient/mods/WorldLabel.class',
   'dev/spaceclient/mods/InventoryBlurRenderer.class',
+  'dev/spaceclient/mods/GaussianKernel.class',
 
   'dev/spaceclient/mods/ModSettings$SoundTheme.class',
   'dev/spaceclient/mods/ModSettings$KillChime.class',
