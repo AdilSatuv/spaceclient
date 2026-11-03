@@ -1,6 +1,8 @@
 package dev.spaceclient.hud;
 
 import dev.spaceclient.SpaceClient;
+import dev.spaceclient.menu.MenuStrings;
+import java.util.Locale;
 import com.mojang.blaze3d.platform.GlStateManager;
 import java.util.List;
 import net.minecraft.client.gui.screen.Screen;
@@ -35,6 +37,8 @@ public final class HudModulesScreen extends Screen {
     private HudViewport viewport;
     private boolean previousRepeatEvents;
     private boolean capturedRepeatEvents;
+    private String ui(String key) { return MenuStrings.get(client,key); }
+    private String sectionLabel(HudSection item) { return ui("catalog.section."+item.name().toLowerCase(Locale.ROOT)); }
 
     @Override public void init() {
         int previousCard = focus >= 2 && focus < modules.size() + 2 ? focus - 2 : -1;
@@ -76,8 +80,8 @@ public final class HudModulesScreen extends Screen {
     @Override public void render(int mouseX, int mouseY, float tickDelta) {
         fillGradient(0, 0, width, height, 0x85070709, 0xA70A0B0E);
         if (!roomy()) {
-            centerText("Resize the window to open HUD", width / 2, height / 2 - 12, TEXT);
-            centerText("Esc - close", width / 2, height / 2 + 4, MUTED);
+            centerText(ui("catalog.resize"), width / 2, height / 2 - 12, TEXT);
+            centerText(ui("catalog.close"), width / 2, height / 2 + 4, MUTED);
             return;
         }
         GlStateManager.pushMatrix();
@@ -96,24 +100,24 @@ public final class HudModulesScreen extends Screen {
         GlStateManager.pushMatrix();
         try {
             GlStateManager.scale(2f, 2f, 1);
-            SpaceUiFont.draw(client, section == HudSection.HOME ? "Modules" : section.label, contentLeft / 2f, (top + 19) / 2f, TEXT);
+            SpaceUiFont.draw(client, section == HudSection.HOME ? ui("catalog.title") : sectionLabel(section), contentLeft / 2f, (top + 19) / 2f, TEXT);
         } finally { GlStateManager.popMatrix(); }
         int editorX = contentLeft + contentWidth - 82, editorY = top + 20;
         primaryButton(editorX, editorY, 82, 20, focus == modules.size() + 2,
             hovered(mouseX, mouseY, editorX, editorY, 82, 20));
-        centerText("Edit layout", editorX + 41, editorY + 6, 0x17130D);
+        centerText(ui("catalog.edit"), editorX + 41, editorY + 6, 0x17130D);
 
         box(contentLeft, top + layout.searchTop, layout.searchWidth, 23, focus == 0,
             hovered(mouseX, mouseY, contentLeft, top + layout.searchTop, layout.searchWidth, 23));
         searchIcon(contentLeft + 10, top + layout.searchTop + 7);
         search.render();
         if (query.isEmpty() && !search.isFocused())
-            SpaceUiFont.draw(client, "Search modules...", contentLeft + 30, top + layout.searchTop + 6, MUTED);
+            SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(ui("catalog.search"),layout.searchWidth-38), contentLeft + 30, top + layout.searchTop + 6, MUTED);
         for (ModuleFilter item : ModuleFilter.values()) {
             int x = layout.filterLeft + item.ordinal() * 53, y = top + layout.searchTop;
             box(x, y, layout.filterWidth, 23, focus == filterControl(item), hovered(mouseX, mouseY, x, y, layout.filterWidth, 23));
             if (item == filter) fill(x + 5, y + 21, x + layout.filterWidth - 5, y + 22, 0xFFD7AF6A);
-            centerText(item.label, x + layout.filterWidth / 2, y + 6, item == filter ? ACCENT : MUTED);
+            centerText(ui("catalog.filter."+item.name().toLowerCase(Locale.ROOT)), x + layout.filterWidth / 2, y + 6, item == filter ? ACCENT : MUTED);
         }
 
         boolean readOnly = SpaceClient.hud.isReadOnly();
@@ -143,25 +147,27 @@ public final class HudModulesScreen extends Screen {
             }
         }
         if (modules.isEmpty()) {
-            centerText("No modules found", contentLeft + contentWidth / 2, top + 110, TEXT);
-            centerText(filter == ModuleFilter.FAVORITES ? "Star a card or press F to add favorites." : "Try All or clear the search.", contentLeft + contentWidth / 2, top + 125, MUTED);
+            centerText(ui("catalog.empty"), contentLeft + contentWidth / 2, top + 110, TEXT);
+            centerText(ui(filter == ModuleFilter.FAVORITES ? "catalog.empty.favorites" : "catalog.empty.search"), contentLeft + contentWidth / 2, top + 125, MUTED);
         }
 
         String status = SpaceClient.hud.getError();
         if (status.isEmpty()) status = SpaceClient.mods.error();
         if (status.isEmpty()) status = SpaceClient.browser.error();
         if (status.isEmpty()) status = SpaceClient.hud.getNotice();
-        if (status.isEmpty() && !SpaceClient.hud.getConfig().active().enabled) status = "HUD hidden; enable HUD";
-        if (status.isEmpty() && readOnly) status = "Settings are read-only";
+        if (status.isEmpty() && readOnly) status = ui("catalog.readonly");
+        if (status.isEmpty() && !SpaceClient.hud.getConfig().active().enabled) status = ui("catalog.hidden");
         if (status.isEmpty()) {
             for (int i = HudModulePages.first(page, modules.size(), layout.pageSize); i < HudModulePages.end(page, modules.size(), layout.pageSize); i++) {
                 if (hovered(mouseX, mouseY, cardX(i), cardY(i), cardWidth, cardHeight)) {
-                    status = "Click: settings  |  Switch: toggle  |  F: favorite";
+                    status = ui("catalog.help.pointer");
                     break;
                 }
             }
         }
-        if (status.isEmpty()) status = modules.size() + " modules  /  " + section.description;
+        if (status.isEmpty() && focus>=sectionControlStart() && focus<sectionControlStart()+(sidebar?HudSection.values().length:0))
+            status=sectionLabel(HudSection.values()[focus-sectionControlStart()])+" / "+ui("settings.help.action");
+        if (status.isEmpty()) status = modules.size() + " / " + ui("catalog.title") + " / " + ui("catalog.help.keyboard");
         SpaceUiFont.draw(client, SpaceUiFont.trimToWidth(status, contentWidth - 90), contentLeft + 2, top + 46,
             readOnly || !SpaceClient.hud.getError().isEmpty() ? ACCENT : MUTED);
 
@@ -176,8 +182,9 @@ public final class HudModulesScreen extends Screen {
         }
         int doneX = contentLeft + contentWidth - 68;
         box(doneX, footerY, 68, 20, focus == modules.size() + 3, hovered(mouseX, mouseY, doneX, footerY, 68, 20));
-        centerText("Done / Esc", doneX + 34, footerY + 6, TEXT);
-        if (contentWidth >= 360) SpaceUiFont.draw(client, "Enter: settings  |  Space: toggle  |  F: star", contentLeft + 96, footerY + 6, MUTED);
+        centerText(ui("catalog.done"), doneX + 34, footerY + 6, TEXT);
+        int helpWidth=contentWidth-176;
+        if (helpWidth>40) SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(ui("catalog.help.focus"),helpWidth),contentLeft+92,footerY+6,MUTED);
     }
 
     private void drawSidebar(int mouseX, int mouseY) {
@@ -190,8 +197,12 @@ public final class HudModulesScreen extends Screen {
             boolean over = hovered(mouseX, mouseY, x, y, w, 25);
             if (selected || focused || over) rounded(x, y, w, 25, focused ? 0xFF3C352B : 0xFF252321);
             if (selected || focused) fill(x, y + 3, x + 2, y + 22, 0xFFD7AF6A);
-            HudModuleIcons.drawSection(item, left + 17, y + 6, 13, selected);
-            SpaceUiFont.draw(client, item.label, left + 39, y + 7, selected ? TEXT : MUTED);
+            if(layout.sidebarWidth>=100) {
+                HudModuleIcons.drawSection(item, left + 17, y + 6, 13, selected);
+                SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(sectionLabel(item),w-38),left+39,y+7,selected?TEXT:MUTED);
+            } else {
+                SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(sectionLabel(item),w-8),x+4,y+7,selected?TEXT:MUTED);
+            }
         }
         fill(left + 10, sectionY(HudSection.SETTINGS) - 7, left + layout.sidebarWidth - 10, sectionY(HudSection.SETTINGS) - 6, BORDER);
     }

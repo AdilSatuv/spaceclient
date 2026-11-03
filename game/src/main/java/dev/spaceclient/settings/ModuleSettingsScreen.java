@@ -2,6 +2,7 @@ package dev.spaceclient.settings;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import dev.spaceclient.SpaceClient;
+import dev.spaceclient.menu.MenuStrings;
 import dev.spaceclient.hud.HudSwitch;
 import dev.spaceclient.hud.HudViewport;
 import dev.spaceclient.hud.SpaceUiFont;
@@ -42,6 +43,7 @@ public abstract class ModuleSettingsScreen extends Screen {
     protected boolean navigation(int id) { return false; }
     protected boolean repeatedInput() { return Keyboard.isRepeatEvent(); }
     protected boolean shiftInput() { return hasShiftDown(); }
+    protected final String ui(String key) { return MenuStrings.get(client,key); }
     protected SettingRow focusedRow() {
         int index=focus-sections().length;
         List<SettingRow> items=rows();
@@ -52,7 +54,7 @@ public abstract class ModuleSettingsScreen extends Screen {
         for(int i=0;i<items.size();i++)if(items.get(i).id==id) { focus=sections().length+i;break; }
         reveal();
     }
-    protected SettingRow[] footer() { return new SettingRow[]{SettingRow.action(98,"Reset settings","",""),SettingRow.action(99,"Back","","")}; }
+    protected SettingRow[] footer() { return new SettingRow[]{SettingRow.action(98,ui("settings.reset"),"",""),SettingRow.action(99,ui("back"),"","")}; }
 
     @Override public void init() {
         viewport=new HudViewport(width,height);
@@ -76,7 +78,7 @@ public abstract class ModuleSettingsScreen extends Screen {
 
     @Override public void render(int mx,int my,float delta) {
         fillGradient(0,0,width,height,0xD0070709,0xE50A0B0E);
-        if(!roomy()) { SpaceUiFont.draw(client,"Resize the window / Esc: back",12,20,TEXT); return; }
+        if(!roomy()) { SpaceUiFont.draw(client,ui("settings.resize"),12,20,TEXT); return; }
         mx=viewport.toUi(mx); my=viewport.toUi(my);
         GlStateManager.pushMatrix();
         try {
@@ -85,9 +87,9 @@ public abstract class ModuleSettingsScreen extends Screen {
             UiShapes.rounded(x+2,y+3,w,h,6,0x90000000);
             UiShapes.rounded(x,y,w,h,6,0xFF3A3B3E);
             UiShapes.rounded(x+1,y+1,w-2,h-2,5,0xFF101114);
-            SpaceUiFont.draw(client,"SPACE / SETTINGS",x+16,y+12,ACCENT);
+            SpaceUiFont.draw(client,ui("settings.heading"),x+16,y+12,ACCENT);
             SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(title(),w-170),x+16,y+31,TEXT);
-            String label=readOnly()?"Read-only":"Autosave";
+            String label=ui(readOnly()?"settings.readonly":"settings.autosave");
             SpaceUiFont.draw(client,label,x+w-16-SpaceUiFont.width(label),y+12,readOnly()?ACCENT:MUTED);
             SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(subtitle(),w-32),x+16,y+49,MUTED);
             String[] tabs=sections();
@@ -113,11 +115,12 @@ public abstract class ModuleSettingsScreen extends Screen {
                 int index=focus-tabs.length;
                 if(index>=0&&index<items.size()) {
                     SettingRow row=items.get(index);
-                    message=row.detail+" / "+(row.kind==SettingRow.Kind.NUMBER?"Left / Right: adjust; LShift: larger step; Home / End: limits.":"Tab: select; Enter: change; Left / Right: previous / next.");
+                    message=rowHelp(row);
                 } else {
                     int action=index-items.size();
                     SettingRow[] actions=footer();
-                    message=action>=0&&action<actions.length&&!actions[action].detail.isEmpty()?actions[action].detail:"Tab / Up / Down: select   |   Enter: activate   |   Esc: back";
+                    message=action>=0&&action<actions.length&&!enabled(actions[action])?rowHelp(actions[action])
+                        :action>=0&&action<actions.length&&!actions[action].detail.isEmpty()?actions[action].detail:ui("settings.help.navigation");
                 }
             }
             drawLines(message,x+16,y+h-73,w-32,2,ACCENT);
@@ -129,6 +132,12 @@ public abstract class ModuleSettingsScreen extends Screen {
             }
         } finally { GlStateManager.popMatrix(); }
     }
+    protected final String rowHelp(SettingRow row) {
+        if(!enabled(row))return ui(readOnly()?"settings.help.readonly":"settings.help.unavailable")+" "+row.detail;
+        String key=row.kind==SettingRow.Kind.NUMBER?"number":row.kind==SettingRow.Kind.TOGGLE?"toggle"
+            :row.kind==SettingRow.Kind.CHOICE?"choice":"action";
+        return row.detail+" / "+ui("settings.help."+key);
+    }
     private void drawRow(SettingRow a,int y,boolean selected,int mx,int my) {
         int x=layout.left+14,w=layout.width-28,cx=layout.controlX(),cw=190;
         boolean active=enabled(a),hover=mx>=cx&&mx<cx+cw&&my>=y&&my<y+40;
@@ -139,10 +148,12 @@ public abstract class ModuleSettingsScreen extends Screen {
         SpaceUiFont.draw(client,shortText(a.detail,labelWidth),x+10,y+23,MUTED);
         UiShapes.rounded(cx,y+4,cw,32,4,!active?0xFF1A1B1E:hover?0xFF353029:0xFF24262B);
         int color=active?ACCENT:MUTED;
-        if(a.kind==SettingRow.Kind.TOGGLE) {
+        if(!active) {
+            center(ui(readOnly()?"settings.locked":"settings.unavailable"),cx+cw/2,y+14,MUTED);
+        } else if(a.kind==SettingRow.Kind.TOGGLE) {
             HudSwitch.Motion motion=motions.get(a.id);
             if(motion==null) { motion=new HudSwitch.Motion(a.checked); motions.put(a.id,motion); }
-            SpaceUiFont.draw(client,a.value,cx+12,y+14,color);
+            SpaceUiFont.draw(client,ui(a.checked?"on":"off"),cx+12,y+14,color);
             HudSwitch.draw(cx+cw-40,y+12,motion.sample(a.checked,System.nanoTime()));
         } else if(a.kind==SettingRow.Kind.NUMBER) {
             int v=dragging==a.id?dragValue:a.number;
@@ -181,7 +192,7 @@ public abstract class ModuleSettingsScreen extends Screen {
     private void button(int x,int y,int w,int h,String text,boolean selected,boolean current,boolean enabled) {
         UiShapes.rounded(x,y,w,h,4,selected?0xFFD7AF6A:0xFF55565B);
         UiShapes.rounded(x+1,y+1,w-2,h-2,3,current?0xFF3A3122:0xFF24262B);
-        center(text,x+w/2,y+5,enabled?(current?ACCENT:TEXT):MUTED);
+        center(SpaceUiFont.trimToWidth(text,w-12),x+w/2,y+5,enabled?(current?ACCENT:TEXT):MUTED);
     }
     @Override protected void keyPressed(char c,int key) {
         if(dragging!=-1) { if(key==Keyboard.KEY_ESCAPE)dragging=-1; return; }
@@ -198,6 +209,10 @@ public abstract class ModuleSettingsScreen extends Screen {
             focus=Math.max(0,Math.min(total()-1,focus+(key==Keyboard.KEY_PRIOR?-layout.slots:layout.slots)));
             reveal(); return;
         }
+        if(focus<sections().length&&(key==Keyboard.KEY_LEFT||key==Keyboard.KEY_RIGHT)) {
+            focus=Math.floorMod(focus+(key==Keyboard.KEY_LEFT?-1:1),sections().length);
+            activateFocus(1); reveal(); return;
+        }
         int index=focus-sections().length;
         List<SettingRow> items=rows();
         if(index>=0&&index<items.size()) {
@@ -209,7 +224,9 @@ public abstract class ModuleSettingsScreen extends Screen {
                 }
             }
         }
-        if(!repeatedInput()&&(key==Keyboard.KEY_RETURN||key==Keyboard.KEY_NUMPADENTER||key==Keyboard.KEY_SPACE||key==Keyboard.KEY_LEFT||key==Keyboard.KEY_RIGHT))
+        boolean choiceArrow=index>=0&&index<items.size()&&items.get(index).kind==SettingRow.Kind.CHOICE
+            &&(key==Keyboard.KEY_LEFT||key==Keyboard.KEY_RIGHT);
+        if(!repeatedInput()&&(key==Keyboard.KEY_RETURN||key==Keyboard.KEY_NUMPADENTER||key==Keyboard.KEY_SPACE||choiceArrow))
             activateFocus(key==Keyboard.KEY_LEFT?-1:1);
     }
     private void setNumber(SettingRow row,int value) { if(value!=row.number)number(row.id,value); }
@@ -218,7 +235,7 @@ public abstract class ModuleSettingsScreen extends Screen {
         if(focus<tabs) { section(focus); offset=0; dragging=-1; return; }
         List<SettingRow> items=rows();
         SettingRow row=index<items.size()?items.get(index):footer()[index-items.size()];
-        if(!enabled(row)) { status=readOnly()?"Read-only: the existing file is preserved.":row.detail; return; }
+        if(!enabled(row)) { status=rowHelp(row); return; }
         if(row.kind==SettingRow.Kind.NUMBER)setNumber(row,row.range.adjust(row.number,direction,shiftInput()));
         else change(row.id,direction);
         reveal();
@@ -237,7 +254,7 @@ public abstract class ModuleSettingsScreen extends Screen {
             SettingRow row=items.get(i); int ry=layout.rowY(i,offset),cx=layout.controlX();
             if(y>=ry&&y<ry+40&&x>=layout.left+14&&x<layout.left+layout.width-14) {
                 focus=tabs+i;
-                if(!enabled(row)) { status=readOnly()?"Read-only: the existing file is preserved.":row.detail; return; }
+                if(!enabled(row)) { status=rowHelp(row); return; }
                 if(x<cx)return;
                 if(row.kind==SettingRow.Kind.NUMBER&&x>=layout.trackX()&&x<=layout.trackX()+layout.trackWidth()) {
                     dragging=row.id; dragValue=row.range.at((x-layout.trackX())/(double)layout.trackWidth()); return;

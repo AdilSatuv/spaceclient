@@ -37,10 +37,10 @@ public final class HudModuleSettingsScreen extends ModuleSettingsScreen {
     private boolean hasContentSettings() {
         return module==HudModule.INVENTORY||module==HudModule.COORDINATES||module==HudModule.CLOCK||module==HudModule.FPS||module==HudModule.CPS||module==HudModule.KEYSTROKES||module==HudModule.SPRINT_STATUS||module==HudModule.ARMOR||module==HudModule.POTION_EFFECTS||contextModule();
     }
-    @Override protected String[] sections() { return hasContentSettings()?new String[]{"Layout","Appearance","Content"}:new String[]{"Layout","Appearance"}; }
+    @Override protected String[] sections() { return hasContentSettings()?new String[]{ui("settings.layout"),ui("settings.appearance"),ui("settings.content")}:new String[]{ui("settings.layout"),ui("settings.appearance")}; }
     @Override protected int section() { return tab; }
     @Override protected void section(int value) { tab=value;status=""; }
-    @Override protected SettingRow[] footer() { return new SettingRow[]{SettingRow.action(5,"Edit HUD layout","",""),SettingRow.action(6,"Back","","")}; }
+    @Override protected SettingRow[] footer() { return new SettingRow[]{SettingRow.action(5,ui("catalog.edit"),"",""),SettingRow.action(6,ui("back"),"","")}; }
     private SettingRow n(int id,String title,String detail,int value,int min,int max) {
         return SettingRow.number(id,title,detail,value,min,max,1,Integer::toString);
     }

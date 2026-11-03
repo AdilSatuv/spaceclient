@@ -44,6 +44,7 @@ public class SettingsInputTest {
         void click(int x,int y) { mouseClicked(px(x),px(y),0); }
         void drag(int x,int y) { mouseDragged(px(x),px(y),0,1); }
         void release(int x,int y) { mouseReleased(px(x),px(y),0); }
+        String help(int id) { for(SettingRow row:rows())if(row.id==id)return rowHelp(row);throw new AssertionError(id); }
     }
     @Test public void keyboardAdjustmentsPersistAndDoNotWriteAgainAtTheLimits() throws Exception {
         Path path=Files.createTempDirectory("space-input").resolve("mods.properties");Harness s=new Harness(path);
@@ -99,5 +100,21 @@ public class SettingsInputTest {
         for(int i=0;i<13;i++)s.key(Keyboard.KEY_TAB);
         s.key(Keyboard.KEY_RETURN);assertTrue(s.empty);
         s.key(Keyboard.KEY_RETURN);assertTrue(s.back);
+    }
+    @Test public void arrowsOnToggleAndFooterDoNotActivateActions() throws Exception {
+        Harness s=new Harness(Files.createTempDirectory("space-actions").resolve("mods.properties"));
+        s.key(Keyboard.KEY_TAB);s.key(Keyboard.KEY_RIGHT);s.key(Keyboard.KEY_LEFT);
+        assertFalse(s.settings.itemSize());
+        for(int i=0;i<13;i++)s.key(Keyboard.KEY_TAB);
+        s.key(Keyboard.KEY_RIGHT);s.key(Keyboard.KEY_LEFT);assertFalse(s.back);
+        s.key(Keyboard.KEY_RETURN);assertTrue(s.back);
+    }
+    @Test public void disabledHelpExplainsTheReasonWithoutInvitingAdjustment() throws Exception {
+        Harness s=new Harness(Files.createTempDirectory("space-help").resolve("mods.properties"));
+        String help=s.help(43);assertTrue(help.contains("Unavailable"));assertTrue(help.contains("Choose another mode"));
+        assertFalse(help.contains("Left / Right"));assertFalse(help.contains("Enter"));
+        assertTrue(s.help(42).contains("Home / End"));
+        Path p=Files.createTempFile("space-locked-help",".properties");Files.write(p,"schemaVersion=999\n".getBytes(StandardCharsets.UTF_8));
+        assertTrue(new Harness(p).help(42).contains("Read-only"));
     }
 }
