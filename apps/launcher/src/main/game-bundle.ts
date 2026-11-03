@@ -19,6 +19,7 @@ export type SpaceBundleManifest = {
 export type InstalledSpace = SpaceBundleManifest & { relativePath: 'mods/space-client.jar' };
 const expectedMixins = [
   'ClientMixin',
+  'QueuedPlayPacketMixin',
   'HudMixin',
   'GameMenuMixin',
   'AutoSprintMixin',
@@ -62,6 +63,7 @@ const required = [
   'dev/spaceclient/ClickCounter.class',
   'dev/spaceclient/HudConfig.class',
   'dev/spaceclient/mixin/ClientMixin.class',
+  'dev/spaceclient/mixin/QueuedPlayPacketMixin.class',
   'dev/spaceclient/mixin/HudMixin.class',
   'dev/spaceclient/mixin/GameMenuMixin.class',
   'dev/spaceclient/mixin/AutoSprintMixin.class',

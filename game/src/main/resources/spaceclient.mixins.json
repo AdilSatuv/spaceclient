@@ -5,6 +5,7 @@
   "client": [
     "HudMixin",
     "ClientMixin",
+    "QueuedPlayPacketMixin",
     "GameMenuMixin",
     "AutoSprintMixin",
     "FreeLookRendererMixin",

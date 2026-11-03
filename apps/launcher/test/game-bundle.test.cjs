@@ -21,6 +21,7 @@ function entries() {
     compatibilityLevel: 'JAVA_8',
     client: [
       'ClientMixin',
+      'QueuedPlayPacketMixin',
       'HudMixin',
       'GameMenuMixin',
       'AutoSprintMixin',
@@ -69,6 +70,7 @@ function entries() {
       'ClickCounter',
       'HudConfig',
       'mixin/ClientMixin',
+      'mixin/QueuedPlayPacketMixin',
       'mixin/HudMixin',
       'mixin/GameMenuMixin',
       'mixin/AutoSprintMixin',
@@ -389,6 +391,7 @@ test('named developer bytecode and newer bytecode are rejected before bundling',
 test('all pinned mixin classes and the exact mixin set are required', async (t) => {
   const pinned = [
     'ClientMixin',
+    'QueuedPlayPacketMixin',
     'HudMixin',
     'GameMenuMixin',
     'AutoSprintMixin',
