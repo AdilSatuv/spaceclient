@@ -41,6 +41,7 @@ export default async function Download({
   return (
     <div className="container page-content">
       <PageIntro
+        section="Загрузки"
         label="ГОТОВНОСТЬ К СТАРТУ"
         title={recommended ? 'Твоя следующая орбита.' : 'Готовим новую орбиту.'}
       >

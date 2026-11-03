@@ -30,7 +30,7 @@ export default async function Updates({
   const result = await getUpdates(type, page);
   return (
     <div className="container page-content">
-      <PageIntro label="БОРТОВОЙ ЖУРНАЛ" title="Не релизы. Путь к ним.">
+      <PageIntro section="Обновления" label="БОРТОВОЙ ЖУРНАЛ" title="Бортовой журнал.">
         Реальные изменения проекта. Заметки разработки ещё не означают выпуск клиента.
       </PageIntro>
       <FilterForm key={type} action="/updates">
@@ -79,8 +79,8 @@ export default async function Updates({
                     : 'Здесь пока тихо.'}
               </h2>
               <p>Следите за ходом разработки и будущими записями.</p>
-              <Link className="text-link" href="/updates">
-                Все обновления →
+              <Link className="button secondary" href="/updates">
+                Все обновления
               </Link>
             </section>
           )}

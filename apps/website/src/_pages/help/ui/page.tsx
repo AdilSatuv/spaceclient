@@ -22,7 +22,7 @@ export default async function Help({
   const questions = helpFaq.filter((item) => matches(`${item.question} ${item.answer}`));
   return (
     <div className="container page-content">
-      <PageIntro label="ЦЕНТР ПОМОЩИ" title="Найдём ответ.">
+      <PageIntro section="Помощь" label="ЦЕНТР ПОМОЩИ" title="Найдём ответ.">
         Начало работы, совместимость и полезные инструкции. Без лишних сложностей.
       </PageIntro>
       <FilterForm key={q} action="/help">
@@ -36,6 +36,7 @@ export default async function Help({
         <p className="result-count" role="status">
           Найдено: {items.length + questions.length} · Инструкции: {items.length} · Ответы:{' '}
           {questions.length}
+          {q && <> · По запросу «{q}»</>}
         </p>
         {q && (
           <Link className="filter-reset" href="/help">
@@ -76,9 +77,12 @@ export default async function Help({
       {!items.length && !questions.length && (
         <div className="empty-state">
           <h2>Ответ пока не найден</h2>
-          <p>Попробуйте изменить запрос.</p>
-          <Link className="text-link" href="/help">
-            Сбросить поиск →
+          <p>
+            Попробуйте короткий запрос, например «Java» или «установка», или откройте все
+            инструкции.
+          </p>
+          <Link className="button secondary" href="/help">
+            Сбросить поиск
           </Link>
           <p>
             <a className="text-link" href="https://github.com/AdilSatuv/spaceclient/issues">

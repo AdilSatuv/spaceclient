@@ -149,7 +149,14 @@ public final class MenuTheme extends DrawableHelper {
         rounded(x + 1, y + 1, width - 2, height - 2, 2,
             !button.active ? 0xFF18191C : primary ? (highlight ? 0xFFF0D5A6 : GOLD)
                 : highlight ? 0xFF302B23 : 0xFF222429);
-        if (focused && button.active) fill(x + 3, y + 3, x + 5, y + height - 3, primary ? 0xFF211C15 : GOLD);
+        if (focused && button.active) {
+            // A separate outer frame distinguishes keyboard focus from pointer hover.
+            int ring = 0xFFF1F0EC;
+            fill(x - 2, y - 2, x + width + 2, y - 1, ring);
+            fill(x - 2, y + height + 1, x + width + 2, y + height + 2, ring);
+            fill(x - 2, y - 1, x - 1, y + height + 1, ring);
+            fill(x + width + 1, y - 1, x + width + 2, y + height + 1, ring);
+        }
         if (client.currentScreen instanceof TitleScreen && width >= 180) {
             int color = !button.active ? 0xFF888A91 : primary ? 0xFF211C15 : TEXT;
             rounded(x + 9, y + (height - 18) / 2, 22, 18, 3, primary ? 0x30211C15 : 0xFF17191E);
@@ -162,8 +169,19 @@ public final class MenuTheme extends DrawableHelper {
             fill(x + width - 13, y + height / 2 - 1, x + width - 12, y + height / 2 + 2, color);
             return;
         }
-        String label = SpaceUiFont.trimToWidth(button.message, Math.max(1, width - 16));
-        SpaceUiFont.draw(client, label, x + (width - SpaceUiFont.width(label)) / 2f,
-            y + (height - SpaceUiFont.height()) / 2f, !button.active ? 0xFF888A91 : primary ? 0xFF211C15 : TEXT);
+        // Native world-list actions have narrow hitboxes. Fit translated labels before truncating.
+        int available = Math.max(1, width - 8);
+        float scale = Math.min(1f, Math.max(.75f, available / (float) Math.max(1, SpaceUiFont.width(button.message))));
+        int limit = (int) (available / scale);
+        String label = button.message;
+        if (SpaceUiFont.width(label) > limit)
+            label = SpaceUiFont.trimToWidth(label, Math.max(1, limit - SpaceUiFont.width("…"))) + "…";
+        GlStateManager.pushMatrix();
+        try {
+            GlStateManager.scale(scale, scale, 1);
+            SpaceUiFont.draw(client, label, (x + (width - SpaceUiFont.width(label) * scale) / 2f) / scale,
+                (y + (height - SpaceUiFont.height() * scale) / 2f) / scale,
+                !button.active ? 0xFF888A91 : primary ? 0xFF211C15 : TEXT);
+        } finally { GlStateManager.popMatrix(); }
     }
 }

@@ -121,6 +121,9 @@ export default function Header() {
             </button>
           </div>
           <nav aria-label="Мобильная навигация">
+            <Link href="/" aria-current={path === '/' ? 'page' : undefined} onClick={close}>
+              Главная
+            </Link>
             {nav}
             <a href="https://github.com/AdilSatuv/spaceclient">
               GitHub <Arrow />

@@ -15,10 +15,10 @@ const mib = (bytes: number) =>
   new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 }).format(bytes / 1048576) + ' МиБ';
 export function InstallationCard({
   installation,
-  locked,
+  lockReason,
 }: {
   installation: ReturnType<typeof useInstallation>;
-  locked: boolean;
+  lockReason: string;
 }) {
   const { current, running, prepared, error, acting, start, cancel } = installation;
   return (
@@ -27,7 +27,17 @@ export function InstallationCard({
         <div className="section-heading">
           <p className="card-eyebrow">02 / ФАЙЛЫ ИГРЫ</p>
           <Badge variant="outline" className={cn(prepared && 'ready-badge')}>
-            {prepared ? 'Проверены' : running ? 'Подготовка' : 'Не проверены'}
+            {error || current?.phase === 'error'
+              ? 'Ошибка'
+              : prepared
+                ? 'Проверены'
+                : running
+                  ? 'Подготовка'
+                  : !current
+                    ? 'Проверяем…'
+                    : current.phase === 'cancelled'
+                      ? 'Отменено'
+                      : 'Не проверены'}
           </Badge>
         </div>
         <CardTitle>
@@ -89,7 +99,12 @@ export function InstallationCard({
               {current?.phase === 'cancelling' ? 'Останавливаем…' : 'Отменить подготовку'}
             </Button>
           ) : (
-            <Button variant="outline" disabled={acting || locked || !current} onClick={start}>
+            <Button
+              variant="outline"
+              disabled={acting || !!lockReason || !current}
+              onClick={start}
+              aria-describedby={lockReason ? 'files-availability' : undefined}
+            >
               {prepared ? <RefreshCw aria-hidden="true" /> : <ArrowDownToLine aria-hidden="true" />}
               {prepared
                 ? 'Проверить и восстановить'
@@ -99,6 +114,11 @@ export function InstallationCard({
             </Button>
           )}
         </div>
+        {!running && lockReason && (
+          <p id="files-availability" className="inline-hint">
+            {lockReason}
+          </p>
+        )}
         <div className="installation-footnote">
           <ShieldCheck aria-hidden="true" />
           <p>

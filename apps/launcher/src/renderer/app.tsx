@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import {
   CircleHelp,
-  LayoutDashboard,
+  Play,
   Layers3,
   LoaderCircle,
   Settings2,
@@ -18,7 +18,7 @@ import { ProfilesPage } from './pages/profiles';
 import { SettingsPage } from './pages/settings';
 type View = 'home' | 'profiles' | 'settings';
 const navigation = [
-  { id: 'home', label: 'Обзор', icon: LayoutDashboard },
+  { id: 'home', label: 'Играть', icon: Play },
   { id: 'profiles', label: 'Профили', icon: Layers3 },
   { id: 'settings', label: 'Настройки', icon: Settings2 },
 ] as const;
@@ -76,6 +76,7 @@ export function App() {
                 variant="ghost"
                 className="nav-item"
                 aria-label={label}
+                title={label}
                 aria-current={view === id ? 'page' : undefined}
                 onClick={() => changeView(id)}
               >
