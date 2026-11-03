@@ -909,6 +909,67 @@ input::placeholder {
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
+.catalog-overview {
+  padding: 24px;
+  margin-bottom: 24px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+}
+.module-catalog-page .page-intro {
+  padding-block: 28px;
+  margin-bottom: 24px;
+}
+.module-catalog-page .page-intro h1 {
+  font-size: clamp(34px, 4vw, 56px);
+}
+.module-catalog-page .page-intro .eyebrow {
+  margin-top: 18px;
+  margin-bottom: 16px;
+}
+.module-catalog-page .page-intro .lead {
+  margin-top: 20px;
+  font-size: 16px;
+}
+.catalog-overview p {
+  max-width: 80ch;
+  color: var(--muted);
+  font-size: 16px;
+}
+.catalog-overview > p {
+  margin-bottom: 8px;
+}
+.catalog-overview details {
+  padding-block: 8px 0;
+  border: 0;
+}
+.catalog-overview summary {
+  font-size: 14px;
+}
+.catalog-total {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 24px;
+  margin-top: 0;
+}
+.catalog-total strong {
+  color: var(--text);
+  font-size: 26px;
+}
+.catalog-labels {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+.catalog-kind {
+  color: var(--muted);
+  font-size: 14px;
+}
+.catalog .page-panel p {
+  font-size: 16px;
+}
 .catalog .page-panel {
   padding: 28px;
 }

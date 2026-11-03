@@ -111,7 +111,7 @@ async function main() {
         }),
       );
     if (url.pathname === '/v1/features')
-      return res.end(JSON.stringify({ items: production.features }));
+      return res.end(JSON.stringify({ items: scenario.emptyFeatures ? [] : production.features }));
     if (url.pathname === '/v1/updates') {
       const page = Number(url.searchParams.get('page') || 1),
         type = url.searchParams.get('type') || 'all';

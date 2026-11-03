@@ -3,6 +3,7 @@ const path = require('node:path');
 const { checkWebsiteControls } = require('./check-website-controls.cjs');
 const { checkWebsiteEclipse } = require('./check-website-eclipse.cjs');
 const { checkNavigationFeedback } = require('./check-website-resilience.cjs');
+const { checkModuleCatalog } = require('./check-website-module-catalog.cjs');
 
 async function runWebsiteFlows({ browser, page, base, output, setScenario, results = [] }) {
   const goto = async (route) => {
@@ -31,6 +32,7 @@ async function runWebsiteFlows({ browser, page, base, output, setScenario, resul
   await checkWebsiteControls({ page, base, results });
   await checkWebsiteEclipse({ browser, page, base, results });
   await checkNavigationFeedback({ browser, page, base, output, setScenario, results });
+  await checkModuleCatalog({ browser, page, base, output, results, setScenario });
 
   for (const width of [390, 1440]) {
     await page.setViewport({ width, height: 900 });
@@ -58,7 +60,7 @@ async function runWebsiteFlows({ browser, page, base, output, setScenario, resul
     assert.match(await text('.empty-state'), /Ничего не найдено/);
     assert.equal((await formValues()).q, 'space-no-such-feature');
     await follow('.empty-state a[href="/features"]');
-    assert.equal(await page.$$eval('.catalog article', (items) => items.length), 6);
+    assert.equal(await page.$$eval('.catalog article', (items) => items.length), 57);
     await page.goBack({ waitUntil: 'networkidle0' });
     await page.waitForSelector('.empty-state');
     assert.equal((await formValues()).q, 'space-no-such-feature');
@@ -69,7 +71,7 @@ async function runWebsiteFlows({ browser, page, base, output, setScenario, resul
     assert.match(await text('.catalog'), /CPS Counter/);
     await follow('.filter-reset');
     assert.deepEqual(await formValues(), { q: '', category: '', status: '' });
-    assert.equal(await page.$$eval('.catalog article', (items) => items.length), 6);
+    assert.equal(await page.$$eval('.catalog article', (items) => items.length), 57);
     assert.equal(await page.$('.filter-reset'), null);
     results.push({
       id: 'WEB-03',

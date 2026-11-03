@@ -4,17 +4,17 @@ import { FilterForm } from '@/shared/ui/filter-form';
 import ContentError from '@/shared/ui/content-error';
 import { getFeatures } from '@/shared/api/index.server';
 import { statusLabels } from '../model/status-labels';
+import { categoryLabels, featureKind, filterFeatures, kindLabels } from '../model/catalog';
 import { pageMetadata } from '@/shared/lib/metadata';
 export async function generateMetadata() {
   const result = await getFeatures();
   return pageMetadata(
     '/features',
     'Возможности — Space Client',
-    'HUD-модули Space Client: возможности, прототипы и планы разработки.',
+    '55 модулей Space Client для Minecraft 1.8.9: 29 игровых и 26 HUD, редактор и профили запуска. Возможности и ограничения локального прототипа.',
     !result.ok,
   );
 }
-const categories = ['hud', 'comfort', 'launcher', 'performance'];
 const statuses = ['prototype', 'planned', 'verified', 'released'];
 export default async function Features({
   searchParams,
@@ -24,31 +24,46 @@ export default async function Features({
   const params = await searchParams;
   const q = typeof params.q === 'string' ? params.q.slice(0, 120).trim() : '';
   const category =
-    typeof params.category === 'string' && categories.includes(params.category)
+    typeof params.category === 'string' && Object.hasOwn(categoryLabels, params.category)
       ? params.category
       : '';
   const status =
     typeof params.status === 'string' && statuses.includes(params.status) ? params.status : '';
   const result = await getFeatures();
-  const items = result.ok
-    ? result.data.items.filter(
-        (item) =>
-          (!category || category === item.category) &&
-          (!status || status === item.status) &&
-          `${item.name} ${item.summary} ${item.details}`
-            .toLocaleLowerCase('ru')
-            .includes(q.toLocaleLowerCase('ru')),
-      )
-    : [];
+  const all = result.ok ? result.data.items : [];
+  const items = filterFeatures(all, q, category, status);
+  const gameCount = all.filter((item) => featureKind(item) === 'game').length;
+  const hudCount = all.filter((item) => featureKind(item) === 'hud').length;
+  const toolCount = all.filter((item) => featureKind(item) === 'tools').length;
   return (
-    <div className="container page-content">
+    <div className="container page-content module-catalog-page">
       <PageIntro
         section="Возможности"
         label="ТВОЙ ИНСТРУМЕНТАРИЙ"
         title="Твой интерфейс. Твои правила."
       >
-        От базового HUD до будущих профилей. Каждая возможность — со своим реальным статусом.
+        Модули Minecraft 1.8.9, их настройки и реальные ограничения. Найди нужное по названию или по
+        тому, что хочешь изменить в игре.
       </PageIntro>
+      {result.ok && all.length > 0 && (
+        <aside className="catalog-overview" aria-label="Состав и статус каталога">
+          <p className="catalog-total">
+            <strong>{gameCount + hudCount} модулей</strong>
+            <span>
+              {gameCount} игровых · {hudCount} HUD · {toolCount} инструмента отдельно
+            </span>
+          </p>
+          <p>Локальный прототип. Публичного релиза и готового установщика пока нет.</p>
+          <details>
+            <summary>Проверки и ограничения</summary>
+            <p>
+              Проверены настройки модулей и отдельные игровые сценарии на локальном тестовом
+              сервере. Полная проверка клавиатуры и мыши, внешних серверов и шейдеров ещё впереди.
+              Оценки клиента отмечены в описаниях. Официальный онлайн-вход пока недоступен.
+            </p>
+          </details>
+        </aside>
+      )}
       <FilterForm key={`${q}|${category}|${status}`} action="/features">
         <label>
           Поиск
@@ -58,10 +73,11 @@ export default async function Features({
           Категория
           <select name="category" defaultValue={category}>
             <option value="">Все категории</option>
-            <option value="hud">HUD</option>
-            <option value="comfort">Удобство</option>
-            <option value="launcher">Лаунчер</option>
-            <option value="performance">Производительность</option>
+            {Object.entries(categoryLabels).map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
           </select>
         </label>
         <label>
@@ -82,8 +98,10 @@ export default async function Features({
         <>
           <div className="filter-results">
             <p className="result-count" role="status">
-              Найдено: {items.length}
+              Найдено: {items.length} из {all.length}
               {q && <> · По запросу «{q}»</>}
+              {category && <> · {categoryLabels[category]}</>}
+              {status && <> · {statusLabels[status]}</>}
             </p>
             {(q || category || status) && (
               <Link className="filter-reset" href="/features">
@@ -94,8 +112,16 @@ export default async function Features({
           {items.length ? (
             <div className="catalog">
               {items.map((item) => (
-                <article className="page-panel" key={item.id}>
-                  <span className="status">{statusLabels[item.status]}</span>
+                <article
+                  className="page-panel"
+                  key={item.id}
+                  id={item.slug}
+                  data-feature-kind={featureKind(item)}
+                >
+                  <div className="catalog-labels">
+                    <span className="status">{statusLabels[item.status]}</span>
+                    <span className="catalog-kind">{kindLabels[featureKind(item)]}</span>
+                  </div>
                   <h2>{item.name}</h2>
                   <p>{item.summary}</p>
                   <details>
@@ -110,10 +136,23 @@ export default async function Features({
                 </article>
               ))}
             </div>
+          ) : all.length === 0 ? (
+            <div className="empty-state">
+              <h2>Каталог пока пуст</h2>
+              <p>
+                Описания ещё не опубликованы. Это не ошибка поиска; загляните в обновления проекта.
+              </p>
+              <Link className="button secondary" href="/updates">
+                Обновления проекта
+              </Link>
+            </div>
           ) : (
             <div className="empty-state">
               <h2>Ничего не найдено</h2>
-              <p>Измените запрос или сбросьте категорию и статус, чтобы увидеть весь каталог.</p>
+              <p>
+                Попробуйте «броня», «камера» или «координаты». Можно также сбросить категорию и
+                статус.
+              </p>
               <Link className="button secondary" href="/features">
                 Сбросить фильтры
               </Link>

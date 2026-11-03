@@ -15,7 +15,7 @@ test('HTTP API exposes health, project and an honest empty release list', async 
     assert.equal(project.minecraft, '1.8.9');
     assert.deepEqual(await (await fetch(base + '/v1/releases')).json(), { items: [], total: 0 });
     const features = await (await fetch(base + '/v1/features')).json();
-    assert.equal(features.items.length, 6);
+    assert.equal(features.items.length, 57);
     assert.equal(
       features.items.some((x) => x.status === 'released'),
       false,
