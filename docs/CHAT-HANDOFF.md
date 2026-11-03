@@ -1,5 +1,13 @@
 # Передача работы между чатами Space Client
 
+## Интеграция основной ветки и Java · 3 ноября 2026
+
+Последнее поручение пользователя прямо разрешает перенос всей накопленной работы в main; прежний local-only запрет push/main отменён. Hosting/release/Microsoft не входят в это поручение. Origin добавлен на AdilSatuv/spaceclient. Merge06a66af сохраняет локальную историю и remote353604d/4598d39 (фильтры сайта); safety/pre-main-20261103 сохраняет313799d. Единственный conflict browser flows разрешён сохранением обеих проверок. Для pending result count используется реальное предыдущее значение вместо старого fixture6.
+
+Общие45+API30+launcher155=230, types/tokens/format, production API/Next и8HTTP pass. QA выполнена в отдельной копии main-publication-verify, не поверх живого сайта. Firefox выявил неподдерживаемую BiDi-команду no-JS helper и частично скрытый «Аккаунт» при Tab в dialog568×320. В9369b5c добавлены reveal +scroll-padding. Итоговый no-JS сценарий объединён с resilience в6c71e40; зависание $$eval точно локализовано и исправлено синхронным DOM count в487ed25, добавлена фазовая диагностика. Assertions сохранены, timeout не повышался. Chrome42layouts/33flows/errors0 (run-fd0214e3), плюс3targeted checks после последней QA-only правки (run-d86be9cf); Firefox полный42layouts/31flows/errors0 на487ed25 (run-ccbcde0b). 21website test/types/format после focus правки pass. Неуспешные промежуточные reports сохранены. Game tree19404e6d не менялся, прежние300Java/strict bundle/native61 остаются применимыми.
+
+Для сообщения «выберите Java» найдено различие preview и установленного приложения: у последнего javaPath=null. Проверен локальный Java21x64 и через ProfileStore.setJava сохранён только путь активного профиля с резервной копией; повторный read/probe usable=true/major21/bits64. Ник/RAM/прочее сохранены, глобальных изменений нет. Уже открытый процесс перечитает настройки после перезапуска. Установленный Electron содержит старый game treead06bc5f13ca76788f6c0832e9f72e77843219ac и не обновляется от push в main; автоматического app upgrade в этом срезе нет. Игра/живой сайт/аккаунты пользователя не прерывались. Полный контекст — [интеграция](MAIN-INTEGRATION-2026-11-03.md). Ниже — исторические checkpoints до разрешения main.
+
 ## Прежний вид HUD и проверка крыльев · 3 ноября2026
 
 Пользователь предпочёл старый HUD и спросил о крыльях. Source47062f1 возвращает graphite catalog/sidebar/cards/buttons, shared module settings/editor/switches к b09706e; единственный сохранённый diff этих4 UI файлов от прежнего образца — безопасный RU state/title spacing в List. Grid/List, все55, групповой/numeric editor/undo/profiles не менялись. Native orbital theme/47mixins остаются. Пользовательские cosmetic defaults/instance/processes не менялись.
