@@ -30,6 +30,7 @@ public class MenuStringsTest {
             for(String filter:new String[]{"all","enabled","favorites"})
                 assertTrue(locale+" "+filter,SpaceUiFont.width(MenuStrings.get(locale,"catalog.filter."+filter))<=47);
             assertTrue(SpaceUiFont.width(MenuStrings.get(locale,"catalog.edit"))<=74);
+            assertTrue(SpaceUiFont.width(MenuStrings.get(locale,"catalog.section.settings"))<=60);
         }
     }
 }

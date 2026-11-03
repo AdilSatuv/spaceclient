@@ -199,7 +199,7 @@ public final class HudModulesScreen extends Screen {
             if (selected || focused) fill(x, y + 3, x + 2, y + 22, 0xFFD7AF6A);
             if(layout.sidebarWidth>=100) {
                 HudModuleIcons.drawSection(item, left + 17, y + 6, 13, selected);
-                SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(sectionLabel(item),w-38),left+39,y+7,selected?TEXT:MUTED);
+                SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(sectionLabel(item),w-34),left+39,y+7,selected?TEXT:MUTED);
             } else {
                 SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(sectionLabel(item),w-8),x+4,y+7,selected?TEXT:MUTED);
             }

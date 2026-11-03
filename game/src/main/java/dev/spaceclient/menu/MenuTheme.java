@@ -97,7 +97,9 @@ public final class MenuTheme extends DrawableHelper {
             SpaceUiFont.draw(client, build, width - SpaceUiFont.width(build) - 12, 4, MUTED);
         } else if (width >= 240) {
             // The compact brand starts at y=13 at the smallest themed layout.
-            smallText(client,build,width-8-(int)Math.ceil(SpaceUiFont.width(build)*.75),1,width-16,MUTED);
+            int buildX=width-8-(int)Math.ceil(SpaceUiFont.width(build)*.75);
+            fill(buildX-2,0,width-6,12,0xFF101114);
+            smallText(client,build,buildX,1,width-16,MUTED);
         }
         if (layout.panelBottom + 25 < height - 13) {
             String hint = MenuStrings.get(client, "keyboard");
