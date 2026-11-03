@@ -11,6 +11,32 @@ const root = path.resolve(__dirname, '..'),
   password = ' local fixture password 123456 ';
 const fixtureImage = (w, h) => {
   const raw = Buffer.alloc(h * (w * 4 + 1));
+  if (w === 64 && [32, 64].includes(h)) {
+    const fill = (x, y, width, height, color) => {
+      for (let row = y; row < y + height; row++)
+        for (let col = x; col < x + width; col++) raw.set(color, row * (w * 4 + 1) + col * 4 + 1);
+    };
+    fill(8, 8, 8, 8, [218, 167, 122, 255]);
+    fill(20, 20, 8, 12, [34, 67, 108, 255]);
+    fill(44, 20, 4, 12, [218, 167, 122, 255]);
+    fill(4, 20, 4, 12, [28, 37, 55, 255]);
+    if (h === 64) {
+      fill(36, 52, 4, 12, [218, 167, 122, 255]);
+      fill(20, 52, 4, 12, [28, 37, 55, 255]);
+      fill(40, 8, 8, 2, [124, 66, 168, 255]);
+      fill(23, 36, 2, 12, [246, 189, 130, 255]); // Distinct jacket stripe over a blue base.
+      fill(44, 39, 4, 3, [193, 70, 69, 255]);
+      fill(52, 55, 4, 3, [193, 70, 69, 255]);
+      fill(4, 45, 4, 3, [228, 232, 237, 255]);
+      fill(4, 61, 4, 3, [228, 232, 237, 255]);
+    } else {
+      fill(44, 20, 2, 12, [200, 40, 30, 255]);
+      fill(46, 20, 2, 12, [20, 60, 210, 255]);
+      fill(4, 20, 2, 12, [20, 180, 50, 255]);
+      fill(6, 20, 2, 12, [230, 180, 20, 255]);
+    }
+    return png(w, h, { raw });
+  }
   for (let y = 0; y < h; y++)
     for (let x = 0; x < w; x++) {
       const offset = y * (w * 4 + 1) + x * 4 + 1;
@@ -238,6 +264,8 @@ async function main() {
         capePath = path.join(output, 'cape.png');
       await fs.writeFile(skinPath, fixtureImage(64, 64));
       await fs.writeFile(capePath, fixtureImage(128, 64));
+      const legacyPath = path.join(output, 'legacy-skin.png');
+      await fs.writeFile(legacyPath, fixtureImage(64, 32));
       const maliciousPath = path.join(output, 'huge-bitmap.png'),
         oversizedPath = path.join(output, 'oversized.png');
       const malicious = fixtureImage(64, 64);
@@ -365,9 +393,55 @@ async function main() {
             true,
           );
         }
+        await (await page.$('#skin-file')).uploadFile(legacyPath);
+        await page.waitForFunction(
+          () =>
+            document.querySelector('canvas')?.getContext('2d').getImageData(5, 120, 1, 1)
+              .data[0] === 200,
+        );
+        assert.deepEqual(
+          await page.$eval('canvas', (element) => {
+            const context = element.getContext('2d');
+            return [
+              [5, 120],
+              [125, 120],
+              [45, 260],
+              [85, 260],
+            ].map(([x, y]) => [...context.getImageData(x, y, 1, 1).data]);
+          }),
+          [
+            [200, 40, 30, 255],
+            [20, 60, 210, 255],
+            [20, 180, 50, 255],
+            [230, 180, 20, 255],
+          ],
+          'Legacy left limbs mirror the right-limb texture',
+        );
+        await (
+          await page.$('canvas')
+        ).screenshot({ path: path.join(output, `account-legacy-preview-${width}.png`) });
         await (await page.$('#skin-file')).uploadFile(skinPath);
         await page.waitForFunction(
           () => !document.querySelector('.account-media:first-child button[type=submit]').disabled,
+        );
+        await page.waitForFunction(
+          () =>
+            document.querySelector('canvas')?.getContext('2d').getImageData(80, 120, 1, 1)
+              .data[0] === 246,
+        );
+        assert.deepEqual(
+          await page.$eval('canvas', (element) => {
+            const context = element.getContext('2d');
+            return [
+              [5, 120],
+              [155, 120],
+            ].map(([x, y]) => [...context.getImageData(x, y, 1, 1).data]);
+          }),
+          [
+            [193, 70, 69, 255],
+            [193, 70, 69, 255],
+          ],
+          'Classic sleeves use four texture columns',
         );
         await page.select('#skin-model', 'slim');
         await page.click('.account-media:first-child button[type=submit]');
@@ -384,8 +458,45 @@ async function main() {
         );
         await page.waitForFunction(
           () =>
-            document.querySelector('canvas')?.getContext('2d').getImageData(80, 30, 1, 1).data[3] >
-            0,
+            document.querySelector('canvas')?.getContext('2d').getImageData(80, 120, 1, 1)
+              .data[0] === 246,
+        );
+        assert.deepEqual(
+          await page.$eval('canvas', (element) => {
+            const context = element.getContext('2d');
+            return [
+              [80, 5],
+              [80, 40],
+              [50, 120],
+              [80, 120],
+              [20, 120],
+              [130, 120],
+              [60, 300],
+              [100, 300],
+            ].map(([x, y]) => [...context.getImageData(x, y, 1, 1).data]);
+          }),
+          [
+            [124, 66, 168, 255],
+            [218, 167, 122, 255],
+            [34, 67, 108, 255],
+            [246, 189, 130, 255],
+            [193, 70, 69, 255],
+            [193, 70, 69, 255],
+            [228, 232, 237, 255],
+            [228, 232, 237, 255],
+          ],
+          'Hat/jacket/sleeves/pants alpha layers reach actual canvas pixels',
+        );
+        assert.deepEqual(
+          await page.$eval('canvas', (element) => {
+            const context = element.getContext('2d');
+            return [
+              [5, 120],
+              [155, 120],
+            ].map(([x, y]) => context.getImageData(x, y, 1, 1).data[3]);
+          }),
+          [0, 0],
+          'Slim sleeves use three texture columns',
         );
         assert.equal(
           await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1),

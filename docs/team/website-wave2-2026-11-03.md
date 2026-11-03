@@ -40,7 +40,7 @@ CSRF cookie сохраняется между вкладками, обновля
 
 | Проверка | Итог |
 | --- | --- |
-| Полный `npm test` на конечном source | **41 general +30 API +138 launcher =209 pass**, fail/cancelled/skipped0 |
+| Полный `npm test` перед дополнением слоёв preview | **41 general +30 API +138 launcher =209 pass**, fail/cancelled/skipped0 |
 | API parallel TAP/trace snapshots | Два отдельно запланированных штатных прогона, по30 pass, оба exit0; не retry и не concurrency1 |
 | Types/tokens всех workspace | Pass |
 | API / Next production build | Pass |
@@ -59,3 +59,7 @@ API worker cause остаётся неизвестной: исходный ра�
 Source commits: backend `f852388`, strict-model/worker `bf45066`, BFF/UI `5d4eed2`, bounded preview `76783c8`; отдельный commit отчёта идёт следом. `2226710` — cherry-pick уже принадлежащего ведущему `ff6e11a`, повторно переносить не нужно.
 
 Границы: local account service и web UI, без Microsoft/public hosting/реальных аккаунтов/нового установщика/видимых окон/CUA/OS input. Настоящие DPAPI, запуск игры и применение appearance в production Java проверяются отдельными направлениями/ведущим; мои HTTP и UI fixtures этого не подменяют. Screen reader, Safari/Firefox и production HTTPS/proxy в этом срезе не проверены. Тяжёлые QA завершены; во время согласованного benchmark новые build/browser/Electron не запускались.
+
+## Дополнение preview после ревью
+
+Подготовлены jacket/sleeves/pants alpha layers для64×64 с classic/slim UV и зеркальные левые конечности дляlegacy64×32. Цветной UV fixture различает базовую текстуру, hat, золотую полосу jacket, красные sleeves и светлые pants; browser assertions сравнивают конкретные canvas RGBA и classic/slim границы рук. Отдельный asymmetric legacy fixture проверяет зеркало обеих конечностей. Пока это source без нового build/browser rerun: ведущий попросил дождаться завершения тихого benchmark-окна. Предыдущие209 тестов и run2a603 не выдаются за проверку этого дополнения.

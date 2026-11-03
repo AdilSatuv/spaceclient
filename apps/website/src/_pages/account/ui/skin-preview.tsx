@@ -23,24 +23,34 @@ export default function SkinPreview({ src, slim }: { src: string; slim: boolean 
         dy: number,
         dw: number,
         dh: number,
-      ) => context.drawImage(image, x, y, w, h, dx, dy, dw, dh);
+        mirror = false,
+      ) => {
+        if (!mirror) {
+          context.drawImage(image, x, y, w, h, dx, dy, dw, dh);
+          return;
+        }
+        context.save();
+        context.translate(dx + dw, dy);
+        context.scale(-1, 1);
+        context.drawImage(image, x, y, w, h, 0, 0, dw, dh);
+        context.restore();
+      };
       draw(8, 8, 8, 8, 40, 0, 80, 80);
       draw(20, 20, 8, 12, 40, 80, 80, 120);
-      const arm = slim ? 3 : 4,
-        armWidth = slim ? 30 : 40;
+      const modern = image.height === 64;
+      const arm = modern && slim ? 3 : 4,
+        armWidth = arm * 10;
       draw(44, 20, arm, 12, 40 - armWidth, 80, armWidth, 120);
-      draw(
-        image.height === 64 ? 36 : 44,
-        image.height === 64 ? 52 : 20,
-        arm,
-        12,
-        120,
-        80,
-        armWidth,
-        120,
-      );
+      draw(modern ? 36 : 44, modern ? 52 : 20, arm, 12, 120, 80, armWidth, 120, !modern);
       draw(4, 20, 4, 12, 40, 200, 40, 120);
-      draw(image.height === 64 ? 20 : 4, image.height === 64 ? 52 : 20, 4, 12, 80, 200, 40, 120);
+      draw(modern ? 20 : 4, modern ? 52 : 20, 4, 12, 80, 200, 40, 120, !modern);
+      if (modern) {
+        draw(20, 36, 8, 12, 40, 80, 80, 120); // Jacket.
+        draw(44, 36, arm, 12, 40 - armWidth, 80, armWidth, 120);
+        draw(52, 52, arm, 12, 120, 80, armWidth, 120);
+        draw(4, 36, 4, 12, 40, 200, 40, 120);
+        draw(4, 52, 4, 12, 80, 200, 40, 120);
+      }
       draw(40, 8, 8, 8, 40, 0, 80, 80);
     };
     image.src = src;
