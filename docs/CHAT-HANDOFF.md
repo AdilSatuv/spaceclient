@@ -1,5 +1,13 @@
 # Передача работы между чатами Space Client
 
+## Установленный лаунчер и игра обновлены · 3 ноября 2026
+
+По прямому поручению «обнови и запусти» собран полный package build-oiLxiv из sourcef996417; strict game bundle и setup extraction/hash/Unicode/long/cancel/corrupt/hostile проверки прошли. Установленное приложение было закрыто: новый payload размещён в отдельной соседней папке, все98SHA сверены, прежняя папка перемещена в Space Client.backup-20261103-154636-8275c7d3 и staging переименован в обычный путь. Все98 установленных файлов повторно совпали. Это локальная замена, не новая функция automatic updater; данные в AppData сохранены отдельно.
+
+Реальный InstallationService обновил активный instance:768 файлов, JAR tree19404e6dfa54414b4053945244243859fd483e6e / dev-19404e6dfa54 / SHA5ecc09c30278e27067f0b5db6ce7430080a472af42094f12783c382fd3f1b40a,1152623bytes. Старые JAR/receipt сохранены в maintenance-backups/launcher-update-24cf4dbb-005e-4baf-81e0-208a0c2d9047. Подготовка завершилась phaseprepared; первоначальный support helper ошибочно ожидал ready, затем выполнен read-only prepareLocalLaunch: все artifacts/native cache/JAR/Java21x64 pass, без spawn Minecraft. settings.json побайтно совпадает с резервной копией до обновления; миры/личность/config не затрагивались.
+
+Обычный Start-Process установленного Space Client.exe отклонён automatic command review с причиной blocked by policy. Новое окно не открыто, альтернативный запуск не предпринимался. Предложено пользователю открыть существующий ярлык через Пуск. Process-only SPACE_ACCOUNT_API_URL=50565 из отклонённого запуска не применён и не сохранён: обычный ручной запуск по-прежнему использует default3001. Полный [QA record](qa/installed-launcher-update-2026-11-03.json). Ниже — история до обновления установленного приложения.
+
 ## Интеграция основной ветки и Java · 3 ноября 2026
 
 Последнее поручение пользователя прямо разрешает перенос всей накопленной работы в main; прежний local-only запрет push/main отменён. Hosting/release/Microsoft не входят в это поручение. Origin добавлен на AdilSatuv/spaceclient. Merge06a66af сохраняет локальную историю и remote353604d/4598d39 (фильтры сайта); safety/pre-main-20261103 сохраняет313799d. Единственный conflict browser flows разрешён сохранением обеих проверок. Для pending result count используется реальное предыдущее значение вместо старого fixture6.

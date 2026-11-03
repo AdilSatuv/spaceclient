@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-03",
+  "scope": "Manual staged replacement of the existing Windows development application; no automatic updater feature or public release",
+  "launcherSourceCommit": "f996417010cf79994ec75f4ebdfa2baab57dc1b8",
+  "packageBuild": "build-oiLxiv",
+  "installedApplication": "%LOCALAPPDATA%/Programs/Space Client",
+  "previousApplicationBackup": "%LOCALAPPDATA%/Programs/Space Client.backup-20261103-154636-8275c7d3",
+  "stagedAndInstalledFileCount": 98,
+  "allPayloadHashesMatch": true,
+  "setupExtractionChecks": "passed: full payload hashes, existing target preservation, Unicode/long paths, cancellation, corrupt and hostile archives",
+  "gamePreparation": "Production InstallationService completed; actual terminal phase is prepared",
+  "gameFileCount": 768,
+  "gameBuildId": "dev-19404e6dfa54",
+  "gameSourceTree": "19404e6dfa54414b4053945244243859fd483e6e",
+  "gameSha256": "5ecc09c30278e27067f0b5db6ce7430080a472af42094f12783c382fd3f1b40a",
+  "gameSizeBytes": 1152623,
+  "previousGameBackup": "%APPDATA%/Space Client/maintenance-backups/launcher-update-24cf4dbb-005e-4baf-81e0-208a0c2d9047",
+  "profileSettingsByteIdenticalToBeforeUpdate": true,
+  "javaProbe": { "usable": true, "major": 21, "bits": 64 },
+  "productionLocalLaunchPreflight": "passed; pinned metadata, installed artifacts, native cache, Space JAR and Java rechecked without spawning Minecraft",
+  "minecraftStarted": false,
+  "visibleLauncherLaunchAttempt": "Automatic command review rejected Start-Process for the installed Space Client.exe: blocked by policy",
+  "visibleLauncherWindowOpened": false,
+  "launchRetriedUsingAnotherMethod": false,
+  "requestedProcessAccountApi": "http://127.0.0.1:50565",
+  "processAccountApiApplied": false,
+  "notes": [
+    "Application and game update succeeded; the visible launch was a separate rejected action.",
+    "A support helper initially expected phase ready; InstallationService had successfully completed with its real phase prepared. A subsequent read-only production preflight passed; preparation was not repeated.",
+    "The standard shortcut retains the installed executable path. Default account API remains localhost:3001; the rejected process-specific preview override was not persisted.",
+    "No worlds, nickname, identity, credentials, HUD settings or global Java/Git configuration were changed."
+  ]
+}
