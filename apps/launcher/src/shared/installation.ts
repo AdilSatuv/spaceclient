@@ -1,3 +1,5 @@
+import type { SpaceBuildIdentity } from './build-identity.ts';
+
 export type InstallationPhase =
   | 'idle'
   | 'planning'
@@ -18,6 +20,7 @@ export type InstallationStatus = {
   totalBytes: number;
   retryCount: number;
   spaceVersion: string | null;
+  bundledBuild: SpaceBuildIdentity | null;
   message: string;
 };
 export const installationRunning = (phase: InstallationPhase) =>

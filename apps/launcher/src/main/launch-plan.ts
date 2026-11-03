@@ -11,12 +11,15 @@ import type { SpaceBundleManifest } from './game-bundle.ts';
 import { inspectJava, javaEnvironment } from './java.ts';
 import { nickname, javaPath, editProfile } from './validation.ts';
 import type { Profile } from '../shared/models.ts';
+import type { SpaceBuildIdentity } from '../shared/build-identity.ts';
+import { spaceBuildIdentity } from './build-identity.ts';
 
 export type LaunchPlan = {
   executable: string;
   args: string[];
   cwd: string;
   env: NodeJS.ProcessEnv;
+  verifiedBuild: SpaceBuildIdentity;
 };
 type ValidationDependencies = {
   runtime: typeof inspectJava;
@@ -60,7 +63,7 @@ export async function prepareLocalLaunch(
   editProfile({ id: profile.id, name: profile.name, memoryMb: profile.memoryMb }, 16384);
   if (!pin)
     throw new UserFacingError(
-      'В этой сборке нет Space. Соберите игровой bundle и подготовьте файлы.',
+      'В этом лаунчере нет игровой сборки Space. Используйте development-лаунчер со сборкой Space, затем подготовьте файлы.',
     );
   if (!profile.javaPath) throw new UserFacingError('Выберите Java 21 x64 в настройках профиля.');
   const executable = javaPath(profile.javaPath);
@@ -73,12 +76,12 @@ export async function prepareLocalLaunch(
   const installed = await dependencies.space(mod, pin.gameSourceTree, signal).catch(() => {
     signal.throwIfAborted();
     throw new UserFacingError(
-      'Установленная сборка Space повреждена или устарела. Нажмите «Проверить и восстановить».',
+      'Установленная сборка Space повреждена или устарела. Повторите подготовку в карточке «Файлы игры».',
     );
   });
   if (installed.manifest.sha256 !== pin.sha256 || installed.manifest.size !== pin.size)
     throw new UserFacingError(
-      'Space не совпадает со сборкой лаунчера. Проверьте и восстановите файлы.',
+      'Space не совпадает со сборкой лаунчера. Повторите подготовку в карточке «Файлы игры».',
     );
   // This launch contract supports our pinned mod only, including no version-specific mod folders.
   const mods = await readdir(join(root, 'mods'));
@@ -92,9 +95,12 @@ export async function prepareLocalLaunch(
   );
   const natives = await findNativeCache(join(root, 'natives'), nativeCacheKey(archives), signal);
   if (!natives)
-    throw new UserFacingError('Natives не прошли проверку. Нажмите «Проверить и восстановить».');
+    throw new UserFacingError(
+      'Библиотеки Windows не прошли проверку. Повторите подготовку в карточке «Файлы игры».',
+    );
   signal.throwIfAborted();
   return {
+    verifiedBuild: spaceBuildIdentity(installed.manifest),
     executable,
     cwd: root,
     env: javaEnvironment(),

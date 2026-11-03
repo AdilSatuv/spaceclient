@@ -278,7 +278,15 @@ async function installation(t) {
       sha256: createHash('sha256').update(bytes).digest('hex'),
     },
   ]);
-  const pin = { size: 3, sha256: 'a'.repeat(64), gameSourceTree: 'b'.repeat(40) };
+  const pin = {
+    channel: 'development',
+    modVersion: '0.1.0',
+    minecraftVersion: '1.8.9',
+    loaderVersion: '0.18.3',
+    size: 3,
+    sha256: 'a'.repeat(64),
+    gameSourceTree: 'b'.repeat(40),
+  };
   const plan = {
     files: [artifact],
     classpath: [artifact.relativePath, 'versions/1.8.9/1.8.9.jar'],
@@ -300,8 +308,9 @@ async function installation(t) {
   };
 }
 test('verified local plan owns fixed JVM/RAM/classpath/natives arguments and offline identity, with no shell string', async (t) => {
-  const { prepare, root } = await installation(t);
+  const { prepare, root, pin } = await installation(t);
   const plan = await prepare();
+  assert.deepEqual(plan.verifiedBuild, pin);
   assert.equal(plan.executable, profile.javaPath);
   assert.equal(plan.cwd, root);
   assert.ok(plan.args.includes('-Xmx2048M'));
@@ -345,7 +354,7 @@ test('changed/missing classpath bytes, extra mods, bundle mismatch, native corru
   await assert.rejects(f.prepare(), /не совпадает/);
   f.dependencies.space = async () => ({ manifest: f.pin });
   await fs.writeFile(path.join(f.root, 'natives/run-test/test.dll'), 'bad');
-  await assert.rejects(f.prepare(), /Natives/);
+  await assert.rejects(f.prepare(), /Библиотеки Windows/);
   await fs.unlink(library);
   await assert.rejects(f.prepare(), /целостности/);
   const outside = path.join(f.root, 'outside');
@@ -362,7 +371,7 @@ test('missing bundle/runtime and unsuitable Java fail before verification or spa
   const f = await installation(t);
   await assert.rejects(
     f.prepareLocalLaunch(f.root, profile, 'SpaceTester', null, signal(), f.dependencies),
-    /нет Space/,
+    /нет игровой сборки Space/,
   );
   await assert.rejects(
     f.prepareLocalLaunch(

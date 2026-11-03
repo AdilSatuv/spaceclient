@@ -425,18 +425,22 @@ try {
       }
       if (slug === 'home' && viewport.width >= 1000) {
         const controls = await page.evaluate(() =>
-          ['.launch-button', '.installation-actions button', '#launch-availability'].map(
-            (selector) => {
-              const rect = document.querySelector(selector).getBoundingClientRect();
-              return {
-                selector,
-                visible:
-                  rect.top >= 38 &&
-                  rect.bottom <= innerHeight &&
-                  rect.height >= (selector === '#launch-availability' ? 1 : 44),
-              };
-            },
-          ),
+          [
+            '.launch-button',
+            '.installation-actions button',
+            '#launch-availability',
+            '.build-id',
+          ].map((selector) => {
+            const rect = document.querySelector(selector).getBoundingClientRect();
+            return {
+              selector,
+              visible:
+                rect.top >= 38 &&
+                rect.bottom <= innerHeight &&
+                rect.height >=
+                  (selector === '#launch-availability' || selector === '.build-id' ? 1 : 44),
+            };
+          }),
         );
         assert.ok(
           controls.every((control) => control.visible),

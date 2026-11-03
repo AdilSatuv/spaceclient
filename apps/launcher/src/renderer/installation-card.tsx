@@ -1,36 +1,33 @@
 import type { useInstallation } from './hooks/use-installation';
-import {
-  ArrowDownToLine,
-  CircleCheck,
-  LoaderCircle,
-  RefreshCw,
-  ShieldCheck,
-  Square,
-} from 'lucide-react';
+import { ArrowDownToLine, CircleCheck, LoaderCircle, RefreshCw, Square } from 'lucide-react';
 import { Button } from './components/ui/button';
 import { Badge } from './components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from './components/ui/card';
 import { cn } from './lib/utils';
+import type { LaunchStatus } from '../shared/launch';
+import { BuildIdentity } from './components/build-identity';
 const mib = (bytes: number) =>
   new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 }).format(bytes / 1048576) + ' МиБ';
 export function InstallationCard({
   installation,
   lockReason,
+  launch,
 }: {
   installation: ReturnType<typeof useInstallation>;
   lockReason: string;
+  launch: LaunchStatus | null;
 }) {
-  const { current, running, prepared, error, acting, start, cancel } = installation;
+  const { current, running, prepared, error, acting, start, cancel, reload } = installation;
   return (
     <Card className="installation-card" aria-label="Подготовка файлов игры">
       <CardHeader>
         <div className="section-heading">
           <p className="card-eyebrow">02 / ФАЙЛЫ ИГРЫ</p>
-          <Badge variant="outline" className={cn(prepared && 'ready-badge')}>
+          <Badge variant="outline" className={cn(prepared && !error && 'ready-badge')}>
             {error || current?.phase === 'error'
               ? 'Ошибка'
               : prepared
-                ? 'Проверены'
+                ? 'Подготовлены'
                 : running
                   ? 'Подготовка'
                   : !current
@@ -48,13 +45,13 @@ export function InstallationCard({
       <CardContent>
         <div
           className={cn('installation-status', current?.phase === 'error' && 'installation-error')}
-          role="status"
-          aria-live="polite"
+          role={current?.phase === 'error' ? 'alert' : 'status'}
+          aria-live={current?.phase === 'error' ? 'assertive' : 'polite'}
           aria-atomic="true"
         >
           {running ? (
             <LoaderCircle className="spinner" aria-hidden="true" />
-          ) : prepared ? (
+          ) : prepared && !error ? (
             <CircleCheck aria-hidden="true" />
           ) : (
             <ArrowDownToLine aria-hidden="true" />
@@ -101,16 +98,18 @@ export function InstallationCard({
           ) : (
             <Button
               variant="outline"
-              disabled={acting || !!lockReason || !current}
-              onClick={start}
+              disabled={acting || !!lockReason || (!current && !error)}
+              onClick={error ? reload : start}
               aria-describedby={lockReason ? 'files-availability' : undefined}
             >
               {prepared ? <RefreshCw aria-hidden="true" /> : <ArrowDownToLine aria-hidden="true" />}
-              {prepared
-                ? 'Проверить и восстановить'
-                : current?.phase === 'cancelled' || current?.phase === 'error'
-                  ? 'Продолжить подготовку'
-                  : 'Подготовить файлы'}
+              {error
+                ? 'Повторить проверку состояния'
+                : prepared
+                  ? 'Проверить и восстановить'
+                  : current?.phase === 'cancelled' || current?.phase === 'error'
+                    ? 'Повторить подготовку'
+                    : 'Подготовить файлы'}
             </Button>
           )}
         </div>
@@ -119,16 +118,8 @@ export function InstallationCard({
             {lockReason}
           </p>
         )}
-        <div className="installation-footnote">
-          <ShieldCheck aria-hidden="true" />
-          <p>
-            Отдельная папка профиля.
-            <br />
-            Файлы проверяются перед каждым запуском.
-          </p>
-        </div>
-        {current?.spaceVersion && (
-          <p className="build-note">SPACE {current.spaceVersion} / DEVELOPMENT</p>
+        {current && (
+          <BuildIdentity bundled={current.bundledBuild} verified={launch?.verifiedBuild ?? null} />
         )}
       </CardContent>
     </Card>

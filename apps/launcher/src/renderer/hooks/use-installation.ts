@@ -65,5 +65,6 @@ export function useInstallation(profileId: string) {
     acting,
     start: () => act(() => api.startInstallation(profileId)),
     cancel: () => act(() => api.cancelInstallation(profileId)),
+    reload: () => act(() => api.getInstallation(profileId)),
   };
 }

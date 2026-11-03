@@ -1,3 +1,5 @@
+import type { VerifiedSpaceBuild } from './build-identity.ts';
+
 export type LaunchStatus = {
   profileId: string;
   mode: 'local';
@@ -5,4 +7,5 @@ export type LaunchStatus = {
   message: string;
   exitCode: number | null;
   log: string[];
+  verifiedBuild: VerifiedSpaceBuild | null;
 };

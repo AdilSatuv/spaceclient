@@ -61,7 +61,7 @@ export function HomePage({
                     : !installation.current
                       ? 'Проверяем…'
                       : installation.prepared
-                        ? 'Проверены'
+                        ? 'Подготовлены'
                         : 'Подготовьте ниже'}
               </span>
             </div>
@@ -87,7 +87,7 @@ export function HomePage({
       </section>
       <div className="play-workspace">
         <LaunchCard model={model} onProfiles={onProfiles} preparing={installation.running} />
-        <InstallationCard installation={installation} lockReason={lockReason} />
+        <InstallationCard installation={installation} launch={current} lockReason={lockReason} />
       </div>
     </>
   );
