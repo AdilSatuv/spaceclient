@@ -26,7 +26,7 @@ public final class WaypointRuntime {
         EntityRenderDispatcher d=c.getEntityRenderManager();
         for(WaypointStore.Point p:current(c))if(p.visible){double x=p.x+.5-d.cameraX,y=p.y+1-d.cameraY,z=p.z+.5-d.cameraZ;double distance=Math.sqrt(x*x+y*y+z*z);if(distance>8192)continue;int rgb=p.color.rgb();
             if(s.waypointBeam()){GL11.glPushAttrib(GL11.GL_ENABLE_BIT|GL11.GL_CURRENT_BIT|GL11.GL_DEPTH_BUFFER_BIT|GL11.GL_LINE_BIT);try{GL11.glEnable(GL11.GL_DEPTH_TEST);GL11.glDepthMask(false);GL11.glDisable(GL11.GL_TEXTURE_2D);GL11.glDisable(GL11.GL_LIGHTING);GL11.glLineWidth(2);GL11.glColor3f((rgb>>16&255)/255f,(rgb>>8&255)/255f,(rgb&255)/255f);GL11.glBegin(GL11.GL_LINES);GL11.glVertex3d(x,y,z);GL11.glVertex3d(x,y+4,z);GL11.glEnd();}finally{GL11.glPopAttrib();}}
-            WorldLabel.draw(p.name+(s.waypointDistance()?" ["+Math.round(distance)+"m]":""),x,y+4.3,z,rgb,true);
+            WorldLabel.draw(p.name+(s.waypointDistance()?" ["+Math.round(distance)+"m]":""),x,y+.35,z,rgb,true);
         }
     }
 }
