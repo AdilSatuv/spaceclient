@@ -1,6 +1,7 @@
 package dev.spaceclient.menu;
 
 import dev.spaceclient.hud.SpaceUiFont;
+import dev.spaceclient.BuildIdentity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
@@ -86,11 +87,19 @@ public final class MenuTheme extends DrawableHelper {
         fill(12, 27, width - 12, 28, 0xFF6F6250);
     }
     public static void titleDetails(MinecraftClient client, MenuLayout layout, int width, int height) {
+        String build = BuildIdentity.label();
         if (width >= 560) {
-            String version = "SPACE / 1.8.9";
+            String version = "SPACE / 1.8.9 / " + build;
             SpaceUiFont.draw(client, version, width - SpaceUiFont.width(version) - 18, 14, MUTED);
             // Decorative orbit marker, no simulated status or service indicator.
             icon(14, width - 34, 32, GOLD);
+        } else if (width >= 320) {
+            SpaceUiFont.draw(client, build, width - SpaceUiFont.width(build) - 12, 4, MUTED);
+        } else if (width >= 240) {
+            // The compact brand starts at y=13 at the smallest themed layout.
+            int buildX=width-8-(int)Math.ceil(SpaceUiFont.width(build)*.75);
+            fill(buildX-2,0,width-6,12,0xFF101114);
+            smallText(client,build,buildX,1,width-16,MUTED);
         }
         if (layout.panelBottom + 25 < height - 13) {
             String hint = MenuStrings.get(client, "keyboard");
