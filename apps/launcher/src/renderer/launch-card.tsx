@@ -136,8 +136,8 @@ export function LaunchCard({
             : ''}
         </p>
         <p className="local-mode-note">
-          Ник хранится на этом компьютере. Без регистрации Space и входа Microsoft; серверы с
-          проверкой аккаунта недоступны.
+          Ник хранится на этом компьютере. Аккаунт Space — по желанию. Вход Microsoft не подключён;
+          серверы с проверкой аккаунта Minecraft недоступны.
         </p>
         {!!current?.log.length && (
           <details className="launch-journal">

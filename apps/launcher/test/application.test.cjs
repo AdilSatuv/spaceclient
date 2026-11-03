@@ -69,10 +69,10 @@ async function fixture(t) {
   };
 }
 
-test('application owns all thirteen commands and preserves profile persistence without Electron', async (t) => {
+test('application owns all 26 explicit commands and preserves profile persistence without Electron', async (t) => {
   const { application, dispatch, event, profiles } = await fixture(t);
   const { channels } = await import('../src/shared/ipc.ts');
-  assert.equal(new Set(Object.values(channels)).size, 13);
+  assert.equal(new Set(Object.values(channels)).size, 26);
   assert.deepEqual(Object.keys(application.commands).sort(), Object.values(channels).sort());
   assert.equal((await dispatch('state:get', event)).value.activeProfileId, 'default');
   const created = await dispatch('profile:create', event);
@@ -87,6 +87,94 @@ test('application owns all thirteen commands and preserves profile persistence w
   const selected = await dispatch('profile:select', event, 'default');
   assert.equal(selected.value.activeProfileId, 'default');
   assert.equal(profiles.profile('default').memoryMb, 3072);
+});
+test('account payloads, confirmation and known profiles are checked before privileged account/recovery ports', async (t) => {
+  const f = await fixture(t);
+  let calls = 0;
+  f.dependencies.account = {
+    register: () => {
+      calls++;
+    },
+    login: () => {
+      calls++;
+    },
+    upload: () => {
+      calls++;
+    },
+    apply: () => {
+      calls++;
+    },
+    remove: () => {
+      calls++;
+    },
+  };
+  f.dependencies.recovery = {
+    restore: () => {
+      calls++;
+    },
+    backup: () => {
+      calls++;
+    },
+  };
+  for (const [command, payload] of [
+    ['account:login', { username: 'abc', password: 'short' }],
+    [
+      'account:register',
+      { username: 'abc', password: 'long password 123', nickname: 'ValidNick', token: 'x' },
+    ],
+    ['account:skin:upload', { expectedRevision: 1, model: 'classic', path: 'C:/secret' }],
+    ['account:cape:upload', { expectedRevision: 1, model: 'slim' }],
+    ['account:apply', { id: 'default', confirmIdentityChange: false }],
+    ['profile:restore', { id: 'default', confirmed: false }],
+    ['profile:backup', '../saves'],
+    ['account:skin:delete', 0],
+  ])
+    assert.equal((await f.dispatch(command, f.event, payload)).ok, false, command);
+  assert.equal(calls, 0);
+});
+test('maintenance reserves the instance until completion; running game blocks backup, restore and account apply', async (t) => {
+  const f = await fixture(t);
+  let release;
+  const waiting = new Promise((resolve) => {
+    release = resolve;
+  });
+  f.dependencies.recovery = {
+    backup: async () => {
+      await waiting;
+      return { message: 'Saved', files: 6 };
+    },
+  };
+  const backup = f.dispatch('profile:backup', f.event, 'default');
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(f.application.running, true);
+  for (const [command, payload] of [
+    ['local:save', 'OtherPlayer'],
+    ['profile:save', { id: 'default', name: 'Changed', memoryMb: 2048 }],
+    ['profile:create', undefined],
+    ['profile:select', 'default'],
+    ['java:choose', 'default'],
+  ])
+    assert.equal(
+      (await f.dispatch(command, f.event, payload)).ok,
+      false,
+      command + ' must not race maintenance',
+    );
+  assert.equal(
+    (await f.dispatch('state:get', f.event)).ok,
+    true,
+    'read-only state remains available',
+  );
+  assert.equal((await f.dispatch('launch:start', f.event, 'default')).ok, false);
+  assert.equal((await f.dispatch('installation:start', f.event, 'default')).ok, false);
+  release();
+  assert.equal((await backup).ok, true);
+  f.dependencies.launch.running = true;
+  for (const [command, payload] of [
+    ['profile:backup', 'default'],
+    ['profile:restore', { id: 'default', confirmed: true }],
+    ['account:apply', { id: 'default', confirmIdentityChange: true }],
+  ])
+    assert.equal((await f.dispatch(command, f.event, payload)).ok, false);
 });
 
 test('unknown profiles and inputless command payloads fail before privileged ports are called', async (t) => {

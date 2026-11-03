@@ -12,6 +12,7 @@ import { dirname, join, resolve } from 'node:path';
 import { createRequire } from 'node:module';
 import { execFileSync } from 'node:child_process';
 import { build } from 'esbuild';
+import { createHash } from 'node:crypto';
 
 const launcher = resolve(import.meta.dirname, '..');
 const repo = resolve(launcher, '../..');
@@ -27,6 +28,14 @@ if (process.platform !== 'win32' || !existsSync(csc) || !existsSync(icon))
   );
 const run = (bin, args, options = {}) =>
   execFileSync(bin, args, { cwd: repo, windowsHide: true, stdio: 'inherit', ...options });
+if (
+  execFileSync(
+    'git',
+    ['status', '--porcelain', '--', 'apps/launcher', 'packages/account-contracts'],
+    { cwd: repo, encoding: 'utf8', windowsHide: true },
+  ).trim()
+)
+  throw new Error('Commit launcher/account-contract sources before setup packaging.');
 run('cmd.exe', ['/d', '/s', '/c', 'npm.cmd run build:launcher'], {
   env: { ...process.env, SPACE_REQUIRE_GAME_BUNDLE: '1' },
 });
@@ -124,6 +133,27 @@ run('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', zipScript], 
   env: { ...process.env, SPACE_SETUP_INPUT: payload, SPACE_SETUP_ZIP: zip },
 });
 const source = join(launcher, 'installer/Setup.cs');
+const payloadHash = createHash('sha256').update(readFileSync(zip)).digest('hex');
+const digestFile = join(runDir, 'payload.sha256');
+writeFileSync(digestFile, payloadHash + '\n');
+const sourceCommit = execFileSync('git', ['rev-parse', 'HEAD'], {
+  cwd: repo,
+  encoding: 'utf8',
+  windowsHide: true,
+}).trim();
+writeFileSync(
+  join(runDir, 'setup-manifest.json'),
+  JSON.stringify(
+    {
+      schemaVersion: 1,
+      launcherSourceCommit: sourceCommit,
+      payloadSha256: payloadHash,
+      game: JSON.parse(readFileSync(join(launcher, 'dist/game/space-build.json'), 'utf8')),
+    },
+    null,
+    2,
+  ) + '\n',
+);
 const references = [
   '/r:System.IO.Compression.dll',
   '/r:System.IO.Compression.FileSystem.dll',
@@ -137,6 +167,7 @@ run(csc, [
   ...references,
   `/win32icon:${icon}`,
   `/resource:${zip},SpacePayload`,
+  `/resource:${digestFile},SpacePayloadHash`,
   `/out:${setup}`,
   source,
 ]);

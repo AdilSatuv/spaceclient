@@ -114,6 +114,44 @@ test('a verified Space bundle extends counts and records development identity wi
   assert.equal(receipt.space.gameSourceTree, spacePin.gameSourceTree);
   assert.equal(receipt.launchReady, false);
 });
+test('failed or cancelled preparation restores the previous JAR and receipt byte for byte', async (t) => {
+  for (const mode of ['error', 'cancel']) {
+    let began;
+    const started = new Promise((resolve) => {
+      began = resolve;
+    });
+    const { root, service } = await fixture(t, {
+      space: {
+        pin: spacePin,
+        install: async (target, signal) => {
+          await fs.writeFile(path.join(target, 'mods/space-client.jar'), 'partial-new-jar');
+          await fs.writeFile(path.join(target, 'base-installation.json'), 'partial-new-receipt');
+          began();
+          if (mode === 'error') throw new Error('installation failed');
+          await new Promise((resolve, reject) =>
+            signal.addEventListener('abort', () => reject(signal.reason), { once: true }),
+          );
+        },
+      },
+    });
+    await fs.mkdir(path.join(root, 'alpha/mods'), { recursive: true });
+    await fs.writeFile(path.join(root, 'alpha/mods/space-client.jar'), 'previous-jar');
+    await fs.writeFile(path.join(root, 'alpha/base-installation.json'), 'previous-receipt');
+    service.start('alpha');
+    await started;
+    if (mode === 'cancel') await service.cancel('alpha');
+    await service.settled();
+    assert.equal(service.status('alpha').phase, mode === 'cancel' ? 'cancelled' : 'error');
+    assert.equal(
+      await fs.readFile(path.join(root, 'alpha/mods/space-client.jar'), 'utf8'),
+      'previous-jar',
+    );
+    assert.equal(
+      await fs.readFile(path.join(root, 'alpha/base-installation.json'), 'utf8'),
+      'previous-receipt',
+    );
+  }
+});
 test('Space copy failure does not publish a new receipt or report the mod as installed', async (t) => {
   const { root, service } = await fixture(t, {
     space: {

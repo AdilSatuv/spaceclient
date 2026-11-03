@@ -8,7 +8,11 @@ import type { Profile } from '../shared/models.ts';
 import type { LaunchStatus } from '../shared/launch.ts';
 import { nickname, profileId } from './validation.ts';
 
-type Dependencies = { prepare: typeof prepareLocalLaunch; spawn: typeof spawn };
+type Dependencies = {
+  prepare: typeof prepareLocalLaunch;
+  spawn: typeof spawn;
+  beforeLaunch: (id: string, root: string, name: string, signal: AbortSignal) => Promise<void>;
+};
 type Job = { done: Promise<void>; controller: AbortController; spawned: boolean };
 
 /** Owns the reservation from the first await through process close, never accepts renderer args. */
@@ -26,7 +30,12 @@ export class LaunchService {
   ) {
     this.rootForProfile = rootForProfile;
     this.pin = pin;
-    this.dependencies = { prepare: prepareLocalLaunch, spawn, ...dependencies };
+    this.dependencies = {
+      prepare: prepareLocalLaunch,
+      spawn,
+      beforeLaunch: async () => {},
+      ...dependencies,
+    };
   }
   get running() {
     return this.jobs.size > 0;
@@ -73,6 +82,8 @@ export class LaunchService {
   private async perform(id: string, profile: Profile, name: string, job: Job) {
     try {
       const root = await this.rootForProfile(id);
+      job.controller.signal.throwIfAborted();
+      await this.dependencies.beforeLaunch(id, root, name, job.controller.signal);
       job.controller.signal.throwIfAborted();
       const plan = await this.dependencies.prepare(
         root,

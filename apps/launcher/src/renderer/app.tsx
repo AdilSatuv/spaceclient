@@ -16,16 +16,19 @@ import { useLauncherSession } from './hooks/use-launcher-session';
 import { HomePage } from './pages/home';
 import { ProfilesPage } from './pages/profiles';
 import { SettingsPage } from './pages/settings';
-type View = 'home' | 'profiles' | 'settings';
+import { AccountPage } from './pages/account';
+type View = 'home' | 'profiles' | 'settings' | 'account';
 const navigation = [
   { id: 'home', label: 'Играть', icon: Play },
   { id: 'profiles', label: 'Профили', icon: Layers3 },
   { id: 'settings', label: 'Настройки', icon: Settings2 },
+  { id: 'account', label: 'Аккаунт Space', icon: UserRound },
 ] as const;
 const titles = {
   home: ['Играть', 'Твоя следующая орбита начинается здесь.'],
   profiles: ['Профили игры', 'Отдельные настройки для каждого твоего мира.'],
   settings: ['Настройки лаунчера', 'Java, память и файлы на твоём устройстве.'],
+  account: ['Аккаунт Space', 'Твой ник и внешний вид — на сайте и в лаунчере.'],
 };
 
 export function App() {
@@ -153,6 +156,7 @@ export function App() {
                   )}
                   {view === 'profiles' && <ProfilesPage model={ready} />}
                   {view === 'settings' && <SettingsPage model={ready} />}
+                  {view === 'account' && <AccountPage model={ready} />}
                 </div>
               )
             )}

@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../co
 import { gb } from '../lib/format';
 import { cn } from '../lib/utils';
 import type { ReadyLauncherModel } from '../model/launcher-session';
+import { ProfileRecoveryCard } from '../components/profile-recovery';
 export function SettingsPage({ model }: { model: ReadyLauncherModel }) {
   const { snapshot, profile, busy, java, javaLabel, session } = model;
   return (
@@ -85,13 +86,14 @@ export function SettingsPage({ model }: { model: ReadyLauncherModel }) {
           <div>
             <h2>Локальный режим</h2>
             <p>
-              Игра по нику доступна без регистрации. Space-регистрация и вход Microsoft ещё не
-              подключены; серверы с проверкой аккаунта недоступны.
+              Игра по нику доступна без регистрации. Аккаунт Space настраивается в своём разделе.
+              Вход Microsoft не подключён; серверы с проверкой аккаунта Minecraft недоступны.
             </p>
           </div>
           <Badge variant="outline">{snapshot.localNickname ?? 'Ник не сохранён'}</Badge>
         </CardContent>
       </Card>
+      <ProfileRecoveryCard key={profile.id} model={model} />
     </>
   );
 }

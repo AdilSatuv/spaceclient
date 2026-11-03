@@ -14,6 +14,11 @@ import { createLauncherWindow } from './electron/window.ts';
 import { createDesktopPort } from './electron/desktop.ts';
 import { registerLauncherIpc } from './electron/ipc.ts';
 import { createAssetHandler } from './electron/assets.ts';
+import { AccountHttp, DEFAULT_ACCOUNT_API } from './account/http.ts';
+import { SpaceSessionVault } from './account/session.ts';
+import { SpaceAccountService } from './account/service.ts';
+import { windowsCacheEncryption } from './electron/windows-cache-encryption.ts';
+import { ProfileRecovery } from './profile-recovery.ts';
 
 declare const __SPACE_GAME_BUNDLE__: SpaceBundleManifest | null;
 
@@ -61,15 +66,45 @@ else {
             : null,
         },
       );
+      const desktop = createDesktopPort(() => window);
+      const instance = async (id: string) =>
+        join(await profiles.instanceDirectory(id), 'minecraft');
+      let account: SpaceAccountService | undefined;
+      try {
+        const http = new AccountHttp(process.env.SPACE_ACCOUNT_API_URL || DEFAULT_ACCOUNT_API);
+        account = new SpaceAccountService(
+          http,
+          new SpaceSessionVault(profiles.root, http.base, windowsCacheEncryption),
+          {
+            rootForProfile: instance,
+            localNickname: () => profiles.snapshot().localNickname,
+            saveNickname: (name) => profiles.saveNickname(name),
+            choosePng: (kind) => desktop.choosePng!(kind),
+          },
+        );
+      } catch {
+        /* Invalid operator configuration must not disable the guest launcher. */
+      }
+      const launch = new LaunchService(instance, pin, {
+        beforeLaunch: async (id, root, name, signal) => {
+          await account?.beforeLaunch(id, root, name, signal);
+        },
+      });
+      const recovery = new ProfileRecovery(profiles.root, {
+        profiles,
+        installation: (id) => installation.status(id),
+        launch: (id) => launch.status(id),
+        build: pin,
+        exportReport: (bytes) => desktop.exportReport!(bytes),
+      });
       application = new LauncherApplication({
+        account,
+        recovery,
         profiles,
         installation,
-        launch: new LaunchService(
-          async (id) => join(await profiles.instanceDirectory(id), 'minecraft'),
-          pin,
-        ),
+        launch,
         inspectJava,
-        desktop: createDesktopPort(() => window),
+        desktop,
       });
       protocol.handle('space', createAssetHandler(join(__dirname, 'renderer')));
       Menu.setApplicationMenu(null);

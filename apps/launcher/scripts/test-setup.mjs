@@ -19,8 +19,17 @@ if (!build.startsWith(expectedParent + '\\') || !existsSync(join(build, 'payload
   throw new Error('Provide the local setup build directory.');
 const harness = join(build, 'test-extract.exe');
 const testRoot = mkdtempSync(join(build, 'test-'));
-const extract = (zip, target) =>
-  spawnSync(harness, [zip, target], { windowsHide: true, encoding: 'utf8' });
+const extract = (zip, target, options = {}) =>
+  spawnSync(
+    harness,
+    [
+      zip,
+      target,
+      options.hash || createHash('sha256').update(readFileSync(zip)).digest('hex'),
+      ...(options.cancelAfter === undefined ? [] : [String(options.cancelAfter)]),
+    ],
+    { windowsHide: true, encoding: 'utf8' },
+  );
 const full = join(testRoot, 'full');
 const extracted = extract(join(build, 'payload.zip'), full);
 assert.equal(extracted.status, 0, `Full payload extraction failed: ${extracted.stderr}`);
@@ -49,6 +58,31 @@ mkdirSync(existing);
 writeFileSync(join(existing, 'user-file.txt'), 'preserve');
 assert.notEqual(extract(join(build, 'payload.zip'), existing).status, 0);
 assert.equal(readFileSync(join(existing, 'user-file.txt'), 'utf8'), 'preserve');
+const unicode = join(testRoot, 'Профиль Windows с пробелами', 'Space Client');
+assert.equal(extract(join(build, 'payload.zip'), unicode).status, 0);
+assert.deepEqual(files(unicode), expected);
+for (const name of expected)
+  assert.equal(await hash(join(unicode, name)), await hash(join(original, name)), name);
+for (const cancelAfter of [0, 6, 20]) {
+  const destination = join(testRoot, 'cancel-' + cancelAfter);
+  assert.notEqual(extract(join(build, 'payload.zip'), destination, { cancelAfter }).status, 0);
+  assert.equal(existsSync(destination), false);
+}
+const corrupt = join(testRoot, 'corrupt.zip'),
+  broken = readFileSync(join(build, 'payload.zip'));
+broken[Math.floor(broken.length / 2)] ^= 1;
+writeFileSync(corrupt, broken);
+assert.notEqual(
+  extract(corrupt, join(testRoot, 'corrupt-target'), {
+    hash: readFileSync(join(build, 'payload.sha256'), 'utf8').trim(),
+  }).status,
+  0,
+);
+assert.equal(existsSync(join(testRoot, 'corrupt-target')), false);
+assert.equal(
+  readdirSync(testRoot).some((name) => name.startsWith('.space-extract-')),
+  false,
+);
 const makeZip = `Add-Type -AssemblyName System.IO.Compression.FileSystem; $f=[IO.File]::Open($env:SPACE_ZIP,[IO.FileMode]::CreateNew); $z=[IO.Compression.ZipArchive]::new($f,[IO.Compression.ZipArchiveMode]::Create); foreach($n in ($env:SPACE_ENTRY -split '\\|')) { $e=$z.CreateEntry($n); $w=[IO.StreamWriter]::new($e.Open()); $w.Write('test'); $w.Dispose() }; $z.Dispose(); $f.Dispose()`;
 for (const [label, name] of [
   ['traversal', '../outside.txt'],
@@ -78,6 +112,9 @@ console.log(
       files: expected.length,
       payloadHashes: 'matched',
       existingTarget: 'preserved',
+      unicodeAndSpaces: 'all file hashes matched',
+      cancellation: 'three stages leave no target or staging',
+      corruption: 'payload SHA-256 rejected before writes',
       hostileArchives: 'rejected before writes',
       testRoot,
     },

@@ -103,10 +103,10 @@ try {
       process: typeof window.process,
       functions: Object.keys(window.space).length,
     })),
-    { require: 'undefined', process: 'undefined', functions: 13 },
+    { require: 'undefined', process: 'undefined', functions: 26 },
   );
   report.checks.push(
-    'Sandbox bridge remains limited to thirteen functions; no renderer Node globals.',
+    'Sandbox bridge has 26 explicit functions; no generic invoke or renderer Node globals.',
   );
   const siteTokens = await readFile(join(repo, 'apps/website/src/_app/styles/tokens.css'), 'utf8');
   const tokenPairs = {

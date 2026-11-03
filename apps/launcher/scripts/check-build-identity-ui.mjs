@@ -124,7 +124,7 @@ try {
       require: typeof window.require,
       process: typeof window.process,
     })),
-    { functions: 13, require: 'undefined', process: 'undefined' },
+    { functions: 26, require: 'undefined', process: 'undefined' },
   );
   const capture = async (name, selector) => {
     if (selector)

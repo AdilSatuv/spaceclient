@@ -1,6 +1,14 @@
 import type { Profile, Snapshot, JavaInfo } from '../../shared/models.ts';
 import type { InstallationStatus } from '../../shared/installation.ts';
 import type { LaunchStatus } from '../../shared/launch.ts';
+import type {
+  AccountState,
+  SpaceCredentials,
+  SpaceRegistration,
+  SpaceProfileEdit,
+  ImageSelection,
+  RecoveryResult,
+} from '../../shared/account.ts';
 
 export interface ProfileRepository {
   snapshot(): Snapshot;
@@ -22,6 +30,25 @@ export interface InstallationPort {
 export interface DesktopPort {
   chooseJava(): Promise<string | null>;
   openDirectory(path: string): Promise<void>;
+  choosePng?(kind: 'skin' | 'cape'): Promise<string | null>;
+  exportReport?(bytes: Uint8Array): Promise<boolean>;
+}
+export interface AccountPort {
+  readonly running: boolean;
+  status(): Promise<AccountState>;
+  register(input: SpaceRegistration): Promise<AccountState>;
+  login(input: SpaceCredentials): Promise<AccountState>;
+  logout(): Promise<AccountState>;
+  edit(input: SpaceProfileEdit): Promise<AccountState>;
+  upload(kind: 'skin' | 'cape', input: ImageSelection): Promise<AccountState>;
+  remove(kind: 'skin' | 'cape', revision: number): Promise<AccountState>;
+  apply(id: string): Promise<AccountState>;
+  settled(): Promise<void>;
+}
+export interface RecoveryPort {
+  backup(id: string): Promise<RecoveryResult>;
+  restore(id: string): Promise<RecoveryResult>;
+  diagnostics(id: string): Promise<RecoveryResult>;
 }
 export interface LaunchPort {
   readonly running: boolean;
@@ -30,6 +57,8 @@ export interface LaunchPort {
   shutdown(): Promise<void>;
 }
 export interface LauncherDependencies {
+  account?: AccountPort;
+  recovery?: RecoveryPort;
   profiles: ProfileRepository;
   installation: InstallationPort;
   launch: LaunchPort;

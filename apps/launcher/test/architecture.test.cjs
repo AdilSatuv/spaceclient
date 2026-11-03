@@ -73,7 +73,12 @@ test('launcher dependency boundaries keep application and presentation models in
     for (const dependency of imports(source.ast)) {
       const local = target(source, dependency.specifier);
       const message = `${source.name} -> ${dependency.specifier}`;
-      if (source.name.startsWith('shared/')) assert.ok(local?.startsWith('shared/'), message);
+      if (source.name.startsWith('shared/'))
+        assert.ok(
+          local?.startsWith('shared/') ||
+            (dependency.typeOnly && dependency.specifier === '@space/account-contracts'),
+          message,
+        );
       if (source.name.startsWith('main/application/')) {
         assert.ok(local?.startsWith('main/application/') || local?.startsWith('shared/'), message);
       }
