@@ -27,7 +27,7 @@ public abstract class MenuScreenMixin implements MenuFocus {
     @Override public boolean spaceclient$isFocused(ButtonWidget button) {
         return button == spaceclient$focus;
     }
-    @Inject(method = "renderBackground(I)V", at = @At("HEAD"), cancellable = true)
+    @Inject(method = {"renderBackground(I)V", "renderDirtBackground(I)V"}, at = @At("HEAD"), cancellable = true)
     private void spaceclient$background(int offset, CallbackInfo ci) {
         if (MenuTheme.applies((Screen) (Object) this)) {
             dev.spaceclient.menu.MenuBackdrop.render(client, width, height);
