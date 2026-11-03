@@ -14,10 +14,11 @@ public final class HudArrangeScreen extends ModuleSettingsScreen {
     protected boolean readOnly(){return SpaceClient.hud.isReadOnly();}
     protected String notice(){return !SpaceClient.hud.getError().isEmpty()?SpaceClient.hud.getError():status;}
     protected boolean navigation(int id){return id==99;}
+    static int coordinateLimit(int viewport,double extent){return (int)Math.round(Math.max(0,viewport-extent));}
     protected List<SettingRow> rows(){
         List<SettingRow> a=new ArrayList<>();HudPlacement.Bounds b=editor.primaryBounds();
         for(int i=0;i<3;i++){
-            SettingRow r=SettingRow.number(i,ui("editor."+(i==0?"x":i==1?"y":"scale")),ui("editor.numeric.hint"),i==0?(int)Math.round(b.x):i==1?(int)Math.round(b.y):(int)Math.round(SpaceClient.hud.getConfig().active().placement(editor.primary()).scale*100),i==2?50:0,i==0?editor.width:i==1?editor.height:300,i==2?5:1,v->Integer.toString(v));
+            SettingRow r=SettingRow.number(i,ui("editor."+(i==0?"x":i==1?"y":"scale")),ui("editor.numeric.hint"),i==0?(int)Math.round(b.x):i==1?(int)Math.round(b.y):(int)Math.round(SpaceClient.hud.getConfig().active().placement(editor.primary()).scale*100),i==2?50:0,i==0?coordinateLimit(editor.width,b.width):i==1?coordinateLimit(editor.height,b.height):300,i==2?5:1,v->Integer.toString(v));
             a.add(editor.primaryLocked()?r.disabled(ui("editor.locked")):r);
         }
         a.add(SettingRow.action(3,ui("editor.selectall"),ui("editor.selection.hint"),"Ctrl+A"));

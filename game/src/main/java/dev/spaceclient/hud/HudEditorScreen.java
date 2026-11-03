@@ -433,7 +433,9 @@ public final class HudEditorScreen extends Screen {
     boolean numeric(int id,int value) {
         if(settings().isReadOnly()||locked(selected)||!commitDraft())return false;
         HudPlacement.Bounds b=bounds(selected);
-        draft=id==2?placement().withScale(value/100.0):placement().at(id==0?value:b.x,id==1?value:b.y,width,height,HudRenderer.moduleWidth(client,selected,label(selected)),HudRenderer.moduleHeight(client,selected),false);
+        double px=id==0?(value==HudArrangeScreen.coordinateLimit(width,b.width)?width-b.width:value):b.x;
+        double py=id==1?(value==HudArrangeScreen.coordinateLimit(height,b.height)?height-b.height:value):b.y;
+        draft=id==2?placement().withScale(value/100.0):placement().at(px,py,width,height,HudRenderer.moduleWidth(client,selected,label(selected)),HudRenderer.moduleHeight(client,selected),false);
         return commitDraft();
     }
     boolean visibility(boolean visible){return !settings().isReadOnly()&&settings().visibility(selection,visible);}
