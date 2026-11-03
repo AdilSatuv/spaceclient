@@ -1,6 +1,7 @@
 const assert = require('node:assert/strict');
 const path = require('node:path');
 const puppeteer = require('puppeteer-core');
+const { checkModuleCatalogNoScript } = require('./check-website-module-catalog.cjs');
 
 async function checkWebsiteResilience({ browser, base, output, firefox, results, setScenario }) {
   const page = await browser.newPage();
@@ -228,6 +229,7 @@ async function checkFirefoxNoScript({ executable, base, output, results, setScen
   });
   try {
     await checkWebsiteResilience({ browser, base, output, firefox: true, results, setScenario });
+    await checkModuleCatalogNoScript({ browser, base, results, firefox: true });
   } finally {
     await browser.close();
   }

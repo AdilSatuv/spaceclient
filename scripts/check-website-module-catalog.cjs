@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const path = require('node:path');
 
-async function checkModuleCatalog({ browser, page, base, output, results, setScenario }) {
+async function checkModuleCatalog({ browser, page, base, output, results, setScenario, firefox }) {
   const goto = async (route) => {
     const response = await page.goto(base + route, { waitUntil: 'networkidle0' });
     assert.equal(response.status(), 200);
@@ -96,17 +96,28 @@ async function checkModuleCatalog({ browser, page, base, output, results, setSce
   } finally {
     setScenario({ emptyFeatures: false });
   }
+  if (!firefox) await checkModuleCatalogNoScript({ browser, base, results });
+}
+
+async function checkModuleCatalogNoScript({ browser, base, results, firefox = false }) {
   const noScript = await browser.newPage();
   try {
-    await noScript.setJavaScriptEnabled(false);
+    // Firefox runs in the existing javascript.enabled=false QA profile.
+    if (!firefox) await noScript.setJavaScriptEnabled(false);
     await noScript.goto(base + '/features?category=performance&q=FPS', {
       waitUntil: 'networkidle0',
     });
+    assert.equal(await noScript.evaluate(() => matchMedia('(scripting: none)').matches), true);
     assert.equal(await noScript.$$eval('.catalog article', (items) => items.length), 1);
     assert.match(await noScript.$eval('.catalog', (item) => item.textContent), /Dynamic FPS/);
+    // A disabled-script Firefox profile cannot run click's IntersectionObserver.
+    const button = await noScript.$('.filter-form button');
+    await button.evaluate((element) => element.scrollIntoView({ block: 'center' }));
+    const bounds = await button.boundingBox();
+    assert.ok(bounds && bounds.width > 0 && bounds.height > 0);
     await Promise.all([
       noScript.waitForNavigation({ waitUntil: 'networkidle0' }),
-      noScript.click('.filter-form button'),
+      noScript.mouse.click(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2),
     ]);
     assert.equal(await noScript.$$eval('.catalog article', (items) => items.length), 1);
     results.push({
@@ -117,4 +128,4 @@ async function checkModuleCatalog({ browser, page, base, output, results, setSce
     await noScript.close();
   }
 }
-module.exports = { checkModuleCatalog };
+module.exports = { checkModuleCatalog, checkModuleCatalogNoScript };

@@ -41,7 +41,7 @@ async function runWebsiteFlows({
   await checkWebsiteControls({ page, base, results });
   await checkWebsiteEclipse({ browser, page, base, results });
   await checkNavigationFeedback({ browser, page, base, output, setScenario, results });
-  await checkModuleCatalog({ browser, page, base, output, results, setScenario });
+  await checkModuleCatalog({ browser, page, base, output, results, setScenario, firefox });
   await checkFilterSubmit({ browser, base, setScenario, results, firefox });
 
   for (const width of [390, 1440]) {
