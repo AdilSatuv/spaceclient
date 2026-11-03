@@ -127,11 +127,13 @@ export class LauncherApplication {
   }
 
   private account() {
+    if (this.closing) throw new UserFacingError('Лаунчер завершает работу.');
     if (!this.dependencies.account)
       throw new UserFacingError('Аккаунты Space недоступны в этой сборке.');
     return this.dependencies.account;
   }
   private recovery() {
+    if (this.closing) throw new UserFacingError('Лаунчер завершает работу.');
     if (!this.dependencies.recovery)
       throw new UserFacingError('Восстановление недоступно в этой сборке.');
     return this.dependencies.recovery;

@@ -327,6 +327,8 @@ try {
         () =>
           document.querySelector('main').scrollWidth <=
             document.querySelector('main').clientWidth + 1 &&
+          document.querySelector('.sidebar').scrollWidth <=
+            document.querySelector('.sidebar').clientWidth + 1 &&
           document.documentElement.scrollWidth <= innerWidth,
       ),
       true,

@@ -1376,6 +1376,9 @@ progress::-webkit-progress-value {
   }
   .nav-text {
     font-size: 10px;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.2;
   }
   .nav-item .draft-dot {
     position: absolute;

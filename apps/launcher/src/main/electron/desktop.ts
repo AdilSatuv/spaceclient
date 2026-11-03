@@ -14,6 +14,7 @@ export async function writeDiagnosticFile(path: string, bytes: Uint8Array) {
     path.startsWith('\\\\') ||
     path.startsWith('//') ||
     !basename(path).toLowerCase().endsWith('.json') ||
+    /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(basename(path)) ||
     bytes.length > 64 * 1024
   )
     throw new UserFacingError('Выберите локальный JSON-файл для диагностики.');

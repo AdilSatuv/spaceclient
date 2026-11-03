@@ -20,10 +20,12 @@ export function AccountPage({ model }: { model: ReadyLauncherModel }) {
     [nickname, setNickname] = useState(''),
     [skinModel, setSkinModel] = useState<SkinModel>('classic'),
     [confirmed, setConfirmed] = useState(false);
-  const applyState = (state: AccountState) => {
+  const applyState = (state: AccountState, resetDraft = true) => {
     setAccount(state);
-    setNickname(state.profile?.nickname ?? '');
-    setSkinModel(state.profile?.skin?.model ?? 'classic');
+    if (resetDraft) {
+      setNickname(state.profile?.nickname ?? '');
+      setSkinModel(state.profile?.skin?.model ?? 'classic');
+    }
     setNotice(state.message);
   };
   const act = async (operation: () => Promise<Result<AccountState>>) => {
@@ -37,7 +39,7 @@ export function AccountPage({ model }: { model: ReadyLauncherModel }) {
       else {
         setError(result.error);
         const fresh = await api.getAccount();
-        if (fresh.ok) applyState(fresh.value);
+        if (fresh.ok) applyState(fresh.value, false);
       }
     } catch {
       setError('Не удалось связаться с лаунчером. Повторите действие.');

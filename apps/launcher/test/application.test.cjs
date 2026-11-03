@@ -176,6 +176,51 @@ test('maintenance reserves the instance until completion; running game blocks ba
   ])
     assert.equal((await f.dispatch(command, f.event, payload)).ok, false);
 });
+test('restore and explicit account Apply reject competing nickname/profile mutations while read-only state stays available', async (t) => {
+  for (const kind of ['restore', 'apply']) {
+    const f = await fixture(t);
+    let release;
+    const waiting = new Promise((resolve) => {
+      release = resolve;
+    });
+    f.dependencies.recovery = {
+      restore: async () => {
+        await waiting;
+        return { message: 'Restored', files: 6 };
+      },
+    };
+    f.dependencies.account = {
+      running: false,
+      apply: async () => {
+        await waiting;
+        return {
+          profile: null,
+          expiresAt: null,
+          skinPreview: null,
+          capePreview: null,
+          message: 'Applied',
+        };
+      },
+    };
+    const pending = f.dispatch(
+      kind === 'restore' ? 'profile:restore' : 'account:apply',
+      f.event,
+      kind === 'restore'
+        ? { id: 'default', confirmed: true }
+        : { id: 'default', confirmIdentityChange: true },
+    );
+    await new Promise((resolve) => setImmediate(resolve));
+    assert.equal((await f.dispatch('local:save', f.event, 'RacePlayer')).ok, false);
+    assert.equal(
+      (await f.dispatch('profile:save', f.event, { id: 'default', name: 'Race', memoryMb: 3072 }))
+        .ok,
+      false,
+    );
+    assert.equal((await f.dispatch('state:get', f.event)).ok, true);
+    release();
+    assert.equal((await pending).ok, true);
+  }
+});
 
 test('unknown profiles and inputless command payloads fail before privileged ports are called', async (t) => {
   const { dispatch, event, calls } = await fixture(t);
