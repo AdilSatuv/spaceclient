@@ -45,6 +45,8 @@ git push origin main
 
 Для Next.js-кода установлен локальный Prettier 3.9.10 (точная версия в package-lock). Использовать `npm.cmd run format` перед проверкой; CI выполняет `format:check`. Не форматировать auto-generated next-env.d.ts и AGENTS.md от Next dev. Встроенные руководства установленной Next.js доступны в node_modules/next/dist/docs и учитываются при смене API/конвенций.
 
+Prettier сохраняет существующий перевод строк (`endOfLine: auto`), согласованно с `.gitattributes` (`text=auto`). Windows checkout с CRLF и CI checkout с LF проверяются одной командой без изменения глобального Git и массовой перезаписи исходников. Смешанные переводы строк внутри файла по-прежнему нормализуются форматтером.
+
 Node.js для workspace теперь требуется версии 24+; CI использует 24. Контрактные тесты читают erasable TypeScript напрямую через встроенную поддержку Node, без отдельного компилятора тестов.
 
 Лаунчер находится в `apps/launcher`; инструкция — LAUNCHER.md. `npm.cmd run launcher` собирает и запускает Electron-приложение, `npm.cmd run build:launcher` собирает без запуска, `npm.cmd run test:launcher` проверяет store/валидацию/IPC/Java parser. Общие test/build/check включают новый workspace; CI отдельно повторяет проверки лаунчера на Windows. Форматирование включает launcher src/scripts/test. Для ручной UI-проверки задавать SPACE_LAUNCHER_DATA в `.reports/launcher-desktop`, чтобы сохранить личные настройки отдельно.
