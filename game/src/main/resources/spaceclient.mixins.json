@@ -38,7 +38,9 @@
     "GlintArmorMixin",
     "DynamicFpsMixin",
     "TntCountdownMixin",
-    "WaypointsMixin"
+    "WaypointsMixin",
+    "SpaceAppearanceMixin",
+    "SpaceCosmeticsMixin"
   ],
   "injectors": {
     "defaultRequire": 1

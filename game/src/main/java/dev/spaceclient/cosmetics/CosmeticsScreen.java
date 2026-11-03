@@ -20,6 +20,25 @@ public final class CosmeticsScreen extends ModuleSettingsScreen {
             :text("Your local appearance. Set skin and cape in the launcher account.","Локальная внешность. Скин и плащ задаются в аккаунте лаунчера.");
     }
     protected boolean readOnly() { return store().readOnly(); }
+    protected boolean navigation(int id) { return id==99; }
+    protected int previewHeight() { return 78; }
+    protected void preview(int x,int y,int w,int h) {
+        CosmeticsSettings.State state=store().view();
+        UiShapes.rounded(x,y,w,h,4,0xFF191B20);
+        int center=x+68;
+        CosmeticFeature.preview(state,center,y+31);
+        UiShapes.rounded(center-7,y+14,14,14,2,0xFFF2EEE7);
+        UiShapes.rounded(center-8,y+30,16,22,2,0xFF646974);
+        UiShapes.rounded(center-8,y+53,7,13,1,0xFF464A52);
+        UiShapes.rounded(center+1,y+53,7,13,1,0xFF464A52);
+        if(state.enabled&&state.halo!=CosmeticsSettings.Halo.NONE) {
+            UiShapes.rounded(center-13,y+5,26,4,2,0xFF000000|state.tint.primary);
+            if(state.halo==CosmeticsSettings.Halo.ORBIT)UiShapes.rounded(center-18,y+8,36,2,1,0xFF000000|state.tint.secondary);
+        }
+        SpaceUiFont.draw(client,text("Appearance preview","Предпросмотр внешности"),x+138,y+13,TEXT);
+        SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(text("Wings and halo update immediately.","Крылья и нимб меняются сразу."),w-150),x+138,y+31,MUTED);
+        SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(text("Skin and cape are read on game launch.","Скин и плащ читаются при запуске игры."),w-150),x+138,y+48,MUTED);
+    }
     protected String notice() { if(!store().error().isEmpty())return store().error();if(!store().notice().isEmpty())return store().notice();return status; }
     private String wing(CosmeticsSettings.Wings value) {
         switch(value) { case AURORA:return text("Aurora","Сияние");case EMBER:return text("Ember","Пламя");case CRYSTAL:return text("Crystal","Кристалл");default:return text("None","Нет"); }
