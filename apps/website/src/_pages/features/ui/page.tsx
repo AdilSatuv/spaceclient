@@ -4,7 +4,13 @@ import { FilterForm } from '@/shared/ui/filter-form';
 import ContentError from '@/shared/ui/content-error';
 import { getFeatures } from '@/shared/api/index.server';
 import { statusLabels } from '../model/status-labels';
-import { categoryLabels, featureKind, filterFeatures, kindLabels } from '../model/catalog';
+import {
+  categoryLabels,
+  countFeatures,
+  featureKind,
+  filterFeatures,
+  kindLabels,
+} from '../model/catalog';
 import { pageMetadata } from '@/shared/lib/metadata';
 export async function generateMetadata() {
   const result = await getFeatures();
@@ -32,9 +38,7 @@ export default async function Features({
   const result = await getFeatures();
   const all = result.ok ? result.data.items : [];
   const items = filterFeatures(all, q, category, status);
-  const gameCount = all.filter((item) => featureKind(item) === 'game').length;
-  const hudCount = all.filter((item) => featureKind(item) === 'hud').length;
-  const toolCount = all.filter((item) => featureKind(item) === 'tools').length;
+  const counts = countFeatures(all);
   return (
     <div className="container page-content module-catalog-page">
       <PageIntro
@@ -48,9 +52,9 @@ export default async function Features({
       {result.ok && all.length > 0 && (
         <aside className="catalog-overview" aria-label="Состав и статус каталога">
           <p className="catalog-total">
-            <strong>{gameCount + hudCount} модулей</strong>
+            <strong>{counts.modules} модулей</strong>
             <span>
-              {gameCount} игровых · {hudCount} HUD · {toolCount} инструмента отдельно
+              {counts.game} игровых · {counts.hud} HUD · {counts.tools} инструмента отдельно
             </span>
           </p>
           <p>Локальный прототип. Публичного релиза и готового установщика пока нет.</p>

@@ -2,7 +2,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 
 test('module group filters preserve tools and combine with search/status and legacy categories', async () => {
-  const { featureKind, filterFeatures } =
+  const { countFeatures, featureKind, filterFeatures } =
     await import('../apps/website/src/_pages/features/model/catalog.ts');
   const items = [
     {
@@ -59,4 +59,20 @@ test('module group filters preserve tools and combine with search/status and leg
   assert.deepEqual(ids('несуществующий'), []);
   assert.deepEqual(ids('', 'hud', 'verified'), []);
   assert.equal(featureKind({ id: 'future', category: 'comfort' }), 'other');
+  assert.deepEqual(countFeatures([...items, { id: 'future', category: 'comfort' }]), {
+    hud: 1,
+    game: 2,
+    tools: 2,
+    other: 1,
+    modules: 3,
+    total: 6,
+  });
+  assert.deepEqual(countFeatures([]), {
+    hud: 0,
+    game: 0,
+    tools: 0,
+    other: 0,
+    modules: 0,
+    total: 0,
+  });
 });

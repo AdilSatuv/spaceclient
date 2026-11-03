@@ -23,6 +23,12 @@ export const kindLabels = {
   other: 'Возможность',
 };
 
+export function countFeatures(items: Feature[]) {
+  const counts = { hud: 0, game: 0, tools: 0, other: 0 };
+  for (const item of items) counts[featureKind(item)]++;
+  return { ...counts, modules: counts.hud + counts.game, total: items.length };
+}
+
 export function matchesCategory(item: Feature, category: string) {
   if (!category) return true;
   if (category === 'game' || category === 'tools') return featureKind(item) === category;
