@@ -20,3 +20,5 @@ Coverage: all 29 gameplay toggle shortcuts, 26 HUD text samples on a real networ
 Each run has a fresh ignored folder, referenced by `.reports/input-network-qa/latest-run.json`. Acceptance requires `result.json`, a positive closed-play-packet count, three exited processes, and no ERROR/FATAL in their saved logs. Inspect the generated captures as well. Initial diagnostics and repeat failures remain in their own run folders.
 
 Physical controls, public online-mode servers, latency/loss conditions, anticheat, shaders/resource packs and the full per-feature multiplayer behavior of every module require additional qualification.
+
+`SPACE_QA_GAME_BUNDLE` may point to an independently prepared `space-client.jar`/`space-build.json` pair inside this repository's `.reports` directory. This permits integration checks while a user is viewing the previous launcher build. The same strict JAR/pin/preflight validation is retained; there is no unpinned or arbitrary-source mode.

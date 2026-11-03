@@ -8,6 +8,14 @@ import { installSpaceBundle } from '../../../apps/launcher/src/main/game-bundle.
 
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const qa = path.join(repo, '.reports/input-network-qa');
+const bundleRoot = process.env.SPACE_QA_GAME_BUNDLE
+  ? path.resolve(process.env.SPACE_QA_GAME_BUNDLE)
+  : path.join(repo, 'apps/launcher/dist/game');
+if (process.env.SPACE_QA_GAME_BUNDLE) {
+  const relative = path.relative(path.join(repo, '.reports'), bundleRoot);
+  if (!relative || relative.startsWith('..') || path.isAbsolute(relative))
+    throw Error('An alternate QA bundle must be inside this repository .reports directory');
+}
 await fs.mkdir(qa, { recursive: true });
 const lockPath = path.join(qa, 'run.lock');
 const lock = await fs.open(lockPath, 'wx');
@@ -65,9 +73,7 @@ try {
   const state = JSON.parse(
     await fs.readFile(path.join(repo, '.reports/native-menu-qa/settings.json'), 'utf8'),
   );
-  const pin = JSON.parse(
-    await fs.readFile(path.join(repo, 'apps/launcher/dist/game/space-build.json'), 'utf8'),
-  );
+  const pin = JSON.parse(await fs.readFile(path.join(bundleRoot, 'space-build.json'), 'utf8'));
   const profile = { ...state.profiles[0], memoryMb: 1536 };
   for (const sub of ['libraries', 'versions', 'assets', 'natives', 'mods'])
     await linkArtifacts(path.join(hostRoot, sub), path.join(clientRoot, sub));
@@ -84,11 +90,7 @@ try {
       options,
       'guiScale:2\npauseOnLostFocus:false\nmaxFps:60\nrenderDistance:4\nsoundCategory_master:0.0\nlang:en_US\n',
     );
-    await installSpaceBundle(
-      root,
-      path.join(repo, 'apps/launcher/dist/game/space-client.jar'),
-      pin,
-    );
+    await installSpaceBundle(root, path.join(bundleRoot, 'space-client.jar'), pin);
   }
   function start(role, root, nickname) {
     const service = new LaunchService(async () => root, pin, {
