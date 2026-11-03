@@ -16,13 +16,11 @@ export async function createApp(options: AppOptions = {}) {
       res.setHeader('Cache-Control', 'no-store');
       res.setHeader('X-Content-Type-Options', 'nosniff');
       if (Object.keys(req.query).length)
-        return res
-          .status(400)
-          .json({
-            statusCode: 400,
-            code: 'SPACE_INVALID_INPUT',
-            message: 'Некорректные параметры запроса.',
-          });
+        return res.status(400).json({
+          statusCode: 400,
+          code: 'SPACE_INVALID_INPUT',
+          message: 'Некорректные параметры запроса.',
+        });
     }
     next();
   });

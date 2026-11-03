@@ -238,6 +238,13 @@ async function main() {
         capePath = path.join(output, 'cape.png');
       await fs.writeFile(skinPath, fixtureImage(64, 64));
       await fs.writeFile(capePath, fixtureImage(128, 64));
+      const maliciousPath = path.join(output, 'huge-bitmap.png'),
+        oversizedPath = path.join(output, 'oversized.png');
+      const malicious = fixtureImage(64, 64);
+      malicious.writeUInt32BE(100000, 16);
+      malicious.writeUInt32BE(100000, 20);
+      await fs.writeFile(maliciousPath, malicious);
+      await fs.writeFile(oversizedPath, Buffer.alloc(256 * 1024 + 1));
       for (const width of [1440, 390]) {
         const context = await browser.createBrowserContext(),
           page = await context.newPage();
@@ -337,13 +344,40 @@ async function main() {
           {},
           'New' + width,
         );
+        for (const rejectedPath of [maliciousPath, oversizedPath]) {
+          await (await page.$('#skin-file')).uploadFile(rejectedPath);
+          await page.waitForSelector('.account-error');
+          await page.waitForFunction(() => document.querySelector('#skin-file').value === '');
+          assert.match(
+            await page.$eval('.account-error', (element) => element.textContent),
+            /PNG|Скин/,
+          );
+          assert.equal(
+            await page.$('.appearance-preview img[src^="blob:"], .skin-figure'),
+            null,
+            'Rejected header must not reach image/canvas decode',
+          );
+          assert.equal(
+            await page.$eval(
+              '.account-media:first-child button[type=submit]',
+              (element) => element.disabled,
+            ),
+            true,
+          );
+        }
         await (await page.$('#skin-file')).uploadFile(skinPath);
+        await page.waitForFunction(
+          () => !document.querySelector('.account-media:first-child button[type=submit]').disabled,
+        );
         await page.select('#skin-model', 'slim');
         await page.click('.account-media:first-child button[type=submit]');
         await page.waitForFunction(() =>
           document.querySelector('.account-profile .caption')?.textContent.includes('профиля 3.'),
         );
         await (await page.$('#cape-file')).uploadFile(capePath);
+        await page.waitForFunction(
+          () => !document.querySelector('.account-media:nth-child(2) button[type=submit]').disabled,
+        );
         await page.click('.account-media:nth-child(2) button[type=submit]');
         await page.waitForFunction(() =>
           document.querySelector('.account-profile .caption')?.textContent.includes('профиля 4.'),
@@ -395,6 +429,27 @@ async function main() {
         await page.waitForSelector('.account-error');
         assert.match(await page.$eval('.account-error', (x) => x.textContent), /Неверное/);
         await page.click('#account-password', { count: 3 });
+        await page.type('#account-password', password);
+        await page.click('.account-entry button[type=submit]');
+        await page.waitForSelector('.account-profile');
+        await api.close();
+        await page.click('.account-profile button:last-child');
+        await page.waitForSelector('.account-entry');
+        assert.match(
+          await page.$eval('.account-error', (element) => element.textContent),
+          /до истечения срока/,
+        );
+        assert.equal(
+          (await context.cookies()).some((cookie) => cookie.name === 'space_session'),
+          false,
+        );
+        api = await createApp({ accounts: { dataDir, now: () => now } });
+        await api.listen(apiPort, '127.0.0.1');
+        await page.screenshot({
+          path: path.join(output, `account-offline-logout-${width}.png`),
+          fullPage: true,
+        });
+        await page.type('#account-username', 'Browser' + width);
         await page.type('#account-password', password);
         await page.click('.account-entry button[type=submit]');
         await page.waitForSelector('.account-profile');

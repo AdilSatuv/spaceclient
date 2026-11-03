@@ -65,7 +65,7 @@ async function checkWebsiteResilience({ browser, base, output, firefox, results 
       });
       assert.deepEqual(state, {
         none: true,
-        nav: 4,
+        nav: 5,
         inertControls: 0,
         overflow: false,
         motion: 'paused',

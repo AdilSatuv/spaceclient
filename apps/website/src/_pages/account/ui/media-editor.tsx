@@ -1,9 +1,10 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import type { SpaceAccountProfile, SkinModel } from '@space/account-contracts';
 import { MAX_IMAGE_BYTES } from '@space/account-contracts';
 import { accountAssetUrl } from '@/shared/api/index.client';
 import SkinPreview from './skin-preview';
+import { validPreviewHeader } from '../model/image-header';
 type Props = {
   kind: 'skin' | 'cape';
   profile: SpaceAccountProfile;
@@ -12,6 +13,7 @@ type Props = {
   fail: (message: string) => void;
 };
 export default function MediaEditor({ kind, profile, disabled, save, fail }: Props) {
+  const selection = useRef(0);
   const [file, setFile] = useState<File | null>(null),
     [preview, setPreview] = useState(''),
     [model, setModel] = useState<SkinModel>(profile.skin?.model ?? 'classic');
@@ -88,15 +90,38 @@ export default function MediaEditor({ kind, profile, disabled, save, fail }: Pro
               name={kind}
               type="file"
               accept="image/png,.png"
-              onChange={(event) => {
-                const selected = event.target.files?.[0] ?? null;
-                if (selected && selected.size > MAX_IMAGE_BYTES) {
-                  fail('PNG должен быть не больше 256 КиБ.');
-                  event.target.value = '';
-                  setFile(null);
+              onChange={async (event) => {
+                const input = event.currentTarget,
+                  selected = input.files?.[0] ?? null,
+                  version = ++selection.current;
+                setFile(null);
+                if (!selected) return;
+                if (selected.size > MAX_IMAGE_BYTES || selected.size < 33) {
+                  fail('Нужен PNG не больше 256 КиБ.');
+                  input.value = '';
                   return;
                 }
-                setFile(selected);
+                try {
+                  const header = new Uint8Array(await selected.slice(0, 33).arrayBuffer());
+                  if (version !== selection.current) return;
+                  if (!validPreviewHeader(header, kind)) {
+                    fail(
+                      kind === 'skin'
+                        ? 'Скин должен быть PNG 64×64 или 64×32.'
+                        : 'Плащ должен быть PNG 64×32, 128×64 или 256×128.',
+                    );
+                    input.value = '';
+                    return;
+                  }
+                  if (kind === 'skin' && new DataView(header.buffer).getUint32(20) === 32)
+                    setModel('classic');
+                  setFile(selected);
+                } catch {
+                  if (version === selection.current) {
+                    input.value = '';
+                    fail('Не удалось прочитать PNG-файл.');
+                  }
+                }
               }}
               aria-describedby={`${kind}-help`}
             />
