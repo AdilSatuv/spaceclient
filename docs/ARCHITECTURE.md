@@ -1,6 +1,6 @@
 # Архитектура Space Launcher
 
-Срез на 23 октября 2026. Рефакторинг касается `apps/launcher`; сайт Next.js/NestJS и игровой мод остаются отдельными приложениями монорепозитория. Лаунчер разделён на прикладные команды, адаптеры Electron, инфраструктуру и представление. Новые библиотеки для этого не потребовались.
+Обновлено 3 ноября 2026. Сайт Next.js/NestJS, Electron-лаунчер и игровой мод остаются отдельными приложениями монорепозитория. Лаунчер разделён на прикладные команды, адаптеры Electron, инфраструктуру и представление. Space-аккаунт использует отдельный общий DTO-пакет и HTTP-сервис; токены остаются в main. Контракт — [ACCOUNT-AND-COSMETICS-CONTRACT.md](ACCOUNT-AND-COSMETICS-CONTRACT.md).
 
 ## Поток команды
 
@@ -8,7 +8,7 @@
 flowchart TD
   Entry[renderer/index: bridge + provider] --> UI[App / pages / components]
   UI --> State[LauncherSession / installation hook]
-  State --> API[LauncherApi: тринадцать функций]
+  State --> API[LauncherApi: 26 конкретных функций]
   API --> Preload[preload: contextBridge]
   Preload --> IPC[Electron IPC: sender / frame / URL]
   IPC --> Dispatch[Dispatcher: Result и безопасные ошибки]
@@ -28,15 +28,23 @@ flowchart TD
 | --- | --- | --- |
 | `shared/models.ts`, `shared/installation.ts` | Данные профилей, результатов и установки | Только `shared` |
 | `shared/ipc.ts` | Каналы, входы, выходы, производный `LauncherApi` | Только `shared` |
-| `main/application` | Тринадцать команд, порты, guards Java, обработка результата | `application`, `shared`; без Electron, Node и конкретных хранилищ |
+| `main/application` | 26 команд, порты, валидация и guards Java/account/maintenance | `application`, `shared`; без Electron, Node и конкретных хранилищ |
 | `main/electron` | Окно, native picker, shell, IPC и локальные assets | Прикладные интерфейсы, Electron и Node по назначению адаптера |
 | Остальные модули `main` | Файлы, очередь загрузок, проверка JAR, natives, auth vault/callback | Node, прикладные контракты, локальные инфраструктурные модули; без Electron, кроме точки сборки и адаптеров |
-| `preload.ts` | Тринадцать явно перечисленных функций | Electron и `shared` |
+| `preload.ts` | 26 явно перечисленных функций | Electron и `shared` |
 | `renderer/model` | Состояние профилей, черновик, ошибки, взаимное исключение команд | Модель и `shared`; без React, DOM и платформенных API |
 | `renderer/hooks` | Подключение модели к React, контекст API, polling установки | React, модель, типизированный API |
 | `renderer/pages`, `components` | Разметка, отображение и пользовательские события | Renderer и общие типы; без Node/Electron |
 
 `shared/contracts.ts` сохранён как совместимый экспорт типов. Типы транспорта не заменяют runtime-валидацию: вход каждого main-обработчика остаётся `unknown`, а ID, поля, память и пути проверяются существующими валидаторами. Модель renderer отвечает за удобство взаимодействия; полномочия и запись принадлежат main.
+
+## Аккаунт и обслуживание профиля
+
+`main/account` владеет фиксированным HTTP-клиентом, проверкой PNG, публичным профилем и OS-encrypted session vault. `shared/account.ts` экспортирует только публичные DTO и типы из `@space/account-contracts`; renderer не получает sessionToken, API origin, файловые пути или произвольный invoke. BFF сайта и main лаунчера работают с одним Nest-сервисом.
+
+Вход сохраняет существующий локальный ник. Явный Apply атомарно пишет публичные appearance-файлы, затем сохраняет выбранный ник. Перед запуском snapshot повторно проверяется; недоступный API не исключает локальную игру с уже проверенной внешностью. Logout всегда очищает локальную сессию, отдельно сообщая о неподтверждённом серверном отзыве.
+
+`ProfileRecovery` сохраняет только whitelist настроек, не worlds/credentials/Java. `LauncherApplication` сериализует Apply/backup/restore с изменениями профиля/ника и блокирует изменения instance во время запуска/игры/подготовки. Установка восстанавливает прежние JAR/receipt после ошибки или отмены; read-only status остаётся доступен.
 
 ## Состояние интерфейса
 
@@ -52,7 +60,7 @@ flowchart TD
 - Ошибки загрузок и проверки файлов содержат фиксированный текст; `DownloadFailure` сохраняет отдельный признак retryable. Тип ошибки не меняет правила повторов, проверки хеша или атомарной записи.
 - Native picker передаёт путь только внутри main. Renderer передаёт ID и разрешённые настройки. Shell получает путь от repository, а не произвольный путь из UI.
 - Проверки точных webContents/mainFrame/URL, sandbox/contextIsolation, CSP, запреты окон, навигации и permissions сохранены. IPC-обработчики снимаются при закрытии окна и частичной ошибке регистрации.
-- Auth vault/callback ещё не подключены к UI. Для них действуют отдельные правила [AUTH.md](AUTH.md): токены, codes, claims, кеш и raw SDK errors не передаются в renderer.
+- Microsoft auth vault/callback ещё не подключены к UI. Для них действуют отдельные правила [AUTH.md](AUTH.md): токены, codes, claims, кеш и raw SDK errors не передаются в renderer. Space-session — независимый main-only механизм.
 
 ## Правила расширения
 
