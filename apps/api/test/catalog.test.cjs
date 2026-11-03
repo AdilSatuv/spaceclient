@@ -24,7 +24,7 @@ test('catalog service works without Nest and repository snapshots cannot mutate 
   result.items.splice(0);
   repository.read().updates.splice(0);
   assert.equal(isFeatureList(service.features()), true);
-  assert.equal(service.features().items.length, 6);
+  assert.equal(service.features().items.length, production.features.length);
   assert.equal(isReleaseList(service.releases()), true);
   assert.equal(isUpdateList(service.updates({ type: 'all', page: 1 })), true);
   assert.equal(isUpdate(service.update('first-contact')), true);

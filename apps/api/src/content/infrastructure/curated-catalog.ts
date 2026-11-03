@@ -1,44 +1,7 @@
 import type { Feature, Release, Update } from '@space/content-contracts';
+import { moduleFeatures } from './module-catalog';
 export const features: Feature[] = [
-  {
-    id: 'fps',
-    slug: 'fps',
-    name: 'FPS Counter',
-    summary: 'Частота кадров прямо в игре.',
-    category: 'hud',
-    status: 'prototype',
-    details:
-      'Показатель берётся из Minecraft; отрисовка в тестовом мире проверена. Локальные замеры не доказывают прирост FPS; официальный сравнительный baseline ещё впереди.',
-  },
-  {
-    id: 'coordinates',
-    slug: 'coordinates',
-    name: 'Координаты',
-    summary: 'XYZ без отладочного экрана.',
-    category: 'hud',
-    status: 'prototype',
-    details: 'В dev-моде реализован виджет положения игрока.',
-  },
-  {
-    id: 'keys',
-    slug: 'keystrokes',
-    name: 'Keystrokes',
-    summary: 'Состояния клавиш движения перед глазами.',
-    category: 'hud',
-    status: 'prototype',
-    details:
-      'Использует игровые bindings; переназначение клавиш и отпускание проверены в мире. Положение и масштаб меняются в редакторе HUD.',
-  },
-  {
-    id: 'cps',
-    slug: 'cps',
-    name: 'CPS Counter',
-    summary: 'Отдельный счётчик левой и правой кнопок.',
-    category: 'hud',
-    status: 'prototype',
-    details:
-      'Скользящее окно в одну секунду. В мире проверены левая и правая кнопки, удержания, исключение кликов меню и сброс при выходе.',
-  },
+  ...moduleFeatures,
   {
     id: 'editor',
     slug: 'hud-editor',

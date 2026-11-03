@@ -32,7 +32,7 @@ const base = process.env.SPACE_SITE_URL || 'http://127.0.0.1:3000';
   for (const route of ['/unknown', '/help/unknown', '/updates/unknown'])
     assert.equal((await fetch(base + route)).status, 404, route);
   let html = await (await fetch(base + '/features?category=hud&status=prototype')).text();
-  assert.match(html, /Найдено: <!-- -->4/, 'Expected four prototype HUD modules, including CPS');
+  assert.match(html, /Найдено: <!-- -->26/, 'Expected all 26 prototype HUD modules, including CPS');
   assert.ok(html.includes('CPS Counter'), 'CPS prototype must be present in the filtered catalog');
   assert.ok(
     !html.includes('Редактор HUD'),
