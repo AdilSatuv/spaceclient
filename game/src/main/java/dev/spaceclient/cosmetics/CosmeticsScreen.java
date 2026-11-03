@@ -43,7 +43,12 @@ public final class CosmeticsScreen extends ModuleSettingsScreen {
         SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(text("Wings and halo update immediately.","Крылья и нимб меняются сразу."),w-150),x+138,y+31,MUTED);
         SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(text("Skin and cape are read on game launch.","Скин и плащ читаются при запуске игры."),w-150),x+138,y+48,MUTED);
     }
-    protected String notice() { if(!store().error().isEmpty())return store().error();if(!store().notice().isEmpty())return store().notice();return status; }
+    protected String notice() {
+        if(!store().error().isEmpty())return text(store().error(),"Не удалось сохранить внешность. Предыдущее значение восстановлено.");
+        if(!store().notice().isEmpty())return text(store().notice(),"Файл настроек сохранён. Используются безопасные значения; новая версия доступна только для чтения.");
+        if(!CosmeticsRuntime.appearance().notice.isEmpty())return text(CosmeticsRuntime.appearance().notice,"Файл внешности не прошёл проверку. Используются стандартные текстуры; примените профиль в лаунчере.");
+        return status;
+    }
     private String wing(CosmeticsSettings.Wings value) {
         switch(value) { case AURORA:return text("Aurora","Сияние");case EMBER:return text("Ember","Пламя");case CRYSTAL:return text("Crystal","Кристалл");default:return text("None","Нет"); }
     }
@@ -57,7 +62,7 @@ public final class CosmeticsScreen extends ModuleSettingsScreen {
         rows.add(SettingRow.number(103,text("Wing size","Размер крыльев"),text("Visual size only.","Меняет только внешний вид."),value.scale,60,140,10,n->n+"%"));
         rows.add(SettingRow.toggle(104,text("Animation","Анимация"),text("Gentle movement; off keeps a static pose.","Плавное движение или статичная поза."),value.animated));
         rows.add(SettingRow.choice(105,text("Halo","Нимб"),text("A ring or orbit above the head.","Кольцо или орбита над головой."),halo(value.halo)));
-        rows.add(SettingRow.toggle(106,text("Space skin","Скин Space"),text("Use the verified profile skin on the next launch.","Использовать проверенный скин профиля."),value.skin));
+        rows.add(SettingRow.toggle(106,text("Space skin","Скин Space"),text("Use the verified profile skin.","Использовать проверенный скин профиля."),value.skin));
         rows.add(SettingRow.toggle(107,text("Space cape","Плащ Space"),text("Show the verified profile cape.","Показывать проверенный плащ профиля."),value.cape));
         if(!value.enabled)for(int i=1;i<rows.size();i++)rows.set(i,rows.get(i).disabled(text("Enable Space appearance first.","Сначала включите внешность Space.")));
         return rows;
