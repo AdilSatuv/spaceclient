@@ -6,6 +6,8 @@ import dev.spaceclient.menu.*;
 import dev.spaceclient.mods.*;
 import dev.spaceclient.settings.*;
 import dev.spaceclient.cosmetics.CosmeticsScreen;
+import dev.spaceclient.cosmetics.CosmeticsSettings;
+import dev.spaceclient.cosmetics.CosmeticsRuntime;
 import dev.spaceclient.qa.mixin.ScreenAccess;
 import java.io.*;
 import java.nio.*;
@@ -136,6 +138,14 @@ public final class MenuThemeCheck {
         screen("hud-editor",()->new HudEditorScreen(new HudModulesScreen()));
         add("hud-arrange",()->key(c.currentScreen,Keyboard.KEY_E));
         screen("inworld-cosmetics",()->new CosmeticsScreen(new GameMenuScreen()));
+        for(CosmeticsSettings.Wings wings:new CosmeticsSettings.Wings[]{CosmeticsSettings.Wings.AURORA,CosmeticsSettings.Wings.EMBER,CosmeticsSettings.Wings.CRYSTAL}){
+            final CosmeticsSettings.Wings shape=wings;
+            add("cosmetics-wings-"+wings.name().toLowerCase(Locale.ROOT),()->{
+                require(CosmeticsRuntime.settings().change(value->{value.enabled=true;value.wings=shape;value.halo=CosmeticsSettings.Halo.ORBIT;}),"Cosmetic choice did not persist");
+                require(CosmeticsRuntime.settings().view().wings==shape,"Wrong persisted wing shape");
+                c.setScreen(new CosmeticsScreen(new GameMenuScreen()));
+            });
+        }
         screen("legacy-mod-controls",()->new ModsScreen(new GameMenuScreen()));
         screen("waypoints",()->new WaypointsScreen(new GameMenuScreen()));
     }

@@ -6,8 +6,7 @@ public final class HudSwitch {
     public static void draw(int x, int y, boolean enabled) { draw(x,y,enabled ? 1 : 0); }
     public static void draw(int x, int y, float amount) {
         float t = Math.max(0,Math.min(1,amount));
-        UiShapes.rounded(x+1,y,26,14,7,mix(0xFF52647D,0xFFF0D5A6,t));
-        UiShapes.rounded(x+2,y+1,24,12,6,mix(0xFF25344A,0xFFD7AF6A,t));
+        UiShapes.rounded(x+2,y+1,24,12,6,mix(0xFF3A3C40,0xFFD7AF6A,t));
         UiShapes.rounded(x+4+11*t,y+3,10,10,5,0x40000000);
         UiShapes.rounded(x+4+11*t,y+2,10,10,5,mix(0xFF979A9E,0xFFF4F1EA,t));
     }
