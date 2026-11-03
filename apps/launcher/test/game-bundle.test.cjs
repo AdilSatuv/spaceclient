@@ -62,6 +62,7 @@ function entries() {
       'LoadingRendererMixin',
       'ProgressScreenMixin',
       'TerrainScreenMixin',
+      'LoadingNavigationMixin',
     ],
   };
   return [
@@ -118,6 +119,7 @@ function entries() {
       'mixin/LoadingRendererMixin',
       'mixin/ProgressScreenMixin',
       'mixin/TerrainScreenMixin',
+      'mixin/LoadingNavigationMixin',
       'cosmetics/AppearanceProfile',
       'cosmetics/CosmeticsSettings',
       'cosmetics/CosmeticsSettings$State',
@@ -464,6 +466,7 @@ test('all pinned mixin classes and the exact mixin set are required', async (t) 
     'LoadingRendererMixin',
     'ProgressScreenMixin',
     'TerrainScreenMixin',
+    'LoadingNavigationMixin',
   ];
   for (const name of pinned) {
     const candidate = await fixture(t, (value) =>

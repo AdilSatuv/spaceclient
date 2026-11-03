@@ -54,6 +54,7 @@ const expectedMixins = [
   'LoadingRendererMixin',
   'ProgressScreenMixin',
   'TerrainScreenMixin',
+  'LoadingNavigationMixin',
 ];
 const required = [
   'fabric.mod.json',
@@ -105,6 +106,7 @@ const required = [
   'dev/spaceclient/mixin/LoadingRendererMixin.class',
   'dev/spaceclient/mixin/ProgressScreenMixin.class',
   'dev/spaceclient/mixin/TerrainScreenMixin.class',
+  'dev/spaceclient/mixin/LoadingNavigationMixin.class',
   'dev/spaceclient/cosmetics/AppearanceProfile.class',
   'dev/spaceclient/cosmetics/CosmeticsSettings.class',
   'dev/spaceclient/cosmetics/CosmeticsSettings$State.class',
