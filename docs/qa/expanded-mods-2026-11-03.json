@@ -1,0 +1,254 @@
+{
+  "date": "2026-11-03",
+  "implementationCommit": "de9ec98",
+  "sourceCommits": [
+    "1479935",
+    "4213be2",
+    "2a297a3",
+    "de9ec98"
+  ],
+  "bundle": {
+    "schemaVersion": 1,
+    "channel": "development",
+    "modVersion": "0.1.0",
+    "minecraftVersion": "1.8.9",
+    "loaderVersion": "0.18.3",
+    "gameSourceTree": "541aae11fe5c1213ea84cdd545723b34fc3bc990",
+    "size": 1062009,
+    "sha256": "752512a6368b24750eca956db7a1687f5b866e30fd8ff76b98350d33596e4738"
+  },
+  "modules": {
+    "gameplay": 29,
+    "hud": 26,
+    "catalog": 55,
+    "newGameplay": [
+      "SCOREBOARD",
+      "TNT_COUNTDOWN",
+      "SCROLLABLE_TOOLTIPS",
+      "WAYPOINTS",
+      "PARTICLES",
+      "ENCHANTMENT_GLINT",
+      "INVENTORY_BLUR",
+      "DYNAMIC_FPS"
+    ],
+    "newHud": [
+      "COMBO_COUNTER",
+      "REACH_DISPLAY",
+      "SATURATION"
+    ],
+    "newModulesDefaultOff": true,
+    "newToggleKeysUnbound": true,
+    "modsSchema": 10,
+    "modsFields": 132,
+    "hudSchema": 18,
+    "profileExport": 13,
+    "browserSchemaUnchanged": 1,
+    "waypointsSchema": 1,
+    "waypointFileLimitBytes": 262144,
+    "maxWaypointsPerContextDimension": 64,
+    "maxWaypointsTotal": 512
+  },
+  "checks": {
+    "javaTests": 249,
+    "launcherTests": 112,
+    "typecheck": true,
+    "prettier": true,
+    "gameBuild": true,
+    "strictLauncherBuild": true,
+    "sourceStampVerified": true,
+    "exactRequiredMixins": 35,
+    "mixinClassesJava8": true,
+    "gitDiffCheck": true
+  },
+  "legacyFixtures": [
+    {
+      "file": "game/src/test/resources/hud-legacy/mods-schema9-1af3562.properties",
+      "sha256": "6019d45af7e7994a372efc17f9f0da7945eb2465f2e30b9ea443a6e7b1e1fac6",
+      "generatedByPreviousCompiledSerializerBeforeEdits": true
+    },
+    {
+      "file": "game/src/test/resources/hud-legacy/hud-schema17-1af3562.properties",
+      "sha256": "2cab59a447f19da9e8cd484c0fb8c435a1a0690de9e3776e67cdc371e128da16",
+      "generatedByPreviousCompiledSerializerBeforeEdits": true
+    },
+    {
+      "file": "game/src/test/resources/hud-legacy/profile-export12-1af3562.properties",
+      "sha256": "faca42dc07a7047be9d2a4401adf41db8d9b8bf54ea48c4af8336fe1966d92d5",
+      "generatedByPreviousCompiledSerializerBeforeEdits": true
+    }
+  ],
+  "native": {
+    "exitCode": 0,
+    "checks": {
+      "hiddenCanvas": true,
+      "cardsSearchControlsCapture": true,
+      "nativeWorldTntWaypointLabels": true,
+      "nativeHurtAndReachSamples": true,
+      "particleAmountScaleTintZero": true,
+      "waypointAddRenameHideColorPersistence": true,
+      "nativeItemArmorGlint": true,
+      "longTooltipAndScroll": true,
+      "inventoryBlurPassAndGlState": true,
+      "backgroundCapAndRestore": true,
+      "settingsAndOptionsPersistence": true,
+      "physicalInputTested": false,
+      "multiplayerTested": false,
+      "userWorldOpened": false
+    },
+    "finalCapturesVisuallyInspected": 15,
+    "zeroActualAttacksOrChatMessagesSent": true,
+    "separateQaWorldOnly": true,
+    "foodTooltipAndAppleNutritionObserved": true,
+    "freshTntAndWaypointLabelsRequiredSeparately": true,
+    "nativeSurvivalInventorySample": true,
+    "noObservedFatalMixinErrorsInFinalRun": true,
+    "findings": [
+      "QA initially chose a key still reserved by a prior QA Auto Text slot. Reset only QA macro bindings; conflict guard worked.",
+      "QA creative inventory redirected away from the player armor preview. Use a local survival-mode sample and renew client-only item/armor samples before render; restore the prior mode afterwards.",
+      "Nearby waypoint label was above view. Lowered production label and hid Space HUD while managing markers, then repeated native checks.",
+      "Post-screen direct GL blur probe initially blurred the completed UI in the capture. Moved only the QA probe before a fresh captured frame; native inventory UI stays sharp.",
+      "Wide-spaced blur taps left repeated text outlines. Replaced production shader with a normalized 17-tap separable Gaussian and linear intermediate textures; final images smooth.",
+      "Held native controls count as activity to avoid entering idle FPS during sustained movement. Physical long-hold input not exercised."
+    ]
+  },
+  "installation": {
+    "sha256": "752512a6368b24750eca956db7a1687f5b866e30fd8ff76b98350d33596e4738",
+    "gameSourceTree": "541aae11fe5c1213ea84cdd545723b34fc3bc990",
+    "preflight": true,
+    "settingsAndWorldMetadataPreserved": true,
+    "checkedFiles": 6
+  },
+  "screenshots": [
+    {
+      "file": "outputs/expanded-mods-2026-11-03/93-scoreboard-settings.png",
+      "sha256": "4dac8e6554ccb4f90fa8eacfbe3e65f763d088b695fe6e311303731f0fd6b2d4",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/expanded-mods-2026-11-03/94-tnt-countdown-settings.png",
+      "sha256": "db531fc082e039694b2391fc8e3e33f9c1b803928a4eea6a20ef33f247a6860e",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/expanded-mods-2026-11-03/95-scrollable-tooltips-settings.png",
+      "sha256": "e770f100383fb7cdac7f3e44d72942b494843aee28f7ec129f60f0384894f0f9",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/expanded-mods-2026-11-03/96-waypoints-settings.png",
+      "sha256": "566c0fe0b4d57ebd058d0c7a599719998c9ac16af92e2082e4679d948dbbc423",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/expanded-mods-2026-11-03/97-particles-settings.png",
+      "sha256": "084fae87b95057c4674e9b1df4dd19123da8ee47e8f2a06bf62b0cbeeb0cfcf7",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/expanded-mods-2026-11-03/98-enchantment-glint-settings.png",
+      "sha256": "fda1556df161e3ab34432c876ac04b7d3bcecfbdd5a6ae844f3789e5629f64b8",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/expanded-mods-2026-11-03/99-inventory-blur-settings.png",
+      "sha256": "df994aa9f65e18365b9e65ae85e13ab1c098c25b8c6641ec2dc630e3c4920f43",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/expanded-mods-2026-11-03/100-dynamic-fps-settings.png",
+      "sha256": "5a58448cbf4bf1356d27058492a3230caf34e1da3639af996b67e986d6367807",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/expanded-mods-2026-11-03/101-world-modules.png",
+      "sha256": "3da6eabb6e008de749e85280e7edd061463f1bf4ef975ee7a24c472e83823e88",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/expanded-mods-2026-11-03/102-waypoint-manager.png",
+      "sha256": "0f682ec9a7ba72e86401d560bf5ed645b0d37d42693d54085c25cccae745641e",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/expanded-mods-2026-11-03/103-scrollable-tooltip.png",
+      "sha256": "2c4c4c022103dc530e95540cffe4b00a064fa1a8e6a5b9b5ad372e961cccd4ef",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/expanded-mods-2026-11-03/104-scrolled-tooltip.png",
+      "sha256": "50c314bb51120b95762138e360c2d5785d7d6667cf3507297b3257108ca0a5a4",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/expanded-mods-2026-11-03/105-inventory-native-background.png",
+      "sha256": "5232e1a1fd4268001ba37f51803a50e6a52a2b287724ef2d3a848d54374c2941",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/expanded-mods-2026-11-03/106-inventory-blur.png",
+      "sha256": "4600ca44a1f4fe569ed1403c689518ff2dfc6490970580013f398fdf60f04f5c",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "outputs/expanded-mods-2026-11-03/107-food-saturation-preview.png",
+      "sha256": "bea92a31e4284ea51186422ca0f1d8e969c2d27ca66076f5b84fb5a4c26f9c1c",
+      "width": 1280,
+      "height": 720
+    }
+  ],
+  "codebaseMemory": {
+    "project": "spaceclient-mods-menus",
+    "rootVerified": true,
+    "indexedAt": "2026-11-03T01:19:01Z",
+    "mode": "fast",
+    "nodes": 9103,
+    "edges": 23464,
+    "skipped": 0,
+    "trace": "WaypointRuntime.draw <- WaypointsMixin.spaceclient$markers",
+    "sourceVerifiedBlurCaller": "TooltipMixin.spaceclient$blur",
+    "heuristicCaveat": "Blur trace included a spurious self-edge; no recursive draw call exists in the source. Coverage metadata_changed remains best-effort; sources checked on disk.",
+    "partialFiles": [
+      "apps/launcher/src/renderer/style.css",
+      "game/build.gradle",
+      "game/gradlew"
+    ]
+  },
+  "settingsChat": {
+    "threadId": "01a19ee4-040c-76d3-9005-3d73ae2166f1",
+    "title": "Space Client · Настройки модов",
+    "model": "gpt-6.1-sol",
+    "thinking": "xhigh",
+    "separateLocalCopy": true,
+    "base": "2b2c0c1",
+    "scope": "Improve settings of existing 21 gameplay and 23 HUD modules; separate UI commits, no user runtime installation. New eleven modules remain in the mods chat.",
+    "statusAtLastObservation": "active; first local UI commit 2499583, preparing its own native QA; not integrated here",
+    "codebaseMemoryProject": "spaceclient-mod-settings-20261103"
+  },
+  "limitations": [
+    "Combo Counter associates a recent local attack with the same target hurt status; another player could cause it. It is not server-authoritative hit attribution.",
+    "Reach Display uses the observed client crosshair hit vector; no reach extension or server confirmation.",
+    "Minecraft 1.8.9 does not sync precise saturation to clients; multiplayer HUD is marked estimated. Food tooltip shows nominal gains before food-level/saturation caps.",
+    "TNT uses visible client fuse timers; server/custom fuse changes may differ. World labels keep depth testing.",
+    "Factory particles can multiply up to 300%; directly constructed block debris is only thinned/scaled/tinted, not cloned. No performance claim.",
+    "Tooltips use native text data; actual wheel/Shift and custom third-party tooltip/creative scrolling interactions are not accepted by this synthetic check.",
+    "Waypoints have local names/coordinates/colors/visibility and world/dimension isolation. No teleport, minimap, sharing or cross-dimension coordinate conversion.",
+    "Inventory Blur needs OpenGL 2.0 and native framebuffer; unsupported contexts keep native background. No full shader/resource-pack/GPU/HiDPI/performance matrix.",
+    "Dynamic FPS background cap and disabled restore observed in hidden canvas; full physical focus/idle/held-input timing not exercised. No battery/FPS gains claimed.",
+    "Only the isolated QA world opened; no user world, multiplayer session or physical input acceptance. User game left closed after installation.",
+    "Implementation, GLSL and icons are own code; Minecraft native data/assets only, no competitor code copied."
+  ]
+}
