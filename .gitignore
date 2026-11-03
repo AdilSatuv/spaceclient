@@ -13,3 +13,4 @@ node_modules/
 *.iml
 .reports/
 .codebase-memory/
+.local/
