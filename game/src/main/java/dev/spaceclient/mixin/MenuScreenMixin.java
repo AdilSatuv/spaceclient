@@ -48,7 +48,7 @@ public abstract class MenuScreenMixin implements MenuFocus {
     // Only button-only pause menu: forms, lists, sliders and their keyboard handling are untouched.
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     private void spaceclient$keys(char character, int key, CallbackInfo ci) {
-        if (!((Object) this instanceof GameMenuScreen)) return;
+        if (!((Object) this instanceof GameMenuScreen) && !((Object)this instanceof net.minecraft.client.gui.screen.ConnectScreen) && !((Object)this instanceof net.minecraft.client.gui.screen.DisconnectedScreen)) return;
         if (spaceclient$navigate(character, key)) ci.cancel();
     }
     @Override public boolean spaceclient$navigate(char character, int key) {

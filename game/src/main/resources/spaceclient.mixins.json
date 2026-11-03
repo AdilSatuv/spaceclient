@@ -40,7 +40,11 @@
     "TntCountdownMixin",
     "WaypointsMixin",
     "SpaceAppearanceMixin",
-    "SpaceCosmeticsMixin"
+    "SpaceCosmeticsMixin",
+    "EarlyLoadingMixin",
+    "LoadingRendererMixin",
+    "ProgressScreenMixin",
+    "TerrainScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -15,7 +15,8 @@ enum HudSection {
     PLAYER("Player", "Player HUD indicators", EnumSet.of(HudModule.KEYSTROKES, HudModule.SPEED, HudModule.HEALTH, HudModule.HUNGER, HudModule.ARMOR, HudModule.POTION_EFFECTS, HudModule.ITEM_COUNTER, HudModule.SPRINT_STATUS, HudModule.EXPERIENCE, HudModule.ARROW_COUNTER, HudModule.INVENTORY, HudModule.SATURATION)),
     WORLD("World", "Position, world days and lighting", EnumSet.of(HudModule.COORDINATES, HudModule.COMPASS, HudModule.BIOME, HudModule.DAY_COUNTER, HudModule.LIGHT_LEVEL)),
     MISC("Misc", "Other HUD indicators", EnumSet.of(HudModule.FPS, HudModule.CPS, HudModule.CLOCK, HudModule.MEMORY, HudModule.PLAYTIME, HudModule.PING, HudModule.PACK_DISPLAY)),
-    SETTINGS("Settings", "Minecraft settings", EnumSet.noneOf(HudModule.class));
+    SETTINGS("Settings", "Minecraft settings", EnumSet.noneOf(HudModule.class)),
+    COSMETICS("Cosmetics","Local appearance",EnumSet.noneOf(HudModule.class));
 
     final String label, description;
     private final EnumSet<HudModule> included;

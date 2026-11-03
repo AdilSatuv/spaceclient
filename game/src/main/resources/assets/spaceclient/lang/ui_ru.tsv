@@ -1,0 +1,191 @@
+Frame rate	Частота кадров
+Position in your world	Координаты в текущем мире
+Movement key activity	Нажатия клавиш движения
+Left and right clicks / second	Левые и правые клики в секунду
+Direction you are facing	Направление взгляда
+Local time on this computer	Местное время компьютера
+Horizontal movement per tick	Горизонтальное перемещение за тик
+Current and maximum health	Текущее и максимальное здоровье
+Current food level	Текущий уровень голода
+Armor and held item durability	Прочность брони и предмета в руке
+Active potion effects	Действующие эффекты зелий
+Java memory used and maximum	Занятая и максимальная память Java
+Time in this world, excluding pauses	Время в мире без учёта пауз
+Held item total in your main inventory	Общее число предметов выбранного типа
+Sprint toggle and current running state	Включение спринта и фактический бег
+Server-reported latency in milliseconds	Задержка по данным сервера, мс
+The biome at your current position	Биом в текущей позиции
+Selected resource packs and server pack	Выбранные ресурспаки и пак сервера
+Current world day, starting at 1	Текущий день мира, начиная с первого
+Sky and block light at your feet	Свет неба и блоков у ваших ног
+Your level and progress to the next level	Уровень и прогресс до следующего
+Arrows in your main inventory and hotbar	Стрелы в инвентаре и хотбаре
+Your carried items in a compact grid	Предметы инвентаря в компактной сетке
+Consecutive hits before the combo breaks	Серия последовательных ударов
+Client-observed distance of your last attack	Дистанция последней атаки по данным клиента
+Food saturation estimate and nutrition preview	Оценка насыщения и питательность еды
+AutoSprint or press-to-toggle sprint	Автоспринт или переключение клавишей
+Look around without turning your player	Осмотр без поворота персонажа
+Hold a key for smooth camera zoom	Удерживайте клавишу для приближения
+Customize shape, size, gap and color	Форма, размер, зазор и цвет прицела
+Brighten dark areas on your screen	Осветление тёмных участков экрана
+Choose the sky's time of day	Выбор времени суток на вашем экране
+Keep your camera steady when hurt	Отключение тряски камеры при уроне
+Hold a key for a quick perspective view	Быстрая смена вида при удержании клавиши
+Choose clear skies, rain or snow	Ясная погода, дождь или снег
+Show when new chat messages arrived	Время получения новых сообщений чата
+Warn when equipped items are nearly broken	Предупреждение о низкой прочности экипировки
+Color the outline and fill of your selected block	Цвет обводки и заливки выбранного блока
+Customize the damage tint of visible entities	Цвет подсветки существ при уроне
+Choose your view angle and dynamic FOV strength	Угол обзора и сила динамического FOV
+Legacy-style block hit, eating and bow poses	Классические анимации блока, еды и лука
+Three messages with your own hotkeys	Три сообщения с собственными горячими клавишами
+Choose the game interface scale	Выбор масштаба игрового интерфейса
+Depth-tested entity bounding boxes	Границы существ с учётом глубины
+Dropped items tumble and rest on the ground	Вращение и положение выброшенных предметов
+Resize first-person and dropped items	Размер предметов в руке и на земле
+Customize block, combat and target-down sounds	Звуки блоков, боя и гибели цели
+Restyle and position the server sidebar	Оформление и положение серверного табло
+See the remaining fuse above visible TNT	Остаток времени до взрыва видимого TNT
+Scroll item descriptions that exceed the screen	Прокрутка подсказок за пределами экрана
+Save named locations for this world or server	Именованные метки текущего мира или сервера
+Adjust particle amount, size and tint	Количество, размер и цвет частиц
+Customize enchanted item and armor shimmer	Блеск зачарованных предметов и брони
+Blur the world behind inventories	Размытие мира за инвентарём
+Reduce frame rate in the background or while idle	Снижение FPS в фоне или при простое
+Enabled	Включено
+Scale	Масштаб
+Screen anchor	Привязка к экрану
+Reset placement	Сброс положения
+Text color	Цвет текста
+Background	Подложка
+Text shadow	Тень текста
+Reset appearance	Сброс оформления
+Reset content	Сброс содержимого
+Show hotbar	Показывать хотбар
+Item overlays	Количество и прочность
+Display style	Вид отображения
+Durability format	Формат прочности
+Include held item	Предмет в руке
+Visible effects	Число эффектов
+Show duration	Время действия
+Show label	Показывать подпись
+Visible pack names	Число имён паков
+Jump key	Клавиша прыжка
+Attack and use keys	Атака и использование
+Key layout	Расположение клавиш
+Decimal places	Знаков после запятой
+Show FPS label	Подпись FPS
+Mouse buttons	Кнопки мыши
+Time format	Формат времени
+Show seconds	Показывать секунды
+Toggle key	Клавиша переключения
+Hold key	Клавиша удержания
+Sprint mode	Режим спринта
+Magnification	Приближение
+Smooth zoom	Плавное приближение
+Shape	Форма
+Color	Цвет
+Size	Размер
+Center gap	Зазор в центре
+Thickness	Толщина
+Center dot	Точка в центре
+Perspective	Вид камеры
+Weather	Погода
+Intensity	Интенсивность
+Time preset	Время суток
+Warning threshold	Порог предупреждения
+Outline width	Толщина контура
+Opacity	Непрозрачность
+Show scores	Показывать счёт
+Sidebar scale	Масштаб табло
+Horizontal offset	Смещение по X
+Vertical offset	Смещение по Y
+Timer color	Цвет таймера
+Timer background	Подложка таймера
+Maximum distance	Макс. расстояние
+Scroll step	Шаг прокрутки
+Marker beam	Луч метки
+Show distance	Показывать расстояние
+Manage markers	Управление метками
+Particle amount	Количество частиц
+Particle size	Размер частиц
+Custom tint	Свой цвет
+Tint color	Цвет частиц
+Glint color	Цвет блеска
+Glint speed	Скорость блеска
+Glint strength	Сила блеска
+Blur strength	Сила размытия
+Background limit	FPS в фоне
+Idle limit	FPS при простое
+Idle delay	Задержка простоя
+Auto	Авто
+Strong	Плотная
+Soft	Мягкая
+Off	Выкл
+On	Вкл
+Text	Текст
+Icons	Значки
+Rainbow	Радуга
+White	Белый
+Gold	Золотой
+Red	Красный
+Green	Зелёный
+Blue	Синий
+Left	Слева
+Right	Справа
+Top	Сверху
+Bottom	Снизу
+Unbound	Не назначено
+Reset	Сброс
+Live preview requires a world	Для предпросмотра нужен открытый мир
+Live preview	Предпросмотр
+Live preview / fitted	Предпросмотр / вписано
+Join a world to preserve the widget's screen position.	Откройте мир для сохранения позиции виджета.
+Join a world to manage its markers.	Откройте мир для управления его метками.
+Turn on Custom tint to choose its color.	Включите «Свой цвет», чтобы выбрать цвет частиц.
+0.5x to 3.0x; preview fits without changing this value.	От 0,5x до 3,0x; предпросмотр вписывается без изменения масштаба.
+Keeps the widget relative to the selected corner.	Положение относительно выбранного угла экрана.
+Restore only this widget's scale, position and anchor.	Сбросить только масштаб, позицию и привязку этого виджета.
+Auto uses this widget's default color.	«Авто» использует исходный цвет виджета.
+Strong is easiest to read over bright scenes.	Плотная подложка лучше читается на светлом фоне.
+Add contrast behind text.	Тень повышает читаемость текста.
+Restore color, background and shadow for this widget.	Восстановить цвет, подложку и тень этого виджета.
+Off: configure now, enable when ready.	Модуль выключен: настройте его и включите, когда будете готовы.
+Changes apply while this module is on.	Настройки действуют при включённом модуле.
+Press once to enable or disable this module.	Одно нажатие включает или выключает модуль.
+Press a key / Esc: cancel / Backspace: unbind	Нажмите клавишу / Esc: отмена / Backspace: снять назначение
+Saved automatically.	Сохранено автоматически.
+Saved to the active HUD profile.	Сохранено в текущий HUD-профиль.
+Soft / Off backgrounds may reduce readability over bright scenes.	Мягкая или отключённая подложка хуже читается на светлом фоне.
+HUD EDITOR	РЕДАКТОР HUD
+MODULE	МОДУЛЬ
+POSITION	ПОЗИЦИЯ
+SCALE	МАСШТАБ
+ANCHOR	ПРИВЯЗКА
+MOVE	СДВИГ
+EDGE	УГОЛ
+Name	Имя
+Done	Готово
+LAYOUT	ПОЗИЦИЯ
+PROFILES	ПРОФИЛИ
+EDIT	ПРАВКА
+ON	ВКЛ
+OFF	ВЫКЛ
+Grid: On (G)	Сетка: вкл (G)
+Grid: Off (G)	Сетка: выкл (G)
+Import	Импорт
+Export	Экспорт
+Save	Сохранить
+Yes	Да
+Reset all	Сбросить всё
+Return to modules (Esc); changes save automatically	Назад к модулям (Esc); изменения сохраняются автоматически
+Layout controls (L)	Положение и масштаб (L); E: расширенный инспектор
+Profile and import/export controls (P)	Профили, импорт и экспорт (P)
+Next module (Tab / PgDn)	Следующий модуль (Tab / PgDn)
+Previous module (Shift+Tab / PgUp)	Предыдущий модуль (Shift+Tab / PgUp)
+Resize the window to edit HUD	Увеличьте окно для редактора HUD
+Esc - back	Esc: назад
+Profile name saved	Имя профиля сохранено
+HUD profile saved	HUD-профиль сохранён
+Action cancelled	Действие отменено

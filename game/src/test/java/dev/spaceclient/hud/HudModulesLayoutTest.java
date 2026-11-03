@@ -50,7 +50,7 @@ public class HudModulesLayoutTest {
     }
     @Test public void navigationSectionsFilterExistingModulesWithoutChangingSearchOrState() {
         for (HudSection section : HudSection.values()) {
-            if (section == HudSection.SETTINGS) continue;
+            if (section == HudSection.SETTINGS||section==HudSection.COSMETICS) {assertTrue(section.catalog("").isEmpty());continue;}
             java.util.List<HudModule> result = section.search("");
             assertFalse(section.label, result.isEmpty());
             assertEquals(result.size(), new java.util.HashSet<HudModule>(result).size());

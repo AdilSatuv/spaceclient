@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import dev.spaceclient.SpaceClient;
 import dev.spaceclient.settings.ModuleSettingsScreen;
 import dev.spaceclient.settings.SettingRow;
+import dev.spaceclient.menu.UiTranslations;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -106,14 +107,14 @@ public final class HudModuleSettingsScreen extends ModuleSettingsScreen {
     @Override protected void preview(int x,int y,int w,int h) {
         UiShapes.rounded(x,y,w,h,4,0xFF30343B);
         if(client.player==null) {
-            SpaceUiFont.draw(client,"Live preview requires a world",x+12,y+10,MUTED);
-            drawLines(moduleDetail(),x+12,y+31,w-24,2,TEXT);return;
+            SpaceUiFont.draw(client,UiTranslations.text(client,"Live preview requires a world"),x+12,y+10,MUTED);
+            drawLines(UiTranslations.text(client,moduleDetail()),x+12,y+31,w-24,2,TEXT);return;
         }
         String text=HudRenderer.text(client,module);
         int availableW=w-24,availableH=h-25;
         HudPlacement sample=new HudPlacement(HudPlacement.Horizontal.LEFT,HudPlacement.Vertical.TOP,0,0,previewScale(placement().scale));
         HudPlacement.Bounds b=sample.resolve(availableW,availableH,HudRenderer.moduleWidth(client,module,text),HudRenderer.moduleHeight(client,module));
-        SpaceUiFont.draw(client,b.scale<placement().scale?"Live preview / fitted":"Live preview",x+10,y+5,MUTED);
+        SpaceUiFont.draw(client,UiTranslations.text(client,b.scale<placement().scale?"Live preview / fitted":"Live preview"),x+10,y+5,MUTED);
         GlStateManager.pushMatrix();
         try { GlStateManager.translate(x+12,y+22,0);HudRenderer.drawModule(client,module,text,b,appearance(),HudRenderer.color(module,appearance())); }
         finally { GlStateManager.popMatrix(); }

@@ -1,0 +1,14 @@
+package dev.spaceclient.hud;
+import java.nio.file.*;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+public class BrowserViewPreferencesTest {
+    @Test public void v1MigrationPreservesExactBackupAndFavorites()throws Exception{
+        Path dir=Files.createTempDirectory("space-browser-v1"),p=dir.resolve("browser");byte[] original="#Space module favorites\nschemaVersion=1\nfavorites=game.ZOOM,hud.ping\n".getBytes(StandardCharsets.ISO_8859_1);Files.write(p,original);ModuleBrowserSettings s=ModuleBrowserSettings.open(p);assertEquals(ModuleBrowserSettings.View.GRID,s.view());assertFalse(s.brand());assertTrue(s.favorite("game.ZOOM"));assertTrue(s.view(ModuleBrowserSettings.View.LIST));try(java.util.stream.Stream<Path> files=Files.list(dir)){Path backup=files.filter(x->x.getFileName().toString().contains(".v1-")).findFirst().get();assertArrayEquals(original,Files.readAllBytes(backup));}s=ModuleBrowserSettings.open(p);assertEquals(ModuleBrowserSettings.View.LIST,s.view());assertTrue(s.favorite("hud.ping"));}
+    @Test public void viewBrandAndPerProfileLocksPersistIndependently()throws Exception{Path p=Files.createTempDirectory("space-browser-v2").resolve("browser");ModuleBrowserSettings s=ModuleBrowserSettings.open(p);assertTrue(s.lock(0,HudModule.FPS,true));assertTrue(s.brand(true));assertTrue(s.view(ModuleBrowserSettings.View.LIST));s=ModuleBrowserSettings.open(p);assertTrue(s.locked(0,HudModule.FPS));assertFalse(s.locked(1,HudModule.FPS));assertTrue(s.brand());assertTrue(s.lock(1,HudModule.CPS,true));assertTrue(s.locked(0,HudModule.FPS));}
+    @Test public void futureOrFailedPreferencesNeverChangeFileOrVisibleState()throws Exception{Path p=Files.createTempFile("space-browser-future",".properties");byte[] future="schemaVersion=999\nfavorites=game.ZOOM\n".getBytes(StandardCharsets.UTF_8);Files.write(p,future);ModuleBrowserSettings s=ModuleBrowserSettings.open(p);assertFalse(s.view(ModuleBrowserSettings.View.LIST));assertFalse(s.brand(true));assertFalse(s.lock(0,HudModule.FPS,true));assertArrayEquals(future,Files.readAllBytes(p));Path blocked=Files.createTempFile("space-browser-failed",".file");s=ModuleBrowserSettings.open(blocked.resolve("browser"));assertFalse(s.view(ModuleBrowserSettings.View.LIST));assertEquals(ModuleBrowserSettings.View.GRID,s.view());assertFalse(s.brand());}
+    @Test public void bothLayoutsKeepEveryPageRowClearOfFooter(){for(int[] size:new int[][]{{581,436},{830,465},{1200,720}})for(boolean list:new boolean[]{false,true}){HudModulesLayout l=new HudModulesLayout(size[0],size[1],list);for(int i=0;i<l.pageSize;i++){assertTrue(l.cardX(i)>=l.contentLeft);assertTrue(l.cardX(i)+l.cardWidth<=l.contentLeft+l.contentWidth);assertTrue(l.cardY(i)+l.cardHeight<=l.footerY()-4);}if(list&&size[1]>=465)assertTrue(l.pageSize>6);}}
+}

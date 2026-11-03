@@ -19,8 +19,9 @@ public final class MenuStrings {
         return result;
     }
     public static String get(MinecraftClient client, String suffix) {
-        return get(client == null ? "en_US" : client.getLanguageManager().getLanguage().getCode(), suffix);
+        return get(isRussian(client)?"ru_RU":"en_US", suffix);
     }
+    public static boolean isRussian(MinecraftClient client){return client!=null&&client.getLanguageManager()!=null&&client.getLanguageManager().getLanguage()!=null&&"ru_RU".equalsIgnoreCase(client.getLanguageManager().getLanguage().getCode());}
     static String get(String locale, String suffix) {
         String key = "space.menu." + suffix;
         boolean russian = "ru_RU".equalsIgnoreCase(locale);

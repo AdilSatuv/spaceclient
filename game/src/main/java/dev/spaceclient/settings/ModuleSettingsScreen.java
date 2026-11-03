@@ -3,6 +3,7 @@ package dev.spaceclient.settings;
 import com.mojang.blaze3d.platform.GlStateManager;
 import dev.spaceclient.SpaceClient;
 import dev.spaceclient.menu.MenuStrings;
+import dev.spaceclient.menu.UiTranslations;
 import dev.spaceclient.hud.HudSwitch;
 import dev.spaceclient.hud.HudViewport;
 import dev.spaceclient.hud.SpaceUiFont;
@@ -91,7 +92,7 @@ public abstract class ModuleSettingsScreen extends Screen {
             SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(title(),w-170),x+16,y+31,TEXT);
             String label=ui(readOnly()?"settings.readonly":"settings.autosave");
             SpaceUiFont.draw(client,label,x+w-16-SpaceUiFont.width(label),y+12,readOnly()?ACCENT:MUTED);
-            SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(subtitle(),w-32),x+16,y+49,MUTED);
+            SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(UiTranslations.text(client,subtitle()),w-32),x+16,y+49,MUTED);
             String[] tabs=sections();
             for(int i=0;i<tabs.length;i++) {
                 int tw=(w-32)/tabs.length,tx=x+16+i*tw;
@@ -123,7 +124,7 @@ public abstract class ModuleSettingsScreen extends Screen {
                         :action>=0&&action<actions.length&&!actions[action].detail.isEmpty()?actions[action].detail:ui("settings.help.navigation");
                 }
             }
-            drawLines(message,x+16,y+h-73,w-32,2,ACCENT);
+            drawLines(UiTranslations.text(client,message),x+16,y+h-73,w-32,2,ACCENT);
             SettingRow[] actions=footer();
             for(int i=0;i<actions.length;i++) {
                 SettingRow a=actions[i]; int bx=x+16+i*136;
@@ -133,10 +134,10 @@ public abstract class ModuleSettingsScreen extends Screen {
         } finally { GlStateManager.popMatrix(); }
     }
     protected final String rowHelp(SettingRow row) {
-        if(!enabled(row))return ui(readOnly()?"settings.help.readonly":"settings.help.unavailable")+" "+row.detail;
+        if(!enabled(row))return ui(readOnly()?"settings.help.readonly":"settings.help.unavailable")+" "+UiTranslations.text(client,row.detail);
         String key=row.kind==SettingRow.Kind.NUMBER?"number":row.kind==SettingRow.Kind.TOGGLE?"toggle"
             :row.kind==SettingRow.Kind.CHOICE?"choice":"action";
-        return row.detail+" / "+ui("settings.help."+key);
+        return UiTranslations.text(client,row.detail)+" / "+ui("settings.help."+key);
     }
     private void drawRow(SettingRow a,int y,boolean selected,int mx,int my) {
         int x=layout.left+14,w=layout.width-28,cx=layout.controlX(),cw=190;
@@ -144,8 +145,8 @@ public abstract class ModuleSettingsScreen extends Screen {
         UiShapes.rounded(x,y,w,40,4,selected?0xFFD7AF6A:0xFF34363B);
         UiShapes.rounded(x+1,y+1,w-2,38,3,selected?0xFF25231F:0xFF191B20);
         int labelWidth=cx-x-20;
-        SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(a.title,labelWidth),x+10,y+6,active?TEXT:MUTED);
-        SpaceUiFont.draw(client,shortText(a.detail,labelWidth),x+10,y+23,MUTED);
+        SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(UiTranslations.text(client,a.title),labelWidth),x+10,y+6,active?TEXT:MUTED);
+        SpaceUiFont.draw(client,shortText(UiTranslations.text(client,a.detail),labelWidth),x+10,y+23,MUTED);
         UiShapes.rounded(cx,y+4,cw,32,4,!active?0xFF1A1B1E:hover?0xFF353029:0xFF24262B);
         int color=active?ACCENT:MUTED;
         if(!active) {
@@ -170,7 +171,7 @@ public abstract class ModuleSettingsScreen extends Screen {
                 SpaceUiFont.draw(client,"<",cx+9,y+14,color);
                 SpaceUiFont.draw(client,">",cx+cw-15,y+14,color);
             }
-            center(SpaceUiFont.trimToWidth(a.value,cw-42),cx+cw/2,y+14,color);
+            center(SpaceUiFont.trimToWidth(UiTranslations.text(client,a.value),cw-42),cx+cw/2,y+14,color);
         }
     }
     protected void drawLines(String text,int x,int y,int width,int lines,int color) {

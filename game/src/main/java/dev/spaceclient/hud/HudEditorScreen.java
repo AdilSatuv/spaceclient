@@ -4,6 +4,12 @@ import dev.spaceclient.SpaceClient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.Set;
+import dev.spaceclient.menu.MenuStrings;
+import dev.spaceclient.menu.UiTranslations;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import org.lwjgl.input.Keyboard;
@@ -16,6 +22,10 @@ public final class HudEditorScreen extends Screen {
     private final Screen parent;
     private HudModule selected = HudModule.FPS;
     private HudPlacement draft;
+    private final Set<HudModule> selection=EnumSet.noneOf(HudModule.class);
+    private final HudLayoutHistory history=new HudLayoutHistory();
+    private Map<HudModule,HudPlacement> groupDraft,groupStart;
+    private Map<HudModule,HudPlacement.Bounds> groupBounds;
     private boolean dragging, capturedRepeat, previousRepeat;
     private boolean profilesTab;
     private boolean grid;
@@ -30,13 +40,17 @@ public final class HudEditorScreen extends Screen {
         if (selected == null) throw new IllegalArgumentException("Missing HUD module");
         this.parent = parent;
         this.selected = selected;
+        selection.add(selected);
     }
     private HudSettings settings() { return SpaceClient.hud; }
     private HudProfile profile() { return settings().getConfig().active(); }
-    private HudPlacement placement() { return draft == null ? profile().placement(selected) : draft; }
+    private HudPlacement editPlacement(HudModule m) { return groupDraft!=null&&groupDraft.containsKey(m)?groupDraft.get(m):m==selected&&draft!=null?draft:profile().placement(m); }
+    private HudPlacement placement() { return editPlacement(selected); }
+    private String ui(String key) { return MenuStrings.get(client,key); }
+    private boolean locked(HudModule m) { return SpaceClient.browser.locked(settings().getConfig().activeIndex(),m); }
     private String label(HudModule module) { return HudRenderer.text(client, module); }
     private HudPlacement.Bounds bounds(HudModule module) {
-        return HudRenderer.bounds(client, module, label(module), module == selected ? placement() : profile().placement(module), width, height);
+        return HudRenderer.bounds(client, module, label(module), editPlacement(module), width, height);
     }
     private boolean sidebar() { return HudEditorLayout.useSidebar(width, height, bounds(selected)); }
     private int barY() { return sidebar() ? HudEditorLayout.sidebarY(height) : HudEditorLayout.toolbarY(height, bounds(selected)); }
@@ -80,8 +94,8 @@ public final class HudEditorScreen extends Screen {
         // Keep the game visible while lifting the inspector above it.
         fillGradient(0, 0, width, height, 0x5006080A, 0x8006080A);
         if (client.player == null || !roomy()) {
-            centerText("Resize the window to edit HUD", width / 2, height / 2 - 12, TEXT);
-            centerText("Esc - back", width / 2, height / 2 + 4, MUTED);
+            centerText(UiTranslations.text(client,"Resize the window to edit HUD"), width / 2, height / 2 - 12, TEXT);
+            centerText(UiTranslations.text(client,"Esc - back"), width / 2, height / 2 + 4, MUTED);
             return;
         }
         lastMouseX = mouseX; lastMouseY = mouseY;
@@ -89,14 +103,14 @@ public final class HudEditorScreen extends Screen {
             for(int gx=0;gx<width;gx+=8) fill(gx,0,gx+1,height,0x153D4149);
             for(int gy=0;gy<height;gy+=8) fill(0,gy,width,gy+1,0x153D4149);
         }
-        for (HudModule module : HudModule.values()) if (module != selected && module.isEnabled(settings().getConfig())) drawModule(module);
+        for (HudModule module : HudModule.values()) if (module != selected && (module.isEnabled(settings().getConfig())||selection.contains(module))) drawModule(module);
         drawModule(selected);
         int y = barY(), x = panelX(), w = panelWidth(), h = panelHeight();
         rounded(x + 2, y + 3, w, h, 0x88000000);
         rounded(x, y, w, h, BORDER);
         rounded(x + 1, y + 1, w - 2, h - 2, PANEL);
         if (sidebar()) {
-            SpaceUiFont.draw(client, "HUD EDITOR", x + 8, y + 10, TEXT);
+            SpaceUiFont.draw(client, UiTranslations.text(client,"HUD EDITOR"), x + 8, y + 10, TEXT);
             fill(x + 8, y + 27, x + w - 8, y + 28, BORDER);
             fill(x + 8, y + 76, x + w - 8, y + 77, BORDER);
             fill(x + 8, y + 194, x + w - 8, y + 195, BORDER);
@@ -114,31 +128,31 @@ public final class HudEditorScreen extends Screen {
             boolean primary = action.id == 13;
             box(action.x, action.y, action.width, 20, chosen, hovered && action.enabled, action.enabled, primary);
             int ink = !action.enabled ? 0x817E78 : primary ? 0x15120E : confirmed ? ACCENT : TEXT;
-            centerText(SpaceUiFont.trimToWidth(action.label, action.width - 6),
+            centerText(SpaceUiFont.trimToWidth(UiTranslations.text(client,action.label), action.width - 6),
                 action.x + action.width / 2, action.y + 6, ink);
-            if (hovered) hoverHint = action.hint;
+            if (hovered) hoverHint = UiTranslations.text(client,action.hint);
         }
         if (sidebar()) {
             if (profilesTab) {
-                SpaceUiFont.draw(client, "Name", x + 8, y + 114, MUTED);
+                SpaceUiFont.draw(client, UiTranslations.text(client,"Name"), x + 8, y + 114, MUTED);
                 box(nameBoxX(), nameBoxY(), 90, 20, name.isFocused(), false, !settings().isReadOnly(), false);
                 name.x = nameBoxX() + 2; name.y = nameBoxY() + 6; name.render();
             } else {
-                SpaceUiFont.draw(client, "MODULE", x + 8, y + 88, MUTED);
-                SpaceUiFont.draw(client, "POSITION", x + 8, y + 108, MUTED);
-                SpaceUiFont.draw(client, "SCALE", x + 8, y + 134, MUTED);
+                SpaceUiFont.draw(client, UiTranslations.text(client,"MODULE"), x + 8, y + 88, MUTED);
+                SpaceUiFont.draw(client, UiTranslations.text(client,"POSITION"), x + 8, y + 108, MUTED);
+                SpaceUiFont.draw(client, UiTranslations.text(client,"SCALE"), x + 8, y + 134, MUTED);
                 SpaceUiFont.draw(client, String.format(Locale.ROOT, "%.1fx", placement().scale), x + 88, y + 134, TEXT);
-                SpaceUiFont.draw(client, "ANCHOR", x + 8, y + 160, MUTED);
+                SpaceUiFont.draw(client, UiTranslations.text(client,"ANCHOR"), x + 8, y + 160, MUTED);
             }
         } else if (profilesTab) {
-            SpaceUiFont.draw(client, "Name", x + 6, y + 60, MUTED);
+            SpaceUiFont.draw(client, UiTranslations.text(client,"Name"), x + 6, y + 60, MUTED);
             box(nameBoxX(), nameBoxY(), 90, 20, name.isFocused(), false, !settings().isReadOnly(), false);
             name.x = nameBoxX() + 2; name.y = nameBoxY() + 6; name.render();
         } else {
-            SpaceUiFont.draw(client, "MOVE", x + 6, y + 36, MUTED);
-            SpaceUiFont.draw(client, "SCALE", x + 132, y + 36, MUTED);
+            SpaceUiFont.draw(client, UiTranslations.text(client,"MOVE"), x + 6, y + 36, MUTED);
+            SpaceUiFont.draw(client, UiTranslations.text(client,"SCALE"), x + 132, y + 36, MUTED);
             SpaceUiFont.draw(client, String.format(Locale.ROOT, "%.1fx", placement().scale), x + 190, y + 36, ACCENT);
-            SpaceUiFont.draw(client, "EDGE", x + 6, y + 60, MUTED);
+            SpaceUiFont.draw(client, UiTranslations.text(client,"EDGE"), x + 6, y + 60, MUTED);
         }
         String message = confirmation.message();
         if (message.isEmpty()) message = settings().getError();
@@ -146,6 +160,7 @@ public final class HudEditorScreen extends Screen {
         if (message.isEmpty()) message = hoverHint.isEmpty() ? status : hoverHint;
         if (message.isEmpty()) message = sidebar() ? "Arrows: move | +/-: scale" : profilesTab ? "1/2: profile  |  N: rename" : "Tab: module  |  Arrows: move  |  +/-: scale";
         if (confirmation.message().isEmpty() && !profile().enabled && !settings().isReadOnly() && settings().getError().isEmpty() && hoverHint.isEmpty()) message = "HUD hidden; this is a layout preview. Esc - modules";
+        message=UiTranslations.text(client,message);
         int messageY = y + (sidebar() ? 196 : 81);
         if (sidebar()) {
             // Long notices must stay understandable in the narrower inspector.
@@ -163,10 +178,10 @@ public final class HudEditorScreen extends Screen {
         HudPlacement.Bounds b = bounds(module);
         int left = Math.max(0, (int) Math.floor(b.x) - 2), top = Math.max(0, (int) Math.floor(b.y) - 2);
         int right = Math.min(width, (int) Math.ceil(b.x + b.width) + 2), bottom = Math.min(height, (int) Math.ceil(b.y + b.height) + 2);
-        int border = module == selected ? 0xFFD7AF6A : BORDER;
+        int border = selection.contains(module) ? 0xFFD7AF6A : BORDER;
         fill(left, top, right, top + 1, border); fill(left, bottom - 1, right, bottom, border);
         fill(left, top, left + 1, bottom, border); fill(right - 1, top, right, bottom, border);
-        if (module == selected) {
+        if (selection.contains(module)) {
             // Corner handles distinguish selection by shape as well as colour.
             fill(left, top, Math.min(right, left + 3), Math.min(bottom, top + 3), 0xFFF2EEE7);
             fill(Math.max(left, right - 3), Math.max(top, bottom - 3), right, bottom, 0xFFF2EEE7);
@@ -182,6 +197,7 @@ public final class HudEditorScreen extends Screen {
         String anchor = (placement().horizontal == HudPlacement.Horizontal.LEFT ? "L" : "R")
             + "/" + (placement().vertical == HudPlacement.Vertical.TOP ? "T" : "B");
         if (sidebar()) {
+            actions.add(new Action(53,"E",x+w-78,y+5,20,true,ui("editor.tools.hint")));
             actions.add(new Action(13, "Done", x + w - 54, y + 5, 46, true, "Return to modules (Esc); changes save automatically"));
             actions.add(new Action(14, "<", x + 8, y + 31, 20, true, "Previous module (Shift+Tab / PgUp)"));
             actions.add(new Action(12, selected.getTitle(), x + 30, y + 31, 88, true, "Next module (Tab / PgDn)"));
@@ -209,6 +225,7 @@ public final class HudEditorScreen extends Screen {
             }
             return actions;
         }
+        actions.add(new Action(53,"E",x+w-84,y+6,20,true,ui("editor.tools.hint")));
         actions.add(new Action(50, "EDIT", x + 6, y + 6, 42, true, "Layout controls (L)"));
         actions.add(new Action(51, "PROFILES", x + 51, y + 6, 56, true, "Profile and import/export controls (P)"));
         actions.add(new Action(14, "<", x + 110, y + 6, 18, true, "Previous module (Shift+Tab / PgUp)"));
@@ -270,32 +287,34 @@ public final class HudEditorScreen extends Screen {
         // Empty inspector space is not part of the draggable canvas.
         if (x >= xBar && x < xBar + panelWidth() && y >= yBar && y < yBar + panelHeight()) return;
         if (settings().isReadOnly()) return;
-        if (bounds(selected).contains(x, y)) { beginDrag(selected, x, y); return; }
+        if (bounds(selected).contains(x, y)) { selectWidget(selected,x,y); return; }
         HudModule[] modules = HudModule.values();
         for (int i = modules.length - 1; i >= 0; i--) if (modules[i].isEnabled(settings().getConfig()) && bounds(modules[i]).contains(x, y)) {
-            beginDrag(modules[i], x, y); return;
+            selectWidget(modules[i], x, y); return;
         }
     }
-    private void beginDrag(HudModule module, int x, int y) {
-        if (!commitDraft()) return;
-        selected = module;
-        HudPlacement.Bounds b = bounds(module);
-        grabX = x - b.x; grabY = y - b.y;
-        draft = profile().placement(module);
-        dragging = true;
-        status = "Drag: align  |  Shift: fine placement  |  G: grid";
-    }
-    @Override protected void mouseDragged(int x, int y, int button, long elapsed) {
-        if (button == 0 && dragging) {
-            double px=x-grabX,py=y-grabY;
-            if(!hasShiftDown()) {
-                List<HudPlacement.Bounds> neighbours=new ArrayList<HudPlacement.Bounds>();
-                for(HudModule m:HudModule.values())if(m!=selected&&m.isEnabled(settings().getConfig()))neighbours.add(bounds(m));
-                HudPlacement.Bounds b=bounds(selected);
-                double[] p=HudAlignment.snap(px,py,b.width,b.height,width,height,neighbours,grid);px=p[0];py=p[1];
-            }
-            draft=placement().at(px,py,width,height,HudRenderer.moduleWidth(client,selected,label(selected)),HudRenderer.moduleHeight(client,selected),!hasShiftDown());
+    private void selectWidget(HudModule module,int x,int y) {
+        if(hasShiftDown()) {
+            if(selection.contains(module)&&selection.size()>1){selection.remove(module);selected=selection.iterator().next();}
+            else{selection.add(module);selected=module;}
+            status=ui("editor.selection")+" "+selection.size();return;
         }
+        if(!selection.contains(module)){selection.clear();selection.add(module);}
+        selected=module;
+        if(locked(module)){status=ui("editor.locked");return;}
+        if(!commitDraft())return;
+        groupStart=HudLayoutOperations.snapshot(profile());groupBounds=allBounds();grabX=x;grabY=y;dragging=true;
+        status=ui("editor.drag");
+    }
+    @Override protected void mouseDragged(int x,int y,int button,long elapsed) {
+        if(button!=0||!dragging)return;
+        double dx=x-grabX,dy=y-grabY;
+        if(!hasShiftDown()) {
+            HudPlacement.Bounds b=groupBounds.get(selected);
+            List<HudPlacement.Bounds> neighbours=new ArrayList<>();for(HudModule m:HudModule.values())if(!selection.contains(m)&&m.isEnabled(settings().getConfig()))neighbours.add(groupBounds.get(m));
+            double[] snap=HudAlignment.snap(b.x+dx,b.y+dy,b.width,b.height,width,height,neighbours,grid);dx=snap[0]-b.x;dy=snap[1]-b.y;
+        }
+        groupDraft=HudLayoutOperations.move(groupStart,groupBounds,selection,lockedModules(),dx,dy,width,height);
     }
     @Override protected void mouseReleased(int x, int y, int button) {
         if (button == 0 && dragging) {
@@ -339,7 +358,7 @@ public final class HudEditorScreen extends Screen {
             return;
         }
         if ((key == Keyboard.KEY_TAB || key == Keyboard.KEY_PRIOR || key == Keyboard.KEY_NEXT) && !Keyboard.isRepeatEvent()) {
-            if (!dragging && commitDraft()) selectModule(key == Keyboard.KEY_PRIOR || (key == Keyboard.KEY_TAB && hasShiftDown()) ? -1 : 1);
+            if (!dragging && commitDraft()) selectModule(key == Keyboard.KEY_PRIOR || (key == Keyboard.KEY_TAB && hasShiftDown()) ? -1 : 1,key!=Keyboard.KEY_TAB&&hasShiftDown());
             return;
         }
         if ((key == Keyboard.KEY_L || key == Keyboard.KEY_P) && !Keyboard.isRepeatEvent()) {
@@ -347,6 +366,12 @@ public final class HudEditorScreen extends Screen {
             return;
         }
         if(key==Keyboard.KEY_G&&!Keyboard.isRepeatEvent()){activate(52);return;}
+        if(hasControlDown()&&!Keyboard.isRepeatEvent()) {
+            if(key==Keyboard.KEY_A){selectAll();return;}
+            if(key==Keyboard.KEY_Z){undo(false);return;}
+            if(key==Keyboard.KEY_Y){undo(true);return;}
+        }
+        if(key==Keyboard.KEY_E&&!Keyboard.isRepeatEvent()){activate(53);return;}
         if (settings().isReadOnly() || dragging) return;
         if (key == Keyboard.KEY_LEFT) nudge(-1, 0);
         else if (key == Keyboard.KEY_RIGHT) nudge(1, 0);
@@ -366,22 +391,53 @@ public final class HudEditorScreen extends Screen {
             else if (key == Keyboard.KEY_O) activate(48);
         }
     }
-    private void nudge(int dx, int dy) {
-        HudPlacement.Bounds b = bounds(selected);
+    private Map<HudModule,HudPlacement.Bounds> allBounds() {
+        Map<HudModule,HudPlacement.Bounds> map=new EnumMap<>(HudModule.class);for(HudModule m:HudModule.values())map.put(m,bounds(m));return map;
+    }
+    private Set<HudModule> lockedModules(){Set<HudModule> set=EnumSet.noneOf(HudModule.class);for(HudModule m:HudModule.values())if(locked(m))set.add(m);return set;}
+    private Map<HudModule,HudPlacement> currentPlacements(){Map<HudModule,HudPlacement> map=HudLayoutOperations.snapshot(profile());for(HudModule m:HudModule.values())map.put(m,editPlacement(m));return map;}
+    private void nudge(int dx,int dy) {
         if(hasShiftDown()){dx*=10;dy*=10;}
-        draft = placement().at(b.x + dx, b.y + dy, width, height, HudRenderer.moduleWidth(client, selected, label(selected)), HudRenderer.moduleHeight(client,selected), false);
+        groupDraft=HudLayoutOperations.move(currentPlacements(),allBounds(),selection,lockedModules(),dx,dy,width,height);draft=null;
     }
     private void scale(double delta) {
-        draft = placement().withScale(Math.max(0.5, Math.min(3, Math.round((placement().scale + delta) * 10) / 10.0)));
+        Map<HudModule,HudPlacement> map=currentPlacements();
+        for(HudModule m:selection)if(!locked(m)){HudPlacement p=map.get(m);map.put(m,p.withScale(Math.max(.5,Math.min(3,Math.round((p.scale+delta)*10)/10.0))));}
+        groupDraft=map;draft=null;
     }
     private boolean commitDraft() {
-        if (draft == null) return true;
-        HudPlacement pending = draft;
-        draft = null;
-        boolean saved = settings().place(selected, pending);
-        status = saved ? "Position saved. Arrows move; +/- scale" : settings().getError();
-        return saved;
+        if(draft==null&&groupDraft==null)return true;
+        Map<HudModule,HudPlacement> pending=currentPlacements(),before=HudLayoutOperations.snapshot(profile());draft=null;groupDraft=null;
+        if(HudLayoutHistory.same(before,pending))return true;
+        boolean saved=settings().placeAll(pending);
+        if(saved)history.record(before,HudLayoutOperations.snapshot(profile()));status=saved?ui("editor.saved"):settings().getError();return saved;
     }
+    void selectAll(){selection.clear();for(HudModule m:HudModule.values())if(m.isEnabled(settings().getConfig()))selection.add(m);selection.add(selected);status=ui("editor.selection")+" "+selection.size();}
+    Set<HudModule> selectedModules(){return EnumSet.copyOf(selection);}
+    HudModule primary(){return selected;}
+    HudPlacement.Bounds primaryBounds(){return bounds(selected);}
+    boolean primaryLocked(){return locked(selected);}
+    boolean canUndo(boolean redo){return redo?history.canRedo():history.canUndo();}
+    boolean undo(boolean redo) {
+        if(settings().isReadOnly()||!commitDraft()||!(redo?history.canRedo():history.canUndo()))return false;
+        Map<HudModule,HudPlacement> current=HudLayoutOperations.snapshot(profile());
+        boolean ok=settings().placeAll(redo?history.redo():history.undo());
+        if(ok){if(redo)history.didRedo(current);else history.didUndo(current);}return ok;
+    }
+    boolean arrange(HudLayoutOperations.Align align,Boolean horizontal) {
+        if(settings().isReadOnly()||!commitDraft())return false;
+        groupDraft=horizontal==null?HudLayoutOperations.align(currentPlacements(),allBounds(),selection,lockedModules(),align,width,height)
+            :HudLayoutOperations.distribute(currentPlacements(),allBounds(),selection,lockedModules(),horizontal,width,height);
+        return commitDraft();
+    }
+    boolean numeric(int id,int value) {
+        if(settings().isReadOnly()||locked(selected)||!commitDraft())return false;
+        HudPlacement.Bounds b=bounds(selected);
+        draft=id==2?placement().withScale(value/100.0):placement().at(id==0?value:b.x,id==1?value:b.y,width,height,HudRenderer.moduleWidth(client,selected,label(selected)),HudRenderer.moduleHeight(client,selected),false);
+        return commitDraft();
+    }
+    boolean visibility(boolean visible){return !settings().isReadOnly()&&settings().visibility(selection,visible);}
+    boolean toggleLock(){return SpaceClient.browser.lock(settings().getConfig().activeIndex(),selected,!locked(selected));}
     private void focusName() {
         if (settings().isReadOnly() || !commitDraft()) return;
         profilesTab = true;
@@ -398,6 +454,7 @@ public final class HudEditorScreen extends Screen {
         if (!commitDraft() || !finishName()) return;
         if (id != 45 && id != 47) cancelConfirmation();
         if (id == 13) { client.setScreen(parent); return; }
+        if(id==53){client.setScreen(new HudArrangeScreen(this));return;}
         if (id == 52) { grid=!grid;status=grid?"Grid on; Shift+drag bypasses snapping":"Grid off; nearby widgets still align";return; }
         if (id == 50 || id == 51) { profilesTab = id == 51; status = ""; return; }
         if (id == 12 || id == 14 || id == 15) { selectModule(id == 14 ? -1 : 1); return; }
@@ -407,10 +464,11 @@ public final class HudEditorScreen extends Screen {
             if (!confirmation.confirm(id)) return;
         }
         boolean saved = true;
-        if (id == 10 || id == 11) { saved = settings().selectProfile(id - 10); name.setText(profile().name); }
+        if (id == 10 || id == 11) { saved = settings().selectProfile(id - 10); if(saved){history.clear();selection.clear();selection.add(selected);} name.setText(profile().name); }
         else if (id == 30) saved = settings().renameProfile(name.getText());
         else if (id == 20 || id == 21) { scale(id == 20 ? -0.1 : 0.1); commitDraft(); return; }
         else if (id == 22) {
+            if(locked(selected))return;
             int anchor = (placement().horizontal.ordinal() * 2 + placement().vertical.ordinal() + 1) % 4;
             draft = placement().anchored(HudPlacement.Horizontal.values()[anchor / 2], HudPlacement.Vertical.values()[anchor % 2],
                 width, height, HudRenderer.moduleWidth(client, selected, label(selected)), HudRenderer.moduleHeight(client,selected));
@@ -418,10 +476,10 @@ public final class HudEditorScreen extends Screen {
         } else if (id >= 40 && id <= 43) {
             nudge(id == 40 ? -1 : id == 41 ? 1 : 0, id == 42 ? -1 : id == 43 ? 1 : 0);
             commitDraft(); return;
-        } else if (id == 44) saved = settings().reset(selected);
-        else if (id == 45) saved = settings().resetLayout();
+        } else if (id == 44) { if(!locked(selected))saved=settings().reset(selected);history.clear(); }
+        else if (id == 45) { if(lockedModules().isEmpty()){saved=settings().resetLayout();history.clear();}else{status=ui("editor.locked");return;} }
         else if (id == 46) saved = settings().toggle(selected);
-        else if (id == 47) { saved = settings().importProfile(); name.setText(profile().name); }
+        else if (id == 47) { saved = settings().importProfile(); if(saved)history.clear();name.setText(profile().name); }
         else if (id == 48) saved = settings().exportProfile();
         status = saved ? (id == 47 || id == 48 ? settings().getNotice() : "HUD profile saved") : settings().getError();
     }
@@ -431,8 +489,12 @@ public final class HudEditorScreen extends Screen {
         return true;
     }
     private void selectModule(int delta) {
+        selectModule(delta,false);
+    }
+    private void selectModule(int delta,boolean extend) {
         HudModule[] modules = HudModule.values();
         selected = modules[HudEditorLayout.nextModuleIndex(selected.ordinal(), delta, modules.length)];
+        if(!extend)selection.clear();selection.add(selected);
         status = "Module " + (selected.ordinal() + 1) + "/" + modules.length + ": " + selected.getTitle();
     }
     private static final class Action {

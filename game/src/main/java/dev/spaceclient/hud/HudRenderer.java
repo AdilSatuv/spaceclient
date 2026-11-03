@@ -224,8 +224,8 @@ public final class HudRenderer {
     }
     public static void render(MinecraftClient client, HudConfig config, int width, int height) {
         if (width < 1 || height < 1) return;
-        backdrop(8, 8, 8 + textWidth(client, "SPACE CLIENT"), 18, BACKDROP_ALPHA);
-        client.textRenderer.drawWithShadow("SPACE CLIENT", 9, 8, HUD_ACCENT);
+        if(SpaceClient.browser!=null&&SpaceClient.browser.brand())
+            client.textRenderer.drawWithShadow("SPACE",Math.max(2,width-36),Math.max(2,height-11),HUD_ACCENT);
         for (HudModule module : HudModule.values()) if (module.isEnabled(config)) {
             String text = text(client, module, config.active().content());
             HudAppearance appearance = config.active().appearance(module);

@@ -42,7 +42,15 @@ public final class MenuTheme extends DrawableHelper {
             || screen instanceof CreateWorldScreen || screen instanceof EditWorldScreen
             || screen instanceof MultiplayerScreen || screen instanceof ChatOptionsScreen
             || screen instanceof SkinOptionsScreen || screen instanceof ControlsOptionsScreen
-            || screen instanceof LanguageOptionsScreen;
+            || screen instanceof LanguageOptionsScreen
+            || screen instanceof net.minecraft.client.gui.screen.ConnectScreen
+            || screen instanceof net.minecraft.client.gui.screen.DisconnectedScreen
+            || screen instanceof net.minecraft.client.gui.screen.SnooperScreen
+            || screen instanceof net.minecraft.client.gui.screen.CustomizeFlatLevelScreen
+            || screen instanceof net.minecraft.client.gui.screen.SuperflatPresetScreen
+            || screen instanceof net.minecraft.client.gui.screen.CustomizeWorldScreen
+            || screen instanceof net.minecraft.client.gui.screen.CustomizedWorldPresetsScreen
+            || screen instanceof net.minecraft.client.gui.screen.ConfirmScreen;
     }
     public static boolean standard(ButtonWidget button) {
         return button.getClass() == ButtonWidget.class || button.getClass() == OptionButtonWidget.class;
@@ -76,6 +84,7 @@ public final class MenuTheme extends DrawableHelper {
         fill(24, 28, width - 24, 29, 0xFF6F6250);
     }
     public static void sectionHeader(MinecraftClient client, Screen screen, int width, int height) {
+        if(screen instanceof net.minecraft.client.gui.screen.ConnectScreen){LoadingTheme.header(client,width,height);LoadingTheme.credits(client,width,height);return;}
         String key = screen instanceof SettingsScreen ? "options.title"
             : screen instanceof SelectWorldScreen ? "selectWorld.title"
             : screen instanceof MultiplayerScreen ? "multiplayer.title" : null;

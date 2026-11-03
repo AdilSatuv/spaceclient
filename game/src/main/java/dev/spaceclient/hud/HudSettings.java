@@ -71,6 +71,15 @@ public final class HudSettings {
     public boolean place(HudModule module, HudPlacement placement) {
         return change(() -> config.active().place(module, placement));
     }
+    public boolean placeAll(java.util.Map<HudModule,HudPlacement> placements) {
+        if(placements==null||placements.isEmpty())return false;
+        return change(()->{for(java.util.Map.Entry<HudModule,HudPlacement> e:placements.entrySet())config.active().place(e.getKey(),e.getValue());});
+    }
+    public boolean visibility(java.util.Set<HudModule> modules,boolean visible) {
+        if(modules==null||modules.isEmpty())return false;
+        for(HudModule m:modules)if(m==null)return false;
+        return change(()->{for(HudModule m:modules)m.setEnabled(config,visible);});
+    }
     public boolean appearance(HudModule module, HudAppearance appearance) {
         return change(() -> config.active().setAppearance(module, appearance));
     }
