@@ -101,6 +101,8 @@ test('a verified Space bundle extends counts and records development identity wi
   const status = service.status('alpha');
   assert.equal(status.phase, 'prepared');
   assert.equal(status.spaceVersion, '0.1.0');
+  assert.deepEqual(status.bundledBuild, (({ schemaVersion, ...identity }) => identity)(spacePin));
+  assert.equal('verifiedBuild' in status, false, 'prepared files never claim launch preflight');
   assert.equal(status.totalFiles, 2);
   assert.equal(status.completedFiles, 2);
   assert.equal(status.totalBytes, 30);

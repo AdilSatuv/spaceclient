@@ -10,6 +10,7 @@
     "dev": "npm run build && electron .",
     "check": "tsc --noEmit",
     "check:ui": "node scripts/check-launcher-ui.mjs",
+    "check:ui:identity": "node scripts/check-build-identity-ui.mjs",
     "test": "node --test test/*.test.cjs"
   },
   "dependencies": {

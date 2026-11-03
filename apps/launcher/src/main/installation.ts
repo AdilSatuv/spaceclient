@@ -7,6 +7,7 @@ import { downloadPlan } from './download-queue.ts';
 import { extractNatives } from './native-extraction.ts';
 import { VERSION_METADATA } from './version-plan.ts';
 import { profileId } from './validation.ts';
+import { spaceBuildIdentity } from './build-identity.ts';
 import type { SpaceBundleManifest, InstalledSpace } from './game-bundle.ts';
 import type { InstallationStatus } from '../shared/installation.ts';
 
@@ -80,7 +81,10 @@ export class InstallationService {
         totalBytes: 0,
         retryCount: 0,
         spaceVersion: null,
-        message: 'Базовые файлы ещё не проверялись в этом сеансе.',
+        bundledBuild: this.dependencies.space
+          ? spaceBuildIdentity(this.dependencies.space.pin)
+          : null,
+        message: 'Нажмите «Подготовить файлы»: загрузим недостающее и проверим файлы профиля.',
       },
     );
   }

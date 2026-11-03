@@ -2,6 +2,7 @@ import { spawn } from 'node:child_process';
 import { UserFacingError } from './application/user-facing-error.ts';
 import { prepareLocalLaunch } from './launch-plan.ts';
 import { LaunchDiagnostics } from './launch-diagnostics.ts';
+import { spaceBuildIdentity } from './build-identity.ts';
 import type { SpaceBundleManifest } from './game-bundle.ts';
 import type { Profile } from '../shared/models.ts';
 import type { LaunchStatus } from '../shared/launch.ts';
@@ -40,6 +41,7 @@ export class LaunchService {
         message: 'Локальная игра без регистрации аккаунта.',
         exitCode: null,
         log: [],
+        verifiedBuild: null,
       },
     );
   }
@@ -56,6 +58,7 @@ export class LaunchService {
       message: 'Проверяем файлы и Java…',
       exitCode: null,
       log: ['Начата локальная проверка установки и runtime.'],
+      verifiedBuild: null,
     });
     const job: Job = { done: Promise.resolve(), controller: new AbortController(), spawned: false };
     this.jobs.set(id, job);
@@ -81,7 +84,16 @@ export class LaunchService {
       job.controller.signal.throwIfAborted();
       this.update(
         id,
-        { phase: 'starting', message: 'Запускаем локальную игру…' },
+        {
+          phase: 'starting',
+          message: 'Запускаем локальную игру…',
+          verifiedBuild: plan.verifiedBuild
+            ? {
+                identity: spaceBuildIdentity(plan.verifiedBuild),
+                checkedAt: new Date().toISOString(),
+              }
+            : null,
+        },
         'Установка и Java проверены.',
       );
       await new Promise<void>((resolve, reject) => {

@@ -117,7 +117,9 @@ export function LaunchCard({
                 : 'Запускаем…'
               : preparing
                 ? 'Подготовка файлов…'
-                : 'Играть локально'}
+                : current?.phase === 'error'
+                  ? 'Повторить запуск'
+                  : 'Играть локально'}
             {!running && !preparing && <ArrowUpRight aria-hidden="true" />}
           </Button>
         </form>
