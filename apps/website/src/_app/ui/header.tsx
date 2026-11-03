@@ -9,6 +9,7 @@ const links = [
   ['/download', 'Загрузки'],
   ['/updates', 'Обновления'],
   ['/help', 'Помощь'],
+  ['/account', 'Аккаунт'],
 ];
 export default function Header() {
   const path = usePathname();

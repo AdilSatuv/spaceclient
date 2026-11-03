@@ -30,6 +30,7 @@ async function build() {
     NEXT_TELEMETRY_DISABLED: '1',
   };
   await run([tsc, '-p', 'packages/content-contracts/tsconfig.json'], env);
+  await run([tsc, '-p', 'packages/account-contracts/tsconfig.json'], env);
   await run([tsc, '-p', 'apps/api/tsconfig.json'], env);
   await run([next, 'build', path.join(root, 'apps/website')], env);
 }
