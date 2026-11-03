@@ -1,0 +1,15 @@
+# Space account: API и сайт · 3 ноября 2026
+
+Копия: `C:/Users/user/Documents/Codex/2026-11-03/space-client-website-agent/work/spaceclient-website`, ветка `feat/space-account-web`, база `cf20fc1c134f53848623097ff297d459640a6d44`. Согласованный architecture commit `ff6e11a` перенесён как `2226710`. Работа local-only; пользовательские приложения и runtime не используются.
+
+## Первый отдельный срез: backend
+
+AccountsModule отделён от content. Все HTTP DTO сохранены без breaking changes. Username и nickname уникальны без учёта регистра; username неизменяем. Пароли 15–128 Unicode code points со значимыми пробелами. Только случайная соль и async scrypt (N=65536,r=8,p=1,32-byte key,maxmem80MiB); максимум два KDF одновременно на сервис. Неизвестное имя проходит такой же KDF. Проверка ключа timingSafeEqual. Оpaque 32-byte session tokens хранятся только SHA-256-хешами; срок 7 дней, отзыв logout, максимум 10 сессий на аккаунт. Лимиты попыток/IP и mutation/assets сохранены в SQLite и ограничены по числу bucket-записей.
+
+SQLite содержит пользователей, сессии и PNG BLOB: нет клиентских путей, remote URL или SSRF. Транзакции, unique constraints и expectedRevision предотвращают потерю изменений. Неиспользуемые медиа удаляются при изменении профиля. Startup запрещает symlink в пути к БД, WAL и SHM; неизвестная будущая версия БД не перезаписывается. `createApp()` создаёт отдельную in-memory БД для каждого fixture; только bootstrap и preview явно включают `.local/space-accounts` (или `SPACE_ACCOUNT_DATA`).
+
+PNG: полные CRC и chunk boundaries/order/critical types, обязательные IHDR/IDAT/IEND, запрет APNG, точная длина ограниченной распаковки и полного zlib stream, фильтры 0–4 и восстановление каждой строки. Декодируются допустимые grayscale/RGB/palette/alpha глубины 1–16 bit, Adam7; индексы палитры проверяются. Результат сохраняется как metadata-free RGBA8 PNG. Дескриптор SHA-256/bytes относится к возвращённому очищенному изображению, а не исходным загруженным байтам. Skin64×64 classic/slim или64×32 classic; cape64×32/128×64/256×128; исходный PNG до256KiB. Строгий base64, JSON body до360KiB, безопасные ошибки без parser/raw input/password/token.
+
+Первичные источники решений: [Node24 SQLite](https://nodejs.org/download/release/v24.15.0/docs/api/sqlite.html), [async scrypt и timingSafeEqual](https://nodejs.org/download/release/v24.15.0/docs/api/crypto.html), [Nest security headers](https://docs.nestjs.com/techniques/security), [PNG specification](https://www.w3.org/TR/png-3/). Installed NestExpressApplication.useBodyParser и Next route/security guides прочитаны локально. Внешних зависимостей не добавлено.
+
+Ранние проверки: API build; **29 API tests pass** в штатном параллельном worker-наборе; **6 architecture tests pass**. Новые тесты подтверждают persistent restart, два клиента одного сервиса, wrong credentials, case-insensitive conflicts, session expiry/logout, stale revision, skin/cape upload/delete и digest, отдельные fixture stores, malformed/oversized JSON/media, rate limit, PNG CRC/zlib/filter/palette/Adam7. Это ранний backend commit; сайт/BFF и итоговая диагностика worker дополняются следующим коммитом.

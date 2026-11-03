@@ -3,14 +3,17 @@ import type { DynamicModule } from '@nestjs/common';
 import { ContentModule } from './content/content.module';
 import { features, releases, updates } from './content/infrastructure/curated-catalog';
 import { ProjectController } from './project.controller';
+import { AccountsModule } from './accounts/module';
+import type { AccountOptions } from './accounts/service';
 
-export type AppOptions = { catalog?: unknown };
+export type AppOptions = { catalog?: unknown; accounts?: AccountOptions };
 @Module({})
 export class AppModule {
   static register(options: AppOptions = {}): DynamicModule {
     return {
       module: AppModule,
       imports: [
+        AccountsModule.register(options.accounts),
         ContentModule.register(
           options.catalog === undefined ? { features, releases, updates } : options.catalog,
         ),

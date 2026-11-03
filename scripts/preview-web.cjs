@@ -37,7 +37,11 @@ async function main() {
   if (buildOnly || prepareOnly) await build();
   if (prepareOnly) return;
   const { createApp } = require('../apps/api/dist/app.js');
-  const api = await createApp();
+  const api = await createApp({
+    accounts: {
+      dataDir: process.env.SPACE_ACCOUNT_DATA || path.join(root, '.local/space-accounts'),
+    },
+  });
   await api.listen(0, '127.0.0.1');
   const reservation = http.createServer();
   await new Promise((resolve) => reservation.listen(0, '127.0.0.1', resolve));
