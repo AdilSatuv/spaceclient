@@ -89,3 +89,4 @@ space.menu.editor.undo=Отменить
 space.menu.editor.redo=Повторить
 space.menu.editor.history.hint=История позиции/масштаба за сеанс; очищается при смене профиля/импорте/сбросе.
 space.menu.editor.history.empty=В этом направлении нет изменений позиции.
+space.menu.editor.axisfull=На этой оси нет места для сдвига на целую GUI-единицу.

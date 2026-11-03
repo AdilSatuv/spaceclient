@@ -89,3 +89,4 @@ space.menu.editor.undo=Undo
 space.menu.editor.redo=Redo
 space.menu.editor.history.hint=Session-only position/scale history; clears on profile/import/reset.
 space.menu.editor.history.empty=No layout change available in this direction.
+space.menu.editor.axisfull=No room for a whole GUI unit of movement on this axis.
