@@ -132,14 +132,16 @@
     "noClaimOfCompleteGraphCoverage": true
   },
   "manualCheck": {
-    "status": "awaiting_user_response",
+    "status": "deferred_by_user",
     "requested": [
       "real V/C hold and release",
       "menu during hold",
       "Alt+Tab during hold",
       "ToggleSprint Toggle mode"
     ],
-    "automatedVirtualFocusIsNotPhysicalFocus": true
+    "automatedVirtualFocusIsNotPhysicalFocus": true,
+    "userResponse": "Проверю позже",
+    "physicalInputAccepted": false
   },
   "remaining": [
     "physical mouse look and interaction delivery",
