@@ -19,6 +19,7 @@ public final class SpaceClient implements ClientModInitializer {
     public static final SessionTimer session = new SessionTimer();
     @Override
     public void onInitializeClient() {
+        dev.spaceclient.cosmetics.CosmeticsRuntime.initialize(FabricLoader.getInstance().getConfigDir());
         hud = HudSettings.open(FabricLoader.getInstance().getConfigDir().resolve("spaceclient-hud.properties"));
         mods = ModSettings.open(FabricLoader.getInstance().getConfigDir().resolve("spaceclient-mods.properties"));
         browser = ModuleBrowserSettings.open(FabricLoader.getInstance().getConfigDir().resolve("spaceclient-browser.properties"));
