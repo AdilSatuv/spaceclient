@@ -1,5 +1,7 @@
 # Меню Minecraft в стиле Space
 
+Уточнение пользователя: прежний графитовый HUD нравился больше. Каталог и shared module settings/editor возвращены к прежним surfaces в47062f1, с сохранением новых функций и RU spacing. Орбитальная тема штатных меню остаётся. Актуальная сборкаdev-19404e6dfa54/47mixins;300Java/strictbundle/native61frames pass, включая3 формы wings на настоящей модели. [QA](qa/hud-graphite-restore-2026-11-03.json). Предыдущее оформление собственного HUD ниже — историческое.
+
 Последнее обновление3 ноября: все категории Space и settings/cosmetics/HUD editor переведены на общие синие surfaces, золотые accents и статичный орбитальный фон. Native option/sound/generic sliders, lock, lists и отдельный resource-pack dirt route покрыты общей темой; drag/release и native row clipping сохранены. Свежие455tests/58nativecaptures/GUI2–3; [точный JAR и приёмка](MENU-THEME-2026-11-03.md). В HUD editor мир остаётся виден под новым overlay для точных координат. Секции ниже отражают предыдущие этапы.
 
 Актуализация3 ноября: графитовая тема теперь покрывает раннюю подготовку ресурсов Minecraft, world/terrain/progress loading, подключение и ошибку подключения; copyright и native Cancel/return сохраняются. Процент отображается только из реального native progress, иначе — честный текст этапа. Для раннего Mojang logo ресурсы ещё не готовы: тема использует собственную простую геометрию и сохраняет native знак. RU/EN подписи расширены, но полный перевод всех описаний не заявляется. [Результат и проверенные границы](WAVE2-REVIEW-2026-11-03.md).

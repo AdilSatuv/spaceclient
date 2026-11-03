@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-03",
+  "sourceCommit": "47062f1",
+  "game": {
+    "schemaVersion": 1,
+    "channel": "development",
+    "modVersion": "0.1.0",
+    "minecraftVersion": "1.8.9",
+    "loaderVersion": "0.18.3",
+    "gameSourceTree": "19404e6dfa54414b4053945244243859fd483e6e",
+    "size": 1152623,
+    "sha256": "5ecc09c30278e27067f0b5db6ce7430080a472af42094f12783c382fd3f1b40a"
+  },
+  "label": "dev-19404e6dfa54",
+  "mixins": 47,
+  "javaTests": 300,
+  "strictLauncherBuild": "pass",
+  "native": {
+    "ok": true,
+    "captures": 61,
+    "nativeSliderDragChecks": 3,
+    "keySteps": 6,
+    "glErrors": 0,
+    "exitCode": 0,
+    "gameSourceTree": "19404e6dfa54414b4053945244243859fd483e6e",
+    "sha256": "5ecc09c30278e27067f0b5db6ce7430080a472af42094f12783c382fd3f1b40a",
+    "root": "C:\\Users\\user\\Documents\\Codex\\2026-10-28\\space-client-minecraft-menus\\work\\spaceclient-menus\\.reports\\menu-theme-qa\\run-14502116-9e81-4f43-9b97-5d60bc812fd0",
+    "noOsInput": true,
+    "noLanDiscovery": true,
+    "privateWorld": true
+  },
+  "restored": [
+    "HUD catalog/background/sidebar/cards/buttons/switches",
+    "HUD editor",
+    "Shared module settings shell"
+  ],
+  "retained": [
+    "Grid/List",
+    "55 modules",
+    "group editor and numeric controls",
+    "undo/redo and profiles",
+    "compact RU state/favorite spacing",
+    "native menu orbital theme and 47 mixins",
+    "cosmetics"
+  ],
+  "wings": {
+    "types": [
+      "AURORA",
+      "EMBER",
+      "CRYSTAL"
+    ],
+    "default": "NONE",
+    "haloTypes": [
+      "RING",
+      "ORBIT"
+    ],
+    "palettes": 4,
+    "scale": [
+      60,
+      140
+    ],
+    "animated": true,
+    "requiresAccount": false,
+    "localOnly": true,
+    "actualPlayerPreviewCaptures": [
+      "cosmetics-wings-aurora.png",
+      "cosmetics-wings-ember.png",
+      "cosmetics-wings-crystal.png"
+    ]
+  },
+  "userInstanceAutomaticallyUpdated": false,
+  "userSettingsChanged": false,
+  "userProcessesStopped": false,
+  "push": false,
+  "mainChanged": false,
+  "codebaseMemory": "Transport closed"
+}

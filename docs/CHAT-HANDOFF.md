@@ -1,5 +1,13 @@
 # Передача работы между чатами Space Client
 
+## Прежний вид HUD и проверка крыльев · 3 ноября2026
+
+Пользователь предпочёл старый HUD и спросил о крыльях. Source47062f1 возвращает graphite catalog/sidebar/cards/buttons, shared module settings/editor/switches к b09706e; единственный сохранённый diff этих4 UI файлов от прежнего образца — безопасный RU state/title spacing в List. Grid/List, все55, групповой/numeric editor/undo/profiles не менялись. Native orbital theme/47mixins остаются. Пользовательские cosmetic defaults/instance/processes не менялись.
+
+300Java/game/strict launcher bundle pass. Native run14502116-9e81-4f43-9b97-5d60bc812fd0:61frames/3sliderchecks/6keys/exit0/GL0/noERROR-FATAL. Четыре finalframe (RU catalog и3 формы крыльев на настоящей модели игрока в мире) просмотрены полноразмерно. Крылья AURORA/EMBER/CRYSTAL,2halo,4palettes,scale60–140,animation; defaultNONE. Включение: RightShift→Cosmetics→SpaceappearanceON→Wings, F5thirdperson. Аккаунт для wings не нужен; local-only guard сохранён.
+
+Tree19404e6dfa54414b4053945244243859fd483e6e, IDdev-19404e6dfa54,1152623bytes, SHA5ecc09c30278e27067f0b5db6ce7430080a472af42094f12783c382fd3f1b40a. Тот же JAR в dist/game; новый frozen QA — [JSON](qa/hud-graphite-restore-2026-11-03.json), logs `.reports/team-review/hud-restore-{game,native,launcher}.log`. Launcher/game пользователя не прерывались, instance автоматически не обновлялся: после выхода restartlauncher→Preparefiles→launch. CBM снова Transportclosed, свежий index не заявлять. Новые работы/агенты/push/main/deploy не начинались. Ниже — история предыдущих checkpoints.
+
 ## Единая тема меню завершена · 3 ноября2026
 
 Пользователь попросил изменить фон всех вкладок Minecraft и все кнопки, затем найти оставшиеся важные задачи. [Результат](MENU-THEME-2026-11-03.md), [QA](qa/menu-theme-2026-11-03.json), [актуальный порядок](CURRENT-PRIORITIES-2026-11-03.md). Выполнено в текущем чате без новых агентов/чатов, local-only без push/main/deploy. Source96f33d5→0a7e7da→b39bf9f→3736c6d→db482b4, helper7d47e0a. Shared MenuBackdrop/MenuTheme используются всеми7 категориями, settings/cosmetics/editor, native menus/buttons/sliders/lock/list. Исправлены native inherited-shadow lock failure, resource-pack dirt entry, overflow при прозрачных masks и legacy slider pixels.
