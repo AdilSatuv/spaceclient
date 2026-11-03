@@ -1,6 +1,8 @@
 package dev.spaceclient.qa;
 import dev.spaceclient.*;
 import dev.spaceclient.cosmetics.*;
+import dev.spaceclient.hud.HudModule;
+import dev.spaceclient.hud.HudEditorScreen;
 import dev.spaceclient.settings.*;
 import dev.spaceclient.qa.mixin.ScreenAccess;
 import java.io.*;import java.lang.reflect.*;import java.nio.*;import java.nio.charset.StandardCharsets;import java.nio.file.*;import java.util.*;
@@ -31,6 +33,16 @@ public final class CosmeticsCheck {
   List<Object> renderers=Arrays.asList(c.getEntityRenderManager().getRenderer(c.player),new PlayerEntityRenderer(c.getEntityRenderManager(),false),new PlayerEntityRenderer(c.getEntityRenderManager(),true));
   for(Object renderer:renderers) {int count=0;for(Field featureField:LivingEntityRenderer.class.getDeclaredFields())if(featureField.getType()==List.class){featureField.setAccessible(true);for(Object f:(List<?>)featureField.get(renderer))if(f instanceof CosmeticFeature)count++;}require(count==1,"Duplicate/missing cosmetic feature "+count);}
   add("title-preview",()->{c.connect(null);c.setScreen(new CosmeticsScreen(new TitleScreen()));});
+  add("compact-inventory-inspector",()->{
+   c.options.guiScale=3;
+   require(SpaceClient.hud.place(HudModule.INVENTORY,SpaceClient.hud.getConfig().active().placement(HudModule.INVENTORY).withScale(3)),"Inventory fixture placement");
+   HudEditorScreen editor=new HudEditorScreen(null,HudModule.INVENTORY);c.setScreen(editor);
+   method(editor.getClass(),"activate",int.class).invoke(editor,53);
+   Screen inspector=c.currentScreen;
+   @SuppressWarnings("unchecked") List<SettingRow> rows=(List<SettingRow>)method(inspector.getClass(),"rows").invoke(inspector);
+   require(!rows.get(0).enabled||!rows.get(1).enabled,"Filled inventory axis must be disabled");
+   for(int i=0;i<2;i++)require(rows.get(i).range.max>rows.get(i).range.min,"Coordinate control must retain a valid numeric range");
+  });
  }
  private static void worldChecks(MinecraftClient c)throws Exception {
   for(CosmeticsSettings.Wings wing:CosmeticsSettings.Wings.values()){final CosmeticsSettings.Wings w=wing;add("world-"+w.name(),()->{CosmeticsRuntime.settings().change(v->{v.enabled=true;v.wings=w;v.animated=false;});c.setScreen(new Preview());});}
