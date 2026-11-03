@@ -46,7 +46,7 @@ export function imageInput(value: unknown, kind: 'skin' | 'cape') {
     x.pngBase64.length > Math.ceil(MAX_IMAGE_BYTES / 3) * 4 ||
     !x.pngBase64.length ||
     !/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(x.pngBase64) ||
-    (kind === 'skin' && !['classic', 'slim'].includes(String(x.model)))
+    (kind === 'skin' && (typeof x.model !== 'string' || !['classic', 'slim'].includes(x.model)))
   )
     return badInput();
   const bytes = Buffer.from(x.pngBase64, 'base64');

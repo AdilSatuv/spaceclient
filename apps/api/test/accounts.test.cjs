@@ -197,6 +197,16 @@ test('independent application stores, strict input, bounded bodies/images and pe
         (await request(first.base, 'register', 'POST', body)).body.code,
         'SPACE_INVALID_INPUT',
       );
+    for (const model of [['slim'], {}, 1]) {
+      const invalidModel = await request(
+        first.base,
+        'me/skin',
+        'PUT',
+        { pngBase64: png().toString('base64'), model, expectedRevision: 1 },
+        session.sessionToken,
+      );
+      assert.equal(invalidModel.body.code, 'SPACE_INVALID_INPUT');
+    }
     for (const bytes of [
       Buffer.from('<svg/>'),
       png(32, 32),
