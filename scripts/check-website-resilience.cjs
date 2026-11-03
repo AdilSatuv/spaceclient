@@ -1,7 +1,6 @@
 const assert = require('node:assert/strict');
 const path = require('node:path');
 const puppeteer = require('puppeteer-core');
-const { checkModuleCatalogNoScript } = require('./check-website-module-catalog.cjs');
 
 async function checkWebsiteResilience({ browser, base, output, firefox, results, setScenario }) {
   const page = await browser.newPage();
@@ -89,6 +88,16 @@ async function checkWebsiteResilience({ browser, base, output, firefox, results,
     await page.focus('.catalog summary');
     await page.keyboard.press('Enter');
     assert.equal(await page.$eval('.catalog details', (element) => element.open), true);
+    await goto('/features?category=performance&q=FPS');
+    assert.equal(await page.evaluate(() => matchMedia('(scripting: none)').matches), true);
+    assert.equal(await page.$$eval('.catalog article', (items) => items.length), 1);
+    assert.match(await page.$eval('.catalog', (item) => item.textContent), /Dynamic FPS/);
+    await submit();
+    assert.equal(await page.$$eval('.catalog article', (items) => items.length), 1);
+    results.push({
+      id: 'WEB-MODULE-NOJS',
+      result: 'Filtered catalog and GET form submission work with JavaScript disabled.',
+    });
     await goto('/help');
     await page.type('input[name=q]', 'вход');
     await Promise.all([
@@ -229,7 +238,6 @@ async function checkFirefoxNoScript({ executable, base, output, results, setScen
   });
   try {
     await checkWebsiteResilience({ browser, base, output, firefox: true, results, setScenario });
-    await checkModuleCatalogNoScript({ browser, base, results, firefox: true });
   } finally {
     await browser.close();
   }
