@@ -7,6 +7,15 @@ const root = path.resolve(__dirname, '..');
 const next = path.join(root, 'node_modules/next/dist/bin/next');
 const buildOnly = process.argv.includes('--build');
 const prepareOnly = process.argv.includes('--prepare');
+function previewPort(value) {
+  if (value === undefined || value === '') return 0;
+  if (!/^\d{1,5}$/.test(value) || Number(value) > 65535)
+    throw new Error('Preview ports must be integers from 0 to 65535.');
+  return Number(value);
+}
+const apiPort = previewPort(process.env.SPACE_PREVIEW_API_PORT);
+const sitePort = previewPort(process.env.SPACE_PREVIEW_PORT);
+if (apiPort && apiPort === sitePort) throw new Error('API and website ports must differ.');
 function run(args, env) {
   return new Promise((resolve, reject) => {
     const child = spawn(process.execPath, args, {
@@ -43,9 +52,17 @@ async function main() {
       dataDir: process.env.SPACE_ACCOUNT_DATA || path.join(root, '.local/space-accounts'),
     },
   });
-  await api.listen(0, '127.0.0.1');
+  await api.listen(apiPort, '127.0.0.1');
   const reservation = http.createServer();
-  await new Promise((resolve) => reservation.listen(0, '127.0.0.1', resolve));
+  try {
+    await new Promise((resolve, reject) => {
+      reservation.once('error', reject);
+      reservation.listen(sitePort, '127.0.0.1', resolve);
+    });
+  } catch (error) {
+    await api.close();
+    throw error;
+  }
   const port = reservation.address().port;
   await new Promise((resolve) => reservation.close(resolve));
   const url = `http://127.0.0.1:${port}`;
