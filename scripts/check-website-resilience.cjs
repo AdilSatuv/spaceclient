@@ -4,6 +4,7 @@ const puppeteer = require('puppeteer-core');
 
 async function checkWebsiteResilience({ browser, base, output, firefox, results, setScenario }) {
   const page = await browser.newPage();
+  let phase = 'initial navigation';
   try {
     await page.setCacheEnabled(false);
     let logoResponse;
@@ -88,16 +89,30 @@ async function checkWebsiteResilience({ browser, base, output, firefox, results,
     await page.focus('.catalog summary');
     await page.keyboard.press('Enter');
     assert.equal(await page.$eval('.catalog details', (element) => element.open), true);
+    phase = 'performance navigation';
     await goto('/features?category=performance&q=FPS');
+    phase = 'performance scripting state';
     assert.equal(await page.evaluate(() => matchMedia('(scripting: none)').matches), true);
-    assert.equal(await page.$$eval('.catalog article', (items) => items.length), 1);
+    phase = 'performance card count';
+    // Firefox with page scripting disabled can stall Puppeteer's async $$eval helper.
+    assert.equal(
+      await page.evaluate(() => document.querySelectorAll('.catalog article').length),
+      1,
+    );
+    phase = 'performance card text';
     assert.match(await page.$eval('.catalog', (item) => item.textContent), /Dynamic FPS/);
+    phase = 'performance form submission';
     await submit();
-    assert.equal(await page.$$eval('.catalog article', (items) => items.length), 1);
+    phase = 'performance result count';
+    assert.equal(
+      await page.evaluate(() => document.querySelectorAll('.catalog article').length),
+      1,
+    );
     results.push({
       id: 'WEB-MODULE-NOJS',
       result: 'Filtered catalog and GET form submission work with JavaScript disabled.',
     });
+    phase = 'remaining native forms';
     await goto('/help');
     await page.type('input[name=q]', 'вход');
     await Promise.all([
@@ -165,9 +180,12 @@ async function checkWebsiteResilience({ browser, base, output, firefox, results,
       backUrlQuery: '',
     });
   } catch (error) {
-    throw new Error('No-JavaScript scenario at ' + page.url() + ': ' + error.message, {
-      cause: error,
-    });
+    throw new Error(
+      'No-JavaScript scenario (' + phase + ') at ' + page.url() + ': ' + error.message,
+      {
+        cause: error,
+      },
+    );
   } finally {
     setScenario?.({ release: false });
     await page.close();
