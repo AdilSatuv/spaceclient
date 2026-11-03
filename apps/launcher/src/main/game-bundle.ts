@@ -54,6 +54,7 @@ const required = [
   'spaceclient.mixins.json',
   'spaceclient-build.properties',
   'dev/spaceclient/SpaceClient.class',
+  'dev/spaceclient/BuildIdentity.class',
   'dev/spaceclient/ClickCounter.class',
   'dev/spaceclient/HudConfig.class',
   'dev/spaceclient/mixin/ClientMixin.class',

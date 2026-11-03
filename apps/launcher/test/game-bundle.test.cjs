@@ -67,6 +67,7 @@ function entries() {
     },
     ...[
       'SpaceClient',
+      'BuildIdentity',
       'ClickCounter',
       'HudConfig',
       'mixin/ClientMixin',
@@ -257,6 +258,7 @@ test('bundled game metadata is bound to the committed source tree and returned w
 
 test('gameplay modules and their settings cannot disappear from an otherwise valid bundle', async (t) => {
   for (const name of [
+    'BuildIdentity',
     'mods/ModSettings',
     'mods/ModSettings$Brightness',
     'mods/ModSettings$TimePreset',
