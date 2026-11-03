@@ -1,0 +1,1 @@
+{"schemaVersion":1,"id":"space_menu_theme_qa","version":"1.0.0","name":"Isolated menu theme checks","environment":"client","entrypoints":{"client":["dev.spaceclient.qa.QaInit"]},"mixins":["settings-qa.mixins.json"],"depends":{"spaceclient":"*","minecraft":"1.8.9"}}

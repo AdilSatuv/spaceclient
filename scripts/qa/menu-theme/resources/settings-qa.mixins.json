@@ -1,0 +1,1 @@
+{"required": true, "package": "dev.spaceclient.qa.mixin", "compatibilityLevel": "JAVA_8", "client": ["QaFocus", "QaMixin", "ScreenAccess", "NoLanProbe"], "injectors": {"defaultRequire": 1}}
