@@ -56,6 +56,12 @@ function entries() {
       'DynamicFpsMixin',
       'TntCountdownMixin',
       'WaypointsMixin',
+      'SpaceAppearanceMixin',
+      'SpaceCosmeticsMixin',
+      'EarlyLoadingMixin',
+      'LoadingRendererMixin',
+      'ProgressScreenMixin',
+      'TerrainScreenMixin',
     ],
   };
   return [
@@ -106,6 +112,29 @@ function entries() {
       'mixin/DynamicFpsMixin',
       'mixin/TntCountdownMixin',
       'mixin/WaypointsMixin',
+      'mixin/SpaceAppearanceMixin',
+      'mixin/SpaceCosmeticsMixin',
+      'mixin/EarlyLoadingMixin',
+      'mixin/LoadingRendererMixin',
+      'mixin/ProgressScreenMixin',
+      'mixin/TerrainScreenMixin',
+      'cosmetics/AppearanceProfile',
+      'cosmetics/CosmeticsSettings',
+      'cosmetics/CosmeticsSettings$State',
+      'cosmetics/CosmeticsSettings$Wings',
+      'cosmetics/CosmeticsSettings$Halo',
+      'cosmetics/CosmeticsSettings$Tint',
+      'cosmetics/CosmeticsRuntime',
+      'cosmetics/CosmeticsRuntime$Data',
+      'cosmetics/CosmeticsScreen',
+      'cosmetics/CosmeticFeature',
+      'hud/HudArrangeScreen',
+      'hud/HudLayoutHistory',
+      'hud/HudLayoutOperations',
+      'hud/HudLayoutOperations$Align',
+      'hud/ModuleBrowserSettings$View',
+      'menu/LoadingTheme',
+      'menu/UiTranslations',
 
       'mods/ModSettings',
       'mods/ModSettings$Brightness',
@@ -236,6 +265,7 @@ function entries() {
     ].map((name) => ({ name: 'dev/spaceclient/' + name + '.class', data: header })),
     { name: 'assets/spaceclient/font/DejaVuSans.ttf', data: 'font fixture' },
     { name: 'assets/spaceclient/font/LICENSE-DejaVu.txt', data: 'license fixture' },
+    { name: 'assets/spaceclient/lang/ui_ru.tsv', data: 'fixture\tперевод\n' },
   ];
 }
 async function fixture(t, change = (value) => value) {
@@ -428,6 +458,12 @@ test('all pinned mixin classes and the exact mixin set are required', async (t) 
     'DynamicFpsMixin',
     'TntCountdownMixin',
     'WaypointsMixin',
+    'SpaceAppearanceMixin',
+    'SpaceCosmeticsMixin',
+    'EarlyLoadingMixin',
+    'LoadingRendererMixin',
+    'ProgressScreenMixin',
+    'TerrainScreenMixin',
   ];
   for (const name of pinned) {
     const candidate = await fixture(t, (value) =>
@@ -499,6 +535,32 @@ test('profile and editor classes cannot be omitted from the pinned game bundle',
     const candidate = await fixture(t, (value) =>
       value.filter((entry) => entry.name !== `dev/spaceclient/hud/${name}.class`),
     );
+    await assert.rejects(candidate.inspectSpaceJar(candidate.source));
+  }
+});
+
+test('account appearance, group editor and loading resources cannot disappear from a pinned bundle', async (t) => {
+  for (const name of [
+    'dev/spaceclient/cosmetics/AppearanceProfile.class',
+    'dev/spaceclient/cosmetics/CosmeticsSettings.class',
+    'dev/spaceclient/cosmetics/CosmeticsSettings$State.class',
+    'dev/spaceclient/cosmetics/CosmeticsSettings$Wings.class',
+    'dev/spaceclient/cosmetics/CosmeticsSettings$Halo.class',
+    'dev/spaceclient/cosmetics/CosmeticsSettings$Tint.class',
+    'dev/spaceclient/cosmetics/CosmeticsRuntime.class',
+    'dev/spaceclient/cosmetics/CosmeticsRuntime$Data.class',
+    'dev/spaceclient/cosmetics/CosmeticsScreen.class',
+    'dev/spaceclient/cosmetics/CosmeticFeature.class',
+    'dev/spaceclient/hud/HudArrangeScreen.class',
+    'dev/spaceclient/hud/HudLayoutHistory.class',
+    'dev/spaceclient/hud/HudLayoutOperations.class',
+    'dev/spaceclient/hud/HudLayoutOperations$Align.class',
+    'dev/spaceclient/hud/ModuleBrowserSettings$View.class',
+    'dev/spaceclient/menu/LoadingTheme.class',
+    'dev/spaceclient/menu/UiTranslations.class',
+    'assets/spaceclient/lang/ui_ru.tsv',
+  ]) {
+    const candidate = await fixture(t, (value) => value.filter((entry) => entry.name !== name));
     await assert.rejects(candidate.inspectSpaceJar(candidate.source));
   }
 });
