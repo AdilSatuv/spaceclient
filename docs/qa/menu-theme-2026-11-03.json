@@ -1,0 +1,468 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-03",
+  "codeSnapshot": "7d47e0a",
+  "productSourceCommit": "db482b4",
+  "branch": "space-minecraft-menus",
+  "localSliceAccepted": true,
+  "publicReleaseAccepted": false,
+  "game": {
+    "schemaVersion": 1,
+    "channel": "development",
+    "modVersion": "0.1.0",
+    "minecraftVersion": "1.8.9",
+    "loaderVersion": "0.18.3",
+    "gameSourceTree": "646284f248b09eee824949dcee60433b9df1c2dd",
+    "size": 1152021,
+    "sha256": "7b84aa7030f5b208f244114312870a0f12191fcc57f7d5b6d6ea5373dfe462e5",
+    "label": "dev-646284f248b0",
+    "exactMixins": 47
+  },
+  "tests": {
+    "java": 300,
+    "launcher": 155,
+    "totalRerun": 455,
+    "failures": 0,
+    "generalAndApiUnchangedFromPrevious530Suite": true
+  },
+  "checks": {
+    "gameBuild": "pass",
+    "launcherTypes": "pass",
+    "strictLauncherBuild": "pass",
+    "format": "pass",
+    "nodeQaSyntax": "pass",
+    "native": {
+      "ok": true,
+      "captures": 58,
+      "nativeSliderDragChecks": 3,
+      "keySteps": 6,
+      "glErrors": 0,
+      "exitCode": 0,
+      "gameSourceTree": "646284f248b09eee824949dcee60433b9df1c2dd",
+      "sha256": "7b84aa7030f5b208f244114312870a0f12191fcc57f7d5b6d6ea5373dfe462e5",
+      "root": "C:\\Users\\user\\Documents\\Codex\\2026-10-28\\space-client-minecraft-menus\\work\\spaceclient-menus\\.reports\\menu-theme-qa\\run-c6e95b3f-6583-4205-aa4e-a7dd917a96b3",
+      "noOsInput": true,
+      "noLanDiscovery": true,
+      "privateWorld": true
+    },
+    "identityUiGroups": 5,
+    "visualReviewedFinal": [
+      "title",
+      "ru-gui3-catalog",
+      "ru-gui3-language",
+      "custom-world",
+      "catalog-grid",
+      "hud-content",
+      "ru-gui3-resources",
+      "inworld-cosmetics"
+    ],
+    "captures": [
+      {
+        "name": "title",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 6
+      },
+      {
+        "name": "title-focus",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 6
+      },
+      {
+        "name": "settings",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 13
+      },
+      {
+        "name": "video",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 1
+      },
+      {
+        "name": "native-option-slider-drag",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 1
+      },
+      {
+        "name": "controls",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 5
+      },
+      {
+        "name": "language",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 2
+      },
+      {
+        "name": "sounds",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 10
+      },
+      {
+        "name": "native-sound-slider-drag",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 10
+      },
+      {
+        "name": "skin-options",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 8
+      },
+      {
+        "name": "chat-options",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 11
+      },
+      {
+        "name": "resources",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 2
+      },
+      {
+        "name": "snooper",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 2
+      },
+      {
+        "name": "worlds",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 6
+      },
+      {
+        "name": "create-world",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 9
+      },
+      {
+        "name": "flat-world",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 6
+      },
+      {
+        "name": "flat-presets",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 2
+      },
+      {
+        "name": "custom-world",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 8
+      },
+      {
+        "name": "native-generic-slider-drag",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 1
+      },
+      {
+        "name": "custom-presets",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 2
+      },
+      {
+        "name": "multiplayer",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 7
+      },
+      {
+        "name": "direct-connect",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 2
+      },
+      {
+        "name": "add-server",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 3
+      },
+      {
+        "name": "confirm",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 2
+      },
+      {
+        "name": "catalog-grid",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 0
+      },
+      {
+        "name": "catalog-list",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 0
+      },
+      {
+        "name": "catalog-home",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 0
+      },
+      {
+        "name": "catalog-combat",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 0
+      },
+      {
+        "name": "catalog-visuals",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 0
+      },
+      {
+        "name": "catalog-hud",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 0
+      },
+      {
+        "name": "catalog-player",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 0
+      },
+      {
+        "name": "catalog-world",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 0
+      },
+      {
+        "name": "catalog-misc",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 0
+      },
+      {
+        "name": "catalog-settings",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 0
+      },
+      {
+        "name": "catalog-cosmetics",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 0
+      },
+      {
+        "name": "hud-content",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 0
+      },
+      {
+        "name": "hud-appearance",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 0
+      },
+      {
+        "name": "gameplay-settings",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 0
+      },
+      {
+        "name": "cosmetics",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 0
+      },
+      {
+        "name": "ru-compact-title",
+        "guiWidth": 427,
+        "guiHeight": 240,
+        "buttons": 6
+      },
+      {
+        "name": "ru-compact-list",
+        "guiWidth": 427,
+        "guiHeight": 240,
+        "buttons": 0
+      },
+      {
+        "name": "ru-compact-video",
+        "guiWidth": 427,
+        "guiHeight": 240,
+        "buttons": 1
+      },
+      {
+        "name": "ru-compact-settings",
+        "guiWidth": 427,
+        "guiHeight": 240,
+        "buttons": 0
+      },
+      {
+        "name": "ru-compact-cosmetics",
+        "guiWidth": 427,
+        "guiHeight": 240,
+        "buttons": 0
+      },
+      {
+        "name": "ru-gui3-language",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 2
+      },
+      {
+        "name": "ru-gui3-resources",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 2
+      },
+      {
+        "name": "ru-gui3-catalog",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 0
+      },
+      {
+        "name": "pause",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 8
+      },
+      {
+        "name": "inworld-settings-lock",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 14
+      },
+      {
+        "name": "native-lock-states",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 14
+      },
+      {
+        "name": "open-to-lan",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 4
+      },
+      {
+        "name": "achievements",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 1
+      },
+      {
+        "name": "statistics",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 5
+      },
+      {
+        "name": "hud-editor",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 0
+      },
+      {
+        "name": "hud-arrange",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 0
+      },
+      {
+        "name": "inworld-cosmetics",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 0
+      },
+      {
+        "name": "legacy-mod-controls",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 0
+      },
+      {
+        "name": "waypoints",
+        "guiWidth": 640,
+        "guiHeight": 360,
+        "buttons": 0
+      }
+    ],
+    "viewports": [
+      "EN1280x720 GUI2",
+      "RU854x480 GUI2",
+      "RU1280x720 GUI3"
+    ],
+    "nativeSliders": [
+      "OptionSliderWidget",
+      "SoundsScreen.SoundButtonWidget",
+      "SliderWidget"
+    ],
+    "fieldAndSideEffects": "native dragging/clamp/listener/release retained; only old paint suppressed",
+    "listBehavior": "native rows/masks/selection preserved; scissor intersects existing bounds and restores previous state"
+  },
+  "evidence": {
+    "native": ".reports/menu-theme-qa/run-c6e95b3f-6583-4205-aa4e-a7dd917a96b3",
+    "gameBuild": ".reports/team-review/menu-theme-final-product.log",
+    "launcherTests": ".reports/team-review/menu-theme-launcher-tests.log",
+    "launcherTypes": ".reports/team-review/menu-theme-launcher-types.log",
+    "strictBundle": ".reports/team-review/menu-theme-bundle.log",
+    "identityUi": ".reports/team-review/menu-theme-bundle-identity.log",
+    "format": ".reports/team-review/menu-theme-final-format.log"
+  },
+  "fixes": [
+    "Inherited lock geometry fixed after native mixin failure",
+    "Separate renderDirtBackground entry point themed for resource packs",
+    "Native list overflow clipped before translucent masks",
+    "Legacy slider corner paint clipped while preserving actual callbacks",
+    "Compact RU state label leaves room before favorite star"
+  ],
+  "preview": {
+    "website": "http://127.0.0.1:50566",
+    "account": "http://127.0.0.1:50566/account",
+    "launcherProcessPreserved": 30140,
+    "gameInstalledAutomatically": false,
+    "unrelatedJavaPreserved": true,
+    "instructions": "After finishing the game, restart launcher and choose Prepare files to install the new bundled game."
+  },
+  "boundaries": {
+    "physicalInput": false,
+    "thirdPartyScreens": false,
+    "realmsStreamingServices": false,
+    "allDpiResourceShaderPacks": false,
+    "newPerformanceSeries": false,
+    "codebaseMemory": "Transport closed",
+    "cleanWindowsVm": false,
+    "push": false,
+    "mainChanged": false,
+    "deployment": false,
+    "userWorldsModified": false
+  },
+  "priorities": [
+    "Profile and reduce HUD cost",
+    "Clean Windows packaged lifecycle and application upgrade/uninstall",
+    "Space password/session/recovery and SQLite backup lifecycle",
+    "Physical input and full multiplayer matrix",
+    "Consolidate old two-module pause screen and finish RU"
+  ],
+  "priorPerformanceReport": "docs/qa/native-hud-observations-2026-11-03.json",
+  "qaHelperSha256": "4f8049da7e50e4fa72b81987129a56a794c7c8cfa166fd2c4726afa0e5084bdd"
+}

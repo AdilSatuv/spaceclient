@@ -1,5 +1,15 @@
 # Передача работы между чатами Space Client
 
+## Единая тема меню завершена · 3 ноября2026
+
+Пользователь попросил изменить фон всех вкладок Minecraft и все кнопки, затем найти оставшиеся важные задачи. [Результат](MENU-THEME-2026-11-03.md), [QA](qa/menu-theme-2026-11-03.json), [актуальный порядок](CURRENT-PRIORITIES-2026-11-03.md). Выполнено в текущем чате без новых агентов/чатов, local-only без push/main/deploy. Source96f33d5→0a7e7da→b39bf9f→3736c6d→db482b4, helper7d47e0a. Shared MenuBackdrop/MenuTheme используются всеми7 категориями, settings/cosmetics/editor, native menus/buttons/sliders/lock/list. Исправлены native inherited-shadow lock failure, resource-pack dirt entry, overflow при прозрачных masks и legacy slider pixels.
+
+Свежие300Java+155launcher=455 pass, launcher types/game/strict bundle/format pass. Финальный native c6e95b3f-6583-4205-aa4e-a7dd917a96b3:58frames/3actualsliderdrag-release/6keys/exit0/GL0/ERROR-FATAL0, EN1280GUI2/RU854GUI2/RU1280GUI3. Восемь ключевых finalframes просмотрены, остальные кандидаты помогли найти дефекты. Private world/hidden Canvas, no OS input/LAN discovery. Identity5groups pass. General45/API30 неизменённых источников в этом срезе не повторялись; прежняя530suite отдельно ниже.
+
+Frozen tree646284f248b09eee824949dcee60433b9df1c2dd, IDdev-646284f248b0,1152021bytes, SHA7b84aa7030f5b208f244114312870a0f12191fcc57f7d5b6d6ea5373dfe462e5,47mixins. Тот же JAR в launcher/dist/game. User instance не переустанавливался; активный посторонний Java17544 и launcher30140 не прерывались. Для просмотра завершить игру → перезапустить launcher → «Подготовить файлы» → запуск. Site/API50566/50565 сохранены. Новый installer не выпускался: старый setupD711 — исторический, не текущий artifact.
+
+Следующий полезный срез: profiling HUD, затем full packaged clean-Windows/app update-uninstall и account lifecycle. Зафиксированы отсутствие password reset/all-session/device/account-delete API и старый ModsScreen только с2 модулями рядом с55catalog; старые реализованные части повторно не выдавать за задачи. Physical matrix отложена пользователем, Microsoft/public hosting не начинать автоматически. CBM Transport closed; свежий index не заявлять. Старые события и hashes ниже исторические.
+
 ## Вторая волна завершена · 3 ноября 2026
 
 Пользователь прямо поручил регистрацию Space на сайте и в лаунчере, изменение ника/скина/плаща, расширение HUD и редактора, темы загрузки, косметику и полезные функции лаунчера; разрешил параллельную работу существующих трёх чатов. Это отменяет прежнее отложенное состояние регистрации. Microsoft-вход и публичная публикация по-прежнему вне текущего поручения. Только local-only, без push/main/deploy и OS input. Сайт/лаунчер обновлены для просмотра по просьбе пользователя; автоматические QA используют отдельные скрытые профили.
