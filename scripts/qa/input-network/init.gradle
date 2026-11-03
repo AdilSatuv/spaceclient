@@ -1,0 +1,26 @@
+allprojects {
+    afterEvaluate {
+        if (plugins.hasPlugin('net.fabricmc.fabric-loom-remap')) {
+            sourceSets.create('inputNetworkQa') {
+                java.srcDir(file('../scripts/qa/input-network/src'))
+                resources.srcDir(file('../scripts/qa/input-network/resources'))
+                compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
+            }
+            tasks.named('compileInputNetworkQaJava') { options.compilerArgs += ['-proc:none'] }
+            def qaJar = tasks.register('inputNetworkQaJar', Jar) {
+                dependsOn tasks.named('inputNetworkQaClasses')
+                from sourceSets.inputNetworkQa.output
+                archiveFileName.set('input-network-qa-dev.jar')
+                destinationDirectory.set(file('../.reports/input-network-qa'))
+            }
+            def remapType = tasks.named('remapJar').get().getClass().superclass
+            tasks.register('remapInputNetworkQa', remapType) {
+                dependsOn qaJar
+                inputFile.set(qaJar.flatMap { it.archiveFile })
+                archiveFileName.set('input-network-qa.jar')
+                destinationDirectory.set(file('../.reports/input-network-qa'))
+                addNestedDependencies.set(false)
+            }
+        }
+    }
+}

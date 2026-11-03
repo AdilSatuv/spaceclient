@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "package": "dev.spaceclient.qa.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "client": [
+    "QaFocus",
+    "QaClient",
+    "QaRenderer",
+    "ScreenAccess",
+    "ServerPorts",
+    "NetworkPorts",
+    "ChatObserve",
+    "ChimeObserve",
+    "RendererPorts",
+    "QueuedObserve",
+    "ClientPorts"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
