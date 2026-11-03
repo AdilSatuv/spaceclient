@@ -1,0 +1,305 @@
+{
+  "date": "2026-11-03",
+  "snapshotCommit": "e7f85094b6326b6c74ebc323e191945a4b621a0a",
+  "branch": "space-minecraft-menus",
+  "verdict": "Working local prototype; readiness for ordinary-user distribution or public alpha not accepted.",
+  "modules": {
+    "gameplay": 29,
+    "hud": 26,
+    "total": 55
+  },
+  "bundle": {
+    "gameSourceTree": "541aae11fe5c1213ea84cdd545723b34fc3bc990",
+    "sha256": "752512a6368b24750eca956db7a1687f5b866e30fd8ff76b98350d33596e4738",
+    "size": 1062009,
+    "installedBytesMatch": true
+  },
+  "checks": {
+    "rootTests": 39,
+    "apiTests": 24,
+    "launcherTests": 112,
+    "javaTests": 249,
+    "total": 424,
+    "javaExecution": "Gradle test/build succeeded up-to-date for unchanged game tree; existing XML reports 249, zero failures/errors.",
+    "typecheckAndTokens": true,
+    "strictFullBuild": true,
+    "websiteHttpScenarios": 8
+  },
+  "launcherUi": {
+    "report": ".reports/launcher-ui/run-449341be-37d7-4ec0-895a-7fa3dff82d9a/report.json",
+    "checks": 10,
+    "generatedScreenshots": 14,
+    "rendererErrors": [],
+    "realDownloadsStarted": false,
+    "realAccountUsed": false
+  },
+  "websiteBrowser": {
+    "initial": {
+      "report": ".reports/website-browser/run-5175e9da-2490-4177-a8ff-93abb89933e0/failure.json",
+      "exitCode": 1,
+      "layoutsCompleted": 42,
+      "flowsCompleted": 23,
+      "pageErrors": [],
+      "error": "ERR_CONNECTION_REFUSED on /download during no-JavaScript scenario",
+      "rootCause": "Not established; do not classify as a proven production site defect."
+    },
+    "repeat": {
+      "report": ".reports/website-browser/run-3236e832-633b-4077-8416-ef4ae433db7b/report.json",
+      "exitCode": 0,
+      "layouts": 42,
+      "flows": 27,
+      "errors": [],
+      "skipped": [],
+      "instrumentation": "Original suite compiled in memory with own Next child exit/output observation only; product source unchanged."
+    },
+    "freshFirefox": false,
+    "freshLighthouse": false,
+    "publicHttpsTested": false
+  },
+  "format": {
+    "rawExitCode": 1,
+    "reportedFiles": 189,
+    "normalizedLfPass": 189,
+    "otherFormattingFailures": [],
+    "scope": "Line-ending mismatch under Windows checkout, not 189 confirmed code formatting errors. No global Git changes."
+  },
+  "nativeGame": {
+    "newLaunchDuringAudit": false,
+    "priorReport": "docs/qa/expanded-mods-2026-11-03.json",
+    "sameGameTreeAndJarHashVerified": true,
+    "priorExitCode": 0,
+    "priorReviewedCaptures": 15,
+    "physicalInputTested": false,
+    "multiplayerTested": false
+  },
+  "confirmedCurrentDefect": {
+    "file": "apps/launcher/src/main/launch-plan.ts",
+    "case": "Already aborted signal still invokes runtime probe before AbortError",
+    "runtimeProbeCalls": 1,
+    "expectedRuntimeProbeCalls": 0,
+    "versionCalls": 0,
+    "probe": ".reports/readiness-core-probe.json",
+    "realProcessSpawned": false,
+    "fixExistsInSeparateCoreBranch": true
+  },
+  "parallelWork": [
+    {
+      "title": "Space Client · UX/UI",
+      "threadId": "01a19ce0-20d4-7dd0-9eb4-aede3297ec5c",
+      "branch": "ux/navigation-surfaces",
+      "head": "774c79e",
+      "sourceCommits": [
+        "711efe0",
+        "31b5532"
+      ],
+      "cleanWhenInspected": true,
+      "integrated": false
+    },
+    {
+      "title": "Space Client · Функции и надёжность",
+      "threadId": "01a19ce0-2533-7472-bb00-6ec01700a85f",
+      "branch": "fix/core-launch-recovery",
+      "head": "c7e87fc",
+      "sourceCommits": [
+        "5ff589d",
+        "03f1187",
+        "42033c2",
+        "e1649e8"
+      ],
+      "cleanWhenInspected": true,
+      "integrated": false,
+      "ownReportedLauncherTests": 135
+    },
+    {
+      "title": "Space Client · Настройки модов",
+      "threadId": "01a19ee4-040c-76d3-9005-3d73ae2166f1",
+      "branch": "space-mod-settings",
+      "observedHead": "080fd40",
+      "workingTreeChangesObserved": true,
+      "latestReportedJavaTests": 271,
+      "latestReportedBuildPassed": true,
+      "latestReportedScope": 55,
+      "nativeUiQaAccepted": false,
+      "status": "active",
+      "integrated": false
+    }
+  ],
+  "integrationEvidence": {
+    "sourceCommitsNotPresentInMainObjectDatabase": true,
+    "keySourceFilesDiffer": true,
+    "abortedProbeDefectConfirmedInMain": true
+  },
+  "websiteCatalog": {
+    "featureDescriptions": 6,
+    "releases": 0,
+    "latestContentNotice": "2026-10-24",
+    "needsSyncWith55Modules": true
+  },
+  "auth": {
+    "localNicknameLaunch": true,
+    "offlineUuid": true,
+    "accessToken": "0 in local launch",
+    "callbackAndEncryptedCacheComponentsExist": true,
+    "officialOnlineFlowWired": false,
+    "spaceRegistrationWired": false,
+    "previouslyDeferredByUser": true
+  },
+  "installer": {
+    "developmentPackagerExists": true,
+    "lastDocumentedSetup": "2026-10-27",
+    "current55ModuleSetupBuiltInAudit": false,
+    "cleanWindowsInstallAccepted": false,
+    "uninstallUpgradeAccepted": false,
+    "automaticApplicationUpdateAccepted": false
+  },
+  "performance": {
+    "oldBaselineGameSourceTree": "ad06bc5f13ca76788f6c0832e9f72e77843219ac",
+    "current55ModuleBaselineAccepted": false,
+    "oldInterruptedStaticSeriesNotCausalProof": true
+  },
+  "remote": {
+    "latestRuns": [
+      {
+        "sha": "d6c45faac6abe135d0a79340627ad003e0dc1719",
+        "conclusion": "success",
+        "updatedAt": "2026-10-28T17:55:09Z",
+        "url": "https://github.com/AdilSatuv/spaceclient/actions/runs/40739568345"
+      },
+      {
+        "sha": "0333c106b6019c7834a64a47e03f508a3ae1a302",
+        "conclusion": "success",
+        "updatedAt": "2026-10-28T17:51:48Z",
+        "url": "https://github.com/AdilSatuv/spaceclient/actions/runs/40739103508"
+      },
+      {
+        "sha": "af160a6f19a112e901c982856c7f5111008c7c5c",
+        "conclusion": "success",
+        "updatedAt": "2026-10-28T17:47:05Z",
+        "url": "https://github.com/AdilSatuv/spaceclient/actions/runs/40738362628"
+      }
+    ],
+    "exactSnapshotAvailableOnGitHub": false,
+    "exactSnapshotCheckResponse": "422 No commit found for the actual snapshot commit",
+    "publicReleases": 0,
+    "openIssuesQuery": "repo:AdilSatuv/spaceclient is:issue is:open",
+    "openIssues": [
+      {
+        "number": 28,
+        "title": "SC-28: Понятная отправка поиска и фильтров сайта",
+        "url": "https://github.com/AdilSatuv/spaceclient/issues/28"
+      },
+      {
+        "number": 24,
+        "title": "SC-24: Подготовить и разместить сайт до игрового релиза",
+        "url": "https://github.com/AdilSatuv/spaceclient/issues/24"
+      },
+      {
+        "number": 23,
+        "title": "SC-23: Пройти матрицу приёмки вебсайта",
+        "url": "https://github.com/AdilSatuv/spaceclient/issues/23"
+      },
+      {
+        "number": 17,
+        "title": "SC-17: Спроектировать wireframes и визуальную систему сайта",
+        "url": "https://github.com/AdilSatuv/spaceclient/issues/17"
+      },
+      {
+        "number": 15,
+        "title": "SC-15: Разместить Next.js и NestJS и проверить пользовательский путь",
+        "url": "https://github.com/AdilSatuv/spaceclient/issues/15"
+      },
+      {
+        "number": 14,
+        "title": "SC-14: Собрать alpha установщик и проверяемые артефакты",
+        "url": "https://github.com/AdilSatuv/spaceclient/issues/14"
+      },
+      {
+        "number": 13,
+        "title": "SC-13: Провести воспроизводимые benchmark и совместимость",
+        "url": "https://github.com/AdilSatuv/spaceclient/issues/13"
+      },
+      {
+        "number": 12,
+        "title": "SC-12: Добавить проверенный каталог релизов в NestJS",
+        "url": "https://github.com/AdilSatuv/spaceclient/issues/12"
+      },
+      {
+        "number": 10,
+        "title": "SC-10: Запустить авторизованный Minecraft из лаунчера",
+        "url": "https://github.com/AdilSatuv/spaceclient/issues/10"
+      },
+      {
+        "number": 8,
+        "title": "SC-08: Добавить Microsoft-вход в лаунчер",
+        "url": "https://github.com/AdilSatuv/spaceclient/issues/8"
+      },
+      {
+        "number": 6,
+        "title": "SC-06: Проверить доступность Microsoft Xbox Minecraft авторизации",
+        "url": "https://github.com/AdilSatuv/spaceclient/issues/6"
+      }
+    ],
+    "mutationsPerformed": false,
+    "localOnlyPolicyPreserved": true
+  },
+  "codebaseMemory": {
+    "project": "spaceclient-mods-menus",
+    "rootVerified": true,
+    "status": "ready",
+    "nodes": 9103,
+    "edges": 23464,
+    "indexedAt": "2026-11-03T01:19:01Z",
+    "graphAndSourceReadsUsed": true,
+    "bestEffortCoverageOnly": true
+  },
+  "priorities": [
+    {
+      "id": 1,
+      "priority": "P0",
+      "task": "Integrate completed core and UX/UI, then finished settings for all 55; verify one combined build.",
+      "done": "Regression runtimeCalls=0, full checks and native UI smoke, matching source stamp and installed SHA."
+    },
+    {
+      "id": 2,
+      "priority": "P0",
+      "task": "Accept physical input, gameplay lifecycle and controlled multiplayer for current modules.",
+      "done": "Per-module supported-scenario matrix with results and explicit client estimates."
+    },
+    {
+      "id": 3,
+      "priority": "P1",
+      "task": "Expose unique build identity and implement tested update/repair/rollback preserving user data.",
+      "done": "Visible identical build identity in launcher/game, reproducible old-to-new update without manual JAR replacement."
+    },
+    {
+      "id": 4,
+      "priority": "P1",
+      "task": "Fresh Windows setup and complete first-run/repair/upgrade/uninstall path.",
+      "done": "New machine/user works without developer .reports or JDK paths; profiles/worlds preserved."
+    },
+    {
+      "id": 5,
+      "priority": "P1",
+      "task": "Benchmark current game tree, including blur/particles, latency and long-session memory.",
+      "done": "Controlled reproducible raw FPS/frametime/memory/startup records; no unsupported performance claims."
+    },
+    {
+      "id": 6,
+      "priority": "P1",
+      "task": "Stabilize browser test server diagnostics and Windows line endings; verify exact combined commit in CI when authorized.",
+      "done": "Repeatable Windows/CI checks and actionable failure diagnostics."
+    },
+    {
+      "id": 7,
+      "priority": "P2",
+      "task": "Synchronize website catalog/changelog/docs with actual tested build.",
+      "done": "Site lists current capabilities and limits; no fictitious public downloads."
+    },
+    {
+      "id": 8,
+      "priority": "Deferred release gates",
+      "task": "Complete chosen official online identity and public hosting/release path when resumed by user.",
+      "done": "End-to-end authorized session and owned-account checks, real release artifacts and public HTTPS/rollback."
+    }
+  ]
+}
