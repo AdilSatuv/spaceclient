@@ -1,5 +1,9 @@
 # Передача работы между чатами Space Client
 
+## Новая команда и ограниченный срез · 3 ноября 2026
+
+Ведущий чат `01a19f85-e481-7790-be82-7a265822256f` принял управление по прямому поручению пользователя. Основная копия clean на `0231800`; трём существующим чатам выданы отдельные local clones и задачи: идентичность сборки лаунчера, каталог сайта из 55 модулей, компактная RU/EN помощь и навигация Minecraft. Идентификаторы, пути, владение и условия приёмки: [координация команды](team/coordination-2026-11-03.md). Изменения пока не интегрированы. Только local-only, без push/main/deploy/auth; пользовательский runtime и отложенная физическая проверка сохраняются.
+
 ## Управление и закрытый TCP: исправлен disconnect · 3 ноября 2026
 
 0253e6b добавляет QueuedPlayPacketMixin на NetworkThreadUtils$1.run: только queued ClientPlayNetworkHandler с закрытым ClientConnection пропускается, живой login/play и server handlers сохраняются. Baseline реального TCP reconnect на прежнем bundle cf3ae55 дал28 FATAL tasks/NPE world=null; после guard итоговый прогон0 ERROR/FATAL и2 discarded tasks (один специально поставлен в main-thread очередь перед disconnect). Теперь36 точных production mixins; строгий bundle/class omission fixture обновлён, Java8 и pin сохранены. [Отчёт](INPUT-NETWORK-2026-11-03.md), [QA](qa/input-network-2026-11-03.json).
