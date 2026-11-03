@@ -35,3 +35,27 @@ CSRF cookie сохраняется между вкладками, обновля
 Прочитан исходный `.reports/team-review/final-workspace-tests.log` основной копии: `api.test.cjs` завершился через829.9053ms до обоих subtests, без причины кроме `test failed`. Причина не установлена и не объявляется исправленной. Сохранён `abortOnError:false` Nest (init errors передаются runner). API test script сохраняет обычные параллельные workers без retry/concurrency1 и добавляет test-only наблюдение start/exit/uncaughtExceptionMonitor: PID/PPID/thread, timestamp, memory и типы active resources. Error text, env, credentials и argv не записываются. Для native fatal error включён Node diagnostic report с exclude-env/exclude-network в ignored `.reports/api-workers`. Monitor не ловит/подавляет ошибку и не меняет exit code.
 
 Отдельный self-test подтверждает неизменённые exit17 и uncaught exit1, наличие lifecycle записи и отсутствие private error text/env. Исправлен только путь preload в Windows fixture (file URL); диагностический провал fixture сохранён в раннем журнале. Первый полный API-набор с новым наблюдением: **30 pass**. Дополнительные raw parallel snapshots и итоговый workspace run фиксируются перед передачей; отсутствие повторения не доказывает устранения старой причины.
+
+## Итог проверки и передача
+
+| Проверка | Итог |
+| --- | --- |
+| Полный `npm test` на конечном source | **41 general +30 API +138 launcher =209 pass**, fail/cancelled/skipped0 |
+| API parallel TAP/trace snapshots | Два отдельно запланированных штатных прогона, по30 pass, оба exit0; не retry и не concurrency1 |
+| Types/tokens всех workspace | Pass |
+| API / Next production build | Pass |
+| Content HTTP states | Все8 pass |
+| Raw `format:check`, `git diff --check` | Pass; общей конфигурации/lockfile не менял |
+| Account HTTP + headless | `run-2a603af1-6a34-49bb-9b63-bb821ed4d689`, 3 группы, errors0, harness exit0 |
+
+Финальный account run завершён `2026-11-03T06:36:15.289Z`: HTTP Origin/CSRF/content-type/body/secret checks; один persistent API с desktop bearer и web HttpOnly sessions; restart/logout/expiry/revision conflict; desktop1440/mobile390 регистрация, неверный пароль, вход, ник, skin/cape upload/preview/delete, огромный IHDR/oversized file до decode, две вкладки, реальное внешнее изменение и обновление, offline logout с удалением cookie и видимым предупреждением. Дополнительно account layout/text-spacing320/375/768/1024/1440, reduced-motion, mobile menu/Escape focus, фокус error summary, no-JS объяснение и отсутствие ложной формы. В browser JSON/localStorage/console session token/пароль не обнаружены. Кадры входа/профиля/offline logout на desktop/mobile осмотрены; встречающееся видимое состояние skip-link является keyboard focus внутри headless страницы, не системным вводом.
+
+Все fixture API/Next/Chrome завершены; Next exit SIGTERM — штатная очистка harness. Отдельный ранее объявленный API55951 оставлен для E2E ведущего, не пользовательский сервис. Это процесс раннего backend source `f852388`; поздний strict-model input fix требует нового процесса при интеграции. Bootstrap: `HOST=127.0.0.1 PORT=55951 node apps/api/dist/main.js` после API build; сайт BFF использует серверный `SPACE_ACCOUNT_API_URL=http://127.0.0.1:55951` (или общий `SPACE_API_URL`). Не заменять текущий пользовательский preview.
+
+API worker cause остаётся неизвестной: исходный ранний выход не воспроизведён. Native fatal report для старого сбоя отсутствует. Новая диагностика создаёт свидетельства для будущего повторения, не доказывает прошлую причину и не маскирует сбой. API self-test намеренно создаёт exit17/1 только в дочерних fixtures; это не аварии production API. Общая папка diagnostics содержит и ранний неудачный preload self-test, поэтому суммарный исторический nonzero1 нельзя выдавать за новый необъяснённый api.test.cjs crash.
+
+Область: `apps/api` account module/bootstrap/parser/errors/tests/test diagnostics; `apps/website` account page/BFF/client-server adapters/navigation/scoped styles; совместимый typeof-fix `packages/account-contracts/src`; account QA, no-JS nav count, preview build; этот отчёт. Root architecture helper перенесён согласованным commit, root package.json/lock не изменены. Shared README/CHAT-HANDOFF, пользовательские runtime, игра, лаунчер и чужие копии не редактировались. Codebase Memory имеет прежний secure endpoint/DACL blocker; источники проверены напрямую, успешная индексация этой копии не заявляется.
+
+Source commits: backend `f852388`, strict-model/worker `bf45066`, BFF/UI `5d4eed2`, bounded preview `76783c8`; отдельный commit отчёта идёт следом. `2226710` — cherry-pick уже принадлежащего ведущему `ff6e11a`, повторно переносить не нужно.
+
+Границы: local account service и web UI, без Microsoft/public hosting/реальных аккаунтов/нового установщика/видимых окон/CUA/OS input. Настоящие DPAPI, запуск игры и применение appearance в production Java проверяются отдельными направлениями/ведущим; мои HTTP и UI fixtures этого не подменяют. Screen reader, Safari/Firefox и production HTTPS/proxy в этом срезе не проверены. Тяжёлые QA завершены; во время согласованного benchmark новые build/browser/Electron не запускались.
