@@ -45,7 +45,9 @@ public final class CosmeticsScreen extends ModuleSettingsScreen {
     }
     protected String notice() {
         if(!store().error().isEmpty())return text(store().error(),"Не удалось сохранить внешность. Предыдущее значение восстановлено.");
-        if(!store().notice().isEmpty())return text(store().notice(),"Файл настроек сохранён. Используются безопасные значения; новая версия доступна только для чтения.");
+        if(!store().notice().isEmpty())return text(store().notice(),store().readOnly()
+            ?"Версия настроек новее поддерживаемой. Файл сохранён без изменений и доступен только для чтения."
+            :"Файл настроек не прошёл проверку. Используются значения по умолчанию; исходный файл сохранён.");
         if(!CosmeticsRuntime.appearance().notice.isEmpty())return text(CosmeticsRuntime.appearance().notice,"Файл внешности не прошёл проверку. Используются стандартные текстуры; примените профиль в лаунчере.");
         return status;
     }
