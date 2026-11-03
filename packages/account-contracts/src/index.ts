@@ -62,7 +62,8 @@ function image(value: unknown, kind: 'skin' | 'cape'): SkinAsset | PngAsset | nu
   const result = { sha256: source.sha256, bytes: Number(source.bytes), width, height };
   if (kind === 'cape') return result;
   if (
-    !['classic', 'slim'].includes(String(source.model)) ||
+    typeof source.model !== 'string' ||
+    !['classic', 'slim'].includes(source.model) ||
     (height === 32 && source.model !== 'classic')
   )
     throw new Error('Invalid account response');

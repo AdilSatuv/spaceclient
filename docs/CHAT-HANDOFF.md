@@ -1,5 +1,13 @@
 # Передача работы между чатами Space Client
 
+## Новая волна: аккаунты, HUD, загрузка и косметика · в работе 3 ноября 2026
+
+Пользователь прямо поручил регистрацию Space на сайте и в лаунчере, изменение ника/скина/плаща, расширение HUD и редактора, темы загрузки, косметику и полезные функции лаунчера; разрешил параллельную работу существующих трёх чатов. Это отменяет прежнее отложенное состояние регистрации. Microsoft-вход и публичная публикация по-прежнему вне текущего поручения. Только local-only, без push/main/deploy и OS input. Сайт/лаунчер предыдущей принятой сборки открыты по просьбе пользователя; автоматические QA используют отдельные скрытые профили.
+
+Общий контракт — [аккаунт и внешность](ACCOUNT-AND-COSMETICS-CONTRACT.md). Launcher chat `01a19f83-edd6-79e1-9bb7-93b9558cb122` делает аккаунт, encrypted main-only session, явное применение внешности, backup/restore, diagnostics и transactional installer. Website chat `01a19f83-f10b-7be0-874f-c263528ab41f` делает Nest service, BFF и /account, совместный E2E и диагностику worker exit. Minecraft chat `01a19f83-f3e5-7991-8e83-25a0e75e8d51` делает grid/list, расширенный HUD editor, переводы, загрузку/настройки и benchmark. Координатор владеет общим контрактом, косметикой, финальным pin/mixin allowlist и последовательным ревью/интеграцией.
+
+В основной ветке уже shared account contracts, backend `61cb9d6` и локальная косметика `b742722`/`ed6ff6c`/`bde4fbc`. Backend: 29 tests pass. Cosmetic slice: 284 Java tests/build; hidden native QA classic/slim по 17 кадров/40 keyboard steps, 0 GL errors, texture fallback, local-only guard и actual model rendering. Это промежуточные проверки с tree `80e93ae511ff0c59ad65d609bf276f99ac14219f`, а не итоговая приёмка всей волны. Финальные UI-ветки, установка, benchmark и общие проверки ещё выполняются. Старые результаты ниже являются историческими контрольными точками.
+
 ## Команда принята после ревью и рефакторинга · 3 ноября 2026
 
 Все 3 исполнителя завершили работу и остановились. В `space-minecraft-menus` последовательно объединены launcher `6bdbf5e` → `91027b7`, website `1df6ae4` → `92dfde0`, menu `35b7a09` → `b207e23`. Координатор исправил воспроизведённую блокировку read-only status retry во время игры (`d735c72`), убрал дублирование identity types и вынес счётчики каталога в модель (`22aee4e`). `710a877` требует BuildIdentity.class и проверяет omission. [Полный результат и честные ограничения](TEAM-REVIEW-2026-11-03.md), [QA JSON](qa/team-review-2026-11-03.json), [границы команды](team/coordination-2026-11-03.md).
