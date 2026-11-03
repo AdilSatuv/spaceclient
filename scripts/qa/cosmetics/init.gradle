@@ -1,0 +1,26 @@
+allprojects {
+    afterEvaluate {
+        if (plugins.hasPlugin('net.fabricmc.fabric-loom-remap')) {
+            sourceSets.create('settingsQa') {
+                java.srcDir(file('../scripts/qa/cosmetics/src'))
+                resources.srcDir(file('../scripts/qa/cosmetics/resources'))
+                compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
+            }
+            tasks.named('compileSettingsQaJava') { options.compilerArgs += ['-proc:none'] }
+            def qaJar = tasks.register('settingsQaJar', Jar) {
+                dependsOn tasks.named('settingsQaClasses')
+                from sourceSets.settingsQa.output
+                archiveFileName.set('settings-qa-dev.jar')
+                destinationDirectory.set(file('../.reports/cosmetics-qa'))
+            }
+            def remapType = tasks.named('remapJar').get().getClass().superclass
+            tasks.register('remapSettingsQa', remapType) {
+                dependsOn qaJar
+                inputFile.set(qaJar.flatMap { it.archiveFile })
+                archiveFileName.set('settings-qa.jar')
+                destinationDirectory.set(file('../.reports/cosmetics-qa'))
+                addNestedDependencies.set(false)
+            }
+        }
+    }
+}

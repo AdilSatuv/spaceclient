@@ -1,0 +1,1 @@
+{"schemaVersion":1,"id":"space_settings_qa","version":"1.0.0","name":"Isolated settings checks","environment":"client","entrypoints":{"client":["dev.spaceclient.qa.QaInit"]},"mixins":["settings-qa.mixins.json"],"depends":{"spaceclient":"*","minecraft":"1.8.9"}}
