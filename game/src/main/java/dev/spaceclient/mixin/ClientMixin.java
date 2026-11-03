@@ -39,6 +39,7 @@ public abstract class ClientMixin {
         SnaplookRuntime.end();
         MinecraftClient client = MinecraftClient.getInstance();
         AutoTextRuntime.context(client);SoundRuntime.context(client);
+        CombatMetricsRuntime.context(client);
         if(client.options!=null){int scale=new Window(client).getScaleFactor();if(spaceclient$lastGuiScale!=0&&spaceclient$lastGuiScale!=scale)onResolutionChanged(client.width,client.height);spaceclient$lastGuiScale=scale;}
         SpaceClient.session.update(System.nanoTime(), client.player != null && client.world != null, client.isPaused());
         if (client.currentScreen != null || client.player == null || !client.focused) SpaceClient.clicks.clear();
@@ -51,6 +52,7 @@ public abstract class ClientMixin {
 
     @Inject(method = "handleKeyInput()V", at = @At("HEAD"))
     private void spaceclient$keyEvent(CallbackInfo callback) {
+        DynamicFpsRuntime.activity();
         MinecraftClient client = MinecraftClient.getInstance();
         if (Keyboard.getEventKey() == Keyboard.KEY_RSHIFT) {
             if (client.currentScreen instanceof GameModuleSettingsScreen
@@ -90,6 +92,7 @@ public abstract class ClientMixin {
     // Observe the event already consumed by vanilla. Never call Mouse.next() here.
     @Inject(method = "tick()V", at = @At(value = "INVOKE", target = "Lorg/lwjgl/input/Mouse;getEventButton()I", ordinal = 0))
     private void spaceclient$mouseEvent(CallbackInfo callback) {
+        DynamicFpsRuntime.activity();
         MinecraftClient client = MinecraftClient.getInstance();
         boolean gameplay = client.currentScreen == null && client.player != null && client.focused;
         SpaceClient.clicks.onMouseEvent(Mouse.getEventButton(), Mouse.getEventButtonState(), gameplay);

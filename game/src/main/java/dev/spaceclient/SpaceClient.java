@@ -14,6 +14,7 @@ public final class SpaceClient implements ClientModInitializer {
     public static HudSettings hud;
     public static ModSettings mods;
     public static ModuleBrowserSettings browser;
+    public static dev.spaceclient.mods.WaypointStore waypoints;
     public static final ClickCounter clicks = new ClickCounter();
     public static final SessionTimer session = new SessionTimer();
     @Override
@@ -21,6 +22,7 @@ public final class SpaceClient implements ClientModInitializer {
         hud = HudSettings.open(FabricLoader.getInstance().getConfigDir().resolve("spaceclient-hud.properties"));
         mods = ModSettings.open(FabricLoader.getInstance().getConfigDir().resolve("spaceclient-mods.properties"));
         browser = ModuleBrowserSettings.open(FabricLoader.getInstance().getConfigDir().resolve("spaceclient-browser.properties"));
+        waypoints = dev.spaceclient.mods.WaypointStore.open(FabricLoader.getInstance().getConfigDir().resolve("spaceclient-waypoints.properties"));
         if (!hud.getNotice().isEmpty()) LOGGER.warn(hud.getNotice());
         LOGGER.info("Space Client 0.1.0 initialized");
     }

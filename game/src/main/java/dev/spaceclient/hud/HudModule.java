@@ -30,7 +30,10 @@ public enum HudModule {
     LIGHT_LEVEL("lightlevel", "Light Level", "Sky and block light at your feet", "light sky block lighting свет освещение небо блок"),
     EXPERIENCE("experience", "Experience", "Your level and progress to the next level", "xp exp level progress опыт уровень прогресс"),
     ARROW_COUNTER("arrows", "Arrow Counter", "Arrows in your main inventory and hotbar", "arrows bow ammunition стрелы лук боезапас"),
-    INVENTORY("inventory", "Inventory HUD", "Your carried items in a compact grid", "inventory items storage hotbar инвентарь предметы хотбар слоты");
+    INVENTORY("inventory", "Inventory HUD", "Your carried items in a compact grid", "inventory items storage hotbar инвентарь предметы хотбар слоты"),
+    COMBO_COUNTER("combo", "Combo Counter", "Consecutive hits before the combo breaks", "combo hits комбо серия"),
+    REACH_DISPLAY("reach", "Reach Display", "Client-observed distance of your last attack", "reach distance дистанция удара"),
+    SATURATION("saturation", "Saturation", "Food saturation estimate and nutrition preview", "saturation food насыщение еда");
 
     private final String id;
     private final String title;
@@ -39,7 +42,7 @@ public enum HudModule {
     private static final HudModule[] BROWSER_ORDER = {
         FPS, COORDINATES, KEYSTROKES, CPS, COMPASS, ARMOR,
         CLOCK, SPEED, HEALTH, HUNGER, POTION_EFFECTS, MEMORY, PLAYTIME, ITEM_COUNTER, SPRINT_STATUS,
-        PING, BIOME, PACK_DISPLAY, DAY_COUNTER, LIGHT_LEVEL, EXPERIENCE, ARROW_COUNTER, INVENTORY
+        PING, BIOME, PACK_DISPLAY, DAY_COUNTER, LIGHT_LEVEL, EXPERIENCE, ARROW_COUNTER, INVENTORY, COMBO_COUNTER, REACH_DISPLAY, SATURATION
     };
 
     HudModule(String id, String title, String description, String aliases) {
@@ -89,6 +92,9 @@ public enum HudModule {
             case EXPERIENCE: return config.active().experience;
             case ARROW_COUNTER: return config.active().arrows;
             case INVENTORY: return config.active().inventory;
+            case COMBO_COUNTER: return config.active().combo;
+            case REACH_DISPLAY: return config.active().reach;
+            case SATURATION: return config.active().saturation;
             default: throw new AssertionError(this);
         }
     }
@@ -118,6 +124,9 @@ public enum HudModule {
             case EXPERIENCE: config.active().experience = enabled; break;
             case ARROW_COUNTER: config.active().arrows = enabled; break;
             case INVENTORY: config.active().inventory = enabled; break;
+            case COMBO_COUNTER: config.active().combo = enabled; break;
+            case REACH_DISPLAY: config.active().reach = enabled; break;
+            case SATURATION: config.active().saturation = enabled; break;
             default: throw new AssertionError(this);
         }
     }

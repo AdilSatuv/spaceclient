@@ -90,6 +90,14 @@ public final class GameModuleSettingsScreen extends Screen {
             return key==0?"Choose a hold key to use Snaplook.":ModuleKeys.conflicts(client,key)||ModuleKeys.usedByToggle(settings(),null,key)
                 ?"Hold key unavailable: choose an unused key":"Hold "+ModuleKeys.label(key)+" for this view. Release to return.";
         }
+        if(module==GameplayModule.SCOREBOARD)return "Styles the server sidebar; move with X/Y offsets.";
+        if(module==GameplayModule.TNT_COUNTDOWN)return "Visible TNT only; fuse time is a client estimate.";
+        if(module==GameplayModule.SCROLLABLE_TOOLTIPS)return "Long tooltips: wheel vertically, Shift+wheel horizontally.";
+        if(module==GameplayModule.WAYPOINTS)return "Named markers are saved per world/server and dimension.";
+        if(module==GameplayModule.PARTICLES)return "Factory particles can multiply; block debris keeps native counts.";
+        if(module==GameplayModule.ENCHANTMENT_GLINT)return "Item and armor shimmer; resource-pack textures are preserved.";
+        if(module==GameplayModule.INVENTORY_BLUR)return "Own blur behind inventories; needs OpenGL 2.0 and framebuffer.";
+        if(module==GameplayModule.DYNAMIC_FPS)return "A lower Minecraft FPS cap always takes priority.";
         if(module==GameplayModule.ANIMATIONS)return "Legacy-style first-person poses; combat timing stays native.";
         if(module==GameplayModule.AUTO_TEXT)return "Only during gameplay; at most one message per second.";
         if(module==GameplayModule.GUI)return "Effective: "+new net.minecraft.client.util.Window(client).getScaleFactor()+"x; limited by your window size.";
@@ -114,7 +122,15 @@ public final class GameModuleSettingsScreen extends Screen {
         List<Action>a=new ArrayList<Action>();
         row(a,0,"Enabled","");
         row(a,12,"Toggle key",capturing&&capturingToggle?"Press key...":ModuleKeys.label(settings().toggleKey(module)));
-        if(module==GameplayModule.ANIMATIONS){row(a,28,"Block hit",on(settings().animationBlockHit()));row(a,29,"Eating",on(settings().animationEat()));row(a,30,"Bow pose",on(settings().animationBow()));}
+        if(module==GameplayModule.SCOREBOARD){row(a,49,"Show numbers",on(settings().scoreboardNumbers()));row(a,50,"Background",on(settings().scoreboardBackground()));row(a,51,"Scale",Integer.toString(settings().scoreboardScale()));row(a,52,"X offset",Integer.toString(settings().scoreboardX()));row(a,53,"Y offset",Integer.toString(settings().scoreboardY()));}
+        else if(module==GameplayModule.TNT_COUNTDOWN){row(a,54,"Color",label(settings().tntColor().name()));row(a,55,"Background",on(settings().tntBackground()));row(a,56,"Max distance",Integer.toString(settings().tntDistance()));}
+        else if(module==GameplayModule.SCROLLABLE_TOOLTIPS){row(a,57,"Scroll pixels",Integer.toString(settings().tooltipSpeed()));}
+        else if(module==GameplayModule.WAYPOINTS){row(a,58,"Marker beam",on(settings().waypointBeam()));row(a,59,"Show distance",on(settings().waypointDistance()));row(a,60,"Manage markers",Integer.toString(WaypointRuntime.current(client).size()));}
+        else if(module==GameplayModule.PARTICLES){row(a,61,"Amount %",Integer.toString(settings().particleAmount()));row(a,62,"Size %",Integer.toString(settings().particleScale()));row(a,63,"Custom tint",on(settings().particleTint()));row(a,64,"Color",label(settings().particleColor().name()));}
+        else if(module==GameplayModule.ENCHANTMENT_GLINT){row(a,65,"Color",label(settings().glintColor().name()));row(a,66,"Speed %",Integer.toString(settings().glintSpeed()));row(a,67,"Strength %",Integer.toString(settings().glintStrength()));}
+        else if(module==GameplayModule.INVENTORY_BLUR){row(a,68,"Blur radius",Integer.toString(settings().blurStrength()));}
+        else if(module==GameplayModule.DYNAMIC_FPS){row(a,69,"Background FPS",Integer.toString(settings().backgroundFps()));row(a,70,"Idle FPS",Integer.toString(settings().idleFps()));row(a,71,"Idle after (sec)",Integer.toString(settings().idleSeconds()));}
+        else if(module==GameplayModule.ANIMATIONS){row(a,28,"Block hit",on(settings().animationBlockHit()));row(a,29,"Eating",on(settings().animationEat()));row(a,30,"Bow pose",on(settings().animationBow()));}
         else if(module==GameplayModule.AUTO_TEXT){row(a,31,"Slot",Integer.toString(macroSlot+1));row(a,32,"Hotkey",capturing&&capturingMacro?"Press key...":ModuleKeys.label(settings().autoTextKey(macroSlot)));a.add(new Action(33,"Text","",left+20,top+154,panelWidth-40));}
         else if(module==GameplayModule.GUI)row(a,34,"GUI scale",settings().guiScale()==0?"Auto":settings().guiScale()+"x");
         else if(module==GameplayModule.HITBOXES){row(a,35,"Color",label(settings().hitboxColor().name()));row(a,36,"Line width",Integer.toString(settings().hitboxWidth()));row(a,37,"Players",on(settings().hitboxPlayers()));row(a,38,"Mobs",on(settings().hitboxMobs()));row(a,39,"Items",on(settings().hitboxItems()));}
@@ -187,6 +203,7 @@ public final class GameModuleSettingsScreen extends Screen {
         List<Action>a=controls();for(int i=0;i<a.size();i++)if(a.get(i).contains(x,y)){focus=i;activate(a.get(i).id,1);return;}
     }
     private void activate(int id,int direction){
+        if(id==60){client.setScreen(new WaypointsScreen(this));return;}
         if(id==99){client.setScreen(parent);return;}if(settings().isReadOnly())return;
         if(id==2||id==12||id==32){capturing=true;capturingToggle=id==12;capturingMacro=id==32;status="";return;}
         if(id==33){editingText=true;macroBuffer=settings().autoTextMessage(macroSlot);return;}
@@ -236,6 +253,28 @@ public final class GameModuleSettingsScreen extends Screen {
         else if(id==46)saved=settings().killChime(ModSettings.KillChime.values()[Math.floorMod(settings().killChime().ordinal()+direction,ModSettings.KillChime.values().length)]);
         else if(id==47)saved=settings().soundsVolume(step(settings().soundsVolume(),0,100,10,direction));
         else if(id==48){SoundRuntime.preview(client);status=settings().killChime()==ModSettings.KillChime.OFF?"Choose a target-down sound first":"Preview played";return;}
+        else if(id==49)saved=settings().scoreboardNumbers(!settings().scoreboardNumbers());
+        else if(id==50)saved=settings().scoreboardBackground(!settings().scoreboardBackground());
+        else if(id==51)saved=settings().scoreboardScale(step(settings().scoreboardScale(),50,150,10,direction));
+        else if(id==52)saved=settings().scoreboardX(step(settings().scoreboardX(),-500,500,10,direction));
+        else if(id==53)saved=settings().scoreboardY(step(settings().scoreboardY(),-500,500,10,direction));
+        else if(id==54)saved=settings().tntColor(VisualPalette.values()[Math.floorMod(settings().tntColor().ordinal()+direction,VisualPalette.values().length)]);
+        else if(id==55)saved=settings().tntBackground(!settings().tntBackground());
+        else if(id==56)saved=settings().tntDistance(step(settings().tntDistance(),8,128,8,direction));
+        else if(id==57)saved=settings().tooltipSpeed(step(settings().tooltipSpeed(),2,30,2,direction));
+        else if(id==58)saved=settings().waypointBeam(!settings().waypointBeam());
+        else if(id==59)saved=settings().waypointDistance(!settings().waypointDistance());
+        else if(id==61)saved=settings().particleAmount(step(settings().particleAmount(),0,300,25,direction));
+        else if(id==62)saved=settings().particleScale(step(settings().particleScale(),50,200,25,direction));
+        else if(id==63)saved=settings().particleTint(!settings().particleTint());
+        else if(id==64)saved=settings().particleColor(VisualPalette.values()[Math.floorMod(settings().particleColor().ordinal()+direction,VisualPalette.values().length)]);
+        else if(id==65)saved=settings().glintColor(VisualPalette.values()[Math.floorMod(settings().glintColor().ordinal()+direction,VisualPalette.values().length)]);
+        else if(id==66)saved=settings().glintSpeed(step(settings().glintSpeed(),25,300,25,direction));
+        else if(id==67)saved=settings().glintStrength(step(settings().glintStrength(),10,100,10,direction));
+        else if(id==68)saved=settings().blurStrength(step(settings().blurStrength(),1,8,1,direction));
+        else if(id==69)saved=settings().backgroundFps(step(settings().backgroundFps(),5,60,5,direction));
+        else if(id==70)saved=settings().idleFps(step(settings().idleFps(),10,120,10,direction));
+        else if(id==71)saved=settings().idleSeconds(step(settings().idleSeconds(),10,300,10,direction));
         else if(id==98)saved=settings().reset(module);else return;
         status=saved?"Saved":"Could not save settings";
     }

@@ -24,7 +24,15 @@ public enum GameplayModule {
     HITBOXES("Hitboxes", "Depth-tested entity bounding boxes", "hit box hitbox boxes хитбоксы"),
     ITEM_PHYSICS("Item Physics", "Dropped items tumble and rest on the ground", "item physics физика предметы"),
     ITEM_SIZE("Item Size", "Resize first-person and dropped items", "item size размер предметов"),
-    SOUNDS("Sounds", "Customize block, combat and target-down sounds", "sounds kill sound звуки убийство блоки");
+    SOUNDS("Sounds", "Customize block, combat and target-down sounds", "sounds kill sound звуки убийство блоки"),
+    SCOREBOARD("Scoreboard", "Restyle and position the server sidebar", "scoreboard табло счёт"),
+    TNT_COUNTDOWN("TNT Countdown", "See the remaining fuse above visible TNT", "tnt timer динамит таймер"),
+    SCROLLABLE_TOOLTIPS("Scrollable Tooltips", "Scroll item descriptions that exceed the screen", "tooltips scroll подсказки прокрутка"),
+    WAYPOINTS("Waypoints", "Save named locations for this world or server", "waypoints markers точки метки"),
+    PARTICLES("Particles", "Adjust particle amount, size and tint", "particles частицы"),
+    ENCHANTMENT_GLINT("Enchantment Glint", "Customize enchanted item and armor shimmer", "glint enchant блеск зачарование"),
+    INVENTORY_BLUR("Inventory Blur", "Blur the world behind inventories", "inventory blur размытие инвентарь"),
+    DYNAMIC_FPS("Dynamic FPS", "Reduce frame rate in the background or while idle", "dynamic fps idle фон нагрузка");
     public final String title, description;
     private final String search;
     GameplayModule(String title, String description, String aliases) {
@@ -48,6 +56,14 @@ public enum GameplayModule {
             case ITEM_PHYSICS: return s.itemPhysics();
             case ITEM_SIZE: return s.itemSize();
             case SOUNDS: return s.sounds();
+            case SCOREBOARD: return s.scoreboard();
+            case TNT_COUNTDOWN: return s.tntCountdown();
+            case SCROLLABLE_TOOLTIPS: return s.scrollableTooltips();
+            case WAYPOINTS: return s.waypoints();
+            case PARTICLES: return s.particles();
+            case ENCHANTMENT_GLINT: return s.enchantmentGlint();
+            case INVENTORY_BLUR: return s.inventoryBlur();
+            case DYNAMIC_FPS: return s.dynamicFps();
             default: throw new AssertionError(this);
         }
     }
@@ -67,6 +83,14 @@ public enum GameplayModule {
             case ITEM_PHYSICS: return s.toggleItemPhysics();
             case ITEM_SIZE: return s.toggleItemSize();
             case SOUNDS: return s.toggleSounds();
+            case SCOREBOARD: return s.toggleScoreboard();
+            case TNT_COUNTDOWN: return s.toggleTntCountdown();
+            case SCROLLABLE_TOOLTIPS: return s.toggleScrollableTooltips();
+            case WAYPOINTS: return s.toggleWaypoints();
+            case PARTICLES: return s.toggleParticles();
+            case ENCHANTMENT_GLINT: return s.toggleEnchantmentGlint();
+            case INVENTORY_BLUR: return s.toggleInventoryBlur();
+            case DYNAMIC_FPS: return s.toggleDynamicFps();
             default: throw new AssertionError(this);
         }
     }

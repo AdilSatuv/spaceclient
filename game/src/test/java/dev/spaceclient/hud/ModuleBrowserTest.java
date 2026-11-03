@@ -22,7 +22,7 @@ public class ModuleBrowserTest {
         for(GameplayModule m:new GameplayModule[]{GameplayModule.BLOCK_OVERLAY,GameplayModule.HIT_COLOR,GameplayModule.FOV_CONTROL})assertTrue(s.toggleFavorite("game."+m.name()));
     }
     @Test public void newUtilityModsAreSearchableInAppropriateSectionsAndCanBeFavorited() throws Exception {
-        assertEquals(44,HudSection.HOME.catalog("").size());
+        assertEquals(55,HudSection.HOME.catalog("").size());
         assertEquals(GameplayModule.CHAT_TIMESTAMPS,HudSection.MISC.catalog("чат").get(0).game);
         assertEquals(GameplayModule.DURABILITY_WARNING,HudSection.PLAYER.catalog("прочность").get(0).game);
         assertTrue(HudSection.VISUALS.catalog("timestamps").isEmpty());assertTrue(HudSection.WORLD.catalog("durability warning").isEmpty());

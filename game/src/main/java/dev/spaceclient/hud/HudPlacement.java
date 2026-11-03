@@ -18,6 +18,7 @@ public final class HudPlacement {
         return Double.isFinite(value) && value >= min && value <= max;
     }
     public static HudPlacement defaults(HudModule module) {
+        if(module.ordinal()>=HudModule.COMBO_COUNTER.ordinal())return new HudPlacement(Horizontal.LEFT,Vertical.TOP,8,115+(module.ordinal()-HudModule.COMBO_COUNTER.ordinal())*12,1);
         if(module==HudModule.INVENTORY)return new HudPlacement(Horizontal.LEFT,Vertical.BOTTOM,8,48,1);
         if(module==HudModule.EXPERIENCE||module==HudModule.ARROW_COUNTER)
             return new HudPlacement(Horizontal.RIGHT,Vertical.TOP,8,module==HudModule.EXPERIENCE?80:104,1);
