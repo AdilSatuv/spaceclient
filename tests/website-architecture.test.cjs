@@ -12,6 +12,7 @@ function files(directory) {
 }
 const sources = [
   'packages/content-contracts/src',
+  'packages/account-contracts/src',
   'apps/api/src',
   'apps/website/app',
   'apps/website/src',
@@ -61,6 +62,7 @@ function imports(ast) {
 }
 function target(source, specifier) {
   if (specifier === '@space/content-contracts') return 'packages/content-contracts/src/index.ts';
+  if (specifier === '@space/account-contracts') return 'packages/account-contracts/src/index.ts';
   if (!specifier.startsWith('.') && !specifier.startsWith('@/')) return null;
   const base = specifier.startsWith('@/')
     ? path.join(root, 'apps/website/src', specifier.slice(2))
@@ -109,7 +111,8 @@ function checkFsdImport(from, to) {
   }
   if (destination.layer === 'shared' && destination.slice === 'api') {
     assert.ok(
-      destination.rest.length === 1 && /^index(?:\.server)?\.ts$/.test(destination.rest[0]),
+      destination.rest.length === 1 &&
+        /^index(?:\.(?:server|client))?\.ts$/.test(destination.rest[0]),
       `Bypassed shared API entry point: ${message}`,
     );
   }
@@ -184,7 +187,10 @@ test('web layers depend on shared contracts without importing another applicatio
       const local = target(source, dependency.specifier);
       const message = `${source.name} -> ${dependency.specifier}`;
       if (source.name.startsWith('packages/'))
-        assert.ok(local?.startsWith('packages/content-contracts/src/'), message);
+        assert.ok(
+          local?.startsWith(source.name.split('/').slice(0, 2).join('/') + '/src/'),
+          message,
+        );
       if (source.name.startsWith('apps/api/'))
         assert.ok(
           !local || local.startsWith('apps/api/') || local.startsWith('packages/'),
@@ -221,7 +227,9 @@ test('web layers depend on shared contracts without importing another applicatio
           node.expression.text === 'fetch'
         ) {
           assert.ok(
-            source.name === 'apps/website/src/shared/api/content-client.ts',
+            ['content-client.ts', 'account-client.ts', 'account-browser.ts'].some(
+              (name) => source.name === `apps/website/src/shared/api/${name}`,
+            ),
             `${source.name}: raw fetch outside server adapter`,
           );
         }
@@ -255,10 +263,16 @@ test('client entry points cannot transitively import server adapters or private 
     if (seen.has(source.name)) return;
     seen.add(source.name);
     assert.ok(
-      !source.name.startsWith('apps/website/src/shared/api/'),
+      !source.name.startsWith('apps/website/src/shared/api/') ||
+        ['index.client.ts', 'account-browser.ts'].some(
+          (name) => source.name === `apps/website/src/shared/api/${name}`,
+        ),
       `${source.name}: server module in client graph`,
     );
-    assert.doesNotMatch(source.ast.text, /process\.env\.SPACE_API_URL/);
+    assert.doesNotMatch(
+      source.ast.text,
+      /process\.env\.(?:SPACE_API_URL|SPACE_ACCOUNT_API_URL|SPACE_ACCOUNT_DATA)/,
+    );
     for (const item of imports(source.ast).filter((item) => !item.typeOnly)) {
       assert.notEqual(item.specifier, 'server-only');
       const next = graph.get(target(source, item.specifier));
