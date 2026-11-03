@@ -15,6 +15,7 @@ public final class HudProfile {
     public boolean ping = false, biome = false, packs = false;
     public boolean dayCounter=false,lightLevel=false;
     public boolean experience=false,arrows=false;
+    public boolean combo=false,reach=false,saturation=false;
     public boolean inventory=false;
     private HudContentSettings content = HudContentSettings.defaults();
     private final EnumMap<HudModule, HudPlacement> placements = new EnumMap<>(HudModule.class);
@@ -63,6 +64,7 @@ public final class HudProfile {
         copy.ping = ping; copy.biome = biome; copy.packs = packs;
         copy.dayCounter=dayCounter;copy.lightLevel=lightLevel;
         copy.experience=experience;copy.arrows=arrows;
+        copy.combo=combo;copy.reach=reach;copy.saturation=saturation;
         copy.inventory=inventory;
         copy.placements.putAll(placements); // Placements and appearances are immutable.
         copy.appearances.putAll(appearances);

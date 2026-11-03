@@ -42,6 +42,39 @@ public final class GameModuleSettingsScreen extends ModuleSettingsScreen {
         int toggle=s.toggleKey(module);
         a.add(SettingRow.action(12,"Toggle key",toggle!=0&&ModuleKeys.toggleConflicts(client,module,toggle)?"Conflict: assign an unused key.":"Press once to enable or disable this module.",keyValue(12,toggle)));
         switch(module) {
+            case SCOREBOARD:
+                a.add(SettingRow.toggle(49,"Show scores","Keep the server sidebar's numeric score column.",s.scoreboardNumbers()));
+                a.add(SettingRow.toggle(50,"Background","Draw a backdrop behind sidebar rows.",s.scoreboardBackground()));
+                a.add(n(51,"Sidebar scale","100% = native size; server content stays unchanged.",s.scoreboardScale(),50,150,10,"%"));
+                a.add(n(52,"Horizontal offset","Negative moves left; positive moves right.",s.scoreboardX(),-500,500,10," px"));
+                a.add(n(53,"Vertical offset","Negative moves up; positive moves down.",s.scoreboardY(),-500,500,10," px"));break;
+            case TNT_COUNTDOWN:
+                a.add(SettingRow.choice(54,"Timer color","Visible native TNT only; fuse is a client estimate.",label(s.tntColor().name())));
+                a.add(SettingRow.toggle(55,"Timer background","Add contrast behind the countdown label.",s.tntBackground()));
+                a.add(n(56,"Maximum distance","Hide TNT timers beyond this distance.",s.tntDistance(),8,128,8," blocks"));break;
+            case SCROLLABLE_TOOLTIPS:
+                a.add(n(57,"Scroll step","Long tooltips: wheel; Shift + wheel horizontally.",s.tooltipSpeed(),2,30,2," px"));break;
+            case WAYPOINTS:
+                a.add(SettingRow.toggle(58,"Marker beam","Draw a depth-tested beam above each visible marker.",s.waypointBeam()));
+                a.add(SettingRow.toggle(59,"Show distance","Include distance in each marker's world label.",s.waypointDistance()));
+                SettingRow markers=SettingRow.action(60,"Manage markers","Names, coordinates and visibility; local to this world.",client==null?"Open":WaypointRuntime.current(client).size()+" markers");
+                a.add(client==null||client.player==null?markers.disabled("Join a world to manage its markers."):markers);break;
+            case PARTICLES:
+                a.add(n(61,"Particle amount","0% hides particles; factories can multiply up to 3x.",s.particleAmount(),0,300,25,"%"));
+                a.add(n(62,"Particle size","100% = native size; block debris is not cloned.",s.particleScale(),50,200,25,"%"));
+                a.add(SettingRow.toggle(63,"Custom tint","Apply the selected color to supported particles.",s.particleTint()));
+                SettingRow tint=SettingRow.choice(64,"Tint color","Rainbow changes with time.",label(s.particleColor().name()));
+                a.add(s.particleTint()?tint:tint.disabled("Turn on Custom tint to choose its color."));break;
+            case ENCHANTMENT_GLINT:
+                a.add(SettingRow.choice(65,"Glint color","Items and armor; resource-pack textures are kept.",label(s.glintColor().name())));
+                a.add(n(66,"Glint speed","100% = native shimmer speed.",s.glintSpeed(),25,300,25,"%"));
+                a.add(n(67,"Glint strength","Higher values make the selected tint stronger.",s.glintStrength(),10,100,10,"%"));break;
+            case INVENTORY_BLUR:
+                a.add(n(68,"Blur strength","Needs OpenGL 2.0 + framebuffer; keeps inventory sharp.",s.blurStrength(),1,8,1,""));break;
+            case DYNAMIC_FPS:
+                a.add(n(69,"Background limit","Applied when the game window is unfocused.",s.backgroundFps(),5,60,5," FPS"));
+                a.add(n(70,"Idle limit","A lower Minecraft FPS limit always takes priority.",s.idleFps(),10,120,10," FPS"));
+                a.add(n(71,"Idle delay","Mouse, keys and held controls restart this timer.",s.idleSeconds(),10,300,10," sec"));break;
             case TOGGLE_SPRINT:
                 a.add(SettingRow.choice(1,"Sprint mode",s.sprintMode()==ModSettings.SprintMode.AUTO?"Forward movement; vanilla restrictions apply.":"Press your Minecraft sprint key to toggle.",label(s.sprintMode().name()))); break;
             case FREE_LOOK:hold(a,s.freeLookKey(),"Release to restore the player's view.");break;
@@ -197,6 +230,19 @@ public final class GameModuleSettingsScreen extends ModuleSettingsScreen {
             case 42:ok=s.heldItemScale(value);break;
             case 43:ok=s.droppedItemScale(value);break;
             case 47:ok=s.soundsVolume(value);break;
+            case 51:ok=s.scoreboardScale(value);break;
+            case 52:ok=s.scoreboardX(value);break;
+            case 53:ok=s.scoreboardY(value);break;
+            case 56:ok=s.tntDistance(value);break;
+            case 57:ok=s.tooltipSpeed(value);break;
+            case 61:ok=s.particleAmount(value);break;
+            case 62:ok=s.particleScale(value);break;
+            case 66:ok=s.glintSpeed(value);break;
+            case 67:ok=s.glintStrength(value);break;
+            case 68:ok=s.blurStrength(value);break;
+            case 69:ok=s.backgroundFps(value);break;
+            case 70:ok=s.idleFps(value);break;
+            case 71:ok=s.idleSeconds(value);break;
             default:return;
         }
         saved(ok);
@@ -240,6 +286,16 @@ public final class GameModuleSettingsScreen extends ModuleSettingsScreen {
             case 45:ok=s.combatSounds(next(ModSettings.SoundTheme.values(),s.combatSounds().ordinal(),direction));break;
             case 46:ok=s.killChime(next(ModSettings.KillChime.values(),s.killChime().ordinal(),direction));break;
             case 48:SoundRuntime.preview(client);status="Local preview requested; Minecraft volume also applies.";return;
+            case 49:ok=s.scoreboardNumbers(!s.scoreboardNumbers());break;
+            case 50:ok=s.scoreboardBackground(!s.scoreboardBackground());break;
+            case 54:ok=s.tntColor(next(VisualPalette.values(),s.tntColor().ordinal(),direction));break;
+            case 55:ok=s.tntBackground(!s.tntBackground());break;
+            case 58:ok=s.waypointBeam(!s.waypointBeam());break;
+            case 59:ok=s.waypointDistance(!s.waypointDistance());break;
+            case 60:client.setScreen(new WaypointsScreen(this));return;
+            case 63:ok=s.particleTint(!s.particleTint());break;
+            case 64:ok=s.particleColor(next(VisualPalette.values(),s.particleColor().ordinal(),direction));break;
+            case 65:ok=s.glintColor(next(VisualPalette.values(),s.glintColor().ordinal(),direction));break;
             case 98:ok=s.reset(module);if(ok) { status="Settings and keys reset; enabled state kept.";return; }break;
             default:return;
         }

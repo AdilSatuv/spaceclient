@@ -29,6 +29,9 @@ public final class HudRenderer {
     public static String text(MinecraftClient client, HudModule module, HudContentSettings content) {
         if (content == null) throw new IllegalArgumentException("Missing HUD content settings");
         switch (module) {
+            case COMBO_COUNTER: return "Combo: "+dev.spaceclient.mods.CombatMetricsRuntime.combo(client);
+            case REACH_DISPLAY: return dev.spaceclient.mods.CombatMetricsRuntime.reach(client);
+            case SATURATION: return dev.spaceclient.mods.NutritionRuntime.text(client);
             case FPS: return HudMetrics.fps(MinecraftClient.getCurrentFps(), content.fpsLabel);
             case COORDINATES: return client.player == null ? "XYZ --" : HudMetrics.coordinates(
                 client.player.x, client.player.y, client.player.z, content.coordinatesPrecision);

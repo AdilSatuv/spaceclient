@@ -23,7 +23,8 @@ public abstract class HudMixin {
         HudConfig config = SpaceClient.hud.getConfig();
         if (!config.active().enabled || client.player == null || client.options.hudHidden || client.options.debugEnabled
                 || client.currentScreen instanceof HudModulesScreen || client.currentScreen instanceof HudEditorScreen
-                || client.currentScreen instanceof HudModuleSettingsScreen || client.currentScreen instanceof GameModuleSettingsScreen) return;
+                || client.currentScreen instanceof HudModuleSettingsScreen || client.currentScreen instanceof GameModuleSettingsScreen
+                || client.currentScreen instanceof dev.spaceclient.mods.WaypointsScreen) return;
         Window window = new Window(client);
         HudRenderer.render(client, config, window.getWidth(), window.getHeight());
         dev.spaceclient.hud.DurabilityWarningRenderer.render(client,window.getWidth(),window.getHeight());

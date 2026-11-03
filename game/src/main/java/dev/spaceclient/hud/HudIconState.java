@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL14;
 
 /** Restore native icon rendering through GlStateManager so its cache agrees with OpenGL. */
-final class HudIconState implements AutoCloseable {
+public final class HudIconState implements AutoCloseable {
     private final int active=GL11.glGetInteger(GL13.GL_ACTIVE_TEXTURE);
     private final boolean lighting=on(GL11.GL_LIGHTING),light0=on(GL11.GL_LIGHT0),light1=on(GL11.GL_LIGHT1),material=on(GL11.GL_COLOR_MATERIAL);
     private final boolean depth=on(GL11.GL_DEPTH_TEST),blend=on(GL11.GL_BLEND),alpha=on(GL11.GL_ALPHA_TEST),cull=on(GL11.GL_CULL_FACE),rescale=on(GL12.GL_RESCALE_NORMAL),normalize=on(GL11.GL_NORMALIZE);
@@ -21,7 +21,7 @@ final class HudIconState implements AutoCloseable {
     private final FloatBuffer color=BufferUtils.createFloatBuffer(16);
     private final int texture;
     private final boolean textured;
-    HudIconState() {
+    public HudIconState() {
         GL11.glGetFloat(GL11.GL_CURRENT_COLOR,color);
         GlStateManager.activeTexture(GL13.GL_TEXTURE0);texture=GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D);textured=on(GL11.GL_TEXTURE_2D);
         GL11.glPushAttrib(GL11.GL_LIGHTING_BIT|GL11.GL_CURRENT_BIT);

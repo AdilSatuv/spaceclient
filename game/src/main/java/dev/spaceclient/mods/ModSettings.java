@@ -55,6 +55,29 @@ public final class ModSettings {
     private boolean readOnly;
     private String error = "";
     private static final class Options {
+        boolean scoreboard,tntCountdown,scrollableTooltips,waypoints,particles,enchantmentGlint,inventoryBlur,dynamicFps;
+        boolean scoreboardNumbers=false;
+        boolean scoreboardBackground=true;
+        int scoreboardScale=100;
+        int scoreboardX=0;
+        int scoreboardY=0;
+        VisualPalette tntColor=VisualPalette.GOLD;
+        boolean tntBackground=true;
+        int tntDistance=64;
+        int tooltipSpeed=10;
+        boolean waypointDistance=true;
+        boolean waypointBeam=true;
+        int particleAmount=100;
+        int particleScale=100;
+        boolean particleTint=false;
+        VisualPalette particleColor=VisualPalette.AQUA;
+        VisualPalette glintColor=VisualPalette.VIOLET;
+        int glintSpeed=100;
+        int glintStrength=100;
+        int blurStrength=4;
+        int backgroundFps=30;
+        int idleFps=60;
+        int idleSeconds=60;
         boolean animations,autoText,gui,hitboxes,itemPhysics,itemSize,sounds;
         boolean animationBlockHit=true;
         boolean animationEat=true;
@@ -95,6 +118,36 @@ public final class ModSettings {
         int[] toggleKeys = new int[GameplayModule.values().length];
         Options copy() {
             Options o = new Options();
+            o.scoreboard=scoreboard;
+            o.tntCountdown=tntCountdown;
+            o.scrollableTooltips=scrollableTooltips;
+            o.waypoints=waypoints;
+            o.particles=particles;
+            o.enchantmentGlint=enchantmentGlint;
+            o.inventoryBlur=inventoryBlur;
+            o.dynamicFps=dynamicFps;
+            o.scoreboardNumbers=scoreboardNumbers;
+            o.scoreboardBackground=scoreboardBackground;
+            o.scoreboardScale=scoreboardScale;
+            o.scoreboardX=scoreboardX;
+            o.scoreboardY=scoreboardY;
+            o.tntColor=tntColor;
+            o.tntBackground=tntBackground;
+            o.tntDistance=tntDistance;
+            o.tooltipSpeed=tooltipSpeed;
+            o.waypointDistance=waypointDistance;
+            o.waypointBeam=waypointBeam;
+            o.particleAmount=particleAmount;
+            o.particleScale=particleScale;
+            o.particleTint=particleTint;
+            o.particleColor=particleColor;
+            o.glintColor=glintColor;
+            o.glintSpeed=glintSpeed;
+            o.glintStrength=glintStrength;
+            o.blurStrength=blurStrength;
+            o.backgroundFps=backgroundFps;
+            o.idleFps=idleFps;
+            o.idleSeconds=idleSeconds;
             o.animations=animations;
             o.autoText=autoText;
             o.gui=gui;
@@ -143,10 +196,10 @@ public final class ModSettings {
             Properties p = new Properties();
             try (InputStream in = Files.newInputStream(file)) { p.load(in); }
             String schema = p.getProperty("schemaVersion", "");
-            if (!schema.matches("[1-9]")) throw new IOException("Unsupported settings");
+            if (!schema.matches("[1-9]|10")) throw new IOException("Unsupported settings");
             int version = Integer.parseInt(schema);
             boolean legacy = version == 1;
-            if (p.size() != (legacy ? 3 : version == 2 ? 17 : version == 3 ? 21 : version == 4 ? 27 : version==5 ? 29 : version==6 ? 36 : version==7 ? 42 : version==8 ? 57 : 94))
+            if (p.size() != (legacy ? 3 : version == 2 ? 17 : version == 3 ? 21 : version == 4 ? 27 : version==5 ? 29 : version==6 ? 36 : version==7 ? 42 : version==8 ? 57 : version==9 ? 94 : 132))
                 throw new IOException("Unsupported settings");
             Options o = new Options();
             o.autoSprint = bool(p, "autoSprint"); o.freeLook = bool(p, "freeLook");
@@ -161,7 +214,7 @@ public final class ModSettings {
                     integer(p, "crosshairThickness", 1, 4), bool(p, "crosshairDot"), bool(p, "crosshairOutline"));
             }
             if (version >= 3) for (GameplayModule m : GameplayModule.values())
-                if (version >= 9 || (version==8 && m.ordinal()<GameplayModule.ANIMATIONS.ordinal()) || (version==7 && m.ordinal()<GameplayModule.BLOCK_OVERLAY.ordinal()) || (version==6 && m.ordinal()<GameplayModule.CHAT_TIMESTAMPS.ordinal()) || (version==5 && m.ordinal()<GameplayModule.SNAPLOOK.ordinal())
+                if (version >= 10 || (version==9 && m.ordinal()<GameplayModule.SCOREBOARD.ordinal()) || (version==8 && m.ordinal()<GameplayModule.ANIMATIONS.ordinal()) || (version==7 && m.ordinal()<GameplayModule.BLOCK_OVERLAY.ordinal()) || (version==6 && m.ordinal()<GameplayModule.CHAT_TIMESTAMPS.ordinal()) || (version==5 && m.ordinal()<GameplayModule.SNAPLOOK.ordinal())
                         || (version == 4 && m.ordinal() < GameplayModule.NO_HURT_CAM.ordinal())
                         || (version == 3 && m.ordinal() < GameplayModule.FULLBRIGHT.ordinal()))
                     o.toggleKeys[m.ordinal()] = integer(p, "toggleKey." + m.name(), 0, 255);
@@ -214,6 +267,38 @@ public final class ModSettings {
                 o.soundsVolume=integer(p,"soundsVolume",0,100);
                 for(int i=0;i<3;i++){o.autoTextKeys[i]=integer(p,"autoText.key."+i,0,255);o.autoTextMessages[i]=p.getProperty("autoText.message."+i);checkText(o.autoTextMessages[i]);}
             }
+            if(version>=10){
+                o.scoreboard=bool(p,"scoreboard");
+                o.tntCountdown=bool(p,"tntCountdown");
+                o.scrollableTooltips=bool(p,"scrollableTooltips");
+                o.waypoints=bool(p,"waypoints");
+                o.particles=bool(p,"particles");
+                o.enchantmentGlint=bool(p,"enchantmentGlint");
+                o.inventoryBlur=bool(p,"inventoryBlur");
+                o.dynamicFps=bool(p,"dynamicFps");
+                o.scoreboardNumbers=bool(p,"scoreboardNumbers");
+                o.scoreboardBackground=bool(p,"scoreboardBackground");
+                o.scoreboardScale=integer(p,"scoreboardScale",50,150);
+                o.scoreboardX=integer(p,"scoreboardX",-500,500);
+                o.scoreboardY=integer(p,"scoreboardY",-500,500);
+                o.tntColor=VisualPalette.valueOf(p.getProperty("tntColor",""));
+                o.tntBackground=bool(p,"tntBackground");
+                o.tntDistance=integer(p,"tntDistance",8,128);
+                o.tooltipSpeed=integer(p,"tooltipSpeed",2,30);
+                o.waypointDistance=bool(p,"waypointDistance");
+                o.waypointBeam=bool(p,"waypointBeam");
+                o.particleAmount=integer(p,"particleAmount",0,300);
+                o.particleScale=integer(p,"particleScale",50,200);
+                o.particleTint=bool(p,"particleTint");
+                o.particleColor=VisualPalette.valueOf(p.getProperty("particleColor",""));
+                o.glintColor=VisualPalette.valueOf(p.getProperty("glintColor",""));
+                o.glintSpeed=integer(p,"glintSpeed",25,300);
+                o.glintStrength=integer(p,"glintStrength",10,100);
+                o.blurStrength=integer(p,"blurStrength",1,8);
+                o.backgroundFps=integer(p,"backgroundFps",5,60);
+                o.idleFps=integer(p,"idleFps",10,120);
+                o.idleSeconds=integer(p,"idleSeconds",10,300);
+            }
             s.value = o;
         } catch (IOException | IllegalArgumentException ex) {
             s.readOnly = true;
@@ -231,6 +316,66 @@ public final class ModSettings {
         if (v < min || v > max) throw new IllegalArgumentException("Out of range");
         return v;
     }
+    public boolean scoreboard(){return value.scoreboard;}
+    public boolean toggleScoreboard(){return change(o->o.scoreboard=!o.scoreboard);}
+    public boolean tntCountdown(){return value.tntCountdown;}
+    public boolean toggleTntCountdown(){return change(o->o.tntCountdown=!o.tntCountdown);}
+    public boolean scrollableTooltips(){return value.scrollableTooltips;}
+    public boolean toggleScrollableTooltips(){return change(o->o.scrollableTooltips=!o.scrollableTooltips);}
+    public boolean waypoints(){return value.waypoints;}
+    public boolean toggleWaypoints(){return change(o->o.waypoints=!o.waypoints);}
+    public boolean particles(){return value.particles;}
+    public boolean toggleParticles(){return change(o->o.particles=!o.particles);}
+    public boolean enchantmentGlint(){return value.enchantmentGlint;}
+    public boolean toggleEnchantmentGlint(){return change(o->o.enchantmentGlint=!o.enchantmentGlint);}
+    public boolean inventoryBlur(){return value.inventoryBlur;}
+    public boolean toggleInventoryBlur(){return change(o->o.inventoryBlur=!o.inventoryBlur);}
+    public boolean dynamicFps(){return value.dynamicFps;}
+    public boolean toggleDynamicFps(){return change(o->o.dynamicFps=!o.dynamicFps);}
+    public boolean scoreboardNumbers(){return value.scoreboardNumbers;}
+    public boolean scoreboardNumbers(boolean v){return change(o->{o.scoreboardNumbers=v;});}
+    public boolean scoreboardBackground(){return value.scoreboardBackground;}
+    public boolean scoreboardBackground(boolean v){return change(o->{o.scoreboardBackground=v;});}
+    public int scoreboardScale(){return value.scoreboardScale;}
+    public boolean scoreboardScale(int v){return change(o->{range(v,50,150);o.scoreboardScale=v;});}
+    public int scoreboardX(){return value.scoreboardX;}
+    public boolean scoreboardX(int v){return change(o->{range(v,-500,500);o.scoreboardX=v;});}
+    public int scoreboardY(){return value.scoreboardY;}
+    public boolean scoreboardY(int v){return change(o->{range(v,-500,500);o.scoreboardY=v;});}
+    public VisualPalette tntColor(){return value.tntColor;}
+    public boolean tntColor(VisualPalette v){return change(o->{if(v==null)throw new IllegalArgumentException();o.tntColor=v;});}
+    public boolean tntBackground(){return value.tntBackground;}
+    public boolean tntBackground(boolean v){return change(o->{o.tntBackground=v;});}
+    public int tntDistance(){return value.tntDistance;}
+    public boolean tntDistance(int v){return change(o->{range(v,8,128);o.tntDistance=v;});}
+    public int tooltipSpeed(){return value.tooltipSpeed;}
+    public boolean tooltipSpeed(int v){return change(o->{range(v,2,30);o.tooltipSpeed=v;});}
+    public boolean waypointDistance(){return value.waypointDistance;}
+    public boolean waypointDistance(boolean v){return change(o->{o.waypointDistance=v;});}
+    public boolean waypointBeam(){return value.waypointBeam;}
+    public boolean waypointBeam(boolean v){return change(o->{o.waypointBeam=v;});}
+    public int particleAmount(){return value.particleAmount;}
+    public boolean particleAmount(int v){return change(o->{range(v,0,300);o.particleAmount=v;});}
+    public int particleScale(){return value.particleScale;}
+    public boolean particleScale(int v){return change(o->{range(v,50,200);o.particleScale=v;});}
+    public boolean particleTint(){return value.particleTint;}
+    public boolean particleTint(boolean v){return change(o->{o.particleTint=v;});}
+    public VisualPalette particleColor(){return value.particleColor;}
+    public boolean particleColor(VisualPalette v){return change(o->{if(v==null)throw new IllegalArgumentException();o.particleColor=v;});}
+    public VisualPalette glintColor(){return value.glintColor;}
+    public boolean glintColor(VisualPalette v){return change(o->{if(v==null)throw new IllegalArgumentException();o.glintColor=v;});}
+    public int glintSpeed(){return value.glintSpeed;}
+    public boolean glintSpeed(int v){return change(o->{range(v,25,300);o.glintSpeed=v;});}
+    public int glintStrength(){return value.glintStrength;}
+    public boolean glintStrength(int v){return change(o->{range(v,10,100);o.glintStrength=v;});}
+    public int blurStrength(){return value.blurStrength;}
+    public boolean blurStrength(int v){return change(o->{range(v,1,8);o.blurStrength=v;});}
+    public int backgroundFps(){return value.backgroundFps;}
+    public boolean backgroundFps(int v){return change(o->{range(v,5,60);o.backgroundFps=v;});}
+    public int idleFps(){return value.idleFps;}
+    public boolean idleFps(int v){return change(o->{range(v,10,120);o.idleFps=v;});}
+    public int idleSeconds(){return value.idleSeconds;}
+    public boolean idleSeconds(int v){return change(o->{range(v,10,300);o.idleSeconds=v;});}
     public boolean autoSprint() { return value.autoSprint; }
     public boolean freeLook() { return value.freeLook; }
     public boolean zoom() { return value.zoom; }
@@ -377,6 +522,14 @@ public final class ModSettings {
         return change(o -> {
             o.toggleKeys[module.ordinal()] = 0;
             switch (module) {
+                case SCOREBOARD:o.scoreboardNumbers=false;o.scoreboardBackground=true;o.scoreboardScale=100;o.scoreboardX=0;o.scoreboardY=0;break;
+                case TNT_COUNTDOWN:o.tntColor=VisualPalette.GOLD;o.tntBackground=true;o.tntDistance=64;break;
+                case SCROLLABLE_TOOLTIPS:o.tooltipSpeed=10;break;
+                case WAYPOINTS:o.waypointDistance=true;o.waypointBeam=true;break;
+                case PARTICLES:o.particleAmount=100;o.particleScale=100;o.particleTint=false;o.particleColor=VisualPalette.AQUA;break;
+                case ENCHANTMENT_GLINT:o.glintColor=VisualPalette.VIOLET;o.glintSpeed=100;o.glintStrength=100;break;
+                case INVENTORY_BLUR:o.blurStrength=4;break;
+                case DYNAMIC_FPS:o.backgroundFps=30;o.idleFps=60;o.idleSeconds=60;break;
                 case TOGGLE_SPRINT: o.sprintMode = SprintMode.AUTO; break;
                 case FREE_LOOK: o.freeLookKey = 47; break;
                 case ZOOM: o.zoomKey = 46; o.zoomFactor = 4; o.zoomSmooth = true; break;
@@ -409,7 +562,37 @@ public final class ModSettings {
         try {
             Options o = value.copy(); mutation.accept(o);
             Properties p = new Properties();
-            p.setProperty("schemaVersion", "9");
+            p.setProperty("schemaVersion", "10");
+            p.setProperty("scoreboard",Boolean.toString(o.scoreboard));
+            p.setProperty("tntCountdown",Boolean.toString(o.tntCountdown));
+            p.setProperty("scrollableTooltips",Boolean.toString(o.scrollableTooltips));
+            p.setProperty("waypoints",Boolean.toString(o.waypoints));
+            p.setProperty("particles",Boolean.toString(o.particles));
+            p.setProperty("enchantmentGlint",Boolean.toString(o.enchantmentGlint));
+            p.setProperty("inventoryBlur",Boolean.toString(o.inventoryBlur));
+            p.setProperty("dynamicFps",Boolean.toString(o.dynamicFps));
+            p.setProperty("scoreboardNumbers",Boolean.toString(o.scoreboardNumbers));
+            p.setProperty("scoreboardBackground",Boolean.toString(o.scoreboardBackground));
+            p.setProperty("scoreboardScale",Integer.toString(o.scoreboardScale));
+            p.setProperty("scoreboardX",Integer.toString(o.scoreboardX));
+            p.setProperty("scoreboardY",Integer.toString(o.scoreboardY));
+            p.setProperty("tntColor",o.tntColor.name());
+            p.setProperty("tntBackground",Boolean.toString(o.tntBackground));
+            p.setProperty("tntDistance",Integer.toString(o.tntDistance));
+            p.setProperty("tooltipSpeed",Integer.toString(o.tooltipSpeed));
+            p.setProperty("waypointDistance",Boolean.toString(o.waypointDistance));
+            p.setProperty("waypointBeam",Boolean.toString(o.waypointBeam));
+            p.setProperty("particleAmount",Integer.toString(o.particleAmount));
+            p.setProperty("particleScale",Integer.toString(o.particleScale));
+            p.setProperty("particleTint",Boolean.toString(o.particleTint));
+            p.setProperty("particleColor",o.particleColor.name());
+            p.setProperty("glintColor",o.glintColor.name());
+            p.setProperty("glintSpeed",Integer.toString(o.glintSpeed));
+            p.setProperty("glintStrength",Integer.toString(o.glintStrength));
+            p.setProperty("blurStrength",Integer.toString(o.blurStrength));
+            p.setProperty("backgroundFps",Integer.toString(o.backgroundFps));
+            p.setProperty("idleFps",Integer.toString(o.idleFps));
+            p.setProperty("idleSeconds",Integer.toString(o.idleSeconds));
             p.setProperty("animations",Boolean.toString(o.animations));
             p.setProperty("autoText",Boolean.toString(o.autoText));
             p.setProperty("gui",Boolean.toString(o.gui));

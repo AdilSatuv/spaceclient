@@ -68,6 +68,14 @@ final class HudModuleIcons {
                 case HITBOXES:rect(3,1,19,21);path(false,3,7,19,7);path(false,8,1,8,21);break;
                 case ITEM_PHYSICS:path(true,2,8,11,3,20,8,20,17,11,22,2,17);path(false,11,3,11,0);path(false,8,1,11,4,14,1);break;
                 case ITEM_SIZE:rect(6,6,16,16);path(false,1,6,1,1,6,1);path(false,16,21,21,21,21,16);break;
+                case SCOREBOARD:rect(1,2,21,20);for(int i=6;i<=16;i+=5)path(false,5,i,17,i);break;
+                case TNT_COUNTDOWN:rect(3,7,19,21);path(false,11,7,11,2,16,2);circle(18,2,2);break;
+                case SCROLLABLE_TOOLTIPS:rect(2,2,18,20);path(false,21,5,21,17);path(false,19,15,21,18,23,15);break;
+                case WAYPOINTS:circle(11,7,5);path(false,6,9,11,21,16,9);circle(11,7,1);break;
+                case PARTICLES:circle(4,5,2);circle(17,4,3);circle(10,15,4);circle(20,20,1);break;
+                case ENCHANTMENT_GLINT:path(true,11,1,14,8,21,11,14,14,11,21,8,14,1,11,8,8);break;
+                case INVENTORY_BLUR:rect(3,3,19,19);rect(7,7,15,15);path(false,0,8,3,8);path(false,19,14,22,14);break;
+                case DYNAMIC_FPS:circle(11,11,9);path(false,11,3,11,11,16,14);path(false,2,21,8,21);break;
                 case SOUNDS:path(true,1,8,6,8,12,3,12,21,6,16,1,16);path(false,16,7,19,12,16,17);path(false,19,3,23,12,19,21);break;
                 case WEATHER_CHANGER:
                     path(false,4,13,2,12,1,9,3,6,7,6,8,2,13,1,17,5,17,7,20,7,22,10,21,13,4,13);
@@ -168,6 +176,9 @@ final class HudModuleIcons {
                 case MEMORY:
                     rect(4,4,18,18);rect(8,8,14,14);
                     for(int i=6;i<=16;i+=5){path(false,0,i,4,i);path(false,18,i,22,i);path(false,i,0,i,4);path(false,i,18,i,22);}break;
+                case COMBO_COUNTER:path(false,2,18,7,18,7,12,12,12,12,6,18,6);path(false,15,2,20,2,20,7);break;
+                case REACH_DISPLAY:path(false,1,11,21,11);path(false,5,7,1,11,5,15);path(false,17,7,21,11,17,15);break;
+                case SATURATION:circle(9,8,5);path(false,12,12,19,19);path(false,17,3,17,8);path(false,15,5,19,5);break;
                 case ITEM_COUNTER:
                     rect(3,3,19,19);path(false,3,8,19,8);path(false,8,8,8,19);path(false,14,8,14,19);break;
                 case HEALTH:

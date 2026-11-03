@@ -21,7 +21,8 @@
 - [Chat Timestamps и Durability Warning](docs/CHAT-AND-ALERT-MODS-2026-11-02.md) — время сообщений и предупреждение о прочности.
 - [Block Overlay, Hit Color и FOV Control](docs/VISUAL-STYLE-MODS-2026-11-03.md) — выделение блоков, цвет урона и настройка камеры.
 - [Animations, Auto Text, GUI и оформление предметов](docs/CLIENT-PACK-MODS-2026-11-03.md) — семь новых модулей и улучшенный Item Counter.
-- [Распределение работы между тремя чатами](docs/PARALLEL-WORK-2026-11-02.md) — области, рабочие копии и индексы Codebase Memory.
+- [Ещё 11 модулей](docs/EXPANDED-MODS-2026-11-03.md) — Combo/Reach/Saturation, Scoreboard, TNT, подсказки, метки, частицы, блеск, размытие и Dynamic FPS.
+- [Распределение работы между чатами](docs/PARALLEL-WORK-2026-11-02.md) — области, рабочие копии и индексы Codebase Memory.
 - [ТЗ и этапы](docs/SPEC.md) — границы MVP, архитектура и критерии приёмки.
 - [Рабочий процесс](docs/DEVELOPMENT.md) — инструменты, проверки, коммиты и пуш.
 - [Установка инструментов](docs/TOOLCHAIN.md) — локальный JDK и команды Gradle.
