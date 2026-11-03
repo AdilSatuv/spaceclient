@@ -86,14 +86,58 @@ async function checkWebsiteAccessibility({
   const page = await browser.newPage();
   const checks = [];
   const errors = [];
+  let changingViewportAndNavigating = false;
   page.on('pageerror', (error) => errors.push(error.message));
   page.on('response', (response) => {
     if (response.url().startsWith(base + '/_next/') && response.status() >= 400)
       errors.push(`Asset HTTP ${response.status()}: ${response.url()}`);
   });
   page.on('requestfailed', (request) => {
-    if (request.url().startsWith(base + '/_next/')) errors.push(`Failed asset: ${request.url()}`);
+    if (!request.url().startsWith(base + '/_next/')) return;
+    const reason = request.failure()?.errorText;
+    // Firefox can cancel the old document's responsive image request when a
+    // viewport change is immediately followed by our next navigation.
+    if (
+      firefox &&
+      changingViewportAndNavigating &&
+      request.url().startsWith(base + '/_next/image?') &&
+      reason === 'NS_BINDING_ABORTED'
+    )
+      return;
+    errors.push(`Failed asset: ${request.url()} (${reason || 'unknown'})`);
   });
+  async function navigateAtViewport(viewport, route) {
+    changingViewportAndNavigating = true;
+    let response;
+    try {
+      await page.setViewport(viewport);
+      response = await page.goto(base + route, { waitUntil: 'networkidle0' });
+    } finally {
+      changingViewportAndNavigating = false;
+    }
+    // An intentionally ignored cancellation must not mask a broken visible image.
+    const brokenImages = await page.evaluate(() =>
+      [...document.images]
+        .filter((image) => {
+          const rect = image.getBoundingClientRect();
+          const style = getComputedStyle(image);
+          return (
+            rect.width > 0 &&
+            rect.height > 0 &&
+            rect.bottom > 0 &&
+            rect.right > 0 &&
+            rect.top < innerHeight &&
+            rect.left < innerWidth &&
+            style.visibility !== 'hidden' &&
+            style.display !== 'none' &&
+            (!image.complete || image.naturalWidth === 0)
+          );
+        })
+        .map((image) => image.currentSrc || image.src),
+    );
+    assert.deepEqual(brokenImages, [], `Visible images failed on ${route}`);
+    return response;
+  }
   try {
     await page.setCacheEnabled(false);
     if (!firefox)
@@ -101,8 +145,7 @@ async function checkWebsiteAccessibility({
     for (const route of routes) {
       const slug = route === '/' ? 'home' : route.slice(1).replaceAll('/', '-');
       for (const width of [320, 761, 1440]) {
-        await page.setViewport({ width, height: 900 });
-        const response = await page.goto(base + route, { waitUntil: 'networkidle0' });
+        const response = await navigateAtViewport({ width, height: 900 }, route);
         assert.equal(response.status(), route === '/sc23-missing' ? 404 : 200, route);
         await page.addStyleTag({ content: textSpacing });
         const state = await layoutState(page);
@@ -118,8 +161,7 @@ async function checkWebsiteAccessibility({
       }
       if (visuals)
         for (const width of [390, 1440]) {
-          await page.setViewport({ width, height: 900 });
-          await page.goto(base + route, { waitUntil: 'networkidle0' });
+          await navigateAtViewport({ width, height: 900 }, route);
           await page.screenshot({
             path: path.join(output, `visual-${slug}-${width}.png`),
             fullPage: true,
@@ -132,8 +174,7 @@ async function checkWebsiteAccessibility({
       { width: 568, height: 320 },
       { width: 320, height: 568 },
     ]) {
-      await page.setViewport(viewport);
-      await page.goto(base + '/help', { waitUntil: 'networkidle0' });
+      await navigateAtViewport(viewport, '/help');
       await page.addStyleTag({ content: textSpacing });
       await page.focus('.menu-trigger');
       await page.keyboard.press('Enter');

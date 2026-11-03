@@ -29,3 +29,4 @@
 - [SC-25: Добавить локальный вход по нику и запуск Space из лаунчера](https://github.com/AdilSatuv/spaceclient/issues/25) — P0, M4 — Установка и запуск игры
 - [SC-26: Привести интерфейс лаунчера к стилю сайта Eclipse](https://github.com/AdilSatuv/spaceclient/issues/26) — P1, M4 — Установка и запуск игры
 - [SC-27: Объяснить готовность и причины блокировки локального запуска](https://github.com/AdilSatuv/spaceclient/issues/27) — Лаунчер, локальный запуск
+- [SC-28: Понятная отправка поиска и фильтров сайта](https://github.com/AdilSatuv/spaceclient/issues/28) — Сайт, поиск и фильтры

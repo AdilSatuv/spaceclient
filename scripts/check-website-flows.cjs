@@ -4,8 +4,17 @@ const { checkWebsiteControls } = require('./check-website-controls.cjs');
 const { checkWebsiteEclipse } = require('./check-website-eclipse.cjs');
 const { checkNavigationFeedback } = require('./check-website-resilience.cjs');
 const { checkModuleCatalog } = require('./check-website-module-catalog.cjs');
+const { checkFilterSubmit } = require('./check-website-filter-submit.cjs');
 
-async function runWebsiteFlows({ browser, page, base, output, setScenario, results = [] }) {
+async function runWebsiteFlows({
+  browser,
+  page,
+  base,
+  output,
+  setScenario,
+  results = [],
+  firefox,
+}) {
   const goto = async (route) => {
     const response = await page.goto(base + route, { waitUntil: 'networkidle0' });
     assert.equal(response.status(), 200, route);
@@ -33,6 +42,7 @@ async function runWebsiteFlows({ browser, page, base, output, setScenario, resul
   await checkWebsiteEclipse({ browser, page, base, results });
   await checkNavigationFeedback({ browser, page, base, output, setScenario, results });
   await checkModuleCatalog({ browser, page, base, output, results, setScenario });
+  await checkFilterSubmit({ browser, base, setScenario, results, firefox });
 
   for (const width of [390, 1440]) {
     await page.setViewport({ width, height: 900 });
