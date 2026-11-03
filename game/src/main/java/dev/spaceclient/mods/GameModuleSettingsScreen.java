@@ -2,285 +2,304 @@ package dev.spaceclient.mods;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import dev.spaceclient.SpaceClient;
-import dev.spaceclient.hud.HudViewport;
-import dev.spaceclient.hud.HudSwitch;
 import dev.spaceclient.hud.SpaceUiFont;
 import dev.spaceclient.hud.UiShapes;
+import dev.spaceclient.settings.ModuleSettingsScreen;
+import dev.spaceclient.settings.SettingRow;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.client.gui.screen.Screen;
 import org.lwjgl.input.Keyboard;
 
-/** Keyboard and pointer use the same logical canvas as the main module browser. */
-public final class GameModuleSettingsScreen extends Screen {
-    private static final int TEXT=0xF2EEE7, MUTED=0xB3B0AA, ACCENT=0xD7AF6A;
-    private final Screen parent;
+/** Presents existing parameters; validation and persistence remain with ModSettings. */
+public final class GameModuleSettingsScreen extends ModuleSettingsScreen {
     private final GameplayModule module;
-    private final HudSwitch.Motion motion;
-    private HudViewport viewport;
-    private int left,top,panelWidth,focus;
-    private boolean capturing;
-    private boolean capturingToggle,capturingMacro,editingText;
-    private int macroSlot;
+    private int captureId=-1,macroSlot;
+    private boolean editingText;
     private String macroBuffer="";
-    private String status="";
     public GameModuleSettingsScreen(Screen parent,GameplayModule module) {
-        this.parent=parent;this.module=module;motion=new HudSwitch.Motion(module.enabled(SpaceClient.mods));
+        super(parent);
+        if(module==null)throw new IllegalArgumentException("Module is required");
+        this.module=module;
     }
-    @Override public void init() {
-        viewport=new HudViewport(width,height);panelWidth=Math.min(500,viewport.width-24);
-        left=(viewport.width-panelWidth)/2;top=(viewport.height-354)/2;SpaceClient.clicks.clear();
+    private ModSettings settings() { return SpaceClient.mods; }
+    @Override protected String title() { return module.title; }
+    @Override protected String subtitle() { return module.description; }
+    @Override protected boolean readOnly() { return settings().isReadOnly(); }
+    public boolean capturingKey() { return captureId!=-1||editingText; }
+    @Override protected boolean modal() { return capturingKey(); }
+    @Override protected boolean navigation(int id) { return id==99||id==31; }
+    @Override protected String notice() {
+        if(!settings().error().isEmpty())return settings().error();
+        if(module==GameplayModule.INVENTORY_BLUR&&client!=null&&!InventoryBlurRenderer.supported())return "Blur unavailable on this graphics setup; the standard background is used.";
+        if(editingText)return (status.isEmpty()?"Enter: save / Esc: cancel / Ctrl+V: paste":status)+"  |  "+macroBuffer.length()+" / 100";
+        if(captureId!=-1)return status.isEmpty()?"Press a key / Esc: cancel / Backspace: unbind":status;
+        return status;
     }
-    @Override public boolean shouldPauseGame(){return true;}
-    @Override public void removed(){SpaceUiFont.release();SpaceClient.clicks.clear();}
-    public boolean capturingKey(){return capturing||editingText;}
-    private ModSettings settings(){return SpaceClient.mods;}
-    @Override public void render(int mx,int my,float delta){
-        fillGradient(0,0,width,height,0x85070709,0xA70A0B0E);
-        if(width<320||height<240){SpaceUiFont.draw(client,"Resize the window / Esc: back",12,20,TEXT);return;}
-        mx=viewport.toUi(mx);my=viewport.toUi(my);
-        GlStateManager.pushMatrix();
-        try{
-            GlStateManager.scale(viewport.scale,viewport.scale,1);
-            UiShapes.rounded(left+2,top+3,panelWidth,354,6,0x90000000);
-            UiShapes.rounded(left,top,panelWidth,354,6,0xFF3A3B3E);
-            UiShapes.rounded(left+1,top+1,panelWidth-2,352,5,0xFF101114);
-            SpaceUiFont.draw(client,"SPACE / MODULE",left+20,top+16,ACCENT);
-            GlStateManager.pushMatrix();
-            GlStateManager.scale(1.8f,1.8f,1);
-            SpaceUiFont.draw(client,module.title,(left+20)/1.8f,(top+35)/1.8f,TEXT);
-            GlStateManager.popMatrix();
-            SpaceUiFont.draw(client,module.description,left+20,top+62,MUTED);
-            List<Action> actions=controls();
-            for(int i=0;i<actions.size();i++){
-                Action a=actions.get(i);boolean selected=focus==i,hovered=a.contains(mx,my);
-                UiShapes.rounded(a.x,a.y,a.w,27,4,selected?0xFFD7AF6A:0xFF3A3B3E);
-                UiShapes.rounded(a.x+1,a.y+1,a.w-2,25,3,selected||hovered?0xFF2A2824:0xFF191B20);
-                if(a.id==33){String message=editingText?macroBuffer+"|":settings().autoTextMessage(macroSlot);SpaceUiFont.draw(client,SpaceUiFont.trimToWidth("Text: "+(message.isEmpty()?"Click to type...":message),a.w-18),a.x+9,a.y+8,TEXT);continue;}
-                SpaceUiFont.draw(client,a.label,a.x+9,a.y+8,settings().isReadOnly()&&a.id!=99?MUTED:TEXT);
-                if(a.id==0)HudSwitch.draw(a.x+a.w-37,a.y+6,motion.sample(module.enabled(settings()),System.nanoTime()));
-                else SpaceUiFont.draw(client,a.value,a.x+a.w-9-SpaceUiFont.width(a.value),a.y+8,a.id==99?TEXT:ACCENT);
-            }
-            String hint=hint();
-            if(module==GameplayModule.CROSSHAIR){
-                UiShapes.rounded(left+20,top+266,panelWidth-40,35,5,0xFF242A30);
-                SpaceUiFont.draw(client,"Live preview",left+32,top+279,MUTED);
-                float fit=Math.min(1,14/settings().crosshairStyle().extent());
-                GlStateManager.pushMatrix();GlStateManager.translate(left+panelWidth-75,top+283,0);GlStateManager.scale(fit,fit,1);
-                CrosshairRenderer.draw(0,0,settings().crosshairStyle());GlStateManager.popMatrix();
-            }else{
-                int infoTop=Math.max(192,86+((actions.size()-1)/2)*34+4);
-                SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(hint,panelWidth-40),left+20,top+infoTop,MUTED);
-                SpaceUiFont.draw(client,"Toggle key enables or disables this module",left+20,top+infoTop+21,MUTED);
-                SpaceUiFont.draw(client,"Settings save automatically",left+20,top+infoTop+42,MUTED);
-            }
-            if(module==GameplayModule.BLOCK_OVERLAY||module==GameplayModule.HIT_COLOR||module==GameplayModule.FOV_CONTROL)
-                VisualModPreview.draw(client,module,settings(),left+20,top+259,panelWidth-40);
-            String notice=settings().error();
-            if(editingText)notice="Enter: save text / Esc: cancel / Ctrl+V: paste";
-            if(notice.isEmpty())notice=capturing?"Press a key / Esc: cancel / Backspace: unbind":status;
-            if(notice.isEmpty())notice="Tab: select  |  Enter: change  |  Left / Right: adjust";
-            SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(notice,panelWidth-40),left+20,top+311,notice.equals(settings().error())&&!notice.isEmpty()?ACCENT:MUTED);
-        }finally{GlStateManager.popMatrix();}
-    }
-    private String hint(){
-        if(module==GameplayModule.SNAPLOOK) {
-            int key=settings().snaplookKey();
-            return key==0?"Choose a hold key to use Snaplook.":ModuleKeys.conflicts(client,key)||ModuleKeys.usedByToggle(settings(),null,key)
-                ?"Hold key unavailable: choose an unused key":"Hold "+ModuleKeys.label(key)+" for this view. Release to return.";
+    @Override protected List<SettingRow> rows() {
+        ModSettings s=settings(); List<SettingRow>a=new ArrayList<>();
+        a.add(SettingRow.toggle(0,"Enabled",module.enabled(s)?"Changes apply while this module is on.":"Off: configure now, enable when ready.",module.enabled(s)));
+        int toggle=s.toggleKey(module);
+        a.add(SettingRow.action(12,"Toggle key",toggle!=0&&ModuleKeys.toggleConflicts(client,module,toggle)?"Conflict: assign an unused key.":"Press once to enable or disable this module.",keyValue(12,toggle)));
+        switch(module) {
+            case SCOREBOARD:
+                a.add(SettingRow.toggle(49,"Show scores","Keep the server sidebar's numeric score column.",s.scoreboardNumbers()));
+                a.add(SettingRow.toggle(50,"Background","Draw a backdrop behind sidebar rows.",s.scoreboardBackground()));
+                a.add(n(51,"Sidebar scale","100% = native size; server content stays unchanged.",s.scoreboardScale(),50,150,10,"%"));
+                a.add(n(52,"Horizontal offset","Negative moves left; positive moves right.",s.scoreboardX(),-500,500,10," px"));
+                a.add(n(53,"Vertical offset","Negative moves up; positive moves down.",s.scoreboardY(),-500,500,10," px"));break;
+            case TNT_COUNTDOWN:
+                a.add(SettingRow.choice(54,"Timer color","Visible native TNT only; fuse is a client estimate.",label(s.tntColor().name())));
+                a.add(SettingRow.toggle(55,"Timer background","Add contrast behind the countdown label.",s.tntBackground()));
+                a.add(n(56,"Maximum distance","Hide TNT timers beyond this distance.",s.tntDistance(),8,128,8," blocks"));break;
+            case SCROLLABLE_TOOLTIPS:
+                a.add(n(57,"Scroll step","Long tooltips: wheel; Shift + wheel horizontally.",s.tooltipSpeed(),2,30,2," px"));break;
+            case WAYPOINTS:
+                a.add(SettingRow.toggle(58,"Marker beam","Draw a depth-tested beam above each visible marker.",s.waypointBeam()));
+                a.add(SettingRow.toggle(59,"Show distance","Include distance in each marker's world label.",s.waypointDistance()));
+                SettingRow markers=SettingRow.action(60,"Manage markers","Names, coordinates and visibility; local to this world.",client==null?"Open":WaypointRuntime.current(client).size()+" markers");
+                a.add(client==null||client.player==null?markers.disabled("Join a world to manage its markers."):markers);break;
+            case PARTICLES:
+                a.add(n(61,"Particle amount","0% hides particles; factories can multiply up to 3x.",s.particleAmount(),0,300,25,"%"));
+                a.add(n(62,"Particle size","100% = native size; block debris is not cloned.",s.particleScale(),50,200,25,"%"));
+                a.add(SettingRow.toggle(63,"Custom tint","Apply the selected color to supported particles.",s.particleTint()));
+                SettingRow tint=SettingRow.choice(64,"Tint color","Rainbow changes with time.",label(s.particleColor().name()));
+                a.add(s.particleTint()?tint:tint.disabled("Turn on Custom tint to choose its color."));break;
+            case ENCHANTMENT_GLINT:
+                a.add(SettingRow.choice(65,"Glint color","Items and armor; resource-pack textures are kept.",label(s.glintColor().name())));
+                a.add(n(66,"Glint speed","100% = native shimmer speed.",s.glintSpeed(),25,300,25,"%"));
+                a.add(n(67,"Glint strength","Higher values make the selected tint stronger.",s.glintStrength(),10,100,10,"%"));break;
+            case INVENTORY_BLUR:
+                a.add(n(68,"Blur strength","Needs OpenGL 2.0 + framebuffer; keeps inventory sharp.",s.blurStrength(),1,8,1,""));break;
+            case DYNAMIC_FPS:
+                a.add(n(69,"Background limit","Applied when the game window is unfocused.",s.backgroundFps(),5,60,5," FPS"));
+                a.add(n(70,"Idle limit","A lower Minecraft FPS limit always takes priority.",s.idleFps(),10,120,10," FPS"));
+                a.add(n(71,"Idle delay","Mouse, keys and held controls restart this timer.",s.idleSeconds(),10,300,10," sec"));break;
+            case TOGGLE_SPRINT:
+                a.add(SettingRow.choice(1,"Sprint mode",s.sprintMode()==ModSettings.SprintMode.AUTO?"Forward movement; vanilla restrictions apply.":"Press your Minecraft sprint key to toggle.",label(s.sprintMode().name()))); break;
+            case FREE_LOOK:hold(a,s.freeLookKey(),"Release to restore the player's view.");break;
+            case SNAPLOOK:
+                hold(a,s.snaplookKey(),"Release to restore your previous perspective.");
+                a.add(SettingRow.choice(15,"Held perspective","Only used while the hold key is down.",s.snapPerspective().label)); break;
+            case ZOOM:
+                hold(a,s.zoomKey(),"Hold to zoom; release to restore FOV.");
+                a.add(n(3,"Magnification","Higher values bring the scene closer.",s.zoomFactor(),2,8,1,"x"));
+                a.add(SettingRow.toggle(4,"Smooth zoom","Blend camera changes on press and release.",s.zoomSmooth())); break;
+            case CROSSHAIR:
+                CrosshairStyle c=s.crosshairStyle();
+                a.add(SettingRow.choice(5,"Shape","Replaces the default first-person crosshair.",label(c.shape.name())));
+                a.add(SettingRow.choice(6,"Color","Rainbow changes with time.",label(c.color.name())));
+                a.add(n(7,"Size","Length or radius in HUD pixels.",c.size,2,12,1," px"));
+                a.add(n(8,"Center gap","Space between the center and the arms.",c.gap,0,8,1," px"));
+                a.add(n(9,"Thickness","Stroke width in HUD pixels.",c.thickness,1,4,1," px"));
+                a.add(SettingRow.toggle(10,"Center dot","Keep a visible point in the center.",c.dot));
+                a.add(SettingRow.toggle(11,"Dark outline","Separate the crosshair from the scene.",c.outline)); break;
+            case FULLBRIGHT:
+                a.add(SettingRow.choice(13,"Brightness","Rendering only; saved Minecraft gamma is kept.",label(s.brightness().name()))); break;
+            case TIME_CHANGER:
+                a.add(SettingRow.choice(14,"Sky time","Overworld sky only; world time stays live.",label(s.timePreset().name()))); break;
+            case NO_HURT_CAM:
+                a.set(0,SettingRow.toggle(0,"Enabled","Steady damage camera; death view stays native.",s.noHurtCam())); break;
+            case WEATHER_CHANGER:
+                a.add(SettingRow.choice(16,"Visual weather","Overworld display; server weather stays live.",label(s.weatherMode().name()))); break;
+            case CHAT_TIMESTAMPS:
+                a.add(SettingRow.choice(17,"Time format","Local arrival time for new chat messages.",s.chatTimeFormat().label)); break;
+            case DURABILITY_WARNING:
+                a.add(SettingRow.choice(18,"Warning threshold","Worn armor and held item; requires visible HUD.",s.durabilityThreshold().percent+"% or less")); break;
+            case BLOCK_OVERLAY:
+                a.add(SettingRow.choice(19,"Color","Uses the selected block's shape and depth.",label(s.blockColor().name())));
+                a.add(SettingRow.choice(20,"Style","Outline, translucent fill, or both.",label(s.blockMode().name())));
+                SettingRow fill=n(21,"Fill opacity","Higher values make the fill more solid.",s.blockOpacity(),5,60,5,"%");
+                a.add(s.blockMode().fill?fill:fill.disabled("Choose Fill or Both to adjust opacity."));
+                SettingRow line=n(22,"Outline width","Stroke width in screen pixels.",s.blockWidth(),1,5,1," px");
+                a.add(s.blockMode().outline?line:line.disabled("Choose Outline or Both to adjust width.")); break;
+            case HIT_COLOR:
+                a.add(SettingRow.choice(23,"Damage color","Visible hurt models; death tint stays native.",label(s.damageColor().name())));
+                a.add(n(24,"Tint strength","More of the selected color on hurt models.",s.hitOpacity(),5,80,5,"%"));
+                a.add(SettingRow.toggle(25,"Players only","Off also tints other visible living entities.",s.hitPlayersOnly())); break;
+            case FOV_CONTROL:
+                a.add(n(26,"View angle","Camera FOV; saved Minecraft FOV is kept.",s.cameraFov(),60,110,5," deg"));
+                a.add(n(27,"Dynamic FOV","0% = steady; 100% = full sprint / bow effects.",s.dynamicFov(),0,100,25,"%")); break;
+            case ANIMATIONS:
+                a.add(SettingRow.toggle(28,"Block-hit swing","Cosmetic sword swing; combat timing stays native.",s.animationBlockHit()));
+                a.add(SettingRow.toggle(29,"Eating pose","Legacy-style first-person food movement.",s.animationEat()));
+                a.add(SettingRow.toggle(30,"Bow pose","Legacy-style first-person bow movement.",s.animationBow())); break;
+            case AUTO_TEXT:
+                a.add(SettingRow.choice(31,"Message slot","Three slots, each with its own key and text.",(macroSlot+1)+" / 3"));
+                int key=s.autoTextKey(macroSlot);
+                a.add(SettingRow.action(32,"Message hotkey",key!=0&&ModuleKeys.autoTextConflicts(client,macroSlot,key)?"Conflict: assign an unused key.":"Gameplay only; at most one message per second.",keyValue(32,key)));
+                a.add(SettingRow.text(33,"Message text","Single line; Enter saves, Esc cancels.",editingText?"Typing...":s.autoTextMessage(macroSlot).isEmpty()?"Write message":"Edit message")); break;
+            case GUI:
+                a.add(SettingRow.choice(34,"Interface scale",client==null?"Scale is limited by window size.":"Effective: "+new net.minecraft.client.util.Window(client).getScaleFactor()+"x; capped by window size.",s.guiScale()==0?"Auto":s.guiScale()+"x")); break;
+            case HITBOXES:
+                a.add(SettingRow.choice(35,"Box color","Visible bounds; depth and collisions stay native.",label(s.hitboxColor().name())));
+                a.add(n(36,"Line width","Stroke width in screen pixels.",s.hitboxWidth(),1,3,1," px"));
+                a.add(SettingRow.toggle(37,"Players","Other visible players' bounding boxes.",s.hitboxPlayers()));
+                a.add(SettingRow.toggle(38,"Mobs","Visible living entities other than players.",s.hitboxMobs()));
+                a.add(SettingRow.toggle(39,"Dropped items","Bounding boxes around dropped items.",s.hitboxItems())); break;
+            case ITEM_PHYSICS:
+                a.add(n(40,"Air spin speed","Visual rotation only; pickup stays native.",s.physicsSpeed(),1,5,1,"x"));
+                a.add(SettingRow.toggle(41,"Flat on ground","Lay flat items down and remove bobbing.",s.physicsFlat())); break;
+            case ITEM_SIZE:
+                a.add(n(42,"First-person size","100% = native size; maps stay unchanged.",s.heldItemScale(),50,150,10,"%"));
+                a.add(n(43,"Dropped item size","100% = native; works with Item Physics.",s.droppedItemScale(),25,200,25,"%")); break;
+            case SOUNDS:
+                a.add(SettingRow.choice(44,"Blocks and footsteps","Choose the local block / step sound theme.",label(s.blockSounds().name())));
+                a.add(SettingRow.choice(45,"Combat theme","Choose the local hurt sound theme.",label(s.combatSounds().name())));
+                a.add(SettingRow.choice(46,"Target-down cue","Target attacked within 3s; not kill credit.",s.killChime().label));
+                a.add(n(47,"Effect volume","Also respects Minecraft's sound categories.",s.soundsVolume(),0,100,10,"%"));
+                SettingRow play=SettingRow.action(48,"Preview target-down cue","Plays locally using the effect volume.","Play");
+                a.add(s.killChime()==ModSettings.KillChime.OFF?play.disabled("Choose a target-down cue first."):s.soundsVolume()==0?play.disabled("Raise effect volume to hear the preview."):play); break;
+            default: break; // New modules retain enabled / toggle controls.
         }
-        if(module==GameplayModule.SCOREBOARD)return "Styles the server sidebar; move with X/Y offsets.";
-        if(module==GameplayModule.TNT_COUNTDOWN)return "Visible TNT only; fuse time is a client estimate.";
-        if(module==GameplayModule.SCROLLABLE_TOOLTIPS)return "Long tooltips: wheel vertically, Shift+wheel horizontally.";
-        if(module==GameplayModule.WAYPOINTS)return "Named markers are saved per world/server and dimension.";
-        if(module==GameplayModule.PARTICLES)return "Factory particles can multiply; block debris keeps native counts.";
-        if(module==GameplayModule.ENCHANTMENT_GLINT)return "Item and armor shimmer; resource-pack textures are preserved.";
-        if(module==GameplayModule.INVENTORY_BLUR)return "Own blur behind inventories; needs OpenGL 2.0 and framebuffer.";
-        if(module==GameplayModule.DYNAMIC_FPS)return "A lower Minecraft FPS cap always takes priority.";
-        if(module==GameplayModule.ANIMATIONS)return "Legacy-style first-person poses; combat timing stays native.";
-        if(module==GameplayModule.AUTO_TEXT)return "Only during gameplay; at most one message per second.";
-        if(module==GameplayModule.GUI)return "Effective: "+new net.minecraft.client.util.Window(client).getScaleFactor()+"x; limited by your window size.";
-        if(module==GameplayModule.HITBOXES)return "Depth-tested boxes; choose the entity types below.";
-        if(module==GameplayModule.ITEM_PHYSICS)return "Visual motion only; item pickup stays unchanged.";
-        if(module==GameplayModule.ITEM_SIZE)return "First-person items and drops; maps keep their native size.";
-        if(module==GameplayModule.SOUNDS)return "Blocks include steps; target down: attacked in the last 3s.";
-        if(module==GameplayModule.BLOCK_OVERLAY)return "Styles the block you point at; respects its shape and depth.";
-        if(module==GameplayModule.HIT_COLOR)return "Damage tint on visible models; death tint stays native.";
-        if(module==GameplayModule.FOV_CONTROL)return "0% dynamics: steady view. Saved Minecraft FOV stays unchanged.";
-        if(module==GameplayModule.CHAT_TIMESTAMPS)return "Local arrival time; existing messages keep their timestamps.";
-        if(module==GameplayModule.DURABILITY_WARNING)return "Checks worn armor and your held item while the HUD is visible.";
-        if(module==GameplayModule.WEATHER_CHANGER)return "Overworld display only; server weather stays unchanged.";
-        if(module==GameplayModule.NO_HURT_CAM)return "Keeps the camera steady on damage; death view stays enabled.";
-        if(module==GameplayModule.FULLBRIGHT)return "Brightens rendering; your saved Minecraft brightness stays unchanged.";
-        if(module==GameplayModule.TIME_CHANGER)return "Overworld sky only; world time and Day Counter stay live.";
-        if(module==GameplayModule.FREE_LOOK)return ModuleKeys.conflicts(client,settings().freeLookKey())?"Key unavailable: choose an unused key":"Hold "+ModuleKeys.label(settings().freeLookKey())+" to look around. Release to restore your view.";
-        if(module==GameplayModule.ZOOM)return ModuleKeys.conflicts(client,settings().zoomKey())?"Key unavailable: choose an unused key":"Hold "+ModuleKeys.label(settings().zoomKey())+" to zoom. FOV restores on release.";
-        return settings().sprintMode()==ModSettings.SprintMode.AUTO?"Auto: sprint while moving forward; vanilla restrictions apply.":"Toggle: press "+ModuleKeys.label(client.options.sprintKey.getCode())+" to switch sprint on or off.";
-    }
-    private List<Action> controls(){
-        List<Action>a=new ArrayList<Action>();
-        row(a,0,"Enabled","");
-        row(a,12,"Toggle key",capturing&&capturingToggle?"Press key...":ModuleKeys.label(settings().toggleKey(module)));
-        if(module==GameplayModule.SCOREBOARD){row(a,49,"Show numbers",on(settings().scoreboardNumbers()));row(a,50,"Background",on(settings().scoreboardBackground()));row(a,51,"Scale",Integer.toString(settings().scoreboardScale()));row(a,52,"X offset",Integer.toString(settings().scoreboardX()));row(a,53,"Y offset",Integer.toString(settings().scoreboardY()));}
-        else if(module==GameplayModule.TNT_COUNTDOWN){row(a,54,"Color",label(settings().tntColor().name()));row(a,55,"Background",on(settings().tntBackground()));row(a,56,"Max distance",Integer.toString(settings().tntDistance()));}
-        else if(module==GameplayModule.SCROLLABLE_TOOLTIPS){row(a,57,"Scroll pixels",Integer.toString(settings().tooltipSpeed()));}
-        else if(module==GameplayModule.WAYPOINTS){row(a,58,"Marker beam",on(settings().waypointBeam()));row(a,59,"Show distance",on(settings().waypointDistance()));row(a,60,"Manage markers",Integer.toString(WaypointRuntime.current(client).size()));}
-        else if(module==GameplayModule.PARTICLES){row(a,61,"Amount %",Integer.toString(settings().particleAmount()));row(a,62,"Size %",Integer.toString(settings().particleScale()));row(a,63,"Custom tint",on(settings().particleTint()));row(a,64,"Color",label(settings().particleColor().name()));}
-        else if(module==GameplayModule.ENCHANTMENT_GLINT){row(a,65,"Color",label(settings().glintColor().name()));row(a,66,"Speed %",Integer.toString(settings().glintSpeed()));row(a,67,"Strength %",Integer.toString(settings().glintStrength()));}
-        else if(module==GameplayModule.INVENTORY_BLUR){row(a,68,"Blur radius",Integer.toString(settings().blurStrength()));}
-        else if(module==GameplayModule.DYNAMIC_FPS){row(a,69,"Background FPS",Integer.toString(settings().backgroundFps()));row(a,70,"Idle FPS",Integer.toString(settings().idleFps()));row(a,71,"Idle after (sec)",Integer.toString(settings().idleSeconds()));}
-        else if(module==GameplayModule.ANIMATIONS){row(a,28,"Block hit",on(settings().animationBlockHit()));row(a,29,"Eating",on(settings().animationEat()));row(a,30,"Bow pose",on(settings().animationBow()));}
-        else if(module==GameplayModule.AUTO_TEXT){row(a,31,"Slot",Integer.toString(macroSlot+1));row(a,32,"Hotkey",capturing&&capturingMacro?"Press key...":ModuleKeys.label(settings().autoTextKey(macroSlot)));a.add(new Action(33,"Text","",left+20,top+154,panelWidth-40));}
-        else if(module==GameplayModule.GUI)row(a,34,"GUI scale",settings().guiScale()==0?"Auto":settings().guiScale()+"x");
-        else if(module==GameplayModule.HITBOXES){row(a,35,"Color",label(settings().hitboxColor().name()));row(a,36,"Line width",Integer.toString(settings().hitboxWidth()));row(a,37,"Players",on(settings().hitboxPlayers()));row(a,38,"Mobs",on(settings().hitboxMobs()));row(a,39,"Items",on(settings().hitboxItems()));}
-        else if(module==GameplayModule.ITEM_PHYSICS){row(a,40,"Spin speed",settings().physicsSpeed()+"x");row(a,41,"Flat on ground",on(settings().physicsFlat()));}
-        else if(module==GameplayModule.ITEM_SIZE){row(a,42,"First person",settings().heldItemScale()+"%");row(a,43,"Dropped items",settings().droppedItemScale()+"%");}
-        else if(module==GameplayModule.SOUNDS){row(a,44,"Blocks / steps",label(settings().blockSounds().name()));row(a,45,"Combat",label(settings().combatSounds().name()));row(a,46,"Target down",settings().killChime().label);row(a,47,"Effect volume",settings().soundsVolume()+"%");row(a,48,"Preview sound","Play");}
-        else if(module==GameplayModule.TOGGLE_SPRINT)row(a,1,"Mode",settings().sprintMode()==ModSettings.SprintMode.AUTO?"Auto":"Toggle");
-        else if(module==GameplayModule.FREE_LOOK)row(a,2,"Hold key",capturing&&!capturingToggle?"Press key...":ModuleKeys.label(settings().freeLookKey()));
-        else if(module==GameplayModule.SNAPLOOK){
-            row(a,2,"Hold key",capturing&&!capturingToggle?"Press key...":ModuleKeys.label(settings().snaplookKey()));
-            row(a,15,"Perspective",settings().snapPerspective().label);
-        }
-        else if(module==GameplayModule.BLOCK_OVERLAY){
-            row(a,19,"Color",label(settings().blockColor().name()));row(a,20,"Style",label(settings().blockMode().name()));
-            row(a,21,"Fill opacity",settings().blockOpacity()+"%");row(a,22,"Line width",Integer.toString(settings().blockWidth()));
-        }else if(module==GameplayModule.HIT_COLOR){
-            row(a,23,"Color",label(settings().damageColor().name()));row(a,24,"Tint strength",settings().hitOpacity()+"%");row(a,25,"Only players",settings().hitPlayersOnly()?"On":"Off");
-        }else if(module==GameplayModule.FOV_CONTROL){row(a,26,"View angle",settings().cameraFov()+" degrees");row(a,27,"Dynamic FOV",settings().dynamicFov()+"%");}
-        else if(module==GameplayModule.CHAT_TIMESTAMPS)row(a,17,"Time format",settings().chatTimeFormat().label);
-        else if(module==GameplayModule.DURABILITY_WARNING)row(a,18,"Warn at",settings().durabilityThreshold().percent+"% or less");
-        else if(module==GameplayModule.WEATHER_CHANGER)row(a,16,"Weather",label(settings().weatherMode().name()));
-        else if(module==GameplayModule.ZOOM){
-            row(a,2,"Hold key",capturing&&!capturingToggle?"Press key...":ModuleKeys.label(settings().zoomKey()));
-            row(a,3,"Magnification",settings().zoomFactor()+"x");row(a,4,"Smooth zoom",settings().zoomSmooth()?"On":"Off");
-        }else if(module==GameplayModule.FULLBRIGHT)row(a,13,"Intensity",label(settings().brightness().name()));
-        else if(module==GameplayModule.TIME_CHANGER)row(a,14,"Sky time",label(settings().timePreset().name()));
-        else if(module==GameplayModule.CROSSHAIR){
-            CrosshairStyle s=settings().crosshairStyle();
-            row(a,5,"Shape",label(s.shape.name()));row(a,6,"Color",label(s.color.name()));row(a,7,"Size",Integer.toString(s.size));
-            row(a,8,"Gap",Integer.toString(s.gap));row(a,9,"Thickness",Integer.toString(s.thickness));
-            row(a,10,"Center dot",s.dot?"On":"Off");row(a,11,"Outline",s.outline?"On":"Off");
-        }
-        a.add(new Action(98,"Reset settings","",left+20,top+322,128));
-        a.add(new Action(99,"Back","Esc",left+panelWidth-116,top+322,96));
         return a;
     }
-    private void row(List<Action>a,int id,String label,String value){
-        int i=a.size(),w=(panelWidth-52)/2;
-        a.add(new Action(id,label,value,left+20+(i%2)*(w+12),top+86+(i/2)*34,w));
+    private SettingRow n(int id,String title,String detail,int value,int min,int max,int step,String unit) {
+        return SettingRow.number(id,title,detail,value,min,max,step,v->v+unit);
     }
-    private static int step(int current,int min,int max,int amount,int direction){return min+Math.floorMod((current-min)/amount+direction,(max-min)/amount+1)*amount;}
-    private static String on(boolean value){return value?"On":"Off";}
-    private void saveText(){boolean saved=settings().autoTextMessage(macroSlot,macroBuffer);editingText=false;status=saved?"Text saved":"Could not save text";}
-    private static String label(String s){return s.substring(0,1)+s.substring(1).toLowerCase(Locale.ROOT);}
-    @Override protected void keyPressed(char c,int key){
-        if(editingText){
-            if(key==Keyboard.KEY_ESCAPE){editingText=false;status="Edit cancelled";return;}
-            if(key==Keyboard.KEY_RETURN||key==Keyboard.KEY_NUMPADENTER){saveText();return;}
-            if(key==Keyboard.KEY_BACK){if(!macroBuffer.isEmpty())macroBuffer=macroBuffer.substring(0,macroBuffer.offsetByCodePoints(macroBuffer.length(),-1));return;}
-            if(key==Keyboard.KEY_V&&hasControlDown()){String pasted=getClipboard();if(pasted!=null){String candidate=macroBuffer+pasted;if(ModSettings.validText(candidate))macroBuffer=candidate;}return;}
-            if(c>=32&&c!=127&&c!=167&&macroBuffer.length()<100)macroBuffer+=c;return;
+    private void hold(List<SettingRow>a,int key,String detail) {
+        boolean conflict=key!=0&&(ModuleKeys.conflicts(client,key)||ModuleKeys.usedByHold(settings(),module,key)||ModuleKeys.usedByToggle(settings(),null,key)||ModuleKeys.usedByAutoText(settings(),-1,key));
+        a.add(SettingRow.action(2,"Hold key",conflict?"Conflict: assign an unused key.":key==0?"Assign a hold key to use this module.":detail,keyValue(2,key)));
+    }
+    private String keyValue(int id,int key) { return captureId==id?"Press a key...":client==null?(key==0?"Unbound":"Key "+key):ModuleKeys.label(key); }
+    private static String label(String s) { return s.substring(0,1)+s.substring(1).toLowerCase(Locale.ROOT).replace('_',' '); }
+    @Override protected int previewHeight() {
+        return module==GameplayModule.AUTO_TEXT?58:module==GameplayModule.CROSSHAIR||module==GameplayModule.BLOCK_OVERLAY||module==GameplayModule.HIT_COLOR||module==GameplayModule.FOV_CONTROL?46:0;
+    }
+    @Override protected void preview(int x,int y,int w,int h) {
+        if(module==GameplayModule.AUTO_TEXT) {
+            UiShapes.rounded(x,y,w,h,4,0xFF242A30);
+            String message=editingText?macroBuffer+"|":settings().autoTextMessage(macroSlot);
+            drawLines(message.isEmpty()?"Slot "+(macroSlot+1)+": no message saved":message,x+10,y+7,w-20,3,TEXT);
+        } else if(module==GameplayModule.CROSSHAIR) {
+            UiShapes.rounded(x,y,w,h,4,0xFF242A30);
+            SpaceUiFont.draw(client,"Live preview",x+12,y+14,MUTED);
+            CrosshairStyle style=settings().crosshairStyle();float fit=Math.min(1,15/style.extent());
+            GlStateManager.pushMatrix();
+            try { GlStateManager.translate(x+w/2,y+h/2,0);GlStateManager.scale(fit,fit,1);CrosshairRenderer.draw(0,0,style); }
+            finally { GlStateManager.popMatrix(); }
+        } else VisualModPreview.draw(client,module,settings(),x,y,w);
+    }
+    @Override protected boolean modalKey(char c,int key) {
+        if(editingText) {
+            if(key==Keyboard.KEY_ESCAPE) { editingText=false;status="Text edit cancelled; saved message kept.";return true; }
+            if(key==Keyboard.KEY_RETURN||key==Keyboard.KEY_NUMPADENTER) {
+                if(settings().autoTextMessage(macroSlot,macroBuffer)) { editingText=false;status="Message saved."; }
+                else status="Could not save. Use up to 100 plain characters.";
+                return true;
+            }
+            if(key==Keyboard.KEY_BACK) { if(!macroBuffer.isEmpty())macroBuffer=macroBuffer.substring(0,macroBuffer.offsetByCodePoints(macroBuffer.length(),-1));status="";return true; }
+            if(key==Keyboard.KEY_V&&hasControlDown()) {
+                String pasted=getClipboard();String candidate=macroBuffer+(pasted==null?"":pasted);
+                if(ModSettings.validText(candidate)) { macroBuffer=candidate;status=""; }
+                else status="Paste rejected: use one plain line, up to 100 characters.";
+                return true;
+            }
+            if(c>=32&&c!=127&&c!=167) {
+                if(macroBuffer.length()<100) { macroBuffer+=c;status=""; } else status="Message limit reached: 100 characters.";
+            }
+            return true;
         }
-        if(capturing){
-            if(Keyboard.isRepeatEvent())return;
-            if(key==Keyboard.KEY_ESCAPE){capturing=false;return;}
-            int code=key==Keyboard.KEY_BACK?0:key;
-            boolean conflict = capturingMacro?ModuleKeys.autoTextConflicts(client,macroSlot,code):capturingToggle ? ModuleKeys.toggleConflicts(client,module,code)
-                : ModuleKeys.conflicts(client,code)||ModuleKeys.usedByHold(settings(),module,code)||ModuleKeys.usedByToggle(settings(),null,code)||ModuleKeys.usedByAutoText(settings(),-1,code);
-            if(code!=0&&conflict){status="Key already used; choose another key";capturing=false;return;}
-            boolean saved=capturingMacro?settings().autoTextKey(macroSlot,code):capturingToggle?settings().toggleKey(module,code):settings().holdKey(module,code);
-            capturing=false;status=saved?"Key saved":"Could not save key";return;
+        if(captureId==-1)return false;
+        if(Keyboard.isRepeatEvent())return true;
+        if(key==Keyboard.KEY_ESCAPE) { captureId=-1;status="Key assignment cancelled.";return true; }
+        int code=key==Keyboard.KEY_BACK?0:key;
+        boolean conflict=captureId==32?ModuleKeys.autoTextConflicts(client,macroSlot,code):captureId==12?ModuleKeys.toggleConflicts(client,module,code)
+            :ModuleKeys.conflicts(client,code)||ModuleKeys.usedByHold(settings(),module,code)||ModuleKeys.usedByToggle(settings(),null,code)||ModuleKeys.usedByAutoText(settings(),-1,code);
+        if(code!=0&&conflict) { status="Key unavailable. Choose another / Esc: cancel.";return true; }
+        boolean saved=captureId==32?settings().autoTextKey(macroSlot,code):captureId==12?settings().toggleKey(module,code):settings().holdKey(module,code);
+        if(saved)captureId=-1;
+        status=saved?(code==0?"Key unbound.":"Key saved."):"Could not save key.";
+        return true;
+    }
+    private void saved(boolean result) { status=result?"Saved automatically.":"Could not save settings; previous values kept."; }
+    @Override protected void number(int id,int value) {
+        ModSettings s=settings();CrosshairStyle c=s.crosshairStyle();boolean ok;
+        switch(id) {
+            case 3:ok=s.zoomFactor(value);break;
+            case 7:ok=s.crosshairStyle(c.withSize(value));break;
+            case 8:ok=s.crosshairStyle(c.withGap(value));break;
+            case 9:ok=s.crosshairStyle(c.withThickness(value));break;
+            case 21:ok=s.blockOpacity(value);break;
+            case 22:ok=s.blockWidth(value);break;
+            case 24:ok=s.hitOpacity(value);break;
+            case 26:ok=s.cameraFov(value);break;
+            case 27:ok=s.dynamicFov(value);break;
+            case 36:ok=s.hitboxWidth(value);break;
+            case 40:ok=s.physicsSpeed(value);break;
+            case 42:ok=s.heldItemScale(value);break;
+            case 43:ok=s.droppedItemScale(value);break;
+            case 47:ok=s.soundsVolume(value);break;
+            case 51:ok=s.scoreboardScale(value);break;
+            case 52:ok=s.scoreboardX(value);break;
+            case 53:ok=s.scoreboardY(value);break;
+            case 56:ok=s.tntDistance(value);break;
+            case 57:ok=s.tooltipSpeed(value);break;
+            case 61:ok=s.particleAmount(value);break;
+            case 62:ok=s.particleScale(value);break;
+            case 66:ok=s.glintSpeed(value);break;
+            case 67:ok=s.glintStrength(value);break;
+            case 68:ok=s.blurStrength(value);break;
+            case 69:ok=s.backgroundFps(value);break;
+            case 70:ok=s.idleFps(value);break;
+            case 71:ok=s.idleSeconds(value);break;
+            default:return;
         }
-        if(key==Keyboard.KEY_ESCAPE){client.setScreen(parent);return;}
-        if(width<320||height<240)return;
-        if(key==Keyboard.KEY_TAB||key==Keyboard.KEY_DOWN||key==Keyboard.KEY_UP){focus=Math.floorMod(focus+(key==Keyboard.KEY_UP||(key==Keyboard.KEY_TAB&&hasShiftDown())?-1:1),controls().size());return;}
-        if(!Keyboard.isRepeatEvent()&&(key==Keyboard.KEY_RETURN||key==Keyboard.KEY_NUMPADENTER||key==Keyboard.KEY_SPACE||key==Keyboard.KEY_LEFT||key==Keyboard.KEY_RIGHT))activate(controls().get(focus).id,key==Keyboard.KEY_LEFT?-1:1);
+        saved(ok);
     }
-    @Override protected void mouseClicked(int x,int y,int button){
-        if(button!=0||capturing||width<320||height<240)return;if(editingText)saveText();x=viewport.toUi(x);y=viewport.toUi(y);
-        List<Action>a=controls();for(int i=0;i<a.size();i++)if(a.get(i).contains(x,y)){focus=i;activate(a.get(i).id,1);return;}
-    }
-    private void activate(int id,int direction){
-        if(id==60){client.setScreen(new WaypointsScreen(this));return;}
-        if(id==99){client.setScreen(parent);return;}if(settings().isReadOnly())return;
-        if(id==2||id==12||id==32){capturing=true;capturingToggle=id==12;capturingMacro=id==32;status="";return;}
-        if(id==33){editingText=true;macroBuffer=settings().autoTextMessage(macroSlot);return;}
-        CrosshairStyle s=settings().crosshairStyle();boolean saved;
-        if(id==0)saved=module.toggle(settings());
-        else if(id==1)saved=settings().sprintMode(settings().sprintMode()==ModSettings.SprintMode.AUTO?ModSettings.SprintMode.TOGGLE:ModSettings.SprintMode.AUTO);
-        else if(id==3)saved=settings().zoomFactor(2+Math.floorMod(settings().zoomFactor()-2+direction,7));
-        else if(id==4)saved=settings().zoomSmooth(!settings().zoomSmooth());
-        else if(id==5)saved=settings().crosshairStyle(s.withShape(CrosshairStyle.Shape.values()[Math.floorMod(s.shape.ordinal()+direction,CrosshairStyle.Shape.values().length)]));
-        else if(id==6)saved=settings().crosshairStyle(s.withColor(CrosshairStyle.Color.values()[Math.floorMod(s.color.ordinal()+direction,CrosshairStyle.Color.values().length)]));
-        else if(id==7)saved=settings().crosshairStyle(s.withSize(2+Math.floorMod(s.size-2+direction,11)));
-        else if(id==8)saved=settings().crosshairStyle(s.withGap(Math.floorMod(s.gap+direction,9)));
-        else if(id==9)saved=settings().crosshairStyle(s.withThickness(1+Math.floorMod(s.thickness-1+direction,4)));
-        else if(id==10)saved=settings().crosshairStyle(s.withDot(!s.dot));
-        else if(id==11)saved=settings().crosshairStyle(s.withOutline(!s.outline));
-        else if(id==13)saved=settings().brightness(ModSettings.Brightness.values()[Math.floorMod(settings().brightness().ordinal()+direction,ModSettings.Brightness.values().length)]);
-        else if(id==14)saved=settings().timePreset(ModSettings.TimePreset.values()[Math.floorMod(settings().timePreset().ordinal()+direction,ModSettings.TimePreset.values().length)]);
-        else if(id==15)saved=settings().snapPerspective(ModSettings.SnapPerspective.values()[Math.floorMod(settings().snapPerspective().ordinal()+direction,ModSettings.SnapPerspective.values().length)]);
-        else if(id==16)saved=settings().weatherMode(ModSettings.WeatherMode.values()[Math.floorMod(settings().weatherMode().ordinal()+direction,ModSettings.WeatherMode.values().length)]);
-        else if(id==17)saved=settings().chatTimeFormat(ModSettings.ChatTimeFormat.values()[Math.floorMod(settings().chatTimeFormat().ordinal()+direction,ModSettings.ChatTimeFormat.values().length)]);
-        else if(id==18)saved=settings().durabilityThreshold(ModSettings.DurabilityThreshold.values()[Math.floorMod(settings().durabilityThreshold().ordinal()+direction,ModSettings.DurabilityThreshold.values().length)]);
-        else if(id==19)saved=settings().blockColor(VisualPalette.values()[Math.floorMod(settings().blockColor().ordinal()+direction,VisualPalette.values().length)]);
-        else if(id==20)saved=settings().blockMode(ModSettings.BlockMode.values()[Math.floorMod(settings().blockMode().ordinal()+direction,ModSettings.BlockMode.values().length)]);
-        else if(id==21)saved=settings().blockOpacity(step(settings().blockOpacity(),5,60,5,direction));
-        else if(id==22)saved=settings().blockWidth(1+Math.floorMod(settings().blockWidth()-1+direction,5));
-        else if(id==23)saved=settings().damageColor(VisualPalette.values()[Math.floorMod(settings().damageColor().ordinal()+direction,VisualPalette.values().length)]);
-        else if(id==24)saved=settings().hitOpacity(step(settings().hitOpacity(),5,80,5,direction));
-        else if(id==25)saved=settings().hitPlayersOnly(!settings().hitPlayersOnly());
-        else if(id==26)saved=settings().cameraFov(step(settings().cameraFov(),60,110,5,direction));
-        else if(id==27)saved=settings().dynamicFov(step(settings().dynamicFov(),0,100,25,direction));
-        else if(id==28)saved=settings().animationBlockHit(!settings().animationBlockHit());
-        else if(id==29)saved=settings().animationEat(!settings().animationEat());
-        else if(id==30)saved=settings().animationBow(!settings().animationBow());
-        else if(id==31){macroSlot=Math.floorMod(macroSlot+direction,3);return;}
-        else if(id==34)saved=settings().guiScale(Math.floorMod(settings().guiScale()+direction,5));
-        else if(id==35)saved=settings().hitboxColor(VisualPalette.values()[Math.floorMod(settings().hitboxColor().ordinal()+direction,VisualPalette.values().length)]);
-        else if(id==36)saved=settings().hitboxWidth(1+Math.floorMod(settings().hitboxWidth()-1+direction,3));
-        else if(id==37)saved=settings().hitboxPlayers(!settings().hitboxPlayers());
-        else if(id==38)saved=settings().hitboxMobs(!settings().hitboxMobs());
-        else if(id==39)saved=settings().hitboxItems(!settings().hitboxItems());
-        else if(id==40)saved=settings().physicsSpeed(1+Math.floorMod(settings().physicsSpeed()-1+direction,5));
-        else if(id==41)saved=settings().physicsFlat(!settings().physicsFlat());
-        else if(id==42)saved=settings().heldItemScale(step(settings().heldItemScale(),50,150,10,direction));
-        else if(id==43)saved=settings().droppedItemScale(step(settings().droppedItemScale(),25,200,25,direction));
-        else if(id==44)saved=settings().blockSounds(ModSettings.SoundTheme.values()[Math.floorMod(settings().blockSounds().ordinal()+direction,ModSettings.SoundTheme.values().length)]);
-        else if(id==45)saved=settings().combatSounds(ModSettings.SoundTheme.values()[Math.floorMod(settings().combatSounds().ordinal()+direction,ModSettings.SoundTheme.values().length)]);
-        else if(id==46)saved=settings().killChime(ModSettings.KillChime.values()[Math.floorMod(settings().killChime().ordinal()+direction,ModSettings.KillChime.values().length)]);
-        else if(id==47)saved=settings().soundsVolume(step(settings().soundsVolume(),0,100,10,direction));
-        else if(id==48){SoundRuntime.preview(client);status=settings().killChime()==ModSettings.KillChime.OFF?"Choose a target-down sound first":"Preview played";return;}
-        else if(id==49)saved=settings().scoreboardNumbers(!settings().scoreboardNumbers());
-        else if(id==50)saved=settings().scoreboardBackground(!settings().scoreboardBackground());
-        else if(id==51)saved=settings().scoreboardScale(step(settings().scoreboardScale(),50,150,10,direction));
-        else if(id==52)saved=settings().scoreboardX(step(settings().scoreboardX(),-500,500,10,direction));
-        else if(id==53)saved=settings().scoreboardY(step(settings().scoreboardY(),-500,500,10,direction));
-        else if(id==54)saved=settings().tntColor(VisualPalette.values()[Math.floorMod(settings().tntColor().ordinal()+direction,VisualPalette.values().length)]);
-        else if(id==55)saved=settings().tntBackground(!settings().tntBackground());
-        else if(id==56)saved=settings().tntDistance(step(settings().tntDistance(),8,128,8,direction));
-        else if(id==57)saved=settings().tooltipSpeed(step(settings().tooltipSpeed(),2,30,2,direction));
-        else if(id==58)saved=settings().waypointBeam(!settings().waypointBeam());
-        else if(id==59)saved=settings().waypointDistance(!settings().waypointDistance());
-        else if(id==61)saved=settings().particleAmount(step(settings().particleAmount(),0,300,25,direction));
-        else if(id==62)saved=settings().particleScale(step(settings().particleScale(),50,200,25,direction));
-        else if(id==63)saved=settings().particleTint(!settings().particleTint());
-        else if(id==64)saved=settings().particleColor(VisualPalette.values()[Math.floorMod(settings().particleColor().ordinal()+direction,VisualPalette.values().length)]);
-        else if(id==65)saved=settings().glintColor(VisualPalette.values()[Math.floorMod(settings().glintColor().ordinal()+direction,VisualPalette.values().length)]);
-        else if(id==66)saved=settings().glintSpeed(step(settings().glintSpeed(),25,300,25,direction));
-        else if(id==67)saved=settings().glintStrength(step(settings().glintStrength(),10,100,10,direction));
-        else if(id==68)saved=settings().blurStrength(step(settings().blurStrength(),1,8,1,direction));
-        else if(id==69)saved=settings().backgroundFps(step(settings().backgroundFps(),5,60,5,direction));
-        else if(id==70)saved=settings().idleFps(step(settings().idleFps(),10,120,10,direction));
-        else if(id==71)saved=settings().idleSeconds(step(settings().idleSeconds(),10,300,10,direction));
-        else if(id==98)saved=settings().reset(module);else return;
-        status=saved?"Saved":"Could not save settings";
-    }
-    private static final class Action{
-        final int id,x,y,w;final String label,value;
-        Action(int id,String label,String value,int x,int y,int w){this.id=id;this.label=label;this.value=value;this.x=x;this.y=y;this.w=w;}
-        boolean contains(int px,int py){return px>=x&&px<x+w&&py>=y&&py<y+27;}
+    private static <E> E next(E[] values,int current,int direction) { return values[Math.floorMod(current+direction,values.length)]; }
+    @Override protected void change(int id,int direction) {
+        ModSettings s=settings();CrosshairStyle c=s.crosshairStyle();boolean ok;
+        if(id==99) { client.setScreen(parent);return; }
+        if(id==31) { macroSlot=Math.floorMod(macroSlot+direction,3);status="";return; }
+        if(readOnly())return;
+        if(id==2||id==12||id==32) { captureId=id;status="";return; }
+        if(id==33) { editingText=true;macroBuffer=s.autoTextMessage(macroSlot);status="";return; }
+        switch(id) {
+            case 0:ok=module.toggle(s);break;
+            case 1:ok=s.sprintMode(s.sprintMode()==ModSettings.SprintMode.AUTO?ModSettings.SprintMode.TOGGLE:ModSettings.SprintMode.AUTO);break;
+            case 4:ok=s.zoomSmooth(!s.zoomSmooth());break;
+            case 5:ok=s.crosshairStyle(c.withShape(next(CrosshairStyle.Shape.values(),c.shape.ordinal(),direction)));break;
+            case 6:ok=s.crosshairStyle(c.withColor(next(CrosshairStyle.Color.values(),c.color.ordinal(),direction)));break;
+            case 10:ok=s.crosshairStyle(c.withDot(!c.dot));break;
+            case 11:ok=s.crosshairStyle(c.withOutline(!c.outline));break;
+            case 13:ok=s.brightness(next(ModSettings.Brightness.values(),s.brightness().ordinal(),direction));break;
+            case 14:ok=s.timePreset(next(ModSettings.TimePreset.values(),s.timePreset().ordinal(),direction));break;
+            case 15:ok=s.snapPerspective(next(ModSettings.SnapPerspective.values(),s.snapPerspective().ordinal(),direction));break;
+            case 16:ok=s.weatherMode(next(ModSettings.WeatherMode.values(),s.weatherMode().ordinal(),direction));break;
+            case 17:ok=s.chatTimeFormat(next(ModSettings.ChatTimeFormat.values(),s.chatTimeFormat().ordinal(),direction));break;
+            case 18:ok=s.durabilityThreshold(next(ModSettings.DurabilityThreshold.values(),s.durabilityThreshold().ordinal(),direction));break;
+            case 19:ok=s.blockColor(next(VisualPalette.values(),s.blockColor().ordinal(),direction));break;
+            case 20:ok=s.blockMode(next(ModSettings.BlockMode.values(),s.blockMode().ordinal(),direction));break;
+            case 23:ok=s.damageColor(next(VisualPalette.values(),s.damageColor().ordinal(),direction));break;
+            case 25:ok=s.hitPlayersOnly(!s.hitPlayersOnly());break;
+            case 28:ok=s.animationBlockHit(!s.animationBlockHit());break;
+            case 29:ok=s.animationEat(!s.animationEat());break;
+            case 30:ok=s.animationBow(!s.animationBow());break;
+            case 34:ok=s.guiScale(Math.floorMod(s.guiScale()+direction,5));break;
+            case 35:ok=s.hitboxColor(next(VisualPalette.values(),s.hitboxColor().ordinal(),direction));break;
+            case 37:ok=s.hitboxPlayers(!s.hitboxPlayers());break;
+            case 38:ok=s.hitboxMobs(!s.hitboxMobs());break;
+            case 39:ok=s.hitboxItems(!s.hitboxItems());break;
+            case 41:ok=s.physicsFlat(!s.physicsFlat());break;
+            case 44:ok=s.blockSounds(next(ModSettings.SoundTheme.values(),s.blockSounds().ordinal(),direction));break;
+            case 45:ok=s.combatSounds(next(ModSettings.SoundTheme.values(),s.combatSounds().ordinal(),direction));break;
+            case 46:ok=s.killChime(next(ModSettings.KillChime.values(),s.killChime().ordinal(),direction));break;
+            case 48:SoundRuntime.preview(client);status="Local preview requested; Minecraft volume also applies.";return;
+            case 49:ok=s.scoreboardNumbers(!s.scoreboardNumbers());break;
+            case 50:ok=s.scoreboardBackground(!s.scoreboardBackground());break;
+            case 54:ok=s.tntColor(next(VisualPalette.values(),s.tntColor().ordinal(),direction));break;
+            case 55:ok=s.tntBackground(!s.tntBackground());break;
+            case 58:ok=s.waypointBeam(!s.waypointBeam());break;
+            case 59:ok=s.waypointDistance(!s.waypointDistance());break;
+            case 60:client.setScreen(new WaypointsScreen(this));return;
+            case 63:ok=s.particleTint(!s.particleTint());break;
+            case 64:ok=s.particleColor(next(VisualPalette.values(),s.particleColor().ordinal(),direction));break;
+            case 65:ok=s.glintColor(next(VisualPalette.values(),s.glintColor().ordinal(),direction));break;
+            case 98:ok=s.reset(module);if(ok) { status="Settings and keys reset; enabled state kept.";return; }break;
+            default:return;
+        }
+        saved(ok);
     }
 }

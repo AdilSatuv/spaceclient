@@ -1,0 +1,71 @@
+{
+  "date": "2026-11-03",
+  "root": "C:/Users/user/Documents/Codex/2026-11-03/space-client-mod-settings/work/spaceclient-settings",
+  "branch": "space-mod-settings",
+  "initialBase": "2b2c0c144093b515b3ebefbbbe08bade739ba357",
+  "integrationBase": "e7f85094b6326b6c74ebc323e191945a4b621a0a",
+  "sourceCommits": [
+    "2499583",
+    "080fd40",
+    "9d431eb5f8f51dc40df575db172b87a99ce697af"
+  ],
+  "modules": {
+    "gameplay": 29,
+    "hud": 26,
+    "catalog": 55,
+    "separateWaypointManager": true
+  },
+  "schemaPreservation": {
+    "mods": 10,
+    "modFields": 132,
+    "hud": 18,
+    "export": 13,
+    "browser": 1,
+    "waypoints": 1,
+    "ordinalChanges": false,
+    "runtimeChangesRelativeToIntegrationBase": false
+  },
+  "checks": {
+    "javaTests": 272,
+    "failures": 0,
+    "errors": 0,
+    "bundleValidatorTests": 10,
+    "strictBundlePassed": true,
+    "gameBuildPassed": true,
+    "qaAddonCompiled": true,
+    "productionMixinCount": 35,
+    "productionClassesJavaMajor": 52,
+    "qaClassesInProductionJar": false
+  },
+  "bundle": {
+    "gameSourceTree": "a7b35374de8508756111c4170e270e5834dd35eb",
+    "size": 1077347,
+    "sha256": "3ad9c34f3f2c50512c0062f8be5c535bdeabd1edaeb76eb3aa77cc84640a67ae",
+    "installed": false
+  },
+  "native": {
+    "status": "not_run_permission_denied",
+    "captures": 0,
+    "worldOpened": false,
+    "physicalInputVerified": false,
+    "visualAcceptanceComplete": false,
+    "parentRuntimeCapturesAreNotThisUIAcceptance": true
+  },
+  "codebaseMemory": {
+    "project": "spaceclient-mod-settings-20261103",
+    "indexedAtUtc": "2026-11-03T01:40:11Z",
+    "nodes": 9269,
+    "edges": 24580,
+    "skipped": 0,
+    "partialParseFiles": 3,
+    "intentionallyExcludedFiles": 31,
+    "changedProductionPathsChecked": 8,
+    "freshnessCaveat": "metadata_changed; source and staged diff read directly"
+  },
+  "limits": [
+    "No native screenshots or physical keys/wheel/clipboard acceptance",
+    "No full GUI/Unicode/DPI/resource-pack preview matrix",
+    "No performance or sound listening acceptance",
+    "No installation or publication"
+  ]
+}

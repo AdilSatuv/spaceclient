@@ -1,52 +1,125 @@
 package dev.spaceclient.mods;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import dev.spaceclient.SpaceClient;
-import dev.spaceclient.hud.*;
+import dev.spaceclient.hud.SpaceUiFont;
+import dev.spaceclient.hud.UiShapes;
+import dev.spaceclient.settings.ModuleSettingsScreen;
+import dev.spaceclient.settings.SettingRow;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import net.minecraft.client.gui.screen.Screen;
 import org.lwjgl.input.Keyboard;
 
-/** Local marker editing; no teleports or chat commands. */
-public final class WaypointsScreen extends Screen {
-    private final Screen parent;private HudViewport viewport;private int left,top,selected,page,focus;
-    private int editing=-1;private String buffer="",notice="";
-    public WaypointsScreen(Screen parent){this.parent=parent;}
-    @Override public void init(){viewport=new HudViewport(width,height);left=(viewport.width-500)/2;top=(viewport.height-354)/2;}
-    @Override public boolean shouldPauseGame(){return true;}
-    @Override public void removed(){SpaceUiFont.release();}
-    private List<WaypointStore.Point> points(){return WaypointRuntime.current(client);}
-    private WaypointStore.Point point(){List<WaypointStore.Point> p=points();selected=Math.max(0,Math.min(selected,p.size()-1));return p.isEmpty()?null:p.get(selected);}
-    private void button(int id,String text,int x,int y,int w,int mx,int my){boolean hover=mx>=x&&mx<x+w&&my>=y&&my<y+27;UiShapes.rounded(x,y,w,27,4,focus==id?0xFFD7AF6A:hover?0xFF3A3B3E:0xFF24262C);SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(text,w-14),x+7,y+9,focus==id?0xFF101114:0xFFF2EEE7);}
-    @Override public void render(int mx,int my,float delta){
-        fillGradient(0,0,width,height,0x99070709,0xB00A0B0E);if(width<320||height<240)return;mx=viewport.toUi(mx);my=viewport.toUi(my);
-        GlStateManager.pushMatrix();try{GlStateManager.scale(viewport.scale,viewport.scale,1);UiShapes.rounded(left,top,500,354,6,0xFF101114);
-            SpaceUiFont.draw(client,"SPACE / WAYPOINTS",left+18,top+17,0xFFD7AF6A);SpaceUiFont.draw(client,"Local to this world/server and dimension",left+18,top+39,0xFFB3B0AA);
-            List<WaypointStore.Point> ps=points();int pages=Math.max(1,(ps.size()+5)/6);page=Math.min(page,pages-1);
-            for(int i=0;i<6;i++){int index=page*6+i;if(index>=ps.size())break;WaypointStore.Point p=ps.get(index);int y=top+70+i*32;button(20+i,(selected==index?"> ":"")+p.name,left+18,y,180,mx,my);}
+/** Local marker list and editor; browsing remains available when the store is read-only. */
+public final class WaypointsScreen extends ModuleSettingsScreen {
+    private int selected,page,tab;
+    private WaypointEdit edit;
+    private boolean deleteArmed;
+    public WaypointsScreen(Screen parent) { super(parent); }
+    private WaypointStore store() { return SpaceClient.waypoints; }
+    private List<WaypointStore.Point> points() { return client==null?Collections.<WaypointStore.Point>emptyList():WaypointRuntime.current(client); }
+    private WaypointStore.Point point() {
+        List<WaypointStore.Point> list=points();selected=Math.max(0,Math.min(selected,list.size()-1));
+        return list.isEmpty()?null:list.get(selected);
+    }
+    private boolean hasWorld() { return client!=null&&client.player!=null&&client.world!=null&&!WaypointRuntime.context(client).isEmpty(); }
+    @Override protected String title() { return "Waypoints"; }
+    @Override protected String subtitle() { return "Local to this world / server and dimension  /  "+points().size()+" of 64 markers"; }
+    @Override protected String[] sections() { return new String[]{"Markers","Edit selected marker"}; }
+    @Override protected int section() { return tab; }
+    @Override protected void section(int value) { tab=value;deleteArmed=false;status=""; }
+    @Override protected boolean navigation(int id) { return id==10||id==8||id==9||id>=20; }
+    @Override protected boolean readOnly() { return store()==null||store().readOnly(); }
+    @Override protected boolean modal() { return edit!=null; }
+    @Override protected String notice() {
+        if(edit!=null) return edit.error().isEmpty()?"Enter: save / Esc: cancel / Backspace: erase / Ctrl+V: paste":edit.error();
+        if(store()!=null&&!store().error().isEmpty())return store().error();
+        if(!status.isEmpty())return status;
+        return hasWorld()?"":"Join a world to view and add its local markers.";
+    }
+    @Override protected SettingRow[] footer() {
+        SettingRow add=SettingRow.action(6,"Add here","Create a marker at your current position, then edit its name.","");
+        if(!hasWorld())add=add.disabled("Join a world before adding a marker.");
+        else if(points().size()>=64||store().all().size()>=512)add=add.disabled("Marker limit reached: 64 here, 512 in total.");
+        return new SettingRow[]{add,SettingRow.action(10,"Back","Return to Waypoints settings.","")};
+    }
+    @Override protected List<SettingRow> rows() {
+        List<SettingRow> rows=new ArrayList<>();List<WaypointStore.Point> list=points();
+        page=Math.max(0,Math.min(page,Math.max(0,(list.size()-1)/6)));
+        if(tab==0) {
+            for(int i=0;i<6&&page*6+i<list.size();i++) {
+                int index=page*6+i;WaypointStore.Point p=list.get(index);
+                rows.add(SettingRow.action(20+i,p.name,"X "+p.x+"  /  Y "+p.y+"  /  Z "+p.z+"  /  "+(p.visible?"Visible":"Hidden"),index==selected?"Selected / Edit":"Select / Edit"));
+            }
+            if(list.isEmpty())rows.add(SettingRow.action(20,"No markers yet","Add a marker at your position to start.","Empty").disabled("Use Add here while in a world."));
+            String value=(page+1)+" / "+Math.max(1,(list.size()+5)/6);
+            SettingRow prev=SettingRow.action(8,"Previous page","Browse six local markers at a time.",value);
+            SettingRow next=SettingRow.action(9,"Next page","Browse six local markers at a time.",value);
+            rows.add(page>0?prev:prev.disabled("You are on the first page."));
+            rows.add((page+1)*6<list.size()?next:next.disabled("You are on the last page."));
+        } else {
             WaypointStore.Point p=point();
-            if(p!=null){String[] values={"Name: "+p.name,"X: "+p.x,"Y: "+p.y,"Z: "+p.z,"Color: "+p.color.name(),"Visible: "+(p.visible?"On":"Off")};
-                for(int i=0;i<6;i++)button(i,editing==i?buffer+"|":values[i],left+215,top+70+i*32,265,mx,my);
-            }else SpaceUiFont.draw(client,"Add a marker at your position",left+215,top+82,0xFFB3B0AA);
-            button(6,"Add here",left+18,top+276,105,mx,my);button(7,"Delete selected",left+133,top+276,125,mx,my);button(8,"<",left+270,top+276,32,mx,my);button(9,">",left+310,top+276,32,mx,my);button(10,"Back",left+375,top+276,105,mx,my);
-            String msg=SpaceClient.waypoints.error();if(msg.isEmpty())msg=editing>=0?"Enter: save / Esc: cancel":notice.isEmpty()?"Page "+(page+1)+" / "+pages+"   Tab: select / Enter: change":notice;
-            SpaceUiFont.draw(client,SpaceUiFont.trimToWidth(msg,464),left+18,top+320,0xFFB3B0AA);
-        }finally{GlStateManager.popMatrix();}
+            if(p==null) {
+                rows.add(SettingRow.action(0,"No marker selected","Select a marker on the Markers tab.","Unavailable").disabled("Add or select a marker first."));return rows;
+            }
+            rows.add(SettingRow.text(0,"Name","1-32 plain characters; Enter edits the full name.",p.name));
+            rows.add(SettingRow.text(1,"X coordinate","Enter: type; Left / Right: 1 block; Shift: 10.",Integer.toString(p.x)));
+            rows.add(SettingRow.text(2,"Y coordinate","Height 0-255; Enter: type; arrows: adjust.",Integer.toString(p.y)));
+            rows.add(SettingRow.text(3,"Z coordinate","Enter: type; Left / Right: 1 block; Shift: 10.",Integer.toString(p.z)));
+            rows.add(SettingRow.choice(4,"Marker color","Use a fixed color or animated Rainbow.",label(p.color.name())));
+            rows.add(SettingRow.toggle(5,"Visible","Hide this marker without deleting its saved position.",p.visible));
+            rows.add(SettingRow.action(7,"Delete marker",deleteArmed?"Press again to permanently remove this local marker.":"Requires a second press; other markers are kept.",deleteArmed?"Confirm delete":"Delete"));
+        }
+        return rows;
     }
-    private void activate(int id){
-        if(id==10){client.setScreen(parent);return;}if(SpaceClient.waypoints.readOnly())return;WaypointStore.Point p=point();
-        if(id>=20){selected=page*6+id-20;return;}
-        if(id<4&&p!=null){editing=id;buffer=id==0?p.name:Integer.toString(id==1?p.x:id==2?p.y:p.z);return;}
-        if(id==4&&p!=null)SpaceClient.waypoints.replace(p,p.color(VisualPalette.values()[(p.color.ordinal()+1)%VisualPalette.values().length]));
-        if(id==5&&p!=null)SpaceClient.waypoints.replace(p,p.visible(!p.visible));
-        if(id==6&&client.player!=null){String context=WaypointRuntime.context(client);if(context.isEmpty()){notice="Join a world before adding a marker";return;}WaypointStore.Point n=new WaypointStore.Point(context,"Marker "+(points().size()+1),client.player.dimension,(int)Math.floor(client.player.x),Math.max(0,Math.min(255,(int)Math.floor(client.player.y))),(int)Math.floor(client.player.z),VisualPalette.GOLD,true);if(SpaceClient.waypoints.add(n)){selected=points().size()-1;page=selected/6;editing=0;buffer=n.name;}}
-        if(id==7&&p!=null){SpaceClient.waypoints.replace(p,null);notice="Marker deleted";}
-        if(id==8)page=Math.max(0,page-1);if(id==9)page=Math.min((points().size()-1)/6,page+1);
+    @Override protected int previewHeight() { return 46; }
+    @Override protected void preview(int x,int y,int w,int h) {
+        UiShapes.rounded(x,y,w,h,4,0xFF242A30);WaypointStore.Point p=point();
+        if(edit!=null) { SpaceUiFont.draw(client,"Editing / "+edit.buffer(),x+10,y+13,TEXT);return; }
+        if(p==null) { SpaceUiFont.draw(client,"No marker selected in this dimension",x+10,y+13,MUTED);return; }
+        SpaceUiFont.draw(client,p.name,x+10,y+5,TEXT);
+        SpaceUiFont.draw(client,"X "+p.x+"  /  Y "+p.y+"  /  Z "+p.z+"   "+(p.visible?"Visible":"Hidden"),x+10,y+22,MUTED);
     }
-    private void save(){WaypointStore.Point p=point();if(p==null){editing=-1;return;}try{int x=p.x,y=p.y,z=p.z;if(editing>0){int value=Integer.parseInt(buffer);if(editing==1)x=value;else if(editing==2)y=value;else z=value;}WaypointStore.Point n=new WaypointStore.Point(p.context,editing==0?buffer:p.name,p.dimension,x,y,z,p.color,p.visible);if(SpaceClient.waypoints.replace(p,n)){editing=-1;notice="Saved";}}catch(IllegalArgumentException e){notice="Name 1-32 chars; X/Z within world, Y 0-255";}}
-    @Override protected void keyPressed(char c,int key){
-        if(editing>=0){if(key==Keyboard.KEY_ESCAPE){editing=-1;return;}if(key==Keyboard.KEY_RETURN||key==Keyboard.KEY_NUMPADENTER){save();return;}if(key==Keyboard.KEY_BACK){if(!buffer.isEmpty())buffer=buffer.substring(0,buffer.offsetByCodePoints(buffer.length(),-1));return;}if(!Character.isISOControl(c)&&buffer.length()<(editing==0?32:10)){String next=buffer+c;if(ModSettings.validText(next))buffer=next;}return;}
-        if(key==Keyboard.KEY_ESCAPE){client.setScreen(parent);return;}if(key==Keyboard.KEY_TAB){focus=Math.floorMod(focus+(hasShiftDown()?-1:1),11);return;}if(key==Keyboard.KEY_UP||key==Keyboard.KEY_DOWN){selected=Math.max(0,Math.min(points().size()-1,selected+(key==Keyboard.KEY_UP?-1:1)));page=Math.max(0,selected/6);return;}if(key==Keyboard.KEY_RETURN||key==Keyboard.KEY_SPACE)activate(focus);
+    @Override protected void number(int id,int value) { }
+    private void saved(boolean ok) { status=ok?"Marker saved automatically.":store().error(); }
+    @Override protected void change(int id,int direction) {
+        if(id==10) { client.setScreen(parent);return; }
+        if(id==8||id==9) { page=Math.max(0,Math.min(Math.max(0,(points().size()-1)/6),page+(id==8?-1:1)));deleteArmed=false;return; }
+        if(id>=20) { selected=page*6+id-20;tab=1;deleteArmed=false;focusRow(0);return; }
+        if(readOnly())return;
+        WaypointStore.Point p=point();if(id!=7)deleteArmed=false;
+        if(id>=0&&id<=3&&p!=null) { edit=new WaypointEdit(p,id);status="";return; }
+        if(id==4&&p!=null)saved(store().replace(p,p.color(VisualPalette.values()[Math.floorMod(p.color.ordinal()+direction,VisualPalette.values().length)])));
+        else if(id==5&&p!=null)saved(store().replace(p,p.visible(!p.visible)));
+        else if(id==6&&hasWorld()) {
+            WaypointStore.Point n=new WaypointStore.Point(WaypointRuntime.context(client),"Marker "+(points().size()+1),client.player.dimension,
+                (int)Math.floor(client.player.x),Math.max(0,Math.min(255,(int)Math.floor(client.player.y))),(int)Math.floor(client.player.z),VisualPalette.GOLD,true);
+            if(store().add(n)) { selected=points().size()-1;page=selected/6;tab=1;edit=new WaypointEdit(n,0);focusRow(0);status=""; } else status=store().error();
+        } else if(id==7&&p!=null) {
+            if(!deleteArmed) { deleteArmed=true;status="Press Delete again to remove "+p.name+". Esc cancels.";return; }
+            if(store().replace(p,null)) { deleteArmed=false;point();page=selected/6;tab=0;focusRow(20);status="Marker deleted."; } else status=store().error();
+        }
     }
-    @Override protected void mouseClicked(int mx,int my,int button){if(button!=0||width<320||height<240)return;if(editing>=0){save();if(editing>=0)return;}mx=viewport.toUi(mx)-left;my=viewport.toUi(my)-top;for(int i=0;i<6;i++){if(my>=70+i*32&&my<97+i*32){if(mx>=18&&mx<198&&page*6+i<points().size()){activate(20+i);return;}if(mx>=215&&mx<480){focus=i;activate(i);return;}}}int[][] buttons={{6,18,105},{7,133,125},{8,270,32},{9,310,32},{10,375,105}};if(my>=276&&my<303)for(int[] b:buttons)if(mx>=b[1]&&mx<b[1]+b[2]){focus=b[0];activate(b[0]);return;}}
+    @Override protected boolean modalKey(char c,int key) {
+        if(edit!=null) {
+            if(key==Keyboard.KEY_ESCAPE) { edit=null;status="Edit cancelled; saved marker kept.";return true; }
+            if(key==Keyboard.KEY_RETURN||key==Keyboard.KEY_NUMPADENTER) { if(edit.save(store())) { edit=null;status="Marker saved."; }return true; }
+            if(key==Keyboard.KEY_BACK) { edit.backspace();return true; }
+            if(key==Keyboard.KEY_V&&hasControlDown()) { edit.append(getClipboard());return true; }
+            if(c>=32&&c!=127)edit.append(String.valueOf(c));return true;
+        }
+        if(deleteArmed&&key==Keyboard.KEY_ESCAPE) { deleteArmed=false;status="Deletion cancelled.";return true; }
+        if(deleteArmed&&key!=Keyboard.KEY_RETURN&&key!=Keyboard.KEY_NUMPADENTER&&key!=Keyboard.KEY_SPACE)deleteArmed=false;
+        SettingRow row=focusedRow();WaypointStore.Point p=point();
+        if(!readOnly()&&tab==1&&p!=null&&row!=null&&row.id>=1&&row.id<=3&&(key==Keyboard.KEY_LEFT||key==Keyboard.KEY_RIGHT)) {
+            int amount=(key==Keyboard.KEY_LEFT?-1:1)*(shiftInput()?10:1);
+            WaypointStore.Point n=WaypointEdit.nudge(p,row.id,amount);
+            if(n.x!=p.x||n.y!=p.y||n.z!=p.z)saved(store().replace(p,n));
+            return true;
+        }
+        return false;
+    }
+    private static String label(String value) { return value.substring(0,1)+value.substring(1).toLowerCase(Locale.ROOT); }
 }
